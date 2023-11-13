@@ -280,6 +280,20 @@ test "quantile.exponential" {
 //     return std.math.pow(f64, -@log(1 - p), 1 / shape) / rate;
 // }
 
+// test "quantile.exponential" {
+//     try testing.expectEqual(weibull(0  , 0  ), 0  );
+//     try testing.expectEqual(weibull(0.5, 0  ), inf);
+//     try testing.expectEqual(weibull(1  , 0  ), inf);
+//     try testing.expectEqual(weibull(0  , inf), 0  );
+//     try testing.expectEqual(weibull(0.5, inf), 0  );
+//     try testing.expectEqual(weibull(1  , inf), inf);
+
+//     try testing.expectApproxEqRel(weibull(0                 , 3), 0, epsilon);
+//     try testing.expectApproxEqRel(weibull(0.9502129316321360, 3), 1, epsilon);
+//     try testing.expectApproxEqRel(weibull(0.9975212478233336, 3), 2, epsilon);
+//     try testing.expectEqual      (weibull(1,                  3), inf       );
+// }
+
 // pub fn cauchy(p: f64, location: f64, scale: f64) !f64 {
 //     if (!isFinite(location) or !isFinite(scale) or !isFinite(p)) {
 //         return error.NonFiniteParam;
@@ -414,7 +428,7 @@ test "quantile.exponential" {
 //     return mean + sd * stdprob.inverseNormalDist(p);
 // }
 
-// pub fn lognormal(p: f64, meanlog: f64, sdlog: f64) !f64 {
+// pub fn logNormal(p: f64, meanlog: f64, sdlog: f64) !f64 {
 //     const q = try normal(p, meanlog, sdlog);
 //     return @exp(q);
 // }

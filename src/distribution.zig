@@ -381,7 +381,7 @@ pub fn beta(q: f64, shape1: f64, shape2: f64) f64 {
 //     return stdprob.normalDist(z);
 // }
 
-// pub fn lognormal(q: f64, meanlog: f64, sdlog: f64) !f64 {
+// pub fn logNormal(q: f64, meanlog: f64, sdlog: f64) !f64 {
 //     if (!isFinite(q)) {
 //         return error.NonFiniteParam;
 //     }
