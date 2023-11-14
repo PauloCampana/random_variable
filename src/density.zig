@@ -2,7 +2,8 @@
 //! for common probability distributions
 //!
 //! Asserts invalid distribution parameters on Debug and ReleaseSafe
-//! such as ±NaN, ±Inf, prob outside [0,1],
+//! such as ±NaN, ±Inf, probabilities outside [0,1],
+//! negative or zero shape, df, rate or scale parameters.
 
 const std = @import("std");
 const lnGamma = @import("thirdyparty/prob.zig").lnGamma;
@@ -19,8 +20,7 @@ const inf = std.math.inf(f64);
 ///
 /// min and max ∈ (-∞,∞)
 pub fn uniform(x: f64, min: f64, max: f64) f64 {
-    assert(isFinite(min));
-    assert(isFinite(max));
+    assert(isFinite(min) and isFinite(max));
     assert(!isNan(x));
     if (x < min or x > max) {
         return 0;
@@ -170,7 +170,7 @@ test "density.binomial" {
 
 /// Probability mass function of Negative Binomial distribution
 ///
-/// size ∈ {0, 1, 2, ⋯}
+/// size ∈ {0,1,2,⋯}
 ///
 /// prob ∈ (0,1]
 pub fn negativeBinomial(x: f64, size: u64, prob: f64) f64 {
