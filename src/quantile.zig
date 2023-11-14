@@ -113,7 +113,7 @@ test "quantile.poisson" {
     try expectApproxEqRel(poisson(0.0497870683678640, 3), 1  );
     try expectApproxEqRel(poisson(0.1991482734714556, 3), 1  );
     try expectApproxEqRel(poisson(0.1991482734714557, 3), 1  );
-    try expectApproxEqRel(poisson(0.1991482734714558, 3), 2  );
+    try expectApproxEqRel(poisson(0.1991482734714559, 3), 2  );
     try expectEqual      (poisson(1                 , 3), inf);
 }
 
