@@ -447,10 +447,10 @@ pub fn t(q: f64, df: f64) f64 {
     assert(isFinite(df));
     assert(df > 0);
     assert(!isNan(q));
-    const z = q * q;
     if (std.math.isPositiveInf(q)) {
         return 1;
     }
+    const z = q * q;
     if (q <= 0) {
         const p = df / (df + z);
         return 0.5 * stdprob.incompleteBeta(0.5 * df, 0.5, p);
