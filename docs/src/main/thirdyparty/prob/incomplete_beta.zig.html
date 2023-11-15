@@ -1,0 +1,826 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">    <title>thirdyparty/prob/incomplete_beta.zig - source view</title>
+    <link rel="icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAgklEQVR4AWMYWuD7EllJIM4G4g4g5oIJ/odhOJ8wToOxSTXgNxDHoeiBMfA4+wGShjyYOCkG/IGqWQziEzYAoUAeiF9D5U+DxEg14DRU7jWIT5IBIOdCxf+A+CQZAAoopEB7QJwBCBwHiip8UYmRdrAlDpIMgApwQZNnNii5Dq0MBgCxxycBnwEd+wAAAABJRU5ErkJggg==">
+    <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNTMgMTQwIj48ZyBmaWxsPSIjRjdBNDFEIj48Zz48cG9seWdvbiBwb2ludHM9IjQ2LDIyIDI4LDQ0IDE5LDMwIi8+PHBvbHlnb24gcG9pbnRzPSI0NiwyMiAzMywzMyAyOCw0NCAyMiw0NCAyMiw5NSAzMSw5NSAyMCwxMDAgMTIsMTE3IDAsMTE3IDAsMjIiIHNoYXBlLXJlbmRlcmluZz0iY3Jpc3BFZGdlcyIvPjxwb2x5Z29uIHBvaW50cz0iMzEsOTUgMTIsMTE3IDQsMTA2Ii8+PC9nPjxnPjxwb2x5Z29uIHBvaW50cz0iNTYsMjIgNjIsMzYgMzcsNDQiLz48cG9seWdvbiBwb2ludHM9IjU2LDIyIDExMSwyMiAxMTEsNDQgMzcsNDQgNTYsMzIiIHNoYXBlLXJlbmRlcmluZz0iY3Jpc3BFZGdlcyIvPjxwb2x5Z29uIHBvaW50cz0iMTE2LDk1IDk3LDExNyA5MCwxMDQiLz48cG9seWdvbiBwb2ludHM9IjExNiw5NSAxMDAsMTA0IDk3LDExNyA0MiwxMTcgNDIsOTUiIHNoYXBlLXJlbmRlcmluZz0iY3Jpc3BFZGdlcyIvPjxwb2x5Z29uIHBvaW50cz0iMTUwLDAgNTIsMTE3IDMsMTQwIDEwMSwyMiIvPjwvZz48Zz48cG9seWdvbiBwb2ludHM9IjE0MSwyMiAxNDAsNDAgMTIyLDQ1Ii8+PHBvbHlnb24gcG9pbnRzPSIxNTMsMjIgMTUzLDExNyAxMDYsMTE3IDEyMCwxMDUgMTI1LDk1IDEzMSw5NSAxMzEsNDUgMTIyLDQ1IDEzMiwzNiAxNDEsMjIiIHNoYXBlLXJlbmRlcmluZz0iY3Jpc3BFZGdlcyIvPjxwb2x5Z29uIHBvaW50cz0iMTI1LDk1IDEzMCwxMTAgMTA2LDExNyIvPjwvZz48L2c+PC9zdmc+">
+    <style>
+      body{
+        font-family: system-ui, -apple-system, Roboto, "Segoe UI", sans-serif;
+        margin: 0;
+        line-height: 1.5;
+      }
+
+      pre > code {
+        display: block;
+        overflow: auto;
+        line-height: normal;
+        margin: 0em;
+      }
+      .tok-kw {
+          color: #333;
+          font-weight: bold;
+      }
+      .tok-str {
+          color: #d14;
+      }
+      .tok-builtin {
+          color: #005C7A;
+      }
+      .tok-comment {
+          color: #545454;
+          font-style: italic;
+      }
+      .tok-fn {
+          color: #900;
+          font-weight: bold;
+      }
+      .tok-null {
+          color: #005C5C;
+      }
+      .tok-number {
+          color: #005C5C;
+      }
+      .tok-type {
+          color: #458;
+          font-weight: bold;
+      }
+      pre {
+        counter-reset: line;
+      }
+      pre .line:before {
+        counter-increment: line;
+        content: counter(line);
+        display: inline-block;
+        padding-right: 1em;
+        width: 2em;
+        text-align: right;
+        color: #999;
+      }
+      
+      .line {
+        width: 100%;
+        display: inline-block;
+      }
+      .line:target {
+        border-top: 1px solid #ccc;
+        border-bottom: 1px solid #ccc;
+        background: #fafafa;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        body{
+            background:#222;
+            color: #ccc;
+        }
+        pre > code {
+            color: #ccc;
+            background: #222;
+            border: unset;
+        }
+        .line:target {
+            border-top: 1px solid #444;
+            border-bottom: 1px solid #444;
+            background: #333;
+        }
+        .tok-kw {
+            color: #eee;
+        }
+        .tok-str {
+            color: #2e5;
+        }
+        .tok-builtin {
+            color: #ff894c;
+        }
+        .tok-comment {
+            color: #aa7;
+        }
+        .tok-fn {
+            color: #B1A0F8;
+        }
+        .tok-null {
+            color: #ff8080;
+        }
+        .tok-number {
+            color: #ff8080;
+        }
+        .tok-type {
+            color: #68f;
+        }
+      }
+    </style>
+</head>
+<body>
+<pre><code><span class="line" id="L1"><span class="tok-comment">// SPDX-License-Identifier: MIT</span>
+</span>
+<span class="line" id="L2"><span class="tok-comment">// Copyright (c) 2015-2021 Zig Contributors</span>
+</span>
+<span class="line" id="L3"><span class="tok-comment">// This file is part of [zig](https://ziglang.org/), which is MIT licensed.</span>
+</span>
+<span class="line" id="L4"><span class="tok-comment">// The MIT license requires this copyright notice to be included in all copies</span>
+</span>
+<span class="line" id="L5"><span class="tok-comment">// and substantial portions of the software.</span>
+</span>
+<span class="line" id="L6"><span class="tok-comment">//</span>
+</span>
+<span class="line" id="L7"><span class="tok-comment">// Ported from the Cephes library. Original license below:</span>
+</span>
+<span class="line" id="L8"><span class="tok-comment">//</span>
+</span>
+<span class="line" id="L9"><span class="tok-comment">// Cephes Math Library, Release 2.8:  June, 2000</span>
+</span>
+<span class="line" id="L10"><span class="tok-comment">// Copyright 1984, 1995, 2000 by Stephen L. Moshier</span>
+</span>
+<span class="line" id="L11"></span>
+<span class="line" id="L12"><span class="tok-kw">const</span> std = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;std&quot;</span>);</span>
+<span class="line" id="L13"><span class="tok-kw">const</span> math = std.math;</span>
+<span class="line" id="L14"></span>
+<span class="line" id="L15"><span class="tok-kw">const</span> constants = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;constants.zig&quot;</span>);</span>
+<span class="line" id="L16"></span>
+<span class="line" id="L17"><span class="tok-kw">const</span> gamma = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;gamma.zig&quot;</span>).gamma;</span>
+<span class="line" id="L18"><span class="tok-kw">const</span> lnGamma = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;gamma.zig&quot;</span>).lnGamma;</span>
+<span class="line" id="L19"></span>
+<span class="line" id="L20"><span class="tok-kw">const</span> MAXGAM = <span class="tok-number">34.84425627277176174</span>;</span>
+<span class="line" id="L21"><span class="tok-kw">const</span> big = <span class="tok-number">4.503599627370496e15</span>;</span>
+<span class="line" id="L22"><span class="tok-kw">const</span> biginv = <span class="tok-number">2.22044604925031308085e-16</span>;</span>
+<span class="line" id="L23"></span>
+<span class="line" id="L24"><span class="tok-kw">fn</span> <span class="tok-fn">done</span>(flag: <span class="tok-type">bool</span>, t: <span class="tok-type">f64</span>) <span class="tok-type">f64</span> {</span>
+<span class="line" id="L25">    <span class="tok-kw">if</span> (flag) {</span>
+<span class="line" id="L26">        <span class="tok-kw">if</span> (t &lt;= constants.MACHEP) {</span>
+<span class="line" id="L27">            <span class="tok-kw">return</span> <span class="tok-number">1.0</span> - constants.MACHEP;</span>
+<span class="line" id="L28">        } <span class="tok-kw">else</span> {</span>
+<span class="line" id="L29">            <span class="tok-kw">return</span> <span class="tok-number">1.0</span> - t;</span>
+<span class="line" id="L30">        }</span>
+<span class="line" id="L31">    }</span>
+<span class="line" id="L32">    <span class="tok-kw">return</span> t;</span>
+<span class="line" id="L33">}</span>
+<span class="line" id="L34"></span>
+<span class="line" id="L35"><span class="tok-comment">/// Incomplete beta integral</span></span>
+<span class="line" id="L36"><span class="tok-comment">///</span></span>
+<span class="line" id="L37"><span class="tok-comment">/// Returns incomplete beta integral of the arguments, evaluated</span></span>
+<span class="line" id="L38"><span class="tok-comment">/// from zero to x.  The function is defined as</span></span>
+<span class="line" id="L39"><span class="tok-comment">///</span></span>
+<span class="line" id="L40"><span class="tok-comment">///                  x</span></span>
+<span class="line" id="L41"><span class="tok-comment">///     -            -</span></span>
+<span class="line" id="L42"><span class="tok-comment">///    | (a+b)      | |  a-1     b-1</span></span>
+<span class="line" id="L43"><span class="tok-comment">///  -----------    |   t   (1-t)   dt.</span></span>
+<span class="line" id="L44"><span class="tok-comment">///   -     -     | |</span></span>
+<span class="line" id="L45"><span class="tok-comment">///  | (a) | (b)   -</span></span>
+<span class="line" id="L46"><span class="tok-comment">///                 0</span></span>
+<span class="line" id="L47"><span class="tok-comment">///</span></span>
+<span class="line" id="L48"><span class="tok-comment">/// The domain of definition is 0 &lt;= x &lt;= 1.  In this</span></span>
+<span class="line" id="L49"><span class="tok-comment">/// implementation a and b are restricted to positive values.</span></span>
+<span class="line" id="L50"><span class="tok-comment">/// The integral from x to 1 may be obtained by the symmetry</span></span>
+<span class="line" id="L51"><span class="tok-comment">/// relation</span></span>
+<span class="line" id="L52"><span class="tok-comment">///</span></span>
+<span class="line" id="L53"><span class="tok-comment">///    1 - incbet( a, b, x )  =  incbet( b, a, 1-x ).</span></span>
+<span class="line" id="L54"><span class="tok-comment">///</span></span>
+<span class="line" id="L55"><span class="tok-comment">/// The integral is evaluated by a continued fraction expansion</span></span>
+<span class="line" id="L56"><span class="tok-comment">/// or, when b*x is small, by a power series.</span></span>
+<span class="line" id="L57"><span class="tok-comment">///</span></span>
+<span class="line" id="L58"><span class="tok-comment">/// ACCURACY:</span></span>
+<span class="line" id="L59"><span class="tok-comment">///</span></span>
+<span class="line" id="L60"><span class="tok-comment">/// Tested at uniformly distributed random points (a,b,x) with a and b</span></span>
+<span class="line" id="L61"><span class="tok-comment">/// in &quot;domain&quot; and x between 0 and 1.</span></span>
+<span class="line" id="L62"><span class="tok-comment">///                                        Relative error</span></span>
+<span class="line" id="L63"><span class="tok-comment">/// arithmetic   domain     # trials      peak         rms</span></span>
+<span class="line" id="L64"><span class="tok-comment">///    IEEE      0,5         10000       6.9e-15     4.5e-16</span></span>
+<span class="line" id="L65"><span class="tok-comment">///    IEEE      0,85       250000       2.2e-13     1.7e-14</span></span>
+<span class="line" id="L66"><span class="tok-comment">///    IEEE      0,1000      30000       5.3e-12     6.3e-13</span></span>
+<span class="line" id="L67"><span class="tok-comment">///    IEEE      0,10000    250000       9.3e-11     7.1e-12</span></span>
+<span class="line" id="L68"><span class="tok-comment">///    IEEE      0,100000    10000       8.7e-10     4.8e-11</span></span>
+<span class="line" id="L69"><span class="tok-comment">/// Outputs smaller than the IEEE gradual underflow threshold</span></span>
+<span class="line" id="L70"><span class="tok-comment">/// were excluded from these statistics.</span></span>
+<span class="line" id="L71"><span class="tok-comment">///</span></span>
+<span class="line" id="L72"><span class="tok-comment">/// ERROR MESSAGES:</span></span>
+<span class="line" id="L73"><span class="tok-comment">///   message         condition      value returned</span></span>
+<span class="line" id="L74"><span class="tok-comment">/// incbet domain      x&lt;0, x&gt;1          0.0</span></span>
+<span class="line" id="L75"><span class="tok-comment">/// incbet underflow                     0.0</span></span>
+<span class="line" id="L76"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">incompleteBeta</span>(aa: <span class="tok-type">f64</span>, bb: <span class="tok-type">f64</span>, xx: <span class="tok-type">f64</span>) <span class="tok-type">f64</span> {</span>
+<span class="line" id="L77">    <span class="tok-kw">if</span> (aa &lt;= <span class="tok-number">0.0</span> <span class="tok-kw">or</span> bb &lt;= <span class="tok-number">0.0</span>) {</span>
+<span class="line" id="L78">        <span class="tok-kw">return</span> <span class="tok-number">0.0</span>; <span class="tok-comment">// Domain</span>
+</span>
+<span class="line" id="L79">    }</span>
+<span class="line" id="L80"></span>
+<span class="line" id="L81">    <span class="tok-kw">if</span> (xx &lt;= <span class="tok-number">0.0</span> <span class="tok-kw">or</span> xx &gt;= <span class="tok-number">1.0</span>) {</span>
+<span class="line" id="L82">        <span class="tok-kw">if</span> (xx == <span class="tok-number">0.0</span>) {</span>
+<span class="line" id="L83">            <span class="tok-kw">return</span> (<span class="tok-number">0.0</span>);</span>
+<span class="line" id="L84">        }</span>
+<span class="line" id="L85">        <span class="tok-kw">if</span> (xx == <span class="tok-number">1.0</span>) {</span>
+<span class="line" id="L86">            <span class="tok-kw">return</span> <span class="tok-number">1.0</span>;</span>
+<span class="line" id="L87">        }</span>
+<span class="line" id="L88"></span>
+<span class="line" id="L89">        <span class="tok-kw">return</span> <span class="tok-number">0.0</span>; <span class="tok-comment">// Domain</span>
+</span>
+<span class="line" id="L90">    }</span>
+<span class="line" id="L91"></span>
+<span class="line" id="L92">    <span class="tok-kw">var</span> flag = <span class="tok-null">false</span>;</span>
+<span class="line" id="L93"></span>
+<span class="line" id="L94">    <span class="tok-kw">if</span> (bb * xx &lt;= <span class="tok-number">1.0</span> <span class="tok-kw">and</span> xx &lt;= <span class="tok-number">0.95</span>) {</span>
+<span class="line" id="L95">        <span class="tok-kw">const</span> t = pseries(aa, bb, xx);</span>
+<span class="line" id="L96">        <span class="tok-kw">return</span> done(flag, t);</span>
+<span class="line" id="L97">    }</span>
+<span class="line" id="L98"></span>
+<span class="line" id="L99">    <span class="tok-kw">var</span> w = <span class="tok-number">1.0</span> - xx;</span>
+<span class="line" id="L100">    <span class="tok-kw">var</span> a = aa;</span>
+<span class="line" id="L101">    <span class="tok-kw">var</span> b = bb;</span>
+<span class="line" id="L102">    <span class="tok-kw">var</span> xc = w;</span>
+<span class="line" id="L103">    <span class="tok-kw">var</span> x = xx;</span>
+<span class="line" id="L104"></span>
+<span class="line" id="L105">    <span class="tok-comment">// Reverse a and b if x is greater than the mean.</span>
+</span>
+<span class="line" id="L106">    <span class="tok-kw">if</span> (xx &gt; aa / (aa + bb)) {</span>
+<span class="line" id="L107">        flag = <span class="tok-null">true</span>;</span>
+<span class="line" id="L108">        a = bb;</span>
+<span class="line" id="L109">        b = aa;</span>
+<span class="line" id="L110">        xc = xx;</span>
+<span class="line" id="L111">        x = w;</span>
+<span class="line" id="L112">    }</span>
+<span class="line" id="L113"></span>
+<span class="line" id="L114">    <span class="tok-kw">if</span> (flag <span class="tok-kw">and</span> b * x &lt;= <span class="tok-number">1.0</span> <span class="tok-kw">and</span> x &lt;= <span class="tok-number">0.95</span>) {</span>
+<span class="line" id="L115">        <span class="tok-kw">const</span> t = pseries(a, b, x);</span>
+<span class="line" id="L116">        <span class="tok-kw">return</span> done(flag, t);</span>
+<span class="line" id="L117">    }</span>
+<span class="line" id="L118"></span>
+<span class="line" id="L119">    <span class="tok-comment">// Choose expansion for better convergence.</span>
+</span>
+<span class="line" id="L120">    <span class="tok-kw">var</span> y = x * (a + b - <span class="tok-number">2.0</span>) - (a - <span class="tok-number">1.0</span>);</span>
+<span class="line" id="L121">    <span class="tok-kw">if</span> (y &lt; <span class="tok-number">0.0</span>) {</span>
+<span class="line" id="L122">        w = incbcf(a, b, x);</span>
+<span class="line" id="L123">    } <span class="tok-kw">else</span> {</span>
+<span class="line" id="L124">        w = incbd(a, b, x) / xc;</span>
+<span class="line" id="L125">    }</span>
+<span class="line" id="L126"></span>
+<span class="line" id="L127">    <span class="tok-comment">// Multiply w by the factor</span>
+</span>
+<span class="line" id="L128">    <span class="tok-comment">//   a      b   _             _     _</span>
+</span>
+<span class="line" id="L129">    <span class="tok-comment">//  x  (1-x)   | (a+b) / ( a | (a) | (b) )</span>
+</span>
+<span class="line" id="L130">    y = a * <span class="tok-builtin">@log</span>(x);</span>
+<span class="line" id="L131">    <span class="tok-kw">var</span> t = b * <span class="tok-builtin">@log</span>(xc);</span>
+<span class="line" id="L132">    <span class="tok-kw">if</span> (a + b &lt; MAXGAM <span class="tok-kw">and</span> <span class="tok-builtin">@abs</span>(y) &lt; constants.MAXLOG <span class="tok-kw">and</span> <span class="tok-builtin">@abs</span>(t) &lt; constants.MAXLOG) {</span>
+<span class="line" id="L133">        t = math.pow(<span class="tok-type">f64</span>, xc, b);</span>
+<span class="line" id="L134">        t *= math.pow(<span class="tok-type">f64</span>, x, a);</span>
+<span class="line" id="L135">        t /= a;</span>
+<span class="line" id="L136">        t *= w;</span>
+<span class="line" id="L137">        t *= gamma(a + b) / (gamma(a) * gamma(b));</span>
+<span class="line" id="L138">        <span class="tok-kw">return</span> done(flag, t);</span>
+<span class="line" id="L139">    }</span>
+<span class="line" id="L140"></span>
+<span class="line" id="L141">    <span class="tok-comment">// Resort to logarithms.</span>
+</span>
+<span class="line" id="L142">    y += t + lnGamma(a + b) - lnGamma(a) - lnGamma(b);</span>
+<span class="line" id="L143">    y += <span class="tok-builtin">@log</span>(w / a);</span>
+<span class="line" id="L144">    <span class="tok-kw">if</span> (y &lt; constants.MINLOG) {</span>
+<span class="line" id="L145">        t = <span class="tok-number">0.0</span>;</span>
+<span class="line" id="L146">    } <span class="tok-kw">else</span> {</span>
+<span class="line" id="L147">        t = math.exp(y);</span>
+<span class="line" id="L148">    }</span>
+<span class="line" id="L149"></span>
+<span class="line" id="L150">    <span class="tok-kw">return</span> done(flag, t);</span>
+<span class="line" id="L151">}</span>
+<span class="line" id="L152"></span>
+<span class="line" id="L153"><span class="tok-comment">/// Continued fraction expansion #1</span></span>
+<span class="line" id="L154"><span class="tok-comment">/// for incomplete beta integral</span></span>
+<span class="line" id="L155"><span class="tok-kw">fn</span> <span class="tok-fn">incbcf</span>(a: <span class="tok-type">f64</span>, b: <span class="tok-type">f64</span>, x: <span class="tok-type">f64</span>) <span class="tok-type">f64</span> {</span>
+<span class="line" id="L156">    <span class="tok-kw">var</span> k1 = a;</span>
+<span class="line" id="L157">    <span class="tok-kw">var</span> k2 = a + b;</span>
+<span class="line" id="L158">    <span class="tok-kw">var</span> k3 = a;</span>
+<span class="line" id="L159">    <span class="tok-kw">var</span> k4 = a + <span class="tok-number">1.0</span>;</span>
+<span class="line" id="L160">    <span class="tok-kw">var</span> k5 = <span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">1.0</span>);</span>
+<span class="line" id="L161">    <span class="tok-kw">var</span> k6 = b - <span class="tok-number">1.0</span>;</span>
+<span class="line" id="L162">    <span class="tok-kw">var</span> k7 = k4;</span>
+<span class="line" id="L163">    <span class="tok-kw">var</span> k8 = a + <span class="tok-number">2.0</span>;</span>
+<span class="line" id="L164"></span>
+<span class="line" id="L165">    <span class="tok-kw">var</span> pkm2: <span class="tok-type">f64</span> = <span class="tok-number">0</span>;</span>
+<span class="line" id="L166">    <span class="tok-kw">var</span> qkm2: <span class="tok-type">f64</span> = <span class="tok-number">1</span>;</span>
+<span class="line" id="L167">    <span class="tok-kw">var</span> pkm1: <span class="tok-type">f64</span> = <span class="tok-number">1</span>;</span>
+<span class="line" id="L168">    <span class="tok-kw">var</span> qkm1: <span class="tok-type">f64</span> = <span class="tok-number">1</span>;</span>
+<span class="line" id="L169">    <span class="tok-kw">var</span> ans: <span class="tok-type">f64</span> = <span class="tok-number">1</span>;</span>
+<span class="line" id="L170">    <span class="tok-kw">var</span> r: <span class="tok-type">f64</span> = <span class="tok-number">1</span>;</span>
+<span class="line" id="L171">    <span class="tok-kw">var</span> n: <span class="tok-type">f64</span> = <span class="tok-number">0</span>;</span>
+<span class="line" id="L172">    <span class="tok-kw">var</span> thresh: <span class="tok-type">f64</span> = <span class="tok-number">3.0</span> * constants.MACHEP;</span>
+<span class="line" id="L173"></span>
+<span class="line" id="L174">    <span class="tok-comment">// mimic do-while</span>
+</span>
+<span class="line" id="L175">    <span class="tok-kw">while</span> (<span class="tok-null">true</span>) {</span>
+<span class="line" id="L176">        <span class="tok-kw">var</span> xk = -(x * k1 * k2) / (k3 * k4);</span>
+<span class="line" id="L177">        <span class="tok-kw">var</span> pk = pkm1 + pkm2 * xk;</span>
+<span class="line" id="L178">        <span class="tok-kw">var</span> qk = qkm1 + qkm2 * xk;</span>
+<span class="line" id="L179">        pkm2 = pkm1;</span>
+<span class="line" id="L180">        pkm1 = pk;</span>
+<span class="line" id="L181">        qkm2 = qkm1;</span>
+<span class="line" id="L182">        qkm1 = qk;</span>
+<span class="line" id="L183"></span>
+<span class="line" id="L184">        xk = (x * k5 * k6) / (k7 * k8);</span>
+<span class="line" id="L185">        pk = pkm1 + pkm2 * xk;</span>
+<span class="line" id="L186">        qk = qkm1 + qkm2 * xk;</span>
+<span class="line" id="L187">        pkm2 = pkm1;</span>
+<span class="line" id="L188">        pkm1 = pk;</span>
+<span class="line" id="L189">        qkm2 = qkm1;</span>
+<span class="line" id="L190">        qkm1 = qk;</span>
+<span class="line" id="L191"></span>
+<span class="line" id="L192">        <span class="tok-kw">if</span> (qk != <span class="tok-number">0</span>) {</span>
+<span class="line" id="L193">            r = pk / qk;</span>
+<span class="line" id="L194">        }</span>
+<span class="line" id="L195"></span>
+<span class="line" id="L196">        <span class="tok-kw">var</span> t: <span class="tok-type">f64</span> = <span class="tok-number">1.0</span>;</span>
+<span class="line" id="L197">        <span class="tok-kw">if</span> (r != <span class="tok-number">0</span>) {</span>
+<span class="line" id="L198">            t = <span class="tok-builtin">@abs</span>((ans - r) / r);</span>
+<span class="line" id="L199">            ans = r;</span>
+<span class="line" id="L200">        }</span>
+<span class="line" id="L201"></span>
+<span class="line" id="L202">        <span class="tok-kw">if</span> (t &lt; thresh) {</span>
+<span class="line" id="L203">            <span class="tok-kw">break</span>;</span>
+<span class="line" id="L204">        }</span>
+<span class="line" id="L205"></span>
+<span class="line" id="L206">        k1 += <span class="tok-number">1.0</span>;</span>
+<span class="line" id="L207">        k2 += <span class="tok-number">1.0</span>;</span>
+<span class="line" id="L208">        k3 += <span class="tok-number">2.0</span>;</span>
+<span class="line" id="L209">        k4 += <span class="tok-number">2.0</span>;</span>
+<span class="line" id="L210">        k5 += <span class="tok-number">1.0</span>;</span>
+<span class="line" id="L211">        k6 -= <span class="tok-number">1.0</span>;</span>
+<span class="line" id="L212">        k7 += <span class="tok-number">2.0</span>;</span>
+<span class="line" id="L213">        k8 += <span class="tok-number">2.0</span>;</span>
+<span class="line" id="L214"></span>
+<span class="line" id="L215">        <span class="tok-kw">if</span> (<span class="tok-builtin">@abs</span>(qk) + <span class="tok-builtin">@abs</span>(pk) &gt; big) {</span>
+<span class="line" id="L216">            pkm2 *= biginv;</span>
+<span class="line" id="L217">            pkm1 *= biginv;</span>
+<span class="line" id="L218">            qkm2 *= biginv;</span>
+<span class="line" id="L219">            qkm1 *= biginv;</span>
+<span class="line" id="L220">        }</span>
+<span class="line" id="L221"></span>
+<span class="line" id="L222">        <span class="tok-kw">if</span> (<span class="tok-builtin">@abs</span>(qk) &lt; biginv <span class="tok-kw">or</span> <span class="tok-builtin">@abs</span>(pk) &lt; biginv) {</span>
+<span class="line" id="L223">            pkm2 *= big;</span>
+<span class="line" id="L224">            pkm1 *= big;</span>
+<span class="line" id="L225">            qkm2 *= big;</span>
+<span class="line" id="L226">            qkm1 *= big;</span>
+<span class="line" id="L227">        }</span>
+<span class="line" id="L228"></span>
+<span class="line" id="L229">        n += <span class="tok-number">1</span>;</span>
+<span class="line" id="L230">        <span class="tok-kw">if</span> (n &gt;= <span class="tok-number">300</span>) <span class="tok-kw">break</span>;</span>
+<span class="line" id="L231">    }</span>
+<span class="line" id="L232"></span>
+<span class="line" id="L233">    <span class="tok-kw">return</span> ans;</span>
+<span class="line" id="L234">}</span>
+<span class="line" id="L235"></span>
+<span class="line" id="L236"><span class="tok-comment">/// Continued fraction expansion #2</span></span>
+<span class="line" id="L237"><span class="tok-comment">/// for incomplete beta integral</span></span>
+<span class="line" id="L238"><span class="tok-kw">fn</span> <span class="tok-fn">incbd</span>(a: <span class="tok-type">f64</span>, b: <span class="tok-type">f64</span>, x: <span class="tok-type">f64</span>) <span class="tok-type">f64</span> {</span>
+<span class="line" id="L239">    <span class="tok-kw">var</span> k1 = a;</span>
+<span class="line" id="L240">    <span class="tok-kw">var</span> k2 = b - <span class="tok-number">1.0</span>;</span>
+<span class="line" id="L241">    <span class="tok-kw">var</span> k3 = a;</span>
+<span class="line" id="L242">    <span class="tok-kw">var</span> k4 = a + <span class="tok-number">1.0</span>;</span>
+<span class="line" id="L243">    <span class="tok-kw">var</span> k5 = <span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">1.0</span>);</span>
+<span class="line" id="L244">    <span class="tok-kw">var</span> k6 = a + b;</span>
+<span class="line" id="L245">    <span class="tok-kw">var</span> k7 = a + <span class="tok-number">1.0</span>;</span>
+<span class="line" id="L246">    <span class="tok-kw">var</span> k8 = a + <span class="tok-number">2.0</span>;</span>
+<span class="line" id="L247"></span>
+<span class="line" id="L248">    <span class="tok-kw">var</span> pkm2: <span class="tok-type">f64</span> = <span class="tok-number">0</span>;</span>
+<span class="line" id="L249">    <span class="tok-kw">var</span> qkm2: <span class="tok-type">f64</span> = <span class="tok-number">1</span>;</span>
+<span class="line" id="L250">    <span class="tok-kw">var</span> pkm1: <span class="tok-type">f64</span> = <span class="tok-number">1</span>;</span>
+<span class="line" id="L251">    <span class="tok-kw">var</span> qkm1: <span class="tok-type">f64</span> = <span class="tok-number">1</span>;</span>
+<span class="line" id="L252">    <span class="tok-kw">var</span> z: <span class="tok-type">f64</span> = x / (<span class="tok-number">1.0</span> - x);</span>
+<span class="line" id="L253">    <span class="tok-kw">var</span> ans: <span class="tok-type">f64</span> = <span class="tok-number">1</span>;</span>
+<span class="line" id="L254">    <span class="tok-kw">var</span> r: <span class="tok-type">f64</span> = <span class="tok-number">1</span>;</span>
+<span class="line" id="L255">    <span class="tok-kw">var</span> n: <span class="tok-type">f64</span> = <span class="tok-number">0</span>;</span>
+<span class="line" id="L256">    <span class="tok-kw">var</span> thresh: <span class="tok-type">f64</span> = <span class="tok-number">3.0</span> * constants.MACHEP;</span>
+<span class="line" id="L257"></span>
+<span class="line" id="L258">    <span class="tok-comment">// mimic do-while</span>
+</span>
+<span class="line" id="L259">    <span class="tok-kw">while</span> (<span class="tok-null">true</span>) {</span>
+<span class="line" id="L260">        <span class="tok-kw">var</span> xk = -(z * k1 * k2) / (k3 * k4);</span>
+<span class="line" id="L261">        <span class="tok-kw">var</span> pk = pkm1 + pkm2 * xk;</span>
+<span class="line" id="L262">        <span class="tok-kw">var</span> qk = qkm1 + qkm2 * xk;</span>
+<span class="line" id="L263">        pkm2 = pkm1;</span>
+<span class="line" id="L264">        pkm1 = pk;</span>
+<span class="line" id="L265">        qkm2 = qkm1;</span>
+<span class="line" id="L266">        qkm1 = qk;</span>
+<span class="line" id="L267"></span>
+<span class="line" id="L268">        xk = (z * k5 * k6) / (k7 * k8);</span>
+<span class="line" id="L269">        pk = pkm1 + pkm2 * xk;</span>
+<span class="line" id="L270">        qk = qkm1 + qkm2 * xk;</span>
+<span class="line" id="L271">        pkm2 = pkm1;</span>
+<span class="line" id="L272">        pkm1 = pk;</span>
+<span class="line" id="L273">        qkm2 = qkm1;</span>
+<span class="line" id="L274">        qkm1 = qk;</span>
+<span class="line" id="L275"></span>
+<span class="line" id="L276">        <span class="tok-kw">if</span> (qk != <span class="tok-number">0</span>) {</span>
+<span class="line" id="L277">            r = pk / qk;</span>
+<span class="line" id="L278">        }</span>
+<span class="line" id="L279"></span>
+<span class="line" id="L280">        <span class="tok-kw">const</span> t = blk: {</span>
+<span class="line" id="L281">            <span class="tok-kw">if</span> (r != <span class="tok-number">0</span>) {</span>
+<span class="line" id="L282">                <span class="tok-kw">const</span> tv = <span class="tok-builtin">@abs</span>((ans - r) / r);</span>
+<span class="line" id="L283">                ans = r;</span>
+<span class="line" id="L284">                <span class="tok-kw">break</span> :blk tv;</span>
+<span class="line" id="L285">            } <span class="tok-kw">else</span> {</span>
+<span class="line" id="L286">                <span class="tok-kw">break</span> :blk <span class="tok-number">1.0</span>;</span>
+<span class="line" id="L287">            }</span>
+<span class="line" id="L288">        };</span>
+<span class="line" id="L289"></span>
+<span class="line" id="L290">        <span class="tok-kw">if</span> (t &lt; thresh) {</span>
+<span class="line" id="L291">            <span class="tok-kw">break</span>;</span>
+<span class="line" id="L292">        }</span>
+<span class="line" id="L293"></span>
+<span class="line" id="L294">        k1 += <span class="tok-number">1.0</span>;</span>
+<span class="line" id="L295">        k2 -= <span class="tok-number">1.0</span>;</span>
+<span class="line" id="L296">        k3 += <span class="tok-number">2.0</span>;</span>
+<span class="line" id="L297">        k4 += <span class="tok-number">2.0</span>;</span>
+<span class="line" id="L298">        k5 += <span class="tok-number">1.0</span>;</span>
+<span class="line" id="L299">        k6 += <span class="tok-number">1.0</span>;</span>
+<span class="line" id="L300">        k7 += <span class="tok-number">2.0</span>;</span>
+<span class="line" id="L301">        k8 += <span class="tok-number">2.0</span>;</span>
+<span class="line" id="L302"></span>
+<span class="line" id="L303">        <span class="tok-kw">if</span> (<span class="tok-builtin">@abs</span>(qk) + <span class="tok-builtin">@abs</span>(pk) &gt; big) {</span>
+<span class="line" id="L304">            pkm2 *= biginv;</span>
+<span class="line" id="L305">            pkm1 *= biginv;</span>
+<span class="line" id="L306">            qkm2 *= biginv;</span>
+<span class="line" id="L307">            qkm1 *= biginv;</span>
+<span class="line" id="L308">        }</span>
+<span class="line" id="L309">        <span class="tok-kw">if</span> (<span class="tok-builtin">@abs</span>(qk) &lt; biginv <span class="tok-kw">or</span> <span class="tok-builtin">@abs</span>(pk) &lt; biginv) {</span>
+<span class="line" id="L310">            pkm2 *= big;</span>
+<span class="line" id="L311">            pkm1 *= big;</span>
+<span class="line" id="L312">            qkm2 *= big;</span>
+<span class="line" id="L313">            qkm1 *= big;</span>
+<span class="line" id="L314">        }</span>
+<span class="line" id="L315"></span>
+<span class="line" id="L316">        n += <span class="tok-number">1</span>;</span>
+<span class="line" id="L317">        <span class="tok-kw">while</span> (n &gt;= <span class="tok-number">300</span>) <span class="tok-kw">break</span>;</span>
+<span class="line" id="L318">    }</span>
+<span class="line" id="L319"></span>
+<span class="line" id="L320">    <span class="tok-kw">return</span> ans;</span>
+<span class="line" id="L321">}</span>
+<span class="line" id="L322"></span>
+<span class="line" id="L323"><span class="tok-comment">/// Power series for incomplete beta integral.</span></span>
+<span class="line" id="L324"><span class="tok-comment">/// Use when b*x is small and x not too close to 1.</span></span>
+<span class="line" id="L325"><span class="tok-kw">fn</span> <span class="tok-fn">pseries</span>(a: <span class="tok-type">f64</span>, b: <span class="tok-type">f64</span>, x: <span class="tok-type">f64</span>) <span class="tok-type">f64</span> {</span>
+<span class="line" id="L326">    <span class="tok-kw">var</span> ai = <span class="tok-number">1.0</span> / a;</span>
+<span class="line" id="L327">    <span class="tok-kw">var</span> u = (<span class="tok-number">1.0</span> - b) * x;</span>
+<span class="line" id="L328">    <span class="tok-kw">var</span> v = u / (a + <span class="tok-number">1.0</span>);</span>
+<span class="line" id="L329">    <span class="tok-kw">var</span> t1 = v;</span>
+<span class="line" id="L330">    <span class="tok-kw">var</span> t = u;</span>
+<span class="line" id="L331">    <span class="tok-kw">var</span> n: <span class="tok-type">f64</span> = <span class="tok-number">2.0</span>;</span>
+<span class="line" id="L332">    <span class="tok-kw">var</span> s: <span class="tok-type">f64</span> = <span class="tok-number">0.0</span>;</span>
+<span class="line" id="L333">    <span class="tok-kw">var</span> z: <span class="tok-type">f64</span> = constants.MACHEP * ai;</span>
+<span class="line" id="L334"></span>
+<span class="line" id="L335">    <span class="tok-kw">while</span> (<span class="tok-builtin">@abs</span>(v) &gt; z) {</span>
+<span class="line" id="L336">        u = (n - b) * x / n;</span>
+<span class="line" id="L337">        t *= u;</span>
+<span class="line" id="L338">        v = t / (a + n);</span>
+<span class="line" id="L339">        s += v;</span>
+<span class="line" id="L340">        n += <span class="tok-number">1.0</span>;</span>
+<span class="line" id="L341">    }</span>
+<span class="line" id="L342"></span>
+<span class="line" id="L343">    s += t1;</span>
+<span class="line" id="L344">    s += ai;</span>
+<span class="line" id="L345"></span>
+<span class="line" id="L346">    u = a * <span class="tok-builtin">@log</span>(x);</span>
+<span class="line" id="L347">    <span class="tok-kw">if</span> ((a + b) &lt; MAXGAM <span class="tok-kw">and</span> <span class="tok-builtin">@abs</span>(u) &lt; constants.MAXLOG) {</span>
+<span class="line" id="L348">        t = gamma(a + b) / (gamma(a) * gamma(b));</span>
+<span class="line" id="L349">        s = s * t * math.pow(<span class="tok-type">f64</span>, x, a);</span>
+<span class="line" id="L350">    } <span class="tok-kw">else</span> {</span>
+<span class="line" id="L351">        t = lnGamma(a + b) - lnGamma(a) - lnGamma(b) + u + <span class="tok-builtin">@log</span>(s);</span>
+<span class="line" id="L352">        <span class="tok-kw">if</span> (t &lt; constants.MINLOG) {</span>
+<span class="line" id="L353">            s = <span class="tok-number">0.0</span>;</span>
+<span class="line" id="L354">        } <span class="tok-kw">else</span> {</span>
+<span class="line" id="L355">            s = math.exp(t);</span>
+<span class="line" id="L356">        }</span>
+<span class="line" id="L357">    }</span>
+<span class="line" id="L358"></span>
+<span class="line" id="L359">    <span class="tok-kw">return</span> s;</span>
+<span class="line" id="L360">}</span>
+<span class="line" id="L361"></span>
+<span class="line" id="L362"><span class="tok-kw">const</span> expectApproxEqRel = std.testing.expectApproxEqRel;</span>
+<span class="line" id="L363"><span class="tok-kw">const</span> expect = std.testing.expect;</span>
+<span class="line" id="L364"><span class="tok-kw">const</span> epsilon = <span class="tok-number">1e-10</span>;</span>
+<span class="line" id="L365"></span>
+<span class="line" id="L366"><span class="tok-kw">test</span> <span class="tok-str">&quot;incompleteBeta&quot;</span> {</span>
+<span class="line" id="L367">    <span class="tok-kw">const</span> cases = [_][<span class="tok-number">4</span>]<span class="tok-type">f64</span>{</span>
+<span class="line" id="L368">        [_]<span class="tok-type">f64</span>{ <span class="tok-number">1</span>, <span class="tok-number">1</span>, <span class="tok-number">0.8</span>, <span class="tok-number">0.8</span> },</span>
+<span class="line" id="L369">        [_]<span class="tok-type">f64</span>{ <span class="tok-number">1</span>, <span class="tok-number">5</span>, <span class="tok-number">0.8</span>, <span class="tok-number">0.99968000000000001</span> },</span>
+<span class="line" id="L370">        [_]<span class="tok-type">f64</span>{ <span class="tok-number">10</span>, <span class="tok-number">10</span>, <span class="tok-number">0.8</span>, <span class="tok-number">0.99842087945083291</span> },</span>
+<span class="line" id="L371">        [_]<span class="tok-type">f64</span>{ <span class="tok-number">10</span>, <span class="tok-number">10</span>, <span class="tok-number">0.1</span>, <span class="tok-number">3.929882327128003e-06</span> },</span>
+<span class="line" id="L372">        [_]<span class="tok-type">f64</span>{ <span class="tok-number">10</span>, <span class="tok-number">2</span>, <span class="tok-number">0.4</span>, <span class="tok-number">0.00073400320000000028</span> },</span>
+<span class="line" id="L373">        [_]<span class="tok-type">f64</span>{ <span class="tok-number">0.1</span>, <span class="tok-number">0.2</span>, <span class="tok-number">0.6</span>, <span class="tok-number">0.69285678232066683</span> },</span>
+<span class="line" id="L374">        [_]<span class="tok-type">f64</span>{ <span class="tok-number">1</span>, <span class="tok-number">10</span>, <span class="tok-number">0.7489</span>, <span class="tok-number">0.99999900352334858</span> },</span>
+<span class="line" id="L375">    };</span>
+<span class="line" id="L376"></span>
+<span class="line" id="L377">    <span class="tok-kw">for</span> (cases) |c| {</span>
+<span class="line" id="L378">        <span class="tok-kw">try</span> expectApproxEqRel(incompleteBeta(c[<span class="tok-number">0</span>], c[<span class="tok-number">1</span>], c[<span class="tok-number">2</span>]), c[<span class="tok-number">3</span>], epsilon);</span>
+<span class="line" id="L379">        <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">1</span> - incompleteBeta(c[<span class="tok-number">1</span>], c[<span class="tok-number">0</span>], <span class="tok-number">1</span> - c[<span class="tok-number">2</span>]), c[<span class="tok-number">3</span>], epsilon);</span>
+<span class="line" id="L380">    }</span>
+<span class="line" id="L381">}</span>
+<span class="line" id="L382"></span>
+<span class="line" id="L383"><span class="tok-kw">const</span> inverseNormalDist = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;normal_dist.zig&quot;</span>).inverseNormalDist;</span>
+<span class="line" id="L384"></span>
+<span class="line" id="L385"><span class="tok-comment">/// Inverse of imcomplete beta integral</span></span>
+<span class="line" id="L386"><span class="tok-comment">///</span></span>
+<span class="line" id="L387"><span class="tok-comment">/// Given y, the function finds x such that</span></span>
+<span class="line" id="L388"><span class="tok-comment">///</span></span>
+<span class="line" id="L389"><span class="tok-comment">///  incbet( a, b, x ) = y .</span></span>
+<span class="line" id="L390"><span class="tok-comment">///</span></span>
+<span class="line" id="L391"><span class="tok-comment">/// The routine performs interval halving or Newton iterations to find the</span></span>
+<span class="line" id="L392"><span class="tok-comment">/// root of incbet(a,b,x) - y = 0.</span></span>
+<span class="line" id="L393"><span class="tok-comment">///</span></span>
+<span class="line" id="L394"><span class="tok-comment">///</span></span>
+<span class="line" id="L395"><span class="tok-comment">/// ACCURACY:</span></span>
+<span class="line" id="L396"><span class="tok-comment">///</span></span>
+<span class="line" id="L397"><span class="tok-comment">///                      Relative error:</span></span>
+<span class="line" id="L398"><span class="tok-comment">///                x     a,b</span></span>
+<span class="line" id="L399"><span class="tok-comment">/// arithmetic   domain  domain  # trials    peak       rms</span></span>
+<span class="line" id="L400"><span class="tok-comment">///    IEEE      0,1    .5,10000   50000    5.8e-12   1.3e-13</span></span>
+<span class="line" id="L401"><span class="tok-comment">///    IEEE      0,1   .25,100    100000    1.8e-13   3.9e-15</span></span>
+<span class="line" id="L402"><span class="tok-comment">///    IEEE      0,1     0,5       50000    1.1e-12   5.5e-15</span></span>
+<span class="line" id="L403"><span class="tok-comment">///    VAX       0,1    .5,100     25000    3.5e-14   1.1e-15</span></span>
+<span class="line" id="L404"><span class="tok-comment">/// With a and b constrained to half-integer or integer values:</span></span>
+<span class="line" id="L405"><span class="tok-comment">///    IEEE      0,1    .5,10000   50000    5.8e-12   1.1e-13</span></span>
+<span class="line" id="L406"><span class="tok-comment">///    IEEE      0,1    .5,100    100000    1.7e-14   7.9e-16</span></span>
+<span class="line" id="L407"><span class="tok-comment">/// With a = .5, b constrained to half-integer or integer values:</span></span>
+<span class="line" id="L408"><span class="tok-comment">///    IEEE      0,1    .5,10000   10000    8.3e-11   1.0e-11</span></span>
+<span class="line" id="L409"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">inverseIncompleteBeta</span>(aa: <span class="tok-type">f64</span>, bb: <span class="tok-type">f64</span>, yy0: <span class="tok-type">f64</span>) <span class="tok-type">f64</span> {</span>
+<span class="line" id="L410">    <span class="tok-kw">if</span> (yy0 &lt;= <span class="tok-number">0</span>) {</span>
+<span class="line" id="L411">        <span class="tok-kw">return</span> <span class="tok-number">0.0</span>;</span>
+<span class="line" id="L412">    }</span>
+<span class="line" id="L413">    <span class="tok-kw">if</span> (yy0 &gt;= <span class="tok-number">1.0</span>) {</span>
+<span class="line" id="L414">        <span class="tok-kw">return</span> <span class="tok-number">1.0</span>;</span>
+<span class="line" id="L415">    }</span>
+<span class="line" id="L416"></span>
+<span class="line" id="L417">    <span class="tok-kw">const</span> State = <span class="tok-kw">enum</span> {</span>
+<span class="line" id="L418">        ihalve,</span>
+<span class="line" id="L419">        newton,</span>
+<span class="line" id="L420">    };</span>
+<span class="line" id="L421">    <span class="tok-kw">var</span> state = State.ihalve;</span>
+<span class="line" id="L422"></span>
+<span class="line" id="L423">    <span class="tok-kw">var</span> rflg = <span class="tok-null">false</span>;</span>
+<span class="line" id="L424">    <span class="tok-kw">var</span> dithresh: <span class="tok-type">f64</span> = <span class="tok-null">undefined</span>;</span>
+<span class="line" id="L425">    <span class="tok-kw">var</span> a: <span class="tok-type">f64</span> = <span class="tok-null">undefined</span>;</span>
+<span class="line" id="L426">    <span class="tok-kw">var</span> b: <span class="tok-type">f64</span> = <span class="tok-null">undefined</span>;</span>
+<span class="line" id="L427">    <span class="tok-kw">var</span> x: <span class="tok-type">f64</span> = <span class="tok-null">undefined</span>;</span>
+<span class="line" id="L428">    <span class="tok-kw">var</span> y: <span class="tok-type">f64</span> = <span class="tok-null">undefined</span>;</span>
+<span class="line" id="L429">    <span class="tok-kw">var</span> yp: <span class="tok-type">f64</span> = <span class="tok-null">undefined</span>;</span>
+<span class="line" id="L430">    <span class="tok-kw">var</span> y0: <span class="tok-type">f64</span> = <span class="tok-null">undefined</span>;</span>
+<span class="line" id="L431"></span>
+<span class="line" id="L432">    <span class="tok-kw">while</span> (<span class="tok-null">true</span>) {</span>
+<span class="line" id="L433">        <span class="tok-kw">if</span> (aa &lt;= <span class="tok-number">1.0</span> <span class="tok-kw">or</span> bb &lt;= <span class="tok-number">1.0</span>) {</span>
+<span class="line" id="L434">            dithresh = <span class="tok-number">1.0e-6</span>;</span>
+<span class="line" id="L435">            rflg = <span class="tok-null">false</span>;</span>
+<span class="line" id="L436">            a = aa;</span>
+<span class="line" id="L437">            b = bb;</span>
+<span class="line" id="L438">            y0 = yy0;</span>
+<span class="line" id="L439">            x = a / (a + b);</span>
+<span class="line" id="L440">            y = incompleteBeta(a, b, x);</span>
+<span class="line" id="L441">            state = .ihalve;</span>
+<span class="line" id="L442">            <span class="tok-kw">break</span>;</span>
+<span class="line" id="L443">        } <span class="tok-kw">else</span> {</span>
+<span class="line" id="L444">            dithresh = <span class="tok-number">1.0e-4</span>;</span>
+<span class="line" id="L445">        }</span>
+<span class="line" id="L446"></span>
+<span class="line" id="L447">        <span class="tok-comment">// approximation to inverse function</span>
+</span>
+<span class="line" id="L448">        yp = -inverseNormalDist(yy0);</span>
+<span class="line" id="L449"></span>
+<span class="line" id="L450">        <span class="tok-kw">if</span> (yy0 &gt; <span class="tok-number">0.5</span>) {</span>
+<span class="line" id="L451">            rflg = <span class="tok-null">true</span>;</span>
+<span class="line" id="L452">            a = bb;</span>
+<span class="line" id="L453">            b = aa;</span>
+<span class="line" id="L454">            y0 = <span class="tok-number">1.0</span> - yy0;</span>
+<span class="line" id="L455">            yp = -yp;</span>
+<span class="line" id="L456">        } <span class="tok-kw">else</span> {</span>
+<span class="line" id="L457">            rflg = <span class="tok-null">false</span>;</span>
+<span class="line" id="L458">            a = aa;</span>
+<span class="line" id="L459">            b = bb;</span>
+<span class="line" id="L460">            y0 = yy0;</span>
+<span class="line" id="L461">        }</span>
+<span class="line" id="L462"></span>
+<span class="line" id="L463">        <span class="tok-kw">const</span> lgm = (yp * yp - <span class="tok-number">3.0</span>) / <span class="tok-number">6.0</span>;</span>
+<span class="line" id="L464">        x = <span class="tok-number">2.0</span> / (<span class="tok-number">1.0</span> / (<span class="tok-number">2.0</span> * a - <span class="tok-number">1.0</span>) + <span class="tok-number">1.0</span> / (<span class="tok-number">2.0</span> * b - <span class="tok-number">1.0</span>));</span>
+<span class="line" id="L465">        <span class="tok-kw">var</span> d = yp * math.sqrt(x + lgm) / x - (<span class="tok-number">1.0</span> / (<span class="tok-number">2.0</span> * b - <span class="tok-number">1.0</span>) - <span class="tok-number">1.0</span> / (<span class="tok-number">2.0</span> * a - <span class="tok-number">1.0</span>)) * (lgm + <span class="tok-number">5.0</span> / <span class="tok-number">6.0</span> - <span class="tok-number">2.0</span> / (<span class="tok-number">3.0</span> * x));</span>
+<span class="line" id="L466">        d = <span class="tok-number">2.0</span> * d;</span>
+<span class="line" id="L467">        <span class="tok-kw">if</span> (d &lt; constants.MINLOG) {</span>
+<span class="line" id="L468">            <span class="tok-kw">return</span> done(rflg, <span class="tok-number">0.0</span>); <span class="tok-comment">// Underflow</span>
+</span>
+<span class="line" id="L469">        }</span>
+<span class="line" id="L470">        x = a / (a + b * math.exp(d));</span>
+<span class="line" id="L471">        y = incompleteBeta(a, b, x);</span>
+<span class="line" id="L472">        yp = (y - y0) / y0;</span>
+<span class="line" id="L473">        <span class="tok-kw">if</span> (<span class="tok-builtin">@abs</span>(yp) &lt; <span class="tok-number">0.2</span>) {</span>
+<span class="line" id="L474">            state = .newton;</span>
+<span class="line" id="L475">            <span class="tok-kw">break</span>;</span>
+<span class="line" id="L476">        }</span>
+<span class="line" id="L477"></span>
+<span class="line" id="L478">        <span class="tok-kw">break</span>;</span>
+<span class="line" id="L479">    }</span>
+<span class="line" id="L480"></span>
+<span class="line" id="L481">    <span class="tok-kw">var</span> x0: <span class="tok-type">f64</span> = <span class="tok-number">0</span>;</span>
+<span class="line" id="L482">    <span class="tok-kw">var</span> yl: <span class="tok-type">f64</span> = <span class="tok-number">0</span>;</span>
+<span class="line" id="L483">    <span class="tok-kw">var</span> x1: <span class="tok-type">f64</span> = <span class="tok-number">1</span>;</span>
+<span class="line" id="L484">    <span class="tok-kw">var</span> yh: <span class="tok-type">f64</span> = <span class="tok-number">1</span>;</span>
+<span class="line" id="L485">    <span class="tok-kw">var</span> nflg = <span class="tok-null">false</span>;</span>
+<span class="line" id="L486"></span>
+<span class="line" id="L487">    outer: <span class="tok-kw">while</span> (<span class="tok-null">true</span>) {</span>
+<span class="line" id="L488">        <span class="tok-kw">switch</span> (state) {</span>
+<span class="line" id="L489">            .ihalve =&gt; {</span>
+<span class="line" id="L490">                <span class="tok-kw">var</span> dir: <span class="tok-type">f64</span> = <span class="tok-number">0</span>;</span>
+<span class="line" id="L491">                <span class="tok-kw">var</span> di: <span class="tok-type">f64</span> = <span class="tok-number">0.5</span>;</span>
+<span class="line" id="L492"></span>
+<span class="line" id="L493">                <span class="tok-kw">var</span> i: <span class="tok-type">usize</span> = <span class="tok-number">0</span>;</span>
+<span class="line" id="L494">                <span class="tok-kw">while</span> (i &lt; <span class="tok-number">100</span>) : (i += <span class="tok-number">1</span>) {</span>
+<span class="line" id="L495">                    <span class="tok-kw">if</span> (i != <span class="tok-number">0</span>) {</span>
+<span class="line" id="L496">                        x = x0 + di * (x1 - x0);</span>
+<span class="line" id="L497">                        <span class="tok-kw">if</span> (x == <span class="tok-number">1.0</span>) {</span>
+<span class="line" id="L498">                            x = <span class="tok-number">1.0</span> - constants.MACHEP;</span>
+<span class="line" id="L499">                        }</span>
+<span class="line" id="L500">                        <span class="tok-kw">if</span> (x == <span class="tok-number">0.0</span>) {</span>
+<span class="line" id="L501">                            di = <span class="tok-number">0.5</span>;</span>
+<span class="line" id="L502">                            x = x0 + di * (x1 - x0);</span>
+<span class="line" id="L503">                            <span class="tok-kw">if</span> (x == <span class="tok-number">0.0</span>) {</span>
+<span class="line" id="L504">                                <span class="tok-kw">return</span> done(rflg, <span class="tok-number">0.0</span>); <span class="tok-comment">// Underflow</span>
+</span>
+<span class="line" id="L505">                            }</span>
+<span class="line" id="L506">                        }</span>
+<span class="line" id="L507">                        y = incompleteBeta(a, b, x);</span>
+<span class="line" id="L508">                        yp = (x1 - x0) / (x1 + x0);</span>
+<span class="line" id="L509">                        <span class="tok-kw">if</span> (<span class="tok-builtin">@abs</span>(yp) &lt; dithresh) {</span>
+<span class="line" id="L510">                            state = .newton;</span>
+<span class="line" id="L511">                            <span class="tok-kw">continue</span> :outer;</span>
+<span class="line" id="L512">                        }</span>
+<span class="line" id="L513">                        yp = (y - y0) / y0;</span>
+<span class="line" id="L514">                        <span class="tok-kw">if</span> (<span class="tok-builtin">@abs</span>(yp) &lt; dithresh) {</span>
+<span class="line" id="L515">                            state = .newton;</span>
+<span class="line" id="L516">                            <span class="tok-kw">continue</span> :outer;</span>
+<span class="line" id="L517">                        }</span>
+<span class="line" id="L518">                    }</span>
+<span class="line" id="L519">                    <span class="tok-kw">if</span> (y &lt; y0) {</span>
+<span class="line" id="L520">                        x0 = x;</span>
+<span class="line" id="L521">                        yl = y;</span>
+<span class="line" id="L522">                        <span class="tok-kw">if</span> (dir &lt; <span class="tok-number">0</span>) {</span>
+<span class="line" id="L523">                            dir = <span class="tok-number">0</span>;</span>
+<span class="line" id="L524">                            di = <span class="tok-number">0.5</span>;</span>
+<span class="line" id="L525">                        } <span class="tok-kw">else</span> <span class="tok-kw">if</span> (dir &gt; <span class="tok-number">3</span>) {</span>
+<span class="line" id="L526">                            di = <span class="tok-number">1.0</span> - (<span class="tok-number">1.0</span> - di) * (<span class="tok-number">1.0</span> - di);</span>
+<span class="line" id="L527">                        } <span class="tok-kw">else</span> <span class="tok-kw">if</span> (dir &gt; <span class="tok-number">1</span>) {</span>
+<span class="line" id="L528">                            di = <span class="tok-number">0.5</span> * di + <span class="tok-number">0.5</span>;</span>
+<span class="line" id="L529">                        } <span class="tok-kw">else</span> {</span>
+<span class="line" id="L530">                            di = (y0 - y) / (yh - yl);</span>
+<span class="line" id="L531">                        }</span>
+<span class="line" id="L532"></span>
+<span class="line" id="L533">                        dir += <span class="tok-number">1</span>;</span>
+<span class="line" id="L534">                        <span class="tok-kw">if</span> (x0 &gt; <span class="tok-number">0.75</span>) {</span>
+<span class="line" id="L535">                            <span class="tok-kw">if</span> (rflg) {</span>
+<span class="line" id="L536">                                rflg = <span class="tok-null">false</span>;</span>
+<span class="line" id="L537">                                a = aa;</span>
+<span class="line" id="L538">                                b = bb;</span>
+<span class="line" id="L539">                                y0 = yy0;</span>
+<span class="line" id="L540">                            } <span class="tok-kw">else</span> {</span>
+<span class="line" id="L541">                                rflg = <span class="tok-null">true</span>;</span>
+<span class="line" id="L542">                                a = bb;</span>
+<span class="line" id="L543">                                b = aa;</span>
+<span class="line" id="L544">                                y0 = <span class="tok-number">1.0</span> - yy0;</span>
+<span class="line" id="L545">                            }</span>
+<span class="line" id="L546">                            x = <span class="tok-number">1.0</span> - x;</span>
+<span class="line" id="L547">                            y = incompleteBeta(a, b, x);</span>
+<span class="line" id="L548">                            x0 = <span class="tok-number">0.0</span>;</span>
+<span class="line" id="L549">                            yl = <span class="tok-number">0.0</span>;</span>
+<span class="line" id="L550">                            x1 = <span class="tok-number">1.0</span>;</span>
+<span class="line" id="L551">                            yh = <span class="tok-number">1.0</span>;</span>
+<span class="line" id="L552">                            state = .ihalve;</span>
+<span class="line" id="L553">                            <span class="tok-kw">continue</span> :outer;</span>
+<span class="line" id="L554">                        }</span>
+<span class="line" id="L555">                    } <span class="tok-kw">else</span> {</span>
+<span class="line" id="L556">                        x1 = x;</span>
+<span class="line" id="L557">                        <span class="tok-kw">if</span> (rflg <span class="tok-kw">and</span> x1 &lt; constants.MACHEP) {</span>
+<span class="line" id="L558">                            <span class="tok-kw">return</span> done(rflg, <span class="tok-number">0.0</span>);</span>
+<span class="line" id="L559">                        }</span>
+<span class="line" id="L560">                        yh = y;</span>
+<span class="line" id="L561">                        <span class="tok-kw">if</span> (dir &gt; <span class="tok-number">0</span>) {</span>
+<span class="line" id="L562">                            dir = <span class="tok-number">0</span>;</span>
+<span class="line" id="L563">                            di = <span class="tok-number">0.5</span>;</span>
+<span class="line" id="L564">                        } <span class="tok-kw">else</span> <span class="tok-kw">if</span> (dir &lt; -<span class="tok-number">3</span>) {</span>
+<span class="line" id="L565">                            di = di * di;</span>
+<span class="line" id="L566">                        } <span class="tok-kw">else</span> <span class="tok-kw">if</span> (dir &lt; -<span class="tok-number">1</span>) {</span>
+<span class="line" id="L567">                            di = <span class="tok-number">0.5</span> * di;</span>
+<span class="line" id="L568">                        } <span class="tok-kw">else</span> {</span>
+<span class="line" id="L569">                            di = (y - y0) / (yh - yl);</span>
+<span class="line" id="L570">                        }</span>
+<span class="line" id="L571">                        dir -= <span class="tok-number">1</span>;</span>
+<span class="line" id="L572">                    }</span>
+<span class="line" id="L573">                }</span>
+<span class="line" id="L574"></span>
+<span class="line" id="L575">                <span class="tok-comment">// Partial Precision Loss</span>
+</span>
+<span class="line" id="L576"></span>
+<span class="line" id="L577">                <span class="tok-kw">if</span> (x0 &gt;= <span class="tok-number">1.0</span>) {</span>
+<span class="line" id="L578">                    x = <span class="tok-number">1.0</span> - constants.MACHEP;</span>
+<span class="line" id="L579">                    <span class="tok-kw">return</span> done(rflg, x);</span>
+<span class="line" id="L580">                }</span>
+<span class="line" id="L581">                <span class="tok-kw">if</span> (x &lt;= <span class="tok-number">0.0</span>) {</span>
+<span class="line" id="L582">                    <span class="tok-kw">return</span> done(rflg, <span class="tok-number">0.0</span>); <span class="tok-comment">// Underflow</span>
+</span>
+<span class="line" id="L583">                }</span>
+<span class="line" id="L584"></span>
+<span class="line" id="L585">                state = .newton;</span>
+<span class="line" id="L586">            },</span>
+<span class="line" id="L587"></span>
+<span class="line" id="L588">            .newton =&gt; {</span>
+<span class="line" id="L589">                <span class="tok-kw">if</span> (nflg) {</span>
+<span class="line" id="L590">                    <span class="tok-kw">return</span> done(rflg, x);</span>
+<span class="line" id="L591">                }</span>
+<span class="line" id="L592"></span>
+<span class="line" id="L593">                nflg = <span class="tok-null">true</span>;</span>
+<span class="line" id="L594">                <span class="tok-kw">const</span> lgm = lnGamma(a + b) - lnGamma(a) - lnGamma(b);</span>
+<span class="line" id="L595"></span>
+<span class="line" id="L596">                <span class="tok-kw">var</span> i: <span class="tok-type">usize</span> = <span class="tok-number">0</span>;</span>
+<span class="line" id="L597">                <span class="tok-kw">while</span> (i &lt; <span class="tok-number">8</span>) : (i += <span class="tok-number">1</span>) {</span>
+<span class="line" id="L598">                    <span class="tok-comment">// Compute the function at this point.</span>
+</span>
+<span class="line" id="L599">                    <span class="tok-kw">if</span> (i != <span class="tok-number">0</span>) {</span>
+<span class="line" id="L600">                        y = incompleteBeta(a, b, x);</span>
+<span class="line" id="L601">                    }</span>
+<span class="line" id="L602">                    <span class="tok-kw">if</span> (y &lt; yl) {</span>
+<span class="line" id="L603">                        x = x0;</span>
+<span class="line" id="L604">                        y = yl;</span>
+<span class="line" id="L605">                    } <span class="tok-kw">else</span> <span class="tok-kw">if</span> (y &gt; yh) {</span>
+<span class="line" id="L606">                        x = x1;</span>
+<span class="line" id="L607">                        y = yh;</span>
+<span class="line" id="L608">                    } <span class="tok-kw">else</span> <span class="tok-kw">if</span> (y &lt; y0) {</span>
+<span class="line" id="L609">                        x0 = x;</span>
+<span class="line" id="L610">                        yl = y;</span>
+<span class="line" id="L611">                    } <span class="tok-kw">else</span> {</span>
+<span class="line" id="L612">                        x1 = x;</span>
+<span class="line" id="L613">                        yh = y;</span>
+<span class="line" id="L614">                    }</span>
+<span class="line" id="L615"></span>
+<span class="line" id="L616">                    <span class="tok-kw">if</span> (x == <span class="tok-number">1.0</span> <span class="tok-kw">or</span> x == <span class="tok-number">0.0</span>) {</span>
+<span class="line" id="L617">                        <span class="tok-kw">break</span>;</span>
+<span class="line" id="L618">                    }</span>
+<span class="line" id="L619"></span>
+<span class="line" id="L620">                    <span class="tok-comment">// Compute the derivative of the function at this point.</span>
+</span>
+<span class="line" id="L621">                    <span class="tok-kw">var</span> d = (a - <span class="tok-number">1.0</span>) * <span class="tok-builtin">@log</span>(x) + (b - <span class="tok-number">1.0</span>) * <span class="tok-builtin">@log</span>(<span class="tok-number">1.0</span> - x) + lgm;</span>
+<span class="line" id="L622">                    <span class="tok-kw">if</span> (d &lt; constants.MINLOG) {</span>
+<span class="line" id="L623">                        <span class="tok-kw">return</span> done(rflg, x);</span>
+<span class="line" id="L624">                    }</span>
+<span class="line" id="L625">                    <span class="tok-kw">if</span> (d &gt; constants.MAXLOG) {</span>
+<span class="line" id="L626">                        <span class="tok-kw">break</span>;</span>
+<span class="line" id="L627">                    }</span>
+<span class="line" id="L628">                    d = math.exp(d);</span>
+<span class="line" id="L629">                    <span class="tok-comment">// Compute the step to the next approximation of x.</span>
+</span>
+<span class="line" id="L630">                    d = (y - y0) / d;</span>
+<span class="line" id="L631">                    <span class="tok-kw">var</span> xt = x - d;</span>
+<span class="line" id="L632">                    <span class="tok-kw">if</span> (xt &lt;= x0) {</span>
+<span class="line" id="L633">                        y = (x - x0) / (x1 - x0);</span>
+<span class="line" id="L634">                        xt = x0 + <span class="tok-number">0.5</span> * y * (x - x0);</span>
+<span class="line" id="L635">                        <span class="tok-kw">if</span> (xt &lt;= <span class="tok-number">0.0</span>) {</span>
+<span class="line" id="L636">                            <span class="tok-kw">break</span>;</span>
+<span class="line" id="L637">                        }</span>
+<span class="line" id="L638">                    }</span>
+<span class="line" id="L639">                    <span class="tok-kw">if</span> (xt &gt;= x1) {</span>
+<span class="line" id="L640">                        y = (x1 - x) / (x1 - x0);</span>
+<span class="line" id="L641">                        xt = x1 - <span class="tok-number">0.5</span> * y * (x1 - x);</span>
+<span class="line" id="L642">                        <span class="tok-kw">if</span> (xt &gt;= <span class="tok-number">1.0</span>) {</span>
+<span class="line" id="L643">                            <span class="tok-kw">break</span>;</span>
+<span class="line" id="L644">                        }</span>
+<span class="line" id="L645">                    }</span>
+<span class="line" id="L646">                    x = xt;</span>
+<span class="line" id="L647">                    <span class="tok-kw">if</span> (<span class="tok-builtin">@abs</span>(d / x) &lt; <span class="tok-number">128.0</span> * constants.MACHEP) {</span>
+<span class="line" id="L648">                        <span class="tok-kw">return</span> done(rflg, x);</span>
+<span class="line" id="L649">                    }</span>
+<span class="line" id="L650">                }</span>
+<span class="line" id="L651"></span>
+<span class="line" id="L652">                <span class="tok-comment">// Did not converge.</span>
+</span>
+<span class="line" id="L653">                dithresh = <span class="tok-number">256.0</span> * constants.MACHEP;</span>
+<span class="line" id="L654">                state = .ihalve;</span>
+<span class="line" id="L655">            },</span>
+<span class="line" id="L656">        }</span>
+<span class="line" id="L657">    }</span>
+<span class="line" id="L658"></span>
+<span class="line" id="L659">    <span class="tok-kw">unreachable</span>;</span>
+<span class="line" id="L660">}</span>
+<span class="line" id="L661"></span>
+<span class="line" id="L662"><span class="tok-kw">test</span> <span class="tok-str">&quot;inverseIncompleteBeta&quot;</span> {</span>
+<span class="line" id="L663">    <span class="tok-kw">const</span> cases = [_][<span class="tok-number">4</span>]<span class="tok-type">f64</span>{</span>
+<span class="line" id="L664">        [_]<span class="tok-type">f64</span>{ <span class="tok-number">1</span>, <span class="tok-number">1</span>, <span class="tok-number">0.8</span>, <span class="tok-number">0.8</span> },</span>
+<span class="line" id="L665">        [_]<span class="tok-type">f64</span>{ <span class="tok-number">1</span>, <span class="tok-number">5</span>, <span class="tok-number">0.8</span>, <span class="tok-number">0.99968000000000001</span> },</span>
+<span class="line" id="L666">        [_]<span class="tok-type">f64</span>{ <span class="tok-number">10</span>, <span class="tok-number">10</span>, <span class="tok-number">0.8</span>, <span class="tok-number">0.99842087945083291</span> },</span>
+<span class="line" id="L667">        [_]<span class="tok-type">f64</span>{ <span class="tok-number">10</span>, <span class="tok-number">10</span>, <span class="tok-number">0.1</span>, <span class="tok-number">3.929882327128003e-06</span> },</span>
+<span class="line" id="L668">        [_]<span class="tok-type">f64</span>{ <span class="tok-number">10</span>, <span class="tok-number">2</span>, <span class="tok-number">0.4</span>, <span class="tok-number">0.00073400320000000028</span> },</span>
+<span class="line" id="L669">        [_]<span class="tok-type">f64</span>{ <span class="tok-number">0.1</span>, <span class="tok-number">0.2</span>, <span class="tok-number">0.6</span>, <span class="tok-number">0.69285678232066683</span> },</span>
+<span class="line" id="L670">        [_]<span class="tok-type">f64</span>{ <span class="tok-number">1</span>, <span class="tok-number">10</span>, <span class="tok-number">0.7489</span>, <span class="tok-number">0.99999900352334858</span> },</span>
+<span class="line" id="L671">    };</span>
+<span class="line" id="L672"></span>
+<span class="line" id="L673">    <span class="tok-kw">for</span> (cases) |c| {</span>
+<span class="line" id="L674">        <span class="tok-kw">var</span> r = incompleteBeta(c[<span class="tok-number">0</span>], c[<span class="tok-number">1</span>], c[<span class="tok-number">2</span>]);</span>
+<span class="line" id="L675">        <span class="tok-kw">try</span> expectApproxEqRel(r, c[<span class="tok-number">3</span>], epsilon);</span>
+<span class="line" id="L676"></span>
+<span class="line" id="L677">        <span class="tok-kw">var</span> ri = inverseIncompleteBeta(c[<span class="tok-number">0</span>], c[<span class="tok-number">1</span>], r);</span>
+<span class="line" id="L678">        <span class="tok-kw">try</span> expectApproxEqRel(ri, c[<span class="tok-number">2</span>], epsilon);</span>
+<span class="line" id="L679">    }</span>
+<span class="line" id="L680">}</span>
+<span class="line" id="L681"></span>
+</code></pre></body>
+</html>
