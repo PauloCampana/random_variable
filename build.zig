@@ -23,8 +23,13 @@ pub fn build(b: *std.Build) !void {
     const test_step = b.step("test", "Run tests");
     test_step.dependOn(&test_cmd.step);
 
+    const docs_tests = b.addTest(.{
+        .root_source_file = .{.path = "src/main.zig"},
+        .target = target,
+        .optimize = optimize,
+    });
     const docs_cmd = b.addInstallDirectory(.{
-        .source_dir = tests.getEmittedDocs(),
+        .source_dir = docs_tests.getEmittedDocs(),
         .install_dir = std.Build.InstallDir {.custom = ".."},
         .install_subdir = "docs",
     });
