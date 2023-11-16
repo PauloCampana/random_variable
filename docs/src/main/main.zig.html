@@ -126,20 +126,8 @@
 <span class="line" id="L12"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> hypotesis = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;hypotesis.zig&quot;</span>);</span>
 <span class="line" id="L13"></span>
 <span class="line" id="L14"><span class="tok-kw">test</span> {</span>
-<span class="line" id="L15">    <span class="tok-kw">var</span> gpa = std.heap.GeneralPurposeAllocator(.{}) {};</span>
-<span class="line" id="L16">    <span class="tok-kw">defer</span> _ = gpa.deinit();</span>
-<span class="line" id="L17">    <span class="tok-kw">var</span> gen = std.rand.DefaultPrng.init(<span class="tok-number">0</span>);</span>
-<span class="line" id="L18">    <span class="tok-kw">const</span> rv = random</span>
-<span class="line" id="L19">        .setType(<span class="tok-type">u64</span>, <span class="tok-type">f64</span>)</span>
-<span class="line" id="L20">        .init(gen.random(), gpa.allocator());</span>
-<span class="line" id="L21"></span>
-<span class="line" id="L22">    <span class="tok-kw">const</span> x = <span class="tok-kw">try</span> rv.geometricSlice(<span class="tok-number">100</span>, <span class="tok-number">0.01</span>);</span>
-<span class="line" id="L23">    <span class="tok-kw">defer</span> rv.allocator.free(x);</span>
-<span class="line" id="L24"></span>
-<span class="line" id="L25">    std.debug.print(<span class="tok-str">&quot;{d:.3}&quot;</span>, .{x});</span>
-<span class="line" id="L26"></span>
-<span class="line" id="L27">    std.testing.refAllDecls(<span class="tok-builtin">@This</span>());</span>
-<span class="line" id="L28">}</span>
-<span class="line" id="L29"></span>
+<span class="line" id="L15">    std.testing.refAllDecls(<span class="tok-builtin">@This</span>());</span>
+<span class="line" id="L16">}</span>
+<span class="line" id="L17"></span>
 </code></pre></body>
 </html>
