@@ -53,7 +53,6 @@ test "distribution.uniform" {
 ///
 /// prob ∈ [0,1]
 pub fn bernoulli(q: f64, prob: f64) f64 {
-    assert(isFinite(prob));
     assert(0 <= prob and prob <= 1);
     assert(!isNan(q));
     if (q < 0) {
@@ -81,7 +80,6 @@ test "distribution.bernoulli" {
 ///
 /// prob ∈ (0,1]
 pub fn geometric(q: f64, prob: f64) f64 {
-    assert(isFinite(prob));
     assert(0 < prob and prob <= 1);
     assert(!isNan(q));
     if (q < 0) {
@@ -137,7 +135,6 @@ test "distribution.poisson" {
 ///
 /// prob ∈ [0,1]
 pub fn binomial(q: f64, size: u64, prob: f64) f64 {
-    assert(isFinite(prob));
     assert(0 <= prob and prob <= 1);
     assert(!isNan(q));
     const fsize = @as(f64, @floatFromInt(size));
@@ -183,7 +180,6 @@ test "distribution.binomial" {
 ///
 /// prob ∈ (0,1]
 pub fn negativeBinomial(q: f64, size: u64, prob: f64) f64 {
-    assert(isFinite(prob));
     assert(0 < prob and prob <= 1);
     assert(!isNan(q));
     if (q < 0) {

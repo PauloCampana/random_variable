@@ -45,7 +45,6 @@ test "quantile.uniform" {
 ///
 /// prob ∈ [0,1]
 pub fn bernoulli(p: f64, prob: f64) f64 {
-    assert(isFinite(prob));
     assert(0 <= prob and prob <= 1);
     assert(0 <= p and p <= 1);
     return if (p > 1 - prob) 1 else 0;
@@ -63,7 +62,6 @@ test "quantile.bernoulli" {
 ///
 /// prob ∈ (0,1]
 pub fn geometric(p: f64, prob: f64) f64 {
-    assert(isFinite(prob));
     assert(0 < prob and prob <= 1);
     assert(0 <= p and p <= 1);
     if (p == 1) {
@@ -91,7 +89,7 @@ test "quantile.geometric" {
 /// lambda ∈ (0,∞)
 pub fn poisson(p: f64, lambda: f64) f64 {
     assert(isFinite(lambda));
-    assert(lambda >= 0);
+    assert(lambda > 0);
     assert(0 <= p and p <= 1);
     if (p == 1) {
         return inf;
@@ -123,7 +121,6 @@ test "quantile.poisson" {
 ///
 /// prob ∈ [0,1]
 pub fn binomial(p: f64, size: u64, prob: f64) f64 {
-    assert(isFinite(prob));
     assert(0 <= prob and prob <= 1);
     assert(0 <= p and p <= 1);
     const fsize = @as(f64, @floatFromInt(size));
@@ -170,7 +167,6 @@ test "quantile.binomial" {
 ///
 /// prob ∈ (0,1]
 pub fn negativeBinomial(p: f64, size: u64, prob: f64) f64 {
-    assert(isFinite(prob));
     assert(0 < prob and prob <= 1);
     assert(0 <= p and p <= 1);
     if (p == 0 or prob == 1 or size == 0) {
@@ -211,10 +207,10 @@ test "quantile.negativeBinomial" {
 ///
 /// rate ∈ (0,∞)
 pub fn exponential(p: f64, rate: f64) f64 {
-    assert(!isNan(rate));
+    assert(isFinite(rate));
     assert(rate >= 0);
     assert(0 <= p and p <= 1);
-    return -@log(1 - p) / rate;
+    return -std.math.log1p(-p) / rate;
 }
 
 test "quantile.exponential" {
@@ -233,7 +229,7 @@ pub fn weibull(p: f64, shape: f64, rate: f64) f64 {
     assert(isFinite(shape) and isFinite(rate));
     assert(shape > 0 and rate > 0);
     assert(0 <= p and p <= 1);
-    return std.math.pow(f64, -@log(1 - p), 1 / shape) / rate;
+    return std.math.pow(f64, -std.math.log1p(-p), 1 / shape) / rate;
 }
 
 test "quantile.weibull" {

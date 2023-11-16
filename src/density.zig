@@ -43,7 +43,6 @@ test "density.uniform" {
 ///
 /// prob ∈ [0,1]
 pub fn bernoulli(x: f64, prob: f64) f64 {
-    assert(isFinite(prob));
     assert(0 <= prob and prob <= 1);
     assert(!isNan(x));
     if (x == 0) {
@@ -71,7 +70,6 @@ test "density.bernoulli" {
 ///
 /// prob ∈ (0,1]
 pub fn geometric(x: f64, prob: f64) f64 {
-    assert(isFinite(prob));
     assert(0 < prob and prob <= 1);
     assert(!isNan(x));
     if (x < 0 or x != @round(x)) {
@@ -129,7 +127,6 @@ test "density.poisson" {
 ///
 /// prob ∈ [0,1]
 pub fn binomial(x: f64, size: u64, prob: f64) f64 {
-    assert(isFinite(prob));
     assert(0 <= prob and prob <= 1);
     assert(!isNan(x));
     const fsize = @as(f64, @floatFromInt(size));
@@ -144,7 +141,7 @@ pub fn binomial(x: f64, size: u64, prob: f64) f64 {
     }
     const diff = fsize - x;
     const binom = lnGamma(fsize + 1) - lnGamma(x + 1) - lnGamma(diff + 1);
-    const log = binom + x * @log(prob) + diff * @log(1 - prob);
+    const log = binom + x * @log(prob) + diff * std.math.log1p(-prob);
     return @exp(log);
 }
 
@@ -174,7 +171,6 @@ test "density.binomial" {
 ///
 /// prob ∈ (0,1]
 pub fn negativeBinomial(x: f64, size: u64, prob: f64) f64 {
-    assert(isFinite(prob));
     assert(0 < prob and prob <= 1);
     assert(!isNan(x));
     if (x < 0 or isInf(x) or x != @round(x)) {
@@ -185,7 +181,7 @@ pub fn negativeBinomial(x: f64, size: u64, prob: f64) f64 {
     }
     const fsize = @as(f64, @floatFromInt(size));
     const binom = lnGamma(fsize + x) - lnGamma(fsize) - lnGamma(x + 1);
-    const log = binom + fsize * @log(prob) + x * @log(1 - prob);
+    const log = binom + fsize * @log(prob) + x * std.math.log1p(-prob);
     return @exp(log);
 }
 
