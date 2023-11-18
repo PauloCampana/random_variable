@@ -167,16 +167,17 @@ test "density.binomial" {
 
 /// Probability mass function of Negative Binomial distribution
 ///
-/// size ∈ {0,1,2,⋯}
+/// size ∈ {1,2,3,⋯}
 ///
 /// prob ∈ (0,1]
 pub fn negativeBinomial(x: f64, size: u64, prob: f64) f64 {
     assert(0 < prob and prob <= 1);
+    assert(size != 0);
     assert(!isNan(x));
     if (x < 0 or isInf(x) or x != @round(x)) {
         return 0;
     }
-    if (prob == 1 or size == 0) {
+    if (prob == 1) {
         return if (x == 0) 1 else 0;
     }
     const fsize = @as(f64, @floatFromInt(size));
@@ -189,8 +190,6 @@ test "density.negativeBinomial" {
     try expectEqual(negativeBinomial(-inf, 10, 0.2), 0);
     try expectEqual(negativeBinomial( inf, 10, 0.2), 0);
 
-    try expectEqual(negativeBinomial( 0,  0, 0.2), 1);
-    try expectEqual(negativeBinomial( 1,  0, 0.2), 0);
     try expectEqual(negativeBinomial( 0, 10, 1  ), 1);
     try expectEqual(negativeBinomial( 1, 10, 1  ), 0);
 

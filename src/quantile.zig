@@ -163,13 +163,14 @@ test "quantile.binomial" {
 
 /// Quantile function of Negative Binomial distribution
 ///
-/// size ∈ {0,1,2,⋯}
+/// size ∈ {1,2,3,⋯}
 ///
 /// prob ∈ (0,1]
 pub fn negativeBinomial(p: f64, size: u64, prob: f64) f64 {
     assert(0 < prob and prob <= 1);
+    assert(size != 0);
     assert(0 <= p and p <= 1);
-    if (p == 0 or prob == 1 or size == 0) {
+    if (p == 0 or prob == 1) {
         return 0;
     }
     if (p == 1) {
@@ -186,9 +187,6 @@ pub fn negativeBinomial(p: f64, size: u64, prob: f64) f64 {
 }
 
 test "quantile.negativeBinomial" {
-    try expectEqual(negativeBinomial(0  , 0 , 0.2), 0);
-    try expectEqual(negativeBinomial(0.5, 0 , 0.2), 0);
-    try expectEqual(negativeBinomial(1  , 0 , 0.2), 0);
     try expectEqual(negativeBinomial(0  , 10, 1  ), 0);
     try expectEqual(negativeBinomial(0.5, 10, 1  ), 0);
     try expectEqual(negativeBinomial(1  , 10, 1  ), 0);

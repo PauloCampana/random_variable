@@ -176,16 +176,17 @@ test "distribution.binomial" {
 
 /// Cumulative distribution function of Negative Binomial distribution
 ///
-/// size ∈ {0,1,2,⋯}
+/// size ∈ {1,2,3,⋯}
 ///
 /// prob ∈ (0,1]
 pub fn negativeBinomial(q: f64, size: u64, prob: f64) f64 {
     assert(0 < prob and prob <= 1);
+    assert(size != 0);
     assert(!isNan(q));
     if (q < 0) {
         return 0;
     }
-    if (isInf(q) or size == 0 or prob == 1) {
+    if (isInf(q) or prob == 1) {
         return 1;
     }
     const fsize = @as(f64, @floatFromInt(size));
@@ -196,8 +197,6 @@ test "distribution.negativeBinomial" {
     try expectEqual(negativeBinomial(-inf, 10, 0.2), 0);
     try expectEqual(negativeBinomial( inf, 10, 0.2), 1);
 
-    try expectEqual(negativeBinomial( 0,  0, 0.2), 1);
-    try expectEqual(negativeBinomial( 1,  0, 0.2), 1);
     try expectEqual(negativeBinomial( 0, 10, 1  ), 1);
     try expectEqual(negativeBinomial( 1, 10, 1  ), 1);
 
