@@ -114,20 +114,18 @@
 <body>
 <pre><code><span class="line" id="L1"><span class="tok-comment">//! Statistical functions</span></span>
 <span class="line" id="L2"></span>
-<span class="line" id="L3"><span class="tok-kw">const</span> std = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;std&quot;</span>);</span>
-<span class="line" id="L4"></span>
-<span class="line" id="L5"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> random = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;random.zig&quot;</span>);</span>
-<span class="line" id="L6"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> density = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;density.zig&quot;</span>);</span>
-<span class="line" id="L7"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> distribution = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;distribution.zig&quot;</span>);</span>
-<span class="line" id="L8"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> quantile = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;quantile.zig&quot;</span>);</span>
+<span class="line" id="L3"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> random = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;random.zig&quot;</span>);</span>
+<span class="line" id="L4"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> density = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;density.zig&quot;</span>);</span>
+<span class="line" id="L5"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> distribution = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;distribution.zig&quot;</span>);</span>
+<span class="line" id="L6"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> quantile = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;quantile.zig&quot;</span>);</span>
+<span class="line" id="L7"></span>
+<span class="line" id="L8"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> descriptive = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;descriptive.zig&quot;</span>);</span>
 <span class="line" id="L9"></span>
-<span class="line" id="L10"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> descriptive = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;descriptive.zig&quot;</span>);</span>
+<span class="line" id="L10"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> hypotesis = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;hypotesis.zig&quot;</span>);</span>
 <span class="line" id="L11"></span>
-<span class="line" id="L12"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> hypotesis = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;hypotesis.zig&quot;</span>);</span>
-<span class="line" id="L13"></span>
-<span class="line" id="L14"><span class="tok-kw">test</span> {</span>
-<span class="line" id="L15">    std.testing.refAllDecls(<span class="tok-builtin">@This</span>());</span>
-<span class="line" id="L16">}</span>
-<span class="line" id="L17"></span>
+<span class="line" id="L12"><span class="tok-kw">test</span> {</span>
+<span class="line" id="L13">    <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;std&quot;</span>).testing.refAllDecls(<span class="tok-builtin">@This</span>());</span>
+<span class="line" id="L14">}</span>
+<span class="line" id="L15"></span>
 </code></pre></body>
 </html>
