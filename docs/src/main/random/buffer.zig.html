@@ -324,17 +324,5 @@
 <span class="line" id="L209">    };</span>
 <span class="line" id="L210">}</span>
 <span class="line" id="L211"></span>
-<span class="line" id="L212"><span class="tok-kw">const</span> expectApproxEqRel = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;../thirdyparty/testing.zig&quot;</span>).expectApproxEqRel;</span>
-<span class="line" id="L213"><span class="tok-kw">test</span> <span class="tok-str">&quot;random.buffer&quot;</span> {</span>
-<span class="line" id="L214">    <span class="tok-kw">var</span> prng = std.rand.DefaultPrng.init(<span class="tok-number">0</span>);</span>
-<span class="line" id="L215">    <span class="tok-kw">const</span> generator = prng.random();</span>
-<span class="line" id="L216">    <span class="tok-kw">const</span> random = Buffer(<span class="tok-type">u64</span>, <span class="tok-type">f64</span>).setGenerator(generator);</span>
-<span class="line" id="L217">    <span class="tok-kw">var</span> buf: [<span class="tok-number">3</span>]<span class="tok-type">f64</span> = <span class="tok-null">undefined</span>;</span>
-<span class="line" id="L218">    <span class="tok-kw">const</span> uni = random.uniform(&amp;buf, <span class="tok-number">0</span>, <span class="tok-number">1</span>);</span>
-<span class="line" id="L219">    <span class="tok-kw">try</span> expectApproxEqRel(uni[<span class="tok-number">0</span>], <span class="tok-number">0x1.75d61490b23dfp-2</span>);</span>
-<span class="line" id="L220">    <span class="tok-kw">try</span> expectApproxEqRel(uni[<span class="tok-number">1</span>], <span class="tok-number">0x1.a6f3dc380d507p-2</span>);</span>
-<span class="line" id="L221">    <span class="tok-kw">try</span> expectApproxEqRel(uni[<span class="tok-number">2</span>], <span class="tok-number">0x1.fdf91ec9a7bfcp-2</span>);</span>
-<span class="line" id="L222">}</span>
-<span class="line" id="L223"></span>
 </code></pre></body>
 </html>

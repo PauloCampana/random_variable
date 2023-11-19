@@ -123,5 +123,45 @@
 <span class="line" id="L9"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> Buffer = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;random/buffer.zig&quot;</span>).Buffer;</span>
 <span class="line" id="L10"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> Alloc = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;random/alloc.zig&quot;</span>).Alloc;</span>
 <span class="line" id="L11"></span>
+<span class="line" id="L12"><span class="tok-kw">const</span> std = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;std&quot;</span>);</span>
+<span class="line" id="L13"></span>
+<span class="line" id="L14"><span class="tok-kw">test</span> Single {</span>
+<span class="line" id="L15">    <span class="tok-kw">var</span> prng = std.rand.DefaultPrng.init(<span class="tok-number">0</span>);</span>
+<span class="line" id="L16">    <span class="tok-kw">const</span> generator = prng.random();</span>
+<span class="line" id="L17"></span>
+<span class="line" id="L18">    <span class="tok-kw">const</span> random = Single(<span class="tok-type">u64</span>, <span class="tok-type">f64</span>)</span>
+<span class="line" id="L19">        .setGenerator(generator);</span>
+<span class="line" id="L20"></span>
+<span class="line" id="L21">    <span class="tok-kw">const</span> nor = random.normal(<span class="tok-number">0</span>, <span class="tok-number">1</span>);</span>
+<span class="line" id="L22">    _ = nor;</span>
+<span class="line" id="L23">}</span>
+<span class="line" id="L24"></span>
+<span class="line" id="L25"><span class="tok-kw">test</span> Buffer {</span>
+<span class="line" id="L26">    <span class="tok-kw">var</span> prng = std.rand.DefaultPrng.init(<span class="tok-number">0</span>);</span>
+<span class="line" id="L27">    <span class="tok-kw">const</span> generator = prng.random();</span>
+<span class="line" id="L28"></span>
+<span class="line" id="L29">    <span class="tok-kw">const</span> random = Buffer(<span class="tok-type">u64</span>, <span class="tok-type">f64</span>)</span>
+<span class="line" id="L30">        .setGenerator(generator);</span>
+<span class="line" id="L31"></span>
+<span class="line" id="L32">    <span class="tok-kw">var</span> buf: [<span class="tok-number">100</span>]<span class="tok-type">f64</span> = <span class="tok-null">undefined</span>;</span>
+<span class="line" id="L33">    <span class="tok-kw">const</span> gam = random.gamma(&amp;buf, <span class="tok-number">3</span>, <span class="tok-number">5</span>);</span>
+<span class="line" id="L34">    _ = gam;</span>
+<span class="line" id="L35">}</span>
+<span class="line" id="L36"></span>
+<span class="line" id="L37"><span class="tok-kw">test</span> Alloc {</span>
+<span class="line" id="L38">    <span class="tok-kw">var</span> prng = std.rand.DefaultPrng.init(<span class="tok-number">0</span>);</span>
+<span class="line" id="L39">    <span class="tok-kw">const</span> generator = prng.random();</span>
+<span class="line" id="L40"></span>
+<span class="line" id="L41">    <span class="tok-kw">var</span> gpa = std.heap.GeneralPurposeAllocator(.{}) {};</span>
+<span class="line" id="L42">    <span class="tok-kw">const</span> allocator = gpa.allocator();</span>
+<span class="line" id="L43">    <span class="tok-kw">defer</span> _ = gpa.deinit();</span>
+<span class="line" id="L44"></span>
+<span class="line" id="L45">    <span class="tok-kw">const</span> random = Alloc(<span class="tok-type">u64</span>, <span class="tok-type">f64</span>)</span>
+<span class="line" id="L46">        .setGeneratorAllocator(generator, allocator);</span>
+<span class="line" id="L47"></span>
+<span class="line" id="L48">    <span class="tok-kw">const</span> bin = <span class="tok-kw">try</span> random.binomial(<span class="tok-number">100</span>, <span class="tok-number">10</span>, <span class="tok-number">0.2</span>);</span>
+<span class="line" id="L49">    <span class="tok-kw">defer</span> allocator.free(bin);</span>
+<span class="line" id="L50">}</span>
+<span class="line" id="L51"></span>
 </code></pre></body>
 </html>

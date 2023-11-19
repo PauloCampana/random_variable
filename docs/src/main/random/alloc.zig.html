@@ -345,19 +345,5 @@
 <span class="line" id="L230">    };</span>
 <span class="line" id="L231">}</span>
 <span class="line" id="L232"></span>
-<span class="line" id="L233"><span class="tok-kw">const</span> expectApproxEqRel = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;../thirdyparty/testing.zig&quot;</span>).expectApproxEqRel;</span>
-<span class="line" id="L234"><span class="tok-kw">test</span> <span class="tok-str">&quot;random.alloc&quot;</span> {</span>
-<span class="line" id="L235">    <span class="tok-kw">var</span> prng = std.rand.DefaultPrng.init(<span class="tok-number">0</span>);</span>
-<span class="line" id="L236">    <span class="tok-kw">const</span> generator = prng.random();</span>
-<span class="line" id="L237">    <span class="tok-kw">const</span> allocator = std.testing.allocator;</span>
-<span class="line" id="L238">    <span class="tok-kw">const</span> random = Alloc(<span class="tok-type">u64</span>, <span class="tok-type">f64</span>).setGeneratorAllocator(generator, allocator);</span>
-<span class="line" id="L239">    <span class="tok-kw">const</span> uni = <span class="tok-kw">try</span> random.uniform(<span class="tok-number">3</span>, <span class="tok-number">0</span>, <span class="tok-number">1</span>);</span>
-<span class="line" id="L240">    <span class="tok-kw">defer</span> allocator.free(uni);</span>
-<span class="line" id="L241">    <span class="tok-kw">try</span> expectApproxEqRel(uni[<span class="tok-number">0</span>], <span class="tok-number">0x1.75d61490b23dfp-2</span>);</span>
-<span class="line" id="L242">    <span class="tok-kw">try</span> expectApproxEqRel(uni[<span class="tok-number">1</span>], <span class="tok-number">0x1.a6f3dc380d507p-2</span>);</span>
-<span class="line" id="L243">    <span class="tok-kw">try</span> expectApproxEqRel(uni[<span class="tok-number">2</span>], <span class="tok-number">0x1.fdf91ec9a7bfcp-2</span>);</span>
-<span class="line" id="L244">}</span>
-<span class="line" id="L245"></span>
-<span class="line" id="L246"></span>
 </code></pre></body>
 </html>

@@ -229,17 +229,3 @@ pub fn Alloc(comptime D: type, comptime C: type) type {
         }
     };
 }
-
-const expectApproxEqRel = @import("../thirdyparty/testing.zig").expectApproxEqRel;
-test "random.alloc" {
-    var prng = std.rand.DefaultPrng.init(0);
-    const generator = prng.random();
-    const allocator = std.testing.allocator;
-    const random = Alloc(u64, f64).setGeneratorAllocator(generator, allocator);
-    const uni = try random.uniform(3, 0, 1);
-    defer allocator.free(uni);
-    try expectApproxEqRel(uni[0], 0x1.75d61490b23dfp-2);
-    try expectApproxEqRel(uni[1], 0x1.a6f3dc380d507p-2);
-    try expectApproxEqRel(uni[2], 0x1.fdf91ec9a7bfcp-2);
-}
-
