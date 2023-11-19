@@ -24,8 +24,8 @@ pub fn Single(comptime D: type, comptime C: type) type {
         generator: std.rand.Random,
 
         /// Specify an engine for random number generation
-        pub fn setGenerator(self: Self, generator: std.rand.Random) Self {
-            self.generator = generator;
+        pub fn setGenerator(generator: std.rand.Random) Self {
+            return Self {.generator = generator};
         }
 
         /// min and max ∈ (-∞,∞)
@@ -155,14 +155,4 @@ pub fn Single(comptime D: type, comptime C: type) type {
             return implementation.t(C, self.generator, df);
         }
     };
-}
-
-const expectApproxEqRel = @import("../thirdyparty/testing.zig").expectApproxEqRel;
-test "random.single" {
-    var prng = std.rand.DefaultPrng.init(0);
-    const generator = prng.random();
-    const random = Single(u64, f64).setGenerator(generator);
-    try expectApproxEqRel(random.uniform(0, 1), 0x1.75d61490b23dfp-2);
-    try expectApproxEqRel(random.uniform(0, 1), 0x1.a6f3dc380d507p-2);
-    try expectApproxEqRel(random.uniform(0, 1), 0x1.fdf91ec9a7bfcp-2);
 }

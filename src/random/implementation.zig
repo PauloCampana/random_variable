@@ -69,43 +69,56 @@ test "random.poisson" {
 }
 
 pub fn binomial(comptime D: type, comptime C: type, generator: std.rand.Random, size: usize, prob: C) D {
-    var bin: D = 0;
-    for (0..size) |_| {
-        const uni = generator.float(C);
-        const ber = @intFromBool(uni < prob);
-        bin += std.math.lossyCast(D, ber);
+    if (prob == 1) {
+        return std.math.lossyCast(D, size);
     }
-    return bin;
+    const uni = generator.float(C);
+    const n = @as(C, @floatFromInt(size));
+    const np1 = n + 1;
+    const q = 1 - prob;
+    const pq = prob / q;
+    var p = std.math.pow(C, q, n);
+    var f = p;
+    var bin: C = 1;
+    while (uni >= f) : (bin += 1) {
+        p *= pq * (np1 - bin) / bin;
+        f += p;
+    }
+    return std.math.lossyCast(D, bin - 1);
 }
 
 test "random.binomial" {
     var prng = std.rand.DefaultPrng.init(0);
     const gen = prng.random();
-    try expectEqual(binomial(u64, f64, gen, 10, 0.2), 3 );
-    try expectEqual(binomial(u64, f64, gen, 10, 0.2), 5 );
-    try expectEqual(binomial(u64, f64, gen, 10, 0.2), 3 );
+    try expectEqual(binomial(u64, f64, gen, 10, 0.2), 1 );
+    try expectEqual(binomial(u64, f64, gen, 10, 0.2), 2 );
+    try expectEqual(binomial(u64, f64, gen, 10, 0.2), 2 );
     try expectEqual(binomial(u64, f64, gen, 0 , 0.2), 0 );
     try expectEqual(binomial(u64, f64, gen, 10, 0  ), 0 );
     try expectEqual(binomial(u64, f64, gen, 10, 1  ), 10);
 }
 
 pub fn negativeBinomial(comptime D: type, comptime C: type, generator: std.rand.Random, size: usize, prob: C) D {
-    const rate = -std.math.log1p(-prob);
-    var nbi: D = 0;
-    for (0..size) |_| {
-        const exp = generator.floatExp(C);
-        const geo = @trunc(exp / rate);
-        nbi += std.math.lossyCast(D, geo);
+    const uni = generator.float(C);
+    const n = @as(C, @floatFromInt(size));
+    const nm1 = n - 1;
+    const q = 1 - prob;
+    var p = std.math.pow(C, prob, n);
+    var f = p;
+    var nbi: C = 1;
+    while (uni >= f) : (nbi += 1) {
+        p *= q * (nm1 + nbi) / nbi;
+        f += p;
     }
-    return nbi;
+    return std.math.lossyCast(D, nbi - 1);
 }
 
 test "random.negativeBinomial" {
     var prng = std.rand.DefaultPrng.init(0);
     const gen = prng.random();
-    try expectEqual(negativeBinomial(u64, f64, gen, 10, 0.2), 27);
-    try expectEqual(negativeBinomial(u64, f64, gen, 10, 0.2), 7 );
-    try expectEqual(negativeBinomial(u64, f64, gen, 10, 0.2), 28);
+    try expectEqual(negativeBinomial(u64, f64, gen, 10, 0.2), 34);
+    try expectEqual(negativeBinomial(u64, f64, gen, 10, 0.2), 36);
+    try expectEqual(negativeBinomial(u64, f64, gen, 10, 0.2), 38);
     try expectEqual(negativeBinomial(u64, f64, gen, 10, 1  ), 0 );
 }
 
@@ -144,9 +157,6 @@ pub fn cauchy(comptime C: type, generator: std.rand.Random, location: C, scale: 
 test "random.cauchy" {
     var prng = std.rand.DefaultPrng.init(0);
     const gen = prng.random();
-    // std.debug.print("{x}\n", .{cauchy(f64, gen, 0, 1)});
-    // std.debug.print("{x}\n", .{cauchy(f64, gen, 0, 1)});
-    // std.debug.print("{x}\n", .{cauchy(f64, gen, 0, 1)});
     try expectApproxEqRel(cauchy(f64, gen, 0, 1), 0x1.1baa5d88fd11ap+1);
     try expectApproxEqRel(cauchy(f64, gen, 0, 1), 0x1.c8d1141faf950p+1);
     try expectApproxEqRel(cauchy(f64, gen, 0, 1), 0x1.419f9beb83432p+7);
