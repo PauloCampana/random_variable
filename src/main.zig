@@ -6,8 +6,9 @@ pub const distribution = @import("distribution.zig");
 pub const quantile = @import("quantile.zig");
 
 pub const descriptive = @import("descriptive.zig");
-
 pub const hypotesis = @import("hypotesis.zig");
+
+pub const matrix = @import("matrix.zig");
 
 const std = @import("std");
 test {

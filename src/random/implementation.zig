@@ -50,12 +50,12 @@ test "random.geometric" {
 
 pub fn poisson(comptime D: type, comptime C: type, generator: std.rand.Random, lambda: C) D {
     const uni = generator.float(C);
-    var p = @exp(-lambda);
-    var f = p;
+    var mass = @exp(-lambda);
+    var cumu = mass;
     var poi: C = 1;
-    while (uni >= f) : (poi += 1) {
-        p *= lambda / poi;
-        f += p;
+    while (uni >= cumu) : (poi += 1) {
+        mass *= lambda / poi;
+        cumu += mass;
     }
     return std.math.lossyCast(D, poi - 1);
 }
@@ -75,14 +75,14 @@ pub fn binomial(comptime D: type, comptime C: type, generator: std.rand.Random, 
     const uni = generator.float(C);
     const n = @as(C, @floatFromInt(size));
     const np1 = n + 1;
-    const q = 1 - prob;
-    const pq = prob / q;
-    var p = std.math.pow(C, q, n);
-    var f = p;
+    const qrob = 1 - prob;
+    const pq = prob / qrob;
+    var mass = std.math.pow(C, qrob, n);
+    var cumu = mass;
     var bin: C = 1;
-    while (uni >= f) : (bin += 1) {
-        p *= pq * (np1 - bin) / bin;
-        f += p;
+    while (uni >= cumu) : (bin += 1) {
+        mass *= pq * (np1 - bin) / bin;
+        cumu += mass;
     }
     return std.math.lossyCast(D, bin - 1);
 }
@@ -102,13 +102,13 @@ pub fn negativeBinomial(comptime D: type, comptime C: type, generator: std.rand.
     const uni = generator.float(C);
     const n = @as(C, @floatFromInt(size));
     const nm1 = n - 1;
-    const q = 1 - prob;
-    var p = std.math.pow(C, prob, n);
-    var f = p;
+    const qrob = 1 - prob;
+    var mass = std.math.pow(C, prob, n);
+    var cumu = mass;
     var nbi: C = 1;
-    while (uni >= f) : (nbi += 1) {
-        p *= q * (nm1 + nbi) / nbi;
-        f += p;
+    while (uni >= cumu) : (nbi += 1) {
+        mass *= qrob * (nm1 + nbi) / nbi;
+        cumu += mass;
     }
     return std.math.lossyCast(D, nbi - 1);
 }

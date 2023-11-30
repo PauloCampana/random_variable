@@ -30,7 +30,7 @@ pub fn build(b: *std.Build) !void {
     });
     const docs_cmd = b.addInstallDirectory(.{
         .source_dir = docs_tests.getEmittedDocs(),
-        .install_dir = std.Build.InstallDir {.custom = ".."},
+        .install_dir = .{.custom = ".."},
         .install_subdir = "docs",
     });
     const docs_step = b.step("docs", "Generate documentation");
