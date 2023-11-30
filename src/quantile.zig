@@ -94,14 +94,14 @@ pub fn poisson(p: f64, lambda: f64) f64 {
     if (p == 1) {
         return inf;
     }
-    var q: f64 = 0;
-    var sum: f64 = 0;
-    while (true) : (q += 1) {
-        sum += density.poisson(q, lambda);
-        if (sum >= p) {
-            return q;
-        }
+    var mass = @exp(-lambda);
+    var cumu = mass;
+    var poi: f64 = 1;
+    while (p >= cumu) : (poi += 1) {
+        mass *= lambda / poi;
+        cumu += mass;
     }
+    return poi - 1;
 }
 
 test "quantile.poisson" {
@@ -111,7 +111,7 @@ test "quantile.poisson" {
     try expectApproxEqRel(poisson(0.0497870683678640, 3), 1  );
     try expectApproxEqRel(poisson(0.1991482734714556, 3), 1  );
     try expectApproxEqRel(poisson(0.1991482734714557, 3), 1  );
-    try expectApproxEqRel(poisson(0.1991482734714559, 3), 2  );
+    try expectApproxEqRel(poisson(0.1991482734714558, 3), 2  );
     try expectEqual      (poisson(1                 , 3), inf);
 }
 
@@ -130,14 +130,18 @@ pub fn binomial(p: f64, size: u64, prob: f64) f64 {
     if (p == 1 or prob == 1) {
         return fsize;
     }
-    var q: f64 = 0;
-    var sum: f64 = 0;
-    while (true) : (q += 1) {
-        sum += density.binomial(q, size, prob);
-        if (sum >= p) {
-            return q;
-        }
+    const n = @as(f64, @floatFromInt(size));
+    const np1 = n + 1;
+    const qrob = 1 - prob;
+    const pq = prob / qrob;
+    var mass = std.math.pow(f64, qrob, n);
+    var cumu = mass;
+    var bin: f64 = 1;
+    while (p >= cumu) : (bin += 1) {
+        mass *= pq * (np1 - bin) / bin;
+        cumu += mass;
     }
+    return bin - 1;
 }
 
 test "quantile.binomial" {
@@ -176,14 +180,17 @@ pub fn negativeBinomial(p: f64, size: u64, prob: f64) f64 {
     if (p == 1) {
         return inf;
     }
-    var q: f64 = 0;
-    var sum: f64 = 0;
-    while (true) : (q += 1) {
-        sum += density.negativeBinomial(q, size, prob);
-        if (sum >= p) {
-            return q;
-        }
+    const n = @as(f64, @floatFromInt(size));
+    const nm1 = n - 1;
+    const qrob = 1 - prob;
+    var mass = std.math.pow(f64, prob, n);
+    var cumu = mass;
+    var nbi: f64 = 1;
+    while (p >= cumu) : (nbi += 1) {
+        mass *= qrob * (nm1 + nbi) / nbi;
+        cumu += mass;
     }
+    return nbi - 1;
 }
 
 test "quantile.negativeBinomial" {
