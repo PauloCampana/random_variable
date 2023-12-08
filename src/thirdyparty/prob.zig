@@ -17,14 +17,6 @@ pub const inverseNormalDist = @import("prob/normal_dist.zig").inverseNormalDist;
 pub const erfc = @import("prob/normal_dist.zig").erfc;
 pub const erf = @import("prob/normal_dist.zig").erf;
 
-pub const besselj0 = @import("prob/besselj0.zig").besselj0;
-pub const bessely0 = @import("prob/besselj0.zig").bessely0;
-pub const besselj1 = @import("prob/besselj1.zig").besselj1;
-pub const bessely1 = @import("prob/besselj1.zig").bessely1;
-pub const besselj = @import("prob/besseljn.zig").besselj;
-
-pub const airy = @import("prob/airy.zig").airy;
-
 pub const incompleteGamma = @import("prob/incomplete_gamma.zig").incompleteGamma;
 pub const complementedIncompleteGamma = @import("prob/incomplete_gamma.zig").complementedIncompleteGamma;
 pub const inverseComplementedIncompleteGamma = @import("prob/incomplete_gamma.zig").inverseComplementedIncompleteGamma;
@@ -42,12 +34,8 @@ test "math.prob" {
     _ = @import("prob/expx2.zig");
     _ = @import("prob/polevl.zig");
 
-    _ = @import("prob/airy.zig");
     _ = @import("prob/gamma.zig");
     _ = @import("prob/incomplete_gamma.zig");
     _ = @import("prob/incomplete_beta.zig");
-    _ = @import("prob/besselj0.zig");
-    _ = @import("prob/besselj1.zig");
-    _ = @import("prob/besseljn.zig");
     _ = @import("prob/normal_dist.zig");
 }

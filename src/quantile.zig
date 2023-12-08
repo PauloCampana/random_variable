@@ -215,7 +215,8 @@ pub fn exponential(p: f64, rate: f64) f64 {
     assert(isFinite(rate));
     assert(rate >= 0);
     assert(0 <= p and p <= 1);
-    return -std.math.log1p(-p) / rate;
+    const q = -std.math.log1p(-p);
+    return q / rate;
 }
 
 test "quantile.exponential" {
@@ -234,7 +235,9 @@ pub fn weibull(p: f64, shape: f64, rate: f64) f64 {
     assert(isFinite(shape) and isFinite(rate));
     assert(shape > 0 and rate > 0);
     assert(0 <= p and p <= 1);
-    return std.math.pow(f64, -std.math.log1p(-p), 1 / shape) / rate;
+    const q1 = -std.math.log1p(-p);
+    const q2 = std.math.pow(f64, q1, 1 / shape);
+    return q2 / rate;
 }
 
 test "quantile.weibull" {
@@ -261,7 +264,8 @@ pub fn cauchy(p: f64, location: f64, scale: f64) f64 {
     if (p == 1) {
         return inf;
     }
-    return location + scale * @tan(std.math.pi * (p - 0.5));
+    const q = @tan(std.math.pi * (p - 0.5));
+    return location + scale * q;
 }
 
 test "quantile.cauchy" {
@@ -282,7 +286,8 @@ pub fn logistic(p: f64, location: f64, scale: f64) f64 {
     assert(isFinite(location) and isFinite(scale));
     assert(scale > 0);
     assert(0 <= p and p <= 1);
-    return location + scale * @log(p / (1 - p));
+    const q = @log(p / (1 - p));
+    return location + scale * q;
 }
 
 test "quantile.logistic" {
@@ -344,7 +349,7 @@ pub fn F(p: f64, df1: f64, df2: f64) f64 {
     assert(df1 > 0 and df2 > 0);
     assert(0 <= p and p <= 1);
     const q = stdprob.inverseIncompleteBeta(0.5 * df2, 0.5 * df1, 1 - p);
-    return df2 / df1 * (1 / q - 1);
+    return (df2 / q - df2) / df1;
 }
 
 test "quantile.F" {
@@ -384,7 +389,8 @@ pub fn normal(p: f64, mean: f64, sd: f64) f64 {
     assert(isFinite(mean) and isFinite(sd));
     assert(sd > 0);
     assert(0 <= p and p <= 1);
-    return mean + sd * stdprob.inverseNormalDist(p);
+    const q = stdprob.inverseNormalDist(p);
+    return mean + sd * q;
 }
 
 test "quantile.normal" {

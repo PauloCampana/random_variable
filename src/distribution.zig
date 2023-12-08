@@ -218,7 +218,8 @@ pub fn exponential(q: f64, rate: f64) f64 {
     if (q <= 0) {
         return 0;
     }
-    return -std.math.expm1(-rate * q);
+    const z = rate * q;
+    return -std.math.expm1(-z);
 }
 
 test "distribution.exponential" {
@@ -240,7 +241,9 @@ pub fn weibull(q: f64, shape: f64, rate: f64) f64 {
     if (q <= 0) {
         return 0;
     }
-    return -std.math.expm1(-std.math.pow(f64, rate * q, shape));
+    const z = rate * q;
+    const za = std.math.pow(f64, z, shape);
+    return -std.math.expm1(-za);
 }
 
 test "distribution.weibull" {
@@ -442,11 +445,11 @@ pub fn t(q: f64, df: f64) f64 {
     assert(isFinite(df));
     assert(df > 0);
     assert(!isNan(q));
-    if (std.math.isPositiveInf(q)) {
-        return 1;
+    if (std.math.isInf(q)) {
+        return if (q < 0) 0 else 1;
     }
     const z = q * q;
-    if (q <= 0) {
+    if (q < 0) {
         const p = df / (df + z);
         return 0.5 * stdprob.incompleteBeta(0.5 * df, 0.5, p);
     } else {

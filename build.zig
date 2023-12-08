@@ -5,7 +5,7 @@ pub fn build(b: *std.Build) !void {
     const optimize = b.standardOptimizeOption(.{});
 
     const lib = b.addStaticLibrary(.{
-        .name = "RandomVariable",
+        .name = "random_variable",
         .root_source_file = .{.path = "src/main.zig"},
         .target = target,
         .optimize = optimize,

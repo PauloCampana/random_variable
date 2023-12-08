@@ -37,7 +37,7 @@ pub fn Alloc(comptime D: type, comptime C: type) type {
         /// min and max ∈ (-∞,∞)
         pub fn uniform(self: Self, n: usize, min: C, max: C) ![]C {
             assert(isFinite(min) and isFinite(max));
-            var slice = try self.allocator.alloc(C, n);
+            const slice = try self.allocator.alloc(C, n);
             for (slice) |*x| {
                 x.* = implementation.uniform(C, self.generator, min, max);
             }
@@ -47,7 +47,7 @@ pub fn Alloc(comptime D: type, comptime C: type) type {
         /// prob ∈ [0,1]
         pub fn bernoulli(self: Self, n: usize, prob: C) ![]D {
             assert(0 <= prob and prob <= 1);
-            var slice = try self.allocator.alloc(D, n);
+            const slice = try self.allocator.alloc(D, n);
             for (slice) |*x| {
                 x.* = implementation.bernoulli(D, C, self.generator, prob);
             }
@@ -57,7 +57,7 @@ pub fn Alloc(comptime D: type, comptime C: type) type {
         /// prob ∈ (0,1]
         pub fn geometric(self: Self, n: usize, prob: C) ![]D {
             assert(0 < prob and prob <= 1);
-            var slice = try self.allocator.alloc(D, n);
+            const slice = try self.allocator.alloc(D, n);
             for (slice) |*x| {
                 x.* = implementation.geometric(D, C, self.generator, prob);
             }
@@ -67,7 +67,7 @@ pub fn Alloc(comptime D: type, comptime C: type) type {
         /// lambda ∈ (0,∞)
         pub fn poisson(self: Self, n: usize, lambda: C) ![]D {
             assert(isFinite(lambda));
-            var slice = try self.allocator.alloc(D, n);
+            const slice = try self.allocator.alloc(D, n);
             for (slice) |*x| {
                 x.* = implementation.poisson(D, C, self.generator, lambda);
             }
@@ -79,7 +79,7 @@ pub fn Alloc(comptime D: type, comptime C: type) type {
         /// prob ∈ [0,1]
         pub fn binomial(self: Self, n: usize, size: usize, prob: C) ![]D {
             assert(0 <= prob and prob <= 1);
-            var slice = try self.allocator.alloc(D, n);
+            const slice = try self.allocator.alloc(D, n);
             for (slice) |*x| {
                 x.* =  implementation.binomial(D, C, self.generator, size, prob);
             }
@@ -92,7 +92,7 @@ pub fn Alloc(comptime D: type, comptime C: type) type {
         pub fn negativeBinomial(self: Self, n: usize, size: usize, prob: C) ![]D {
             assert(0 < prob and prob <= 1);
             assert(size != 0);
-            var slice = try self.allocator.alloc(D, n);
+            const slice = try self.allocator.alloc(D, n);
             for (slice) |*x| {
                 x.* = implementation.negativeBinomial(D, C, self.generator, size, prob);
             }
@@ -103,7 +103,7 @@ pub fn Alloc(comptime D: type, comptime C: type) type {
         pub fn exponential(self: Self, n: usize, rate: C) ![]C {
             assert(isFinite(rate));
             assert(rate > 0);
-            var slice = try self.allocator.alloc(C, n);
+            const slice = try self.allocator.alloc(C, n);
             for (slice) |*x| {
                 x.* = implementation.exponential(C, self.generator, rate);
             }
@@ -114,7 +114,7 @@ pub fn Alloc(comptime D: type, comptime C: type) type {
         pub fn weibull(self: Self, n: usize, shape: C, rate: C) ![]C {
             assert(isFinite(shape) and isFinite(rate));
             assert(shape > 0 and rate > 0);
-            var slice = try self.allocator.alloc(C, n);
+            const slice = try self.allocator.alloc(C, n);
             for (slice) |*x| {
                 x.* = implementation.weibull(C, self.generator, shape, rate);
             }
@@ -127,7 +127,7 @@ pub fn Alloc(comptime D: type, comptime C: type) type {
         pub fn cauchy(self: Self, n: usize, location: C, scale: C) ![]C {
             assert(isFinite(location) and isFinite(scale));
             assert(scale > 0);
-            var slice = try self.allocator.alloc(C, n);
+            const slice = try self.allocator.alloc(C, n);
             for (slice) |*x| {
                 x.* = implementation.cauchy(C, self.generator, location, scale);
             }
@@ -140,7 +140,7 @@ pub fn Alloc(comptime D: type, comptime C: type) type {
         pub fn logistic(self: Self, n: usize, location: C, scale: C) ![]C {
             assert(isFinite(location) and isFinite(scale));
             assert(scale > 0);
-            var slice = try self.allocator.alloc(C, n);
+            const slice = try self.allocator.alloc(C, n);
             for (slice) |*x| {
                 x.* = implementation.logistic(C, self.generator, location, scale);
             }
@@ -151,7 +151,7 @@ pub fn Alloc(comptime D: type, comptime C: type) type {
         pub fn gamma(self: Self, n: usize, shape: C, rate: C) ![]C {
             assert(isFinite(shape) and isFinite(rate));
             assert(shape > 0 and rate > 0);
-            var slice = try self.allocator.alloc(C, n);
+            const slice = try self.allocator.alloc(C, n);
             for (slice) |*x| {
                 x.* = implementation.gamma(C, self.generator, shape, rate);
             }
@@ -162,7 +162,7 @@ pub fn Alloc(comptime D: type, comptime C: type) type {
         pub fn chiSquared(self: Self, n: usize, df: C) ![]C {
             assert(isFinite(df));
             assert(df > 0);
-            var slice = try self.allocator.alloc(C, n);
+            const slice = try self.allocator.alloc(C, n);
             for (slice) |*x| {
                 x.* = implementation.chiSquared(C, self.generator, df);
             }
@@ -173,7 +173,7 @@ pub fn Alloc(comptime D: type, comptime C: type) type {
         pub fn F(self: Self, n: usize, df1: C, df2: C) ![]C {
             assert(isFinite(df1) and isFinite(df2));
             assert(df1 > 0 and df2 > 0);
-            var slice = try self.allocator.alloc(C, n);
+            const slice = try self.allocator.alloc(C, n);
             for (slice) |*x| {
                 x.* = implementation.F(C, self.generator, df1, df2);
             }
@@ -184,7 +184,7 @@ pub fn Alloc(comptime D: type, comptime C: type) type {
         pub fn beta(self: Self, n: usize, shape1: C, shape2: C) ![]C {
             assert(isFinite(shape1) and isFinite(shape2));
             assert(shape1 > 0 and shape2 > 0);
-            var slice = try self.allocator.alloc(C, n);
+            const slice = try self.allocator.alloc(C, n);
             for (slice) |*x| {
                 x.* = implementation.beta(C, self.generator, shape1, shape2);
             }
@@ -197,7 +197,7 @@ pub fn Alloc(comptime D: type, comptime C: type) type {
         pub fn normal(self: Self, n: usize, mean: C, sd: C) ![]C {
             assert(isFinite(mean) and isFinite(sd));
             assert(sd > 0);
-            var slice = try self.allocator.alloc(C, n);
+            const slice = try self.allocator.alloc(C, n);
             for (slice) |*x| {
                 x.* = implementation.normal(C, self.generator, mean, sd);
             }
@@ -210,7 +210,7 @@ pub fn Alloc(comptime D: type, comptime C: type) type {
         pub fn logNormal(self: Self, n: usize, meanlog: C, sdlog: C) ![]C {
             assert(isFinite(meanlog) and isFinite(sdlog));
             assert(sdlog > 0);
-            var slice = try self.allocator.alloc(C, n);
+            const slice = try self.allocator.alloc(C, n);
             for (slice) |*x| {
                 x.* = implementation.logNormal(C, self.generator, meanlog, sdlog);
             }
@@ -221,7 +221,7 @@ pub fn Alloc(comptime D: type, comptime C: type) type {
         pub fn t(self: Self, n: usize, df: C) ![]C {
             assert(isFinite(df));
             assert(df > 0);
-            var slice = try self.allocator.alloc(C, n);
+            const slice = try self.allocator.alloc(C, n);
             for (slice) |*x| {
                 x.* = implementation.t(C, self.generator, df);
             }

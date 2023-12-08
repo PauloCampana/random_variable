@@ -8,7 +8,7 @@ pub const quantile = @import("quantile.zig");
 pub const descriptive = @import("descriptive.zig");
 pub const hypotesis = @import("hypotesis.zig");
 
-pub const matrix = @import("matrix.zig");
+pub const Matrix = @import("Matrix.zig");
 
 const std = @import("std");
 test {
