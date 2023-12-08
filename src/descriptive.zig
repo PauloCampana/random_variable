@@ -140,8 +140,8 @@ pub fn correlation(slice1: []f64, slice2: []f64) f64 {
 }
 
 fn rank(allocator: std.mem.Allocator, slice: []f64) ![]f64 {
-    var ranked = try allocator.dupe(f64, slice);
-    var sorted = try allocator.dupe(f64, slice);
+    const ranked = try allocator.dupe(f64, slice);
+    const sorted = try allocator.dupe(f64, slice);
     defer allocator.free(sorted);
     std.mem.sortUnstable(f64, sorted, {}, std.sort.asc(f64));
     const original = slice;

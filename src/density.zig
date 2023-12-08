@@ -230,11 +230,14 @@ pub fn weibull(x: f64, shape: f64, rate: f64) f64 {
     assert(isFinite(shape) and isFinite(rate));
     assert(shape > 0 and rate > 0);
     assert(!isNan(x));
-    if (x == 0) {
-        return if (shape < 1) inf else 0;
-    }
     if (x < 0 or isInf(x)) {
         return 0;
+    }
+    if (x == 0) {
+        if (shape == 1) {
+            return rate;
+        }
+        return if (shape < 1) inf else 0;
     }
     const z = rate * x;
     const zam1 = std.math.pow(f64, z, shape - 1);
@@ -245,6 +248,10 @@ pub fn weibull(x: f64, shape: f64, rate: f64) f64 {
 test "density.weibull" {
     try expectEqual(weibull(-inf, 3, 0.5), 0);
     try expectEqual(weibull( inf, 3, 0.5), 0);
+
+    try expectEqual(weibull(0, 0.9, 5), inf);
+    try expectEqual(weibull(0, 1  , 5), 5  );
+    try expectEqual(weibull(0, 1.1, 5), 0  );
 
     try expectApproxEqRel(weibull(0, 3, 0.5), 0                 );
     try expectApproxEqRel(weibull(1, 3, 0.5), 0.3309363384692233);
