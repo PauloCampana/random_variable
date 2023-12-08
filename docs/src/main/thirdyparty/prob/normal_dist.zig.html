@@ -221,7 +221,7 @@
 <span class="line" id="L95"><span class="tok-comment">///   message         condition         value returned</span></span>
 <span class="line" id="L96"><span class="tok-comment">/// erfc underflow    x &gt; 37.519379347       0.0</span></span>
 <span class="line" id="L97"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">normalDist</span>(a: <span class="tok-type">f64</span>) <span class="tok-type">f64</span> {</span>
-<span class="line" id="L98">    <span class="tok-kw">var</span> x = a * constants.SQRTH;</span>
+<span class="line" id="L98">    <span class="tok-kw">const</span> x = a * constants.SQRTH;</span>
 <span class="line" id="L99">    <span class="tok-kw">var</span> z = <span class="tok-builtin">@abs</span>(x);</span>
 <span class="line" id="L100"></span>
 <span class="line" id="L101">    <span class="tok-kw">if</span> (z &lt; <span class="tok-number">1.0</span>) {</span>
@@ -368,16 +368,16 @@
 <span class="line" id="L230"></span>
 <span class="line" id="L231">    <span class="tok-kw">if</span> (y &gt; <span class="tok-number">0.13533528323661269189</span>) {</span>
 <span class="line" id="L232">        y = y - <span class="tok-number">0.5</span>;</span>
-<span class="line" id="L233">        <span class="tok-kw">var</span> y2 = y * y;</span>
+<span class="line" id="L233">        <span class="tok-kw">const</span> y2 = y * y;</span>
 <span class="line" id="L234">        <span class="tok-kw">var</span> x = y + y * (y2 * polevl(y2, P0[<span class="tok-number">0</span>..]) / p1evl(y2, Q0[<span class="tok-number">0</span>..]));</span>
 <span class="line" id="L235">        x = x * s2pi;</span>
 <span class="line" id="L236">        <span class="tok-kw">return</span> x;</span>
 <span class="line" id="L237">    }</span>
 <span class="line" id="L238"></span>
 <span class="line" id="L239">    <span class="tok-kw">var</span> x = math.sqrt(-<span class="tok-number">2.0</span> * <span class="tok-builtin">@log</span>(y));</span>
-<span class="line" id="L240">    <span class="tok-kw">var</span> x0 = x - <span class="tok-builtin">@log</span>(x) / x;</span>
+<span class="line" id="L240">    <span class="tok-kw">const</span> x0 = x - <span class="tok-builtin">@log</span>(x) / x;</span>
 <span class="line" id="L241"></span>
-<span class="line" id="L242">    <span class="tok-kw">var</span> z = <span class="tok-number">1.0</span> / x;</span>
+<span class="line" id="L242">    <span class="tok-kw">const</span> z = <span class="tok-number">1.0</span> / x;</span>
 <span class="line" id="L243"></span>
 <span class="line" id="L244">    <span class="tok-comment">// y &gt; exp(-32) = 1.2664165549e-14</span>
 </span>
@@ -457,7 +457,7 @@
 <span class="line" id="L310"><span class="tok-comment">///   message         condition              value returned</span></span>
 <span class="line" id="L311"><span class="tok-comment">/// erfc underflow    x &gt; 9.231948545 (DEC)       0.0</span></span>
 <span class="line" id="L312"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">erfc</span>(a: <span class="tok-type">f64</span>) <span class="tok-type">f64</span> {</span>
-<span class="line" id="L313">    <span class="tok-kw">var</span> x = <span class="tok-kw">if</span> (a &lt; <span class="tok-number">0.0</span>) -a <span class="tok-kw">else</span> a;</span>
+<span class="line" id="L313">    <span class="tok-kw">const</span> x = <span class="tok-kw">if</span> (a &lt; <span class="tok-number">0.0</span>) -a <span class="tok-kw">else</span> a;</span>
 <span class="line" id="L314">    <span class="tok-kw">if</span> (x &lt; <span class="tok-number">1.0</span>) {</span>
 <span class="line" id="L315">        <span class="tok-kw">return</span> <span class="tok-number">1.0</span> - erf(a);</span>
 <span class="line" id="L316">    }</span>
@@ -546,8 +546,8 @@
 <span class="line" id="L398">        <span class="tok-kw">return</span> <span class="tok-number">1.0</span> - erfc(x);</span>
 <span class="line" id="L399">    }</span>
 <span class="line" id="L400"></span>
-<span class="line" id="L401">    <span class="tok-kw">var</span> z = x * x;</span>
-<span class="line" id="L402">    <span class="tok-kw">var</span> y = x * polevl(z, T[<span class="tok-number">0</span>..]) / p1evl(z, U[<span class="tok-number">0</span>..]);</span>
+<span class="line" id="L401">    <span class="tok-kw">const</span> z = x * x;</span>
+<span class="line" id="L402">    <span class="tok-kw">const</span> y = x * polevl(z, T[<span class="tok-number">0</span>..]) / p1evl(z, U[<span class="tok-number">0</span>..]);</span>
 <span class="line" id="L403">    <span class="tok-kw">return</span> y;</span>
 <span class="line" id="L404">}</span>
 <span class="line" id="L405"></span>

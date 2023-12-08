@@ -120,31 +120,32 @@
 <span class="line" id="L6"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> quantile = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;quantile.zig&quot;</span>);</span>
 <span class="line" id="L7"></span>
 <span class="line" id="L8"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> descriptive = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;descriptive.zig&quot;</span>);</span>
-<span class="line" id="L9"></span>
-<span class="line" id="L10"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> hypotesis = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;hypotesis.zig&quot;</span>);</span>
-<span class="line" id="L11"></span>
-<span class="line" id="L12"><span class="tok-kw">const</span> std = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;std&quot;</span>);</span>
-<span class="line" id="L13"><span class="tok-kw">test</span> {</span>
-<span class="line" id="L14">    std.testing.refAllDecls(<span class="tok-builtin">@This</span>());</span>
-<span class="line" id="L15">}</span>
-<span class="line" id="L16"></span>
-<span class="line" id="L17"><span class="tok-kw">test</span> density {</span>
-<span class="line" id="L18">    _ = density.normal(<span class="tok-number">3</span>, <span class="tok-number">0</span>, <span class="tok-number">1</span>);</span>
-<span class="line" id="L19">    _ = density.gamma(<span class="tok-number">10</span>, <span class="tok-number">3</span>, <span class="tok-number">5</span>);</span>
-<span class="line" id="L20">    _ = density.binomial(<span class="tok-number">5</span>, <span class="tok-number">10</span>, <span class="tok-number">0.2</span>);</span>
-<span class="line" id="L21">}</span>
-<span class="line" id="L22"></span>
-<span class="line" id="L23"><span class="tok-kw">test</span> distribution {</span>
-<span class="line" id="L24">    _ = distribution.normal(<span class="tok-number">3</span>, <span class="tok-number">0</span>, <span class="tok-number">1</span>);</span>
-<span class="line" id="L25">    _ = distribution.gamma(<span class="tok-number">10</span>, <span class="tok-number">3</span>, <span class="tok-number">5</span>);</span>
-<span class="line" id="L26">    _ = distribution.binomial(<span class="tok-number">5</span>, <span class="tok-number">10</span>, <span class="tok-number">0.2</span>);</span>
-<span class="line" id="L27">}</span>
-<span class="line" id="L28"></span>
-<span class="line" id="L29"><span class="tok-kw">test</span> quantile {</span>
-<span class="line" id="L30">    _ = quantile.normal(<span class="tok-number">0.95</span>, <span class="tok-number">0</span>, <span class="tok-number">1</span>);</span>
-<span class="line" id="L31">    _ = quantile.gamma(<span class="tok-number">0.95</span>, <span class="tok-number">3</span>, <span class="tok-number">5</span>);</span>
-<span class="line" id="L32">    _ = quantile.binomial(<span class="tok-number">0.95</span>, <span class="tok-number">10</span>, <span class="tok-number">0.2</span>);</span>
-<span class="line" id="L33">}</span>
-<span class="line" id="L34"></span>
+<span class="line" id="L9"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> hypotesis = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;hypotesis.zig&quot;</span>);</span>
+<span class="line" id="L10"></span>
+<span class="line" id="L11"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> Matrix = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;Matrix.zig&quot;</span>);</span>
+<span class="line" id="L12"></span>
+<span class="line" id="L13"><span class="tok-kw">const</span> std = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;std&quot;</span>);</span>
+<span class="line" id="L14"><span class="tok-kw">test</span> {</span>
+<span class="line" id="L15">    std.testing.refAllDecls(<span class="tok-builtin">@This</span>());</span>
+<span class="line" id="L16">}</span>
+<span class="line" id="L17"></span>
+<span class="line" id="L18"><span class="tok-kw">test</span> density {</span>
+<span class="line" id="L19">    _ = density.normal(<span class="tok-number">3</span>, <span class="tok-number">0</span>, <span class="tok-number">1</span>);</span>
+<span class="line" id="L20">    _ = density.gamma(<span class="tok-number">10</span>, <span class="tok-number">3</span>, <span class="tok-number">5</span>);</span>
+<span class="line" id="L21">    _ = density.binomial(<span class="tok-number">5</span>, <span class="tok-number">10</span>, <span class="tok-number">0.2</span>);</span>
+<span class="line" id="L22">}</span>
+<span class="line" id="L23"></span>
+<span class="line" id="L24"><span class="tok-kw">test</span> distribution {</span>
+<span class="line" id="L25">    _ = distribution.normal(<span class="tok-number">3</span>, <span class="tok-number">0</span>, <span class="tok-number">1</span>);</span>
+<span class="line" id="L26">    _ = distribution.gamma(<span class="tok-number">10</span>, <span class="tok-number">3</span>, <span class="tok-number">5</span>);</span>
+<span class="line" id="L27">    _ = distribution.binomial(<span class="tok-number">5</span>, <span class="tok-number">10</span>, <span class="tok-number">0.2</span>);</span>
+<span class="line" id="L28">}</span>
+<span class="line" id="L29"></span>
+<span class="line" id="L30"><span class="tok-kw">test</span> quantile {</span>
+<span class="line" id="L31">    _ = quantile.normal(<span class="tok-number">0.95</span>, <span class="tok-number">0</span>, <span class="tok-number">1</span>);</span>
+<span class="line" id="L32">    _ = quantile.gamma(<span class="tok-number">0.95</span>, <span class="tok-number">3</span>, <span class="tok-number">5</span>);</span>
+<span class="line" id="L33">    _ = quantile.binomial(<span class="tok-number">0.95</span>, <span class="tok-number">10</span>, <span class="tok-number">0.2</span>);</span>
+<span class="line" id="L34">}</span>
+<span class="line" id="L35"></span>
 </code></pre></body>
 </html>

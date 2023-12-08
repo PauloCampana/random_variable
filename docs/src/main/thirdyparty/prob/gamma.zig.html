@@ -188,7 +188,7 @@
 <span class="line" id="L63">    <span class="tok-kw">if</span> (x &gt; MAXSTIR) {</span>
 <span class="line" id="L64">        <span class="tok-comment">// Avoid overflow in pow()</span>
 </span>
-<span class="line" id="L65">        <span class="tok-kw">var</span> v = math.pow(<span class="tok-type">f64</span>, x, <span class="tok-number">0.5</span> * x - <span class="tok-number">0.25</span>);</span>
+<span class="line" id="L65">        <span class="tok-kw">const</span> v = math.pow(<span class="tok-type">f64</span>, x, <span class="tok-number">0.5</span> * x - <span class="tok-number">0.25</span>);</span>
 <span class="line" id="L66">        y = v * (v / y);</span>
 <span class="line" id="L67">    } <span class="tok-kw">else</span> {</span>
 <span class="line" id="L68">        y = math.pow(<span class="tok-type">f64</span>, x, x - <span class="tok-number">0.5</span>) / y;</span>
@@ -252,7 +252,7 @@
 </span>
 <span class="line" id="L125">            }</span>
 <span class="line" id="L126"></span>
-<span class="line" id="L127">            <span class="tok-kw">var</span> i = <span class="tok-builtin">@as</span>(<span class="tok-type">isize</span>, <span class="tok-builtin">@intFromFloat</span>(p));</span>
+<span class="line" id="L127">            <span class="tok-kw">const</span> i = <span class="tok-builtin">@as</span>(<span class="tok-type">isize</span>, <span class="tok-builtin">@intFromFloat</span>(p));</span>
 <span class="line" id="L128">            <span class="tok-kw">if</span> (i &amp; <span class="tok-number">1</span> == <span class="tok-number">0</span>) {</span>
 <span class="line" id="L129">                sgngam = -<span class="tok-number">1</span>;</span>
 <span class="line" id="L130">            }</span>
@@ -301,7 +301,7 @@
 <span class="line" id="L173">    }</span>
 <span class="line" id="L174"></span>
 <span class="line" id="L175">    x -= <span class="tok-number">2.0</span>;</span>
-<span class="line" id="L176">    <span class="tok-kw">var</span> p = polevl(x, P[<span class="tok-number">0</span>..]);</span>
+<span class="line" id="L176">    <span class="tok-kw">const</span> p = polevl(x, P[<span class="tok-number">0</span>..]);</span>
 <span class="line" id="L177">    q = polevl(x, Q[<span class="tok-number">0</span>..]);</span>
 <span class="line" id="L178">    <span class="tok-kw">return</span> z * p / q;</span>
 <span class="line" id="L179">}</span>
@@ -399,8 +399,8 @@
 <span class="line" id="L267"></span>
 <span class="line" id="L268">    <span class="tok-kw">var</span> z: <span class="tok-type">f64</span> = <span class="tok-null">undefined</span>;</span>
 <span class="line" id="L269">    <span class="tok-kw">if</span> (x &lt; -<span class="tok-number">34.0</span>) {</span>
-<span class="line" id="L270">        <span class="tok-kw">var</span> q = -x;</span>
-<span class="line" id="L271">        <span class="tok-kw">var</span> w = lnGamma(q);</span>
+<span class="line" id="L270">        <span class="tok-kw">const</span> q = -x;</span>
+<span class="line" id="L271">        <span class="tok-kw">const</span> w = lnGamma(q);</span>
 <span class="line" id="L272"></span>
 <span class="line" id="L273">        <span class="tok-kw">var</span> p = math.floor(q);</span>
 <span class="line" id="L274">        <span class="tok-kw">if</span> (p == q) {</span>
@@ -408,7 +408,7 @@
 </span>
 <span class="line" id="L276">        }</span>
 <span class="line" id="L277"></span>
-<span class="line" id="L278">        <span class="tok-kw">var</span> i = <span class="tok-builtin">@as</span>(<span class="tok-type">isize</span>, <span class="tok-builtin">@intFromFloat</span>(p));</span>
+<span class="line" id="L278">        <span class="tok-kw">const</span> i = <span class="tok-builtin">@as</span>(<span class="tok-type">isize</span>, <span class="tok-builtin">@intFromFloat</span>(p));</span>
 <span class="line" id="L279">        sgngam = <span class="tok-kw">if</span> (i &amp; <span class="tok-number">1</span> == <span class="tok-number">0</span>) -<span class="tok-number">1</span> <span class="tok-kw">else</span> <span class="tok-number">1</span>;</span>
 <span class="line" id="L280"></span>
 <span class="line" id="L281">        z = q - p;</span>
@@ -473,7 +473,7 @@
 <span class="line" id="L337">        <span class="tok-kw">return</span> q;</span>
 <span class="line" id="L338">    }</span>
 <span class="line" id="L339"></span>
-<span class="line" id="L340">    <span class="tok-kw">var</span> p = <span class="tok-number">1.0</span> / (x * x);</span>
+<span class="line" id="L340">    <span class="tok-kw">const</span> p = <span class="tok-number">1.0</span> / (x * x);</span>
 <span class="line" id="L341">    <span class="tok-kw">if</span> (x &gt;= <span class="tok-number">1000.0</span>) {</span>
 <span class="line" id="L342">        q += ((<span class="tok-number">7.9365079365079365079365e-4</span> * p - <span class="tok-number">2.7777777777777777777778e-3</span>) * p + <span class="tok-number">0.0833333333333333333333</span>) / x;</span>
 <span class="line" id="L343">    } <span class="tok-kw">else</span> {</span>

@@ -152,7 +152,7 @@
 <span class="line" id="L37">        <span class="tok-comment">/// min and max ∈ (-∞,∞)</span></span>
 <span class="line" id="L38">        <span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">uniform</span>(self: Self, n: <span class="tok-type">usize</span>, min: C, max: C) ![]C {</span>
 <span class="line" id="L39">            assert(isFinite(min) <span class="tok-kw">and</span> isFinite(max));</span>
-<span class="line" id="L40">            <span class="tok-kw">var</span> slice = <span class="tok-kw">try</span> self.allocator.alloc(C, n);</span>
+<span class="line" id="L40">            <span class="tok-kw">const</span> slice = <span class="tok-kw">try</span> self.allocator.alloc(C, n);</span>
 <span class="line" id="L41">            <span class="tok-kw">for</span> (slice) |*x| {</span>
 <span class="line" id="L42">                x.* = implementation.uniform(C, self.generator, min, max);</span>
 <span class="line" id="L43">            }</span>
@@ -162,7 +162,7 @@
 <span class="line" id="L47">        <span class="tok-comment">/// prob ∈ [0,1]</span></span>
 <span class="line" id="L48">        <span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">bernoulli</span>(self: Self, n: <span class="tok-type">usize</span>, prob: C) ![]D {</span>
 <span class="line" id="L49">            assert(<span class="tok-number">0</span> &lt;= prob <span class="tok-kw">and</span> prob &lt;= <span class="tok-number">1</span>);</span>
-<span class="line" id="L50">            <span class="tok-kw">var</span> slice = <span class="tok-kw">try</span> self.allocator.alloc(D, n);</span>
+<span class="line" id="L50">            <span class="tok-kw">const</span> slice = <span class="tok-kw">try</span> self.allocator.alloc(D, n);</span>
 <span class="line" id="L51">            <span class="tok-kw">for</span> (slice) |*x| {</span>
 <span class="line" id="L52">                x.* = implementation.bernoulli(D, C, self.generator, prob);</span>
 <span class="line" id="L53">            }</span>
@@ -172,7 +172,7 @@
 <span class="line" id="L57">        <span class="tok-comment">/// prob ∈ (0,1]</span></span>
 <span class="line" id="L58">        <span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">geometric</span>(self: Self, n: <span class="tok-type">usize</span>, prob: C) ![]D {</span>
 <span class="line" id="L59">            assert(<span class="tok-number">0</span> &lt; prob <span class="tok-kw">and</span> prob &lt;= <span class="tok-number">1</span>);</span>
-<span class="line" id="L60">            <span class="tok-kw">var</span> slice = <span class="tok-kw">try</span> self.allocator.alloc(D, n);</span>
+<span class="line" id="L60">            <span class="tok-kw">const</span> slice = <span class="tok-kw">try</span> self.allocator.alloc(D, n);</span>
 <span class="line" id="L61">            <span class="tok-kw">for</span> (slice) |*x| {</span>
 <span class="line" id="L62">                x.* = implementation.geometric(D, C, self.generator, prob);</span>
 <span class="line" id="L63">            }</span>
@@ -182,7 +182,7 @@
 <span class="line" id="L67">        <span class="tok-comment">/// lambda ∈ (0,∞)</span></span>
 <span class="line" id="L68">        <span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">poisson</span>(self: Self, n: <span class="tok-type">usize</span>, lambda: C) ![]D {</span>
 <span class="line" id="L69">            assert(isFinite(lambda));</span>
-<span class="line" id="L70">            <span class="tok-kw">var</span> slice = <span class="tok-kw">try</span> self.allocator.alloc(D, n);</span>
+<span class="line" id="L70">            <span class="tok-kw">const</span> slice = <span class="tok-kw">try</span> self.allocator.alloc(D, n);</span>
 <span class="line" id="L71">            <span class="tok-kw">for</span> (slice) |*x| {</span>
 <span class="line" id="L72">                x.* = implementation.poisson(D, C, self.generator, lambda);</span>
 <span class="line" id="L73">            }</span>
@@ -194,7 +194,7 @@
 <span class="line" id="L79">        <span class="tok-comment">/// prob ∈ [0,1]</span></span>
 <span class="line" id="L80">        <span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">binomial</span>(self: Self, n: <span class="tok-type">usize</span>, size: <span class="tok-type">usize</span>, prob: C) ![]D {</span>
 <span class="line" id="L81">            assert(<span class="tok-number">0</span> &lt;= prob <span class="tok-kw">and</span> prob &lt;= <span class="tok-number">1</span>);</span>
-<span class="line" id="L82">            <span class="tok-kw">var</span> slice = <span class="tok-kw">try</span> self.allocator.alloc(D, n);</span>
+<span class="line" id="L82">            <span class="tok-kw">const</span> slice = <span class="tok-kw">try</span> self.allocator.alloc(D, n);</span>
 <span class="line" id="L83">            <span class="tok-kw">for</span> (slice) |*x| {</span>
 <span class="line" id="L84">                x.* =  implementation.binomial(D, C, self.generator, size, prob);</span>
 <span class="line" id="L85">            }</span>
@@ -207,7 +207,7 @@
 <span class="line" id="L92">        <span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">negativeBinomial</span>(self: Self, n: <span class="tok-type">usize</span>, size: <span class="tok-type">usize</span>, prob: C) ![]D {</span>
 <span class="line" id="L93">            assert(<span class="tok-number">0</span> &lt; prob <span class="tok-kw">and</span> prob &lt;= <span class="tok-number">1</span>);</span>
 <span class="line" id="L94">            assert(size != <span class="tok-number">0</span>);</span>
-<span class="line" id="L95">            <span class="tok-kw">var</span> slice = <span class="tok-kw">try</span> self.allocator.alloc(D, n);</span>
+<span class="line" id="L95">            <span class="tok-kw">const</span> slice = <span class="tok-kw">try</span> self.allocator.alloc(D, n);</span>
 <span class="line" id="L96">            <span class="tok-kw">for</span> (slice) |*x| {</span>
 <span class="line" id="L97">                x.* = implementation.negativeBinomial(D, C, self.generator, size, prob);</span>
 <span class="line" id="L98">            }</span>
@@ -218,7 +218,7 @@
 <span class="line" id="L103">        <span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">exponential</span>(self: Self, n: <span class="tok-type">usize</span>, rate: C) ![]C {</span>
 <span class="line" id="L104">            assert(isFinite(rate));</span>
 <span class="line" id="L105">            assert(rate &gt; <span class="tok-number">0</span>);</span>
-<span class="line" id="L106">            <span class="tok-kw">var</span> slice = <span class="tok-kw">try</span> self.allocator.alloc(C, n);</span>
+<span class="line" id="L106">            <span class="tok-kw">const</span> slice = <span class="tok-kw">try</span> self.allocator.alloc(C, n);</span>
 <span class="line" id="L107">            <span class="tok-kw">for</span> (slice) |*x| {</span>
 <span class="line" id="L108">                x.* = implementation.exponential(C, self.generator, rate);</span>
 <span class="line" id="L109">            }</span>
@@ -229,7 +229,7 @@
 <span class="line" id="L114">        <span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">weibull</span>(self: Self, n: <span class="tok-type">usize</span>, shape: C, rate: C) ![]C {</span>
 <span class="line" id="L115">            assert(isFinite(shape) <span class="tok-kw">and</span> isFinite(rate));</span>
 <span class="line" id="L116">            assert(shape &gt; <span class="tok-number">0</span> <span class="tok-kw">and</span> rate &gt; <span class="tok-number">0</span>);</span>
-<span class="line" id="L117">            <span class="tok-kw">var</span> slice = <span class="tok-kw">try</span> self.allocator.alloc(C, n);</span>
+<span class="line" id="L117">            <span class="tok-kw">const</span> slice = <span class="tok-kw">try</span> self.allocator.alloc(C, n);</span>
 <span class="line" id="L118">            <span class="tok-kw">for</span> (slice) |*x| {</span>
 <span class="line" id="L119">                x.* = implementation.weibull(C, self.generator, shape, rate);</span>
 <span class="line" id="L120">            }</span>
@@ -242,7 +242,7 @@
 <span class="line" id="L127">        <span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">cauchy</span>(self: Self, n: <span class="tok-type">usize</span>, location: C, scale: C) ![]C {</span>
 <span class="line" id="L128">            assert(isFinite(location) <span class="tok-kw">and</span> isFinite(scale));</span>
 <span class="line" id="L129">            assert(scale &gt; <span class="tok-number">0</span>);</span>
-<span class="line" id="L130">            <span class="tok-kw">var</span> slice = <span class="tok-kw">try</span> self.allocator.alloc(C, n);</span>
+<span class="line" id="L130">            <span class="tok-kw">const</span> slice = <span class="tok-kw">try</span> self.allocator.alloc(C, n);</span>
 <span class="line" id="L131">            <span class="tok-kw">for</span> (slice) |*x| {</span>
 <span class="line" id="L132">                x.* = implementation.cauchy(C, self.generator, location, scale);</span>
 <span class="line" id="L133">            }</span>
@@ -255,7 +255,7 @@
 <span class="line" id="L140">        <span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">logistic</span>(self: Self, n: <span class="tok-type">usize</span>, location: C, scale: C) ![]C {</span>
 <span class="line" id="L141">            assert(isFinite(location) <span class="tok-kw">and</span> isFinite(scale));</span>
 <span class="line" id="L142">            assert(scale &gt; <span class="tok-number">0</span>);</span>
-<span class="line" id="L143">            <span class="tok-kw">var</span> slice = <span class="tok-kw">try</span> self.allocator.alloc(C, n);</span>
+<span class="line" id="L143">            <span class="tok-kw">const</span> slice = <span class="tok-kw">try</span> self.allocator.alloc(C, n);</span>
 <span class="line" id="L144">            <span class="tok-kw">for</span> (slice) |*x| {</span>
 <span class="line" id="L145">                x.* = implementation.logistic(C, self.generator, location, scale);</span>
 <span class="line" id="L146">            }</span>
@@ -266,7 +266,7 @@
 <span class="line" id="L151">        <span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">gamma</span>(self: Self, n: <span class="tok-type">usize</span>, shape: C, rate: C) ![]C {</span>
 <span class="line" id="L152">            assert(isFinite(shape) <span class="tok-kw">and</span> isFinite(rate));</span>
 <span class="line" id="L153">            assert(shape &gt; <span class="tok-number">0</span> <span class="tok-kw">and</span> rate &gt; <span class="tok-number">0</span>);</span>
-<span class="line" id="L154">            <span class="tok-kw">var</span> slice = <span class="tok-kw">try</span> self.allocator.alloc(C, n);</span>
+<span class="line" id="L154">            <span class="tok-kw">const</span> slice = <span class="tok-kw">try</span> self.allocator.alloc(C, n);</span>
 <span class="line" id="L155">            <span class="tok-kw">for</span> (slice) |*x| {</span>
 <span class="line" id="L156">                x.* = implementation.gamma(C, self.generator, shape, rate);</span>
 <span class="line" id="L157">            }</span>
@@ -277,7 +277,7 @@
 <span class="line" id="L162">        <span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">chiSquared</span>(self: Self, n: <span class="tok-type">usize</span>, df: C) ![]C {</span>
 <span class="line" id="L163">            assert(isFinite(df));</span>
 <span class="line" id="L164">            assert(df &gt; <span class="tok-number">0</span>);</span>
-<span class="line" id="L165">            <span class="tok-kw">var</span> slice = <span class="tok-kw">try</span> self.allocator.alloc(C, n);</span>
+<span class="line" id="L165">            <span class="tok-kw">const</span> slice = <span class="tok-kw">try</span> self.allocator.alloc(C, n);</span>
 <span class="line" id="L166">            <span class="tok-kw">for</span> (slice) |*x| {</span>
 <span class="line" id="L167">                x.* = implementation.chiSquared(C, self.generator, df);</span>
 <span class="line" id="L168">            }</span>
@@ -288,7 +288,7 @@
 <span class="line" id="L173">        <span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">F</span>(self: Self, n: <span class="tok-type">usize</span>, df1: C, df2: C) ![]C {</span>
 <span class="line" id="L174">            assert(isFinite(df1) <span class="tok-kw">and</span> isFinite(df2));</span>
 <span class="line" id="L175">            assert(df1 &gt; <span class="tok-number">0</span> <span class="tok-kw">and</span> df2 &gt; <span class="tok-number">0</span>);</span>
-<span class="line" id="L176">            <span class="tok-kw">var</span> slice = <span class="tok-kw">try</span> self.allocator.alloc(C, n);</span>
+<span class="line" id="L176">            <span class="tok-kw">const</span> slice = <span class="tok-kw">try</span> self.allocator.alloc(C, n);</span>
 <span class="line" id="L177">            <span class="tok-kw">for</span> (slice) |*x| {</span>
 <span class="line" id="L178">                x.* = implementation.F(C, self.generator, df1, df2);</span>
 <span class="line" id="L179">            }</span>
@@ -299,7 +299,7 @@
 <span class="line" id="L184">        <span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">beta</span>(self: Self, n: <span class="tok-type">usize</span>, shape1: C, shape2: C) ![]C {</span>
 <span class="line" id="L185">            assert(isFinite(shape1) <span class="tok-kw">and</span> isFinite(shape2));</span>
 <span class="line" id="L186">            assert(shape1 &gt; <span class="tok-number">0</span> <span class="tok-kw">and</span> shape2 &gt; <span class="tok-number">0</span>);</span>
-<span class="line" id="L187">            <span class="tok-kw">var</span> slice = <span class="tok-kw">try</span> self.allocator.alloc(C, n);</span>
+<span class="line" id="L187">            <span class="tok-kw">const</span> slice = <span class="tok-kw">try</span> self.allocator.alloc(C, n);</span>
 <span class="line" id="L188">            <span class="tok-kw">for</span> (slice) |*x| {</span>
 <span class="line" id="L189">                x.* = implementation.beta(C, self.generator, shape1, shape2);</span>
 <span class="line" id="L190">            }</span>
@@ -312,7 +312,7 @@
 <span class="line" id="L197">        <span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">normal</span>(self: Self, n: <span class="tok-type">usize</span>, mean: C, sd: C) ![]C {</span>
 <span class="line" id="L198">            assert(isFinite(mean) <span class="tok-kw">and</span> isFinite(sd));</span>
 <span class="line" id="L199">            assert(sd &gt; <span class="tok-number">0</span>);</span>
-<span class="line" id="L200">            <span class="tok-kw">var</span> slice = <span class="tok-kw">try</span> self.allocator.alloc(C, n);</span>
+<span class="line" id="L200">            <span class="tok-kw">const</span> slice = <span class="tok-kw">try</span> self.allocator.alloc(C, n);</span>
 <span class="line" id="L201">            <span class="tok-kw">for</span> (slice) |*x| {</span>
 <span class="line" id="L202">                x.* = implementation.normal(C, self.generator, mean, sd);</span>
 <span class="line" id="L203">            }</span>
@@ -325,7 +325,7 @@
 <span class="line" id="L210">        <span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">logNormal</span>(self: Self, n: <span class="tok-type">usize</span>, meanlog: C, sdlog: C) ![]C {</span>
 <span class="line" id="L211">            assert(isFinite(meanlog) <span class="tok-kw">and</span> isFinite(sdlog));</span>
 <span class="line" id="L212">            assert(sdlog &gt; <span class="tok-number">0</span>);</span>
-<span class="line" id="L213">            <span class="tok-kw">var</span> slice = <span class="tok-kw">try</span> self.allocator.alloc(C, n);</span>
+<span class="line" id="L213">            <span class="tok-kw">const</span> slice = <span class="tok-kw">try</span> self.allocator.alloc(C, n);</span>
 <span class="line" id="L214">            <span class="tok-kw">for</span> (slice) |*x| {</span>
 <span class="line" id="L215">                x.* = implementation.logNormal(C, self.generator, meanlog, sdlog);</span>
 <span class="line" id="L216">            }</span>
@@ -336,7 +336,7 @@
 <span class="line" id="L221">        <span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">t</span>(self: Self, n: <span class="tok-type">usize</span>, df: C) ![]C {</span>
 <span class="line" id="L222">            assert(isFinite(df));</span>
 <span class="line" id="L223">            assert(df &gt; <span class="tok-number">0</span>);</span>
-<span class="line" id="L224">            <span class="tok-kw">var</span> slice = <span class="tok-kw">try</span> self.allocator.alloc(C, n);</span>
+<span class="line" id="L224">            <span class="tok-kw">const</span> slice = <span class="tok-kw">try</span> self.allocator.alloc(C, n);</span>
 <span class="line" id="L225">            <span class="tok-kw">for</span> (slice) |*x| {</span>
 <span class="line" id="L226">                x.* = implementation.t(C, self.generator, df);</span>
 <span class="line" id="L227">            }</span>

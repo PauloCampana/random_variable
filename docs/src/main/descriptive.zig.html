@@ -114,115 +114,168 @@
 <body>
 <pre><code><span class="line" id="L1"><span class="tok-kw">const</span> std = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;std&quot;</span>);</span>
 <span class="line" id="L2"></span>
-<span class="line" id="L3"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">sum</span>(<span class="tok-kw">comptime</span> T: <span class="tok-type">type</span>, slice: []T) T {</span>
-<span class="line" id="L4">    <span class="tok-kw">var</span> s: T = <span class="tok-number">0</span>;</span>
-<span class="line" id="L5">    <span class="tok-kw">for</span> (slice) |x| {</span>
-<span class="line" id="L6">        s += x;</span>
+<span class="line" id="L3"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">lossyCastAlloc</span>(<span class="tok-kw">comptime</span> T: <span class="tok-type">type</span>, allocator: std.mem.Allocator, slice: <span class="tok-kw">anytype</span>) ![]T {</span>
+<span class="line" id="L4">    <span class="tok-kw">const</span> out = <span class="tok-kw">try</span> allocator.alloc(T, slice.len);</span>
+<span class="line" id="L5">    <span class="tok-kw">for</span> (out, slice) |*x, y| {</span>
+<span class="line" id="L6">        x.* = std.math.lossyCast(T, y);</span>
 <span class="line" id="L7">    }</span>
-<span class="line" id="L8">    <span class="tok-kw">return</span> s;</span>
+<span class="line" id="L8">    <span class="tok-kw">return</span> out;</span>
 <span class="line" id="L9">}</span>
 <span class="line" id="L10"></span>
-<span class="line" id="L11"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">mean</span>(<span class="tok-kw">comptime</span> T: <span class="tok-type">type</span>, slice: []T) <span class="tok-type">f64</span> {</span>
-<span class="line" id="L12">    <span class="tok-kw">const</span> s = std.math.lossyCast(<span class="tok-type">f64</span>, sum(T, slice));</span>
-<span class="line" id="L13">    <span class="tok-kw">const</span> len = <span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-builtin">@floatFromInt</span>(slice.len));</span>
-<span class="line" id="L14">    <span class="tok-kw">return</span> s / len;</span>
-<span class="line" id="L15">}</span>
-<span class="line" id="L16"></span>
-<span class="line" id="L17"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">median</span>(<span class="tok-kw">comptime</span> T: <span class="tok-type">type</span>, slice: []T) !T {</span>
-<span class="line" id="L18">    <span class="tok-kw">var</span> gpa = std.heap.GeneralPurposeAllocator(.{}) {};</span>
-<span class="line" id="L19">    <span class="tok-kw">defer</span> _ = gpa.deinit();</span>
-<span class="line" id="L20">    <span class="tok-kw">const</span> allocator = gpa.allocator();</span>
-<span class="line" id="L21">    <span class="tok-kw">const</span> temp = <span class="tok-kw">try</span> allocator.dupe(T, slice);</span>
-<span class="line" id="L22">    <span class="tok-kw">defer</span> allocator.free(temp);</span>
-<span class="line" id="L23">    std.mem.sortUnstable(T, temp, {}, std.sort.asc(T));</span>
-<span class="line" id="L24">    <span class="tok-kw">return</span> temp[temp.len / <span class="tok-number">2</span>];</span>
-<span class="line" id="L25">}</span>
-<span class="line" id="L26"></span>
-<span class="line" id="L27"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">medianInPlace</span>(<span class="tok-kw">comptime</span> T: <span class="tok-type">type</span>, slice: []T) T {</span>
-<span class="line" id="L28">    std.mem.sortUnstable(T, slice, {}, std.sort.asc(T));</span>
-<span class="line" id="L29">    <span class="tok-kw">return</span> slice[slice.len / <span class="tok-number">2</span>];</span>
-<span class="line" id="L30">}</span>
-<span class="line" id="L31"></span>
-<span class="line" id="L32"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">variance</span>(<span class="tok-kw">comptime</span> T: <span class="tok-type">type</span>, slice: []T) <span class="tok-type">f64</span> {</span>
-<span class="line" id="L33">    <span class="tok-kw">const</span> len = <span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-builtin">@floatFromInt</span>(slice.len));</span>
-<span class="line" id="L34">    <span class="tok-kw">const</span> m = mean(T, slice);</span>
-<span class="line" id="L35">    <span class="tok-kw">var</span> s: <span class="tok-type">f64</span> = <span class="tok-number">0</span>;</span>
-<span class="line" id="L36">    <span class="tok-kw">for</span> (slice) |x| {</span>
-<span class="line" id="L37">        <span class="tok-kw">const</span> xx = std.math.lossyCast(<span class="tok-type">f64</span>, x * x);</span>
-<span class="line" id="L38">        s += xx;</span>
-<span class="line" id="L39">    }</span>
-<span class="line" id="L40">    <span class="tok-kw">return</span> (s - len * m * m) / (len - <span class="tok-number">1</span>);</span>
+<span class="line" id="L11"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">length</span>(slice: []<span class="tok-type">f64</span>) <span class="tok-type">f64</span> {</span>
+<span class="line" id="L12">    <span class="tok-kw">return</span> <span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-builtin">@floatFromInt</span>(slice.len));</span>
+<span class="line" id="L13">}</span>
+<span class="line" id="L14"></span>
+<span class="line" id="L15"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">sum</span>(slice: []<span class="tok-type">f64</span>) <span class="tok-type">f64</span> {</span>
+<span class="line" id="L16">    <span class="tok-kw">var</span> sumx: <span class="tok-type">f64</span> = <span class="tok-number">0</span>;</span>
+<span class="line" id="L17">    <span class="tok-kw">for</span> (slice) |x| {</span>
+<span class="line" id="L18">        sumx += x;</span>
+<span class="line" id="L19">    }</span>
+<span class="line" id="L20">    <span class="tok-kw">return</span> sumx;</span>
+<span class="line" id="L21">}</span>
+<span class="line" id="L22"></span>
+<span class="line" id="L23"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">product</span>(slice: []<span class="tok-type">f64</span>) <span class="tok-type">f64</span> {</span>
+<span class="line" id="L24">    <span class="tok-kw">var</span> prodx: <span class="tok-type">f64</span> = <span class="tok-number">1</span>;</span>
+<span class="line" id="L25">    <span class="tok-kw">for</span> (slice) |x| {</span>
+<span class="line" id="L26">        prodx *= x;</span>
+<span class="line" id="L27">    }</span>
+<span class="line" id="L28">    <span class="tok-kw">return</span> prodx;</span>
+<span class="line" id="L29">}</span>
+<span class="line" id="L30"></span>
+<span class="line" id="L31"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">mean</span>(slice: []<span class="tok-type">f64</span>) <span class="tok-type">f64</span> {</span>
+<span class="line" id="L32">    <span class="tok-kw">const</span> len = length(slice);</span>
+<span class="line" id="L33">    <span class="tok-kw">const</span> sumx = sum(slice);</span>
+<span class="line" id="L34">    <span class="tok-kw">return</span> sumx / len;</span>
+<span class="line" id="L35">}</span>
+<span class="line" id="L36"></span>
+<span class="line" id="L37"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">meanGeometric</span>(slice: []<span class="tok-type">f64</span>) <span class="tok-type">f64</span> {</span>
+<span class="line" id="L38">    <span class="tok-kw">const</span> len = length(slice);</span>
+<span class="line" id="L39">    <span class="tok-kw">const</span> prodx = product(slice);</span>
+<span class="line" id="L40">    <span class="tok-kw">return</span> std.math.pow(prodx, <span class="tok-number">1</span> / len);</span>
 <span class="line" id="L41">}</span>
 <span class="line" id="L42"></span>
-<span class="line" id="L43"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">standardDeviation</span>(<span class="tok-kw">comptime</span> T: <span class="tok-type">type</span>, slice: []T) <span class="tok-type">f64</span> {</span>
-<span class="line" id="L44">    <span class="tok-kw">return</span> <span class="tok-builtin">@sqrt</span>(variance(T, slice));</span>
-<span class="line" id="L45">}</span>
-<span class="line" id="L46"></span>
-<span class="line" id="L47"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">standardError</span>(<span class="tok-kw">comptime</span> T: <span class="tok-type">type</span>, slice: []T) <span class="tok-type">f64</span> {</span>
-<span class="line" id="L48">    <span class="tok-kw">const</span> len = <span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-builtin">@floatFromInt</span>(slice.len));</span>
-<span class="line" id="L49">    <span class="tok-kw">return</span> <span class="tok-builtin">@sqrt</span>(variance(T, slice) / len);</span>
+<span class="line" id="L43"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">meanHarmonic</span>(slice: []<span class="tok-type">f64</span>) <span class="tok-type">f64</span> {</span>
+<span class="line" id="L44">    <span class="tok-kw">const</span> len = length(slice);</span>
+<span class="line" id="L45">    <span class="tok-kw">var</span> invsum: <span class="tok-type">f64</span> = <span class="tok-number">0</span>;</span>
+<span class="line" id="L46">    <span class="tok-kw">for</span> (slice) |x| {</span>
+<span class="line" id="L47">        invsum += <span class="tok-number">1</span> / x;</span>
+<span class="line" id="L48">    }</span>
+<span class="line" id="L49">    <span class="tok-kw">return</span> len / invsum;</span>
 <span class="line" id="L50">}</span>
 <span class="line" id="L51"></span>
-<span class="line" id="L52"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">skewness</span>(<span class="tok-kw">comptime</span> T: <span class="tok-type">type</span>, slice: []T) <span class="tok-type">f64</span> {</span>
-<span class="line" id="L53">    <span class="tok-kw">const</span> len = <span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-builtin">@floatFromInt</span>(slice.len));</span>
-<span class="line" id="L54">    <span class="tok-kw">const</span> m = mean(T, slice);</span>
-<span class="line" id="L55">    <span class="tok-kw">const</span> sd = standardDeviation(T, slice);</span>
-<span class="line" id="L56">    <span class="tok-kw">var</span> s: <span class="tok-type">f64</span> = <span class="tok-number">0</span>;</span>
-<span class="line" id="L57">    <span class="tok-kw">for</span> (slice) |x| {</span>
-<span class="line" id="L58">        <span class="tok-kw">const</span> fx = std.math.lossyCast(<span class="tok-type">f64</span>, x);</span>
-<span class="line" id="L59">        <span class="tok-kw">const</span> d = fx - m;</span>
-<span class="line" id="L60">        s += d * d * d;</span>
-<span class="line" id="L61">    }</span>
-<span class="line" id="L62">    <span class="tok-kw">return</span> s / (len * sd * sd * sd);</span>
-<span class="line" id="L63">}</span>
-<span class="line" id="L64"></span>
-<span class="line" id="L65"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">kurtosis</span>(<span class="tok-kw">comptime</span> T: <span class="tok-type">type</span>, slice: []T) <span class="tok-type">f64</span> {</span>
-<span class="line" id="L66">    <span class="tok-kw">const</span> len = <span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-builtin">@floatFromInt</span>(slice.len));</span>
-<span class="line" id="L67">    <span class="tok-kw">const</span> m = mean(T, slice);</span>
-<span class="line" id="L68">    <span class="tok-kw">var</span> sum2: <span class="tok-type">f64</span> = <span class="tok-number">0</span>;</span>
-<span class="line" id="L69">    <span class="tok-kw">var</span> sum4: <span class="tok-type">f64</span> = <span class="tok-number">0</span>;</span>
-<span class="line" id="L70">    <span class="tok-kw">for</span> (slice) |x| {</span>
-<span class="line" id="L71">        <span class="tok-kw">const</span> fx = std.math.lossyCast(<span class="tok-type">f64</span>, x);</span>
-<span class="line" id="L72">        <span class="tok-kw">const</span> d = fx - m;</span>
-<span class="line" id="L73">        <span class="tok-kw">const</span> d2 = d * d;</span>
-<span class="line" id="L74">        sum2 += d2;</span>
-<span class="line" id="L75">        sum4 += d2 * d2;</span>
-<span class="line" id="L76">    }</span>
-<span class="line" id="L77">    <span class="tok-kw">return</span> len * sum4 / (sum2 * sum2);</span>
-<span class="line" id="L78">}</span>
-<span class="line" id="L79"></span>
-<span class="line" id="L80"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">covariance</span>(<span class="tok-kw">comptime</span> T: <span class="tok-type">type</span>, slice1: []T, slice2: []T) <span class="tok-type">f64</span> {</span>
-<span class="line" id="L81">    <span class="tok-kw">const</span> len = <span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-builtin">@floatFromInt</span>(slice1.len));</span>
-<span class="line" id="L82">    <span class="tok-kw">const</span> m1 = mean(T, slice1);</span>
-<span class="line" id="L83">    <span class="tok-kw">const</span> m2 = mean(T, slice2);</span>
-<span class="line" id="L84">    <span class="tok-kw">var</span> s: <span class="tok-type">f64</span> = <span class="tok-number">0</span>;</span>
-<span class="line" id="L85">    <span class="tok-kw">for</span> (slice1, slice2) |x, y| {</span>
-<span class="line" id="L86">        <span class="tok-kw">const</span> fx = std.math.lossyCast(<span class="tok-type">f64</span>, x);</span>
-<span class="line" id="L87">        <span class="tok-kw">const</span> fy = std.math.lossyCast(<span class="tok-type">f64</span>, y);</span>
-<span class="line" id="L88">        s += fx * fy;</span>
-<span class="line" id="L89">    }</span>
-<span class="line" id="L90">    <span class="tok-kw">return</span> (s - len * m1 * m2) / (len - <span class="tok-number">1</span>);</span>
-<span class="line" id="L91">}</span>
-<span class="line" id="L92"></span>
-<span class="line" id="L93"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">correlation</span>(<span class="tok-kw">comptime</span> T: <span class="tok-type">type</span>, slice1: []T, slice2: []T) <span class="tok-type">f64</span> {</span>
-<span class="line" id="L94">    <span class="tok-kw">const</span> len = <span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-builtin">@floatFromInt</span>(slice1.len));</span>
-<span class="line" id="L95">    <span class="tok-kw">const</span> m1 = mean(T, slice1);</span>
-<span class="line" id="L96">    <span class="tok-kw">const</span> m2 = mean(T, slice2);</span>
-<span class="line" id="L97">    <span class="tok-kw">var</span> sumxy: <span class="tok-type">f64</span> = <span class="tok-number">0</span>;</span>
-<span class="line" id="L98">    <span class="tok-kw">var</span> sumxx: <span class="tok-type">f64</span> = <span class="tok-number">0</span>;</span>
-<span class="line" id="L99">    <span class="tok-kw">var</span> sumyy: <span class="tok-type">f64</span> = <span class="tok-number">0</span>;</span>
-<span class="line" id="L100">    <span class="tok-kw">for</span> (slice1, slice2) |x, y| {</span>
-<span class="line" id="L101">        <span class="tok-kw">const</span> fx = std.math.lossyCast(<span class="tok-type">f64</span>, x);</span>
-<span class="line" id="L102">        <span class="tok-kw">const</span> fy = std.math.lossyCast(<span class="tok-type">f64</span>, y);</span>
-<span class="line" id="L103">        sumxy += fx * fy;</span>
-<span class="line" id="L104">        sumxx += fx * fx;</span>
-<span class="line" id="L105">        sumyy += fy * fy;</span>
-<span class="line" id="L106">    }</span>
-<span class="line" id="L107">    <span class="tok-kw">const</span> num  = sumxy - len * m1 * m2;</span>
-<span class="line" id="L108">    <span class="tok-kw">const</span> den1 = sumxx - len * m1 * m1;</span>
-<span class="line" id="L109">    <span class="tok-kw">const</span> den2 = sumyy - len * m2 * m2;</span>
-<span class="line" id="L110">    <span class="tok-kw">return</span> num / <span class="tok-builtin">@sqrt</span>(den1 * den2);</span>
-<span class="line" id="L111">}</span>
-<span class="line" id="L112"></span>
+<span class="line" id="L52"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">medianAlloc</span>(allocator: std.mem.Allocator, slice: []<span class="tok-type">f64</span>) !<span class="tok-type">f64</span> {</span>
+<span class="line" id="L53">    <span class="tok-kw">const</span> temp = <span class="tok-kw">try</span> allocator.dupe(<span class="tok-type">f64</span>, slice);</span>
+<span class="line" id="L54">    <span class="tok-kw">defer</span> allocator.free(temp);</span>
+<span class="line" id="L55">    std.mem.sortUnstable(<span class="tok-type">f64</span>, temp, {}, std.sort.asc(<span class="tok-type">f64</span>));</span>
+<span class="line" id="L56">    <span class="tok-kw">return</span> temp[temp.len / <span class="tok-number">2</span>];</span>
+<span class="line" id="L57">}</span>
+<span class="line" id="L58"></span>
+<span class="line" id="L59"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">medianInPlace</span>(slice: []<span class="tok-type">f64</span>) <span class="tok-type">f64</span> {</span>
+<span class="line" id="L60">    std.mem.sortUnstable(<span class="tok-type">f64</span>, slice, {}, std.sort.asc(<span class="tok-type">f64</span>));</span>
+<span class="line" id="L61">    <span class="tok-kw">return</span> slice[slice.len / <span class="tok-number">2</span>];</span>
+<span class="line" id="L62">}</span>
+<span class="line" id="L63"></span>
+<span class="line" id="L64"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">variance</span>(slice: []<span class="tok-type">f64</span>) <span class="tok-type">f64</span> {</span>
+<span class="line" id="L65">    <span class="tok-kw">const</span> len = length(slice);</span>
+<span class="line" id="L66">    <span class="tok-kw">const</span> sumx = sum(slice);</span>
+<span class="line" id="L67">    <span class="tok-kw">var</span> sumxx: <span class="tok-type">f64</span> = <span class="tok-number">0</span>;</span>
+<span class="line" id="L68">    <span class="tok-kw">for</span> (slice) |x| {</span>
+<span class="line" id="L69">        sumxx += x * x;</span>
+<span class="line" id="L70">    }</span>
+<span class="line" id="L71">    <span class="tok-kw">return</span> (sumxx - sumx * sumx / len) / (len - <span class="tok-number">1</span>);</span>
+<span class="line" id="L72">}</span>
+<span class="line" id="L73"></span>
+<span class="line" id="L74"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">standardDeviation</span>(slice: []<span class="tok-type">f64</span>) <span class="tok-type">f64</span> {</span>
+<span class="line" id="L75">    <span class="tok-kw">return</span> <span class="tok-builtin">@sqrt</span>(variance(slice));</span>
+<span class="line" id="L76">}</span>
+<span class="line" id="L77"></span>
+<span class="line" id="L78"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">standardError</span>(slice: []<span class="tok-type">f64</span>) <span class="tok-type">f64</span> {</span>
+<span class="line" id="L79">    <span class="tok-kw">const</span> len = length(slice);</span>
+<span class="line" id="L80">    <span class="tok-kw">return</span> <span class="tok-builtin">@sqrt</span>(variance(slice) / len);</span>
+<span class="line" id="L81">}</span>
+<span class="line" id="L82"></span>
+<span class="line" id="L83"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">skewness</span>(slice: []<span class="tok-type">f64</span>) <span class="tok-type">f64</span> {</span>
+<span class="line" id="L84">    <span class="tok-kw">const</span> len = length(slice);</span>
+<span class="line" id="L85">    <span class="tok-kw">const</span> meanx = mean(slice);</span>
+<span class="line" id="L86">    <span class="tok-kw">const</span> sd = standardDeviation(slice);</span>
+<span class="line" id="L87">    <span class="tok-kw">var</span> sumddd: <span class="tok-type">f64</span> = <span class="tok-number">0</span>;</span>
+<span class="line" id="L88">    <span class="tok-kw">for</span> (slice) |x| {</span>
+<span class="line" id="L89">        <span class="tok-kw">const</span> d = x - meanx;</span>
+<span class="line" id="L90">        sumddd += d * d * d;</span>
+<span class="line" id="L91">    }</span>
+<span class="line" id="L92">    <span class="tok-kw">return</span> sumddd / (len * sd * sd * sd);</span>
+<span class="line" id="L93">}</span>
+<span class="line" id="L94"></span>
+<span class="line" id="L95"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">kurtosis</span>(slice: []<span class="tok-type">f64</span>) <span class="tok-type">f64</span> {</span>
+<span class="line" id="L96">    <span class="tok-kw">const</span> len = length(slice);</span>
+<span class="line" id="L97">    <span class="tok-kw">const</span> meanx = mean(slice);</span>
+<span class="line" id="L98">    <span class="tok-kw">var</span> sumdd: <span class="tok-type">f64</span> = <span class="tok-number">0</span>;</span>
+<span class="line" id="L99">    <span class="tok-kw">var</span> sumdddd: <span class="tok-type">f64</span> = <span class="tok-number">0</span>;</span>
+<span class="line" id="L100">    <span class="tok-kw">for</span> (slice) |x| {</span>
+<span class="line" id="L101">        <span class="tok-kw">const</span> d = x - meanx;</span>
+<span class="line" id="L102">        <span class="tok-kw">const</span> dd = d * d;</span>
+<span class="line" id="L103">        sumdd += dd;</span>
+<span class="line" id="L104">        sumdddd += dd * dd;</span>
+<span class="line" id="L105">    }</span>
+<span class="line" id="L106">    <span class="tok-kw">return</span> len * sumdddd / (sumdd * sumdd);</span>
+<span class="line" id="L107">}</span>
+<span class="line" id="L108"></span>
+<span class="line" id="L109"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">covariance</span>(slice1: []<span class="tok-type">f64</span>, slice2: []<span class="tok-type">f64</span>) <span class="tok-type">f64</span> {</span>
+<span class="line" id="L110">    <span class="tok-kw">const</span> len = length(slice1);</span>
+<span class="line" id="L111">    <span class="tok-kw">var</span> sumx: <span class="tok-type">f64</span> = <span class="tok-number">0</span>;</span>
+<span class="line" id="L112">    <span class="tok-kw">var</span> sumy: <span class="tok-type">f64</span> = <span class="tok-number">0</span>;</span>
+<span class="line" id="L113">    <span class="tok-kw">var</span> sumxy: <span class="tok-type">f64</span> = <span class="tok-number">0</span>;</span>
+<span class="line" id="L114">    <span class="tok-kw">for</span> (slice1, slice2) |x, y| {</span>
+<span class="line" id="L115">        sumx += x;</span>
+<span class="line" id="L116">        sumy += y;</span>
+<span class="line" id="L117">        sumxy += x * y;</span>
+<span class="line" id="L118">    }</span>
+<span class="line" id="L119">    <span class="tok-kw">return</span> (sumxy - sumx * sumy / len) / (len - <span class="tok-number">1</span>);</span>
+<span class="line" id="L120">}</span>
+<span class="line" id="L121"></span>
+<span class="line" id="L122"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">correlation</span>(slice1: []<span class="tok-type">f64</span>, slice2: []<span class="tok-type">f64</span>) <span class="tok-type">f64</span> {</span>
+<span class="line" id="L123">    <span class="tok-kw">const</span> len = length(slice1);</span>
+<span class="line" id="L124">    <span class="tok-kw">var</span> sumx: <span class="tok-type">f64</span> = <span class="tok-number">0</span>;</span>
+<span class="line" id="L125">    <span class="tok-kw">var</span> sumy: <span class="tok-type">f64</span> = <span class="tok-number">0</span>;</span>
+<span class="line" id="L126">    <span class="tok-kw">var</span> sumxy: <span class="tok-type">f64</span> = <span class="tok-number">0</span>;</span>
+<span class="line" id="L127">    <span class="tok-kw">var</span> sumxx: <span class="tok-type">f64</span> = <span class="tok-number">0</span>;</span>
+<span class="line" id="L128">    <span class="tok-kw">var</span> sumyy: <span class="tok-type">f64</span> = <span class="tok-number">0</span>;</span>
+<span class="line" id="L129">    <span class="tok-kw">for</span> (slice1, slice2) |x, y| {</span>
+<span class="line" id="L130">        sumx += x;</span>
+<span class="line" id="L131">        sumy += y;</span>
+<span class="line" id="L132">        sumxx += x * x;</span>
+<span class="line" id="L133">        sumyy += y * y;</span>
+<span class="line" id="L134">        sumxy += x * y;</span>
+<span class="line" id="L135">    }</span>
+<span class="line" id="L136">    <span class="tok-kw">const</span> num  = sumxy - sumx * sumy / len;</span>
+<span class="line" id="L137">    <span class="tok-kw">const</span> den1 = sumxx - sumx * sumx / len;</span>
+<span class="line" id="L138">    <span class="tok-kw">const</span> den2 = sumyy - sumy * sumy / len;</span>
+<span class="line" id="L139">    <span class="tok-kw">return</span> num / <span class="tok-builtin">@sqrt</span>(den1 * den2);</span>
+<span class="line" id="L140">}</span>
+<span class="line" id="L141"></span>
+<span class="line" id="L142"><span class="tok-kw">fn</span> <span class="tok-fn">rank</span>(allocator: std.mem.Allocator, slice: []<span class="tok-type">f64</span>) ![]<span class="tok-type">f64</span> {</span>
+<span class="line" id="L143">    <span class="tok-kw">const</span> ranked = <span class="tok-kw">try</span> allocator.dupe(<span class="tok-type">f64</span>, slice);</span>
+<span class="line" id="L144">    <span class="tok-kw">const</span> sorted = <span class="tok-kw">try</span> allocator.dupe(<span class="tok-type">f64</span>, slice);</span>
+<span class="line" id="L145">    <span class="tok-kw">defer</span> allocator.free(sorted);</span>
+<span class="line" id="L146">    std.mem.sortUnstable(<span class="tok-type">f64</span>, sorted, {}, std.sort.asc(<span class="tok-type">f64</span>));</span>
+<span class="line" id="L147">    <span class="tok-kw">const</span> original = slice;</span>
+<span class="line" id="L148">    <span class="tok-kw">for</span> (ranked, original) |*r, o| {</span>
+<span class="line" id="L149">        <span class="tok-kw">for</span> (sorted, <span class="tok-number">0</span>..) |s, i| {</span>
+<span class="line" id="L150">            <span class="tok-kw">if</span> (o == s) {</span>
+<span class="line" id="L151">                r.* = <span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-builtin">@floatFromInt</span>(i));</span>
+<span class="line" id="L152">            }</span>
+<span class="line" id="L153">        }</span>
+<span class="line" id="L154">    }</span>
+<span class="line" id="L155">    <span class="tok-kw">return</span> ranked;</span>
+<span class="line" id="L156">}</span>
+<span class="line" id="L157"></span>
+<span class="line" id="L158"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">correlationSpearman</span>(allocator: std.mem.Allocator, slice1: []<span class="tok-type">f64</span>, slice2: []<span class="tok-type">f64</span>) !<span class="tok-type">f64</span> {</span>
+<span class="line" id="L159">    <span class="tok-kw">const</span> rank1 = <span class="tok-kw">try</span> rank(allocator, slice1);</span>
+<span class="line" id="L160">    <span class="tok-kw">const</span> rank2 = <span class="tok-kw">try</span> rank(allocator, slice2);</span>
+<span class="line" id="L161">    <span class="tok-kw">defer</span> allocator.free(rank1);</span>
+<span class="line" id="L162">    <span class="tok-kw">defer</span> allocator.free(rank2);</span>
+<span class="line" id="L163">    <span class="tok-kw">return</span> correlation(rank1, rank2);</span>
+<span class="line" id="L164">}</span>
+<span class="line" id="L165"></span>
 </code></pre></body>
 </html>

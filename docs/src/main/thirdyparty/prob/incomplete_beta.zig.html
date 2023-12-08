@@ -301,7 +301,7 @@
 <span class="line" id="L169">    <span class="tok-kw">var</span> ans: <span class="tok-type">f64</span> = <span class="tok-number">1</span>;</span>
 <span class="line" id="L170">    <span class="tok-kw">var</span> r: <span class="tok-type">f64</span> = <span class="tok-number">1</span>;</span>
 <span class="line" id="L171">    <span class="tok-kw">var</span> n: <span class="tok-type">f64</span> = <span class="tok-number">0</span>;</span>
-<span class="line" id="L172">    <span class="tok-kw">var</span> thresh: <span class="tok-type">f64</span> = <span class="tok-number">3.0</span> * constants.MACHEP;</span>
+<span class="line" id="L172">    <span class="tok-kw">const</span> thresh: <span class="tok-type">f64</span> = <span class="tok-number">3.0</span> * constants.MACHEP;</span>
 <span class="line" id="L173"></span>
 <span class="line" id="L174">    <span class="tok-comment">// mimic do-while</span>
 </span>
@@ -382,11 +382,11 @@
 <span class="line" id="L249">    <span class="tok-kw">var</span> qkm2: <span class="tok-type">f64</span> = <span class="tok-number">1</span>;</span>
 <span class="line" id="L250">    <span class="tok-kw">var</span> pkm1: <span class="tok-type">f64</span> = <span class="tok-number">1</span>;</span>
 <span class="line" id="L251">    <span class="tok-kw">var</span> qkm1: <span class="tok-type">f64</span> = <span class="tok-number">1</span>;</span>
-<span class="line" id="L252">    <span class="tok-kw">var</span> z: <span class="tok-type">f64</span> = x / (<span class="tok-number">1.0</span> - x);</span>
+<span class="line" id="L252">    <span class="tok-kw">const</span> z: <span class="tok-type">f64</span> = x / (<span class="tok-number">1.0</span> - x);</span>
 <span class="line" id="L253">    <span class="tok-kw">var</span> ans: <span class="tok-type">f64</span> = <span class="tok-number">1</span>;</span>
 <span class="line" id="L254">    <span class="tok-kw">var</span> r: <span class="tok-type">f64</span> = <span class="tok-number">1</span>;</span>
 <span class="line" id="L255">    <span class="tok-kw">var</span> n: <span class="tok-type">f64</span> = <span class="tok-number">0</span>;</span>
-<span class="line" id="L256">    <span class="tok-kw">var</span> thresh: <span class="tok-type">f64</span> = <span class="tok-number">3.0</span> * constants.MACHEP;</span>
+<span class="line" id="L256">    <span class="tok-kw">const</span> thresh: <span class="tok-type">f64</span> = <span class="tok-number">3.0</span> * constants.MACHEP;</span>
 <span class="line" id="L257"></span>
 <span class="line" id="L258">    <span class="tok-comment">// mimic do-while</span>
 </span>
@@ -457,14 +457,14 @@
 <span class="line" id="L323"><span class="tok-comment">/// Power series for incomplete beta integral.</span></span>
 <span class="line" id="L324"><span class="tok-comment">/// Use when b*x is small and x not too close to 1.</span></span>
 <span class="line" id="L325"><span class="tok-kw">fn</span> <span class="tok-fn">pseries</span>(a: <span class="tok-type">f64</span>, b: <span class="tok-type">f64</span>, x: <span class="tok-type">f64</span>) <span class="tok-type">f64</span> {</span>
-<span class="line" id="L326">    <span class="tok-kw">var</span> ai = <span class="tok-number">1.0</span> / a;</span>
+<span class="line" id="L326">    <span class="tok-kw">const</span> ai = <span class="tok-number">1.0</span> / a;</span>
 <span class="line" id="L327">    <span class="tok-kw">var</span> u = (<span class="tok-number">1.0</span> - b) * x;</span>
 <span class="line" id="L328">    <span class="tok-kw">var</span> v = u / (a + <span class="tok-number">1.0</span>);</span>
-<span class="line" id="L329">    <span class="tok-kw">var</span> t1 = v;</span>
+<span class="line" id="L329">    <span class="tok-kw">const</span> t1 = v;</span>
 <span class="line" id="L330">    <span class="tok-kw">var</span> t = u;</span>
 <span class="line" id="L331">    <span class="tok-kw">var</span> n: <span class="tok-type">f64</span> = <span class="tok-number">2.0</span>;</span>
 <span class="line" id="L332">    <span class="tok-kw">var</span> s: <span class="tok-type">f64</span> = <span class="tok-number">0.0</span>;</span>
-<span class="line" id="L333">    <span class="tok-kw">var</span> z: <span class="tok-type">f64</span> = constants.MACHEP * ai;</span>
+<span class="line" id="L333">    <span class="tok-kw">const</span> z: <span class="tok-type">f64</span> = constants.MACHEP * ai;</span>
 <span class="line" id="L334"></span>
 <span class="line" id="L335">    <span class="tok-kw">while</span> (<span class="tok-builtin">@abs</span>(v) &gt; z) {</span>
 <span class="line" id="L336">        u = (n - b) * x / n;</span>
@@ -814,10 +814,10 @@
 <span class="line" id="L671">    };</span>
 <span class="line" id="L672"></span>
 <span class="line" id="L673">    <span class="tok-kw">for</span> (cases) |c| {</span>
-<span class="line" id="L674">        <span class="tok-kw">var</span> r = incompleteBeta(c[<span class="tok-number">0</span>], c[<span class="tok-number">1</span>], c[<span class="tok-number">2</span>]);</span>
+<span class="line" id="L674">        <span class="tok-kw">const</span> r = incompleteBeta(c[<span class="tok-number">0</span>], c[<span class="tok-number">1</span>], c[<span class="tok-number">2</span>]);</span>
 <span class="line" id="L675">        <span class="tok-kw">try</span> expectApproxEqRel(r, c[<span class="tok-number">3</span>], epsilon);</span>
 <span class="line" id="L676"></span>
-<span class="line" id="L677">        <span class="tok-kw">var</span> ri = inverseIncompleteBeta(c[<span class="tok-number">0</span>], c[<span class="tok-number">1</span>], r);</span>
+<span class="line" id="L677">        <span class="tok-kw">const</span> ri = inverseIncompleteBeta(c[<span class="tok-number">0</span>], c[<span class="tok-number">1</span>], r);</span>
 <span class="line" id="L678">        <span class="tok-kw">try</span> expectApproxEqRel(ri, c[<span class="tok-number">2</span>], epsilon);</span>
 <span class="line" id="L679">    }</span>
 <span class="line" id="L680">}</span>
