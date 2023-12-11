@@ -5,32 +5,35 @@ const assert = std.debug.assert;
 const Self = @This();
 
 // for testing purposes
-const Matrix = Self.setAllocator(std.testing.allocator);
+var Matrix = Self.setAllocator(std.testing.allocator);
 var first = [_]f64 {1, 2, 3};
 var secon = [_]f64 {4, 5, 6};
 var third = [_]f64 {7, 8, 9};
 var all = [_][]f64 {&first, &secon, &third};
-const X: [][]f64 = &all;
+const X = Self {.allocator = std.testing.allocator, .data = &all};
 
 allocator: std.mem.Allocator,
+data: [][]f64,
 
 /// Specify an allocator for the returning matrices and slices.
 pub fn setAllocator(allocator: std.mem.Allocator) Self {
-    return Self {.allocator = allocator};
+    return Self {
+        .allocator = allocator,
+        .data = undefined,
+    };
 }
 
 /// Prints a matrix in the correct orientation,
 /// output is customizable with `fmt`, such as "{d:.3}, ".
-pub fn print(self: Self, comptime fmt: []const u8, matrix: [][]f64) void {
-    _ = self;
+pub fn print(self: Self, comptime fmt: []const u8) void {
     const printf = std.debug.print;
-    const rows = matrix[0].len;
-    const cols = matrix.len;
+    const rows = self.data[0].len;
+    const cols = self.data.len;
     printf("[{} x {}] {{\n", .{rows, cols});
     for (0..rows) |i| {
         printf("    ", .{});
         for (0..cols) |j| {
-            printf(fmt, .{matrix[j][i]});
+            printf(fmt, .{self.data[j][i]});
         }
         printf("\n", .{});
     }
@@ -38,154 +41,181 @@ pub fn print(self: Self, comptime fmt: []const u8, matrix: [][]f64) void {
 } // TODO change from debug.print to io.Writer
 
 /// Allocates memory for a rows×columns matrix,
-/// the memory is undefined and must first be written before reading,
+/// the memory is undefined and must first be written to before reading,
 /// result must be freed by the caller with `destroy`.
-pub fn create(self: Self, rows: usize, columns: usize) ![][]f64 {
-    const result = try self.allocator.alloc([]f64, columns);
-    for (result) |*col| {
+pub fn create(self: Self, rows: usize, cols: usize) !Self {
+    const data = try self.allocator.alloc([]f64, cols);
+    for (data) |*col| {
         col.* = try self.allocator.alloc(f64, rows);
     }
-    return result;
+    return Self {
+        .allocator = self.allocator,
+        .data = data,
+    };
 }
 
 /// Frees the allocated memory of a matrix.
-pub fn destroy(self: Self, matrix: [][]f64) void {
-    for (matrix) |col| {
+pub fn destroy(self: Self) void {
+    for (self.data) |col| {
         self.allocator.free(col);
     }
-    self.allocator.free(matrix);
+    self.allocator.free(self.data);
 }
 
 test "Matrix.create, Matrix.destroy" {
     const Y = try Matrix.create(3, 3);
-    defer Matrix.destroy(Y);
-    for (Y, X) |coly, colx| {
+    defer Y.destroy();
+    for (Y.data, X.data) |coly, colx| {
         for (coly, colx) |*y, x| {
             y.* = x;
         }
     }
-    try std.testing.expectEqualSlices(f64, &.{1,2,3}, Y[0]);
-    try std.testing.expectEqualSlices(f64, &.{4,5,6}, Y[1]);
-    try std.testing.expectEqualSlices(f64, &.{7,8,9}, Y[2]);
+    try std.testing.expectEqualSlices(f64, &.{1,2,3}, Y.data[0]);
+    try std.testing.expectEqualSlices(f64, &.{4,5,6}, Y.data[1]);
+    try std.testing.expectEqualSlices(f64, &.{7,8,9}, Y.data[2]);
 }
 
 /// Creates a new matrix with the contents of another,
 /// result must be freed by the caller with `destroy`.
-pub fn dupe(self: Self, matrix: [][]f64) ![][]f64 {
-    const result = try self.allocator.dupe([]f64, matrix);
-    for (matrix, result) |old, *new| {
+pub fn dupe(self: Self) !Self {
+    const data = try self.allocator.dupe([]f64, self.data);
+    for (self.data, data) |old, *new| {
         new.* = try self.allocator.dupe(f64, old);
+    }
+    return Self {
+        .allocator = self.allocator,
+        .data = data,
+    };
+}
+
+test "Matrix.dupe" {
+    const Y = try X.dupe();
+    defer Y.destroy();
+    Y.data[1][1] = 55;
+    try std.testing.expectEqual(@as(f64, 55), Y.data[1][1]);
+    try std.testing.expectEqual(@as(f64, 5 ), X.data[1][1]);
+}
+
+/// Creates a new matrix with the values of a slice,
+/// `slice.len` must be divisible by `cols`,
+/// result must be freed by the caller with `destroy`.
+pub fn createFromSlice(self: Self, slice: []const f64, cols: usize) !Self {
+    const rows = try std.math.divExact(usize, slice.len, cols);
+    const result = try self.create(rows, cols);
+    for (0..cols) |j| {
+        const toskip = j * rows;
+        for (0..rows) |i| {
+            result.data[j][i] = slice[toskip + i];
+        }
     }
     return result;
 }
 
-test "Matrix.dupe" {
-    const Y = try Matrix.dupe(X);
-    defer Matrix.destroy(Y);
-    Y[1][1] = 55;
-    try std.testing.expectEqual(@as(f64, 55), Y[1][1]);
-    try std.testing.expectEqual(@as(f64, 5 ), X[1][1]);
+test "Matrix.createFromSlice" {
+    const Y = try Matrix.createFromSlice(&.{1, 2, 3, 4, 5, 6, 7, 8, 9}, 3);
+    defer Y.destroy();
+    try std.testing.expectEqualSlices(f64, X.data[0], Y.data[0]);
+    try std.testing.expectEqualSlices(f64, X.data[1], Y.data[1]);
+    try std.testing.expectEqualSlices(f64, X.data[2], Y.data[2]);
 }
 
 /// Creates a new n×n identity matrix,
 /// result must be freed by the caller with `destroy`.
-pub fn createIdentity(self: Self, n: usize) ![][]f64 {
+pub fn createIdentity(self: Self, n: usize) !Self {
     const result = try self.create(n, n);
     for (0..n) |i| {
-        @memset(result[i], 0);
-        result[i][i] = 1;
+        @memset(result.data[i], 0);
+        result.data[i][i] = 1;
     }
     return result;
 }
 
 test "Matrix.createIdentity" {
-    const I = try Matrix.createIdentity(3);
-    defer Matrix.destroy(I);
-    try std.testing.expectEqualSlices(f64, &.{1,0,0}, I[0]);
-    try std.testing.expectEqualSlices(f64, &.{0,1,0}, I[1]);
-    try std.testing.expectEqualSlices(f64, &.{0,0,1}, I[2]);
+    const Y = try Matrix.createIdentity(3);
+    defer Y.destroy();
+    try std.testing.expectEqualSlices(f64, &.{1, 0, 0}, Y.data[0]);
+    try std.testing.expectEqualSlices(f64, &.{0, 1, 0}, Y.data[1]);
+    try std.testing.expectEqualSlices(f64, &.{0, 0, 1}, Y.data[2]);
 }
 
 /// Creates a new square matrix where the diagonal is taken from a slice,
 /// result must be freed by the caller with `destroy`.
-pub fn createDiagonal(self: Self, slice: []f64) ![][]f64 {
+pub fn createDiagonal(self: Self, slice: []const f64) !Self {
     const n = slice.len;
     const result = try self.create(n, n);
     for (0..n) |i| {
-        @memset(result[i], 0);
-        result[i][i] = slice[i];
+        @memset(result.data[i], 0);
+        result.data[i][i] = slice[i];
     }
     return result;
 }
 
 test "Matrix.createDiagonal" {
-    var array = [_]f64 {1, 2, 3};
-    const D = try Matrix.createDiagonal(&array);
-    defer Matrix.destroy(D);
-    try std.testing.expectEqualSlices(f64, &.{1,0,0}, D[0]);
-    try std.testing.expectEqualSlices(f64, &.{0,2,0}, D[1]);
-    try std.testing.expectEqualSlices(f64, &.{0,0,3}, D[2]);
+    const Y = try Matrix.createDiagonal(&.{1, 2, 3});
+    defer Y.destroy();
+    try std.testing.expectEqualSlices(f64, &.{1, 0, 0}, Y.data[0]);
+    try std.testing.expectEqualSlices(f64, &.{0, 2, 0}, Y.data[1]);
+    try std.testing.expectEqualSlices(f64, &.{0, 0, 3}, Y.data[2]);
 }
 
 /// Returns the diagonal entries of the matrix as a slice,
 /// result must be freed by the caller.
-pub fn getDiagonal(self: Self, matrix: [][]f64) ![]f64 {
-    assert(matrix.len == matrix[0].len);
-    const n = matrix.len;
+pub fn getDiagonal(self: Self) ![]f64 {
+    assert(self.data.len == self.data[0].len);
+    const n = self.data.len;
     const result = try self.allocator.alloc(f64, n);
     for (0..n) |i| {
-        result[i] = matrix[i][i];
+        result[i] = self.data[i][i];
     }
     return result;
 }
 
 test "Matrix.getDiagonal" {
-    const slice = try Matrix.getDiagonal(X);
-    defer Matrix.allocator.free(slice);
-    try std.testing.expectEqualSlices(f64, &.{1,5,9}, slice);
+    const slice = try X.getDiagonal();
+    defer std.testing.allocator.free(slice);
+    try std.testing.expectEqualSlices(f64, &.{1, 5, 9}, slice);
 }
 
 /// Creates a new flipped version of a matrix over its main diagonal,
 /// the transpose of a matrix of size a×b is size b×a,
 /// result must be freed by the caller with `destroy`.
-pub fn transpose(self: Self, matrix: [][]f64) ![][]f64 {
-    const rows = matrix[0].len;
-    const cols = matrix.len;
+pub fn transpose(self: Self) !Self {
+    const rows = self.data[0].len;
+    const cols = self.data.len;
     const result = try self.create(cols, rows);
     for (0..cols) |j| {
         for (0..rows) |i| {
-            result[j][i] = matrix[i][j];
+            result.data[j][i] = self.data[i][j];
         }
     }
     return result;
 }
 
 test "Matrix.transpose" {
-    const T = try Matrix.transpose(X);
-    defer Matrix.destroy(T);
-    try std.testing.expectEqualSlices(f64, &.{1,4,7}, T[0]);
-    try std.testing.expectEqualSlices(f64, &.{2,5,8}, T[1]);
-    try std.testing.expectEqualSlices(f64, &.{3,6,9}, T[2]);
+    const Y = try X.transpose();
+    defer Y.destroy();
+    try std.testing.expectEqualSlices(f64, &.{1, 4, 7}, Y.data[0]);
+    try std.testing.expectEqualSlices(f64, &.{2, 5, 8}, Y.data[1]);
+    try std.testing.expectEqualSlices(f64, &.{3, 6, 9}, Y.data[2]);
 }
 
 /// Calculates the sum of the diagonal entries of a square matrix.
-pub fn trace(matrix: [][]f64) f64 {
-    assert(matrix.len == matrix[0].len);
+pub fn trace(self: Self) f64 {
+    assert(self.data.len == self.data[0].len);
     var sum: f64 = 0;
-    for (0..matrix.len) |i| {
-        sum += matrix[i][i];
+    for (0..self.data.len) |i| {
+        sum += self.data[i][i];
     }
     return sum;
 }
 
 test "Matrix.trace" {
-    try std.testing.expectEqual(@as(f64, 15), trace(X));
+    try std.testing.expectEqual(@as(f64, 15), X.trace());
 }
 
-/// Overwrites a matrix by adding a number to every entry.
-pub fn addScalar(self: Self, matrix: [][]f64, scalar: f64) void {
-    _ = self;
-    for (matrix) |col| {
+/// Overwrites the matrix by adding a number to every entry.
+pub fn addScalar(self: Self, scalar: f64) void {
+    for (self.data) |col| {
         for (col) |*entry| {
             entry.* += scalar;
         }
@@ -193,40 +223,17 @@ pub fn addScalar(self: Self, matrix: [][]f64, scalar: f64) void {
 }
 
 test "Matrix.addScalar" {
-    const Y = try Matrix.dupe(X);
-    defer Matrix.destroy(Y);
-    Matrix.addScalar(Y, 3);
-    try std.testing.expectEqualSlices(f64, &.{4 ,5 ,6 }, Y[0]);
-    try std.testing.expectEqualSlices(f64, &.{7 ,8 ,9 }, Y[1]);
-    try std.testing.expectEqualSlices(f64, &.{10,11,12}, Y[2]);
+    const Y = try X.dupe();
+    defer Y.destroy();
+    Y.addScalar(3);
+    try std.testing.expectEqualSlices(f64, &.{4 , 5 , 6 }, Y.data[0]);
+    try std.testing.expectEqualSlices(f64, &.{7 , 8 , 9 }, Y.data[1]);
+    try std.testing.expectEqualSlices(f64, &.{10, 11, 12}, Y.data[2]);
 }
 
-/// Overwrites the lhs matrix by adding the rhs matrix to it,
-/// they must have the same amount of rows and columns.
-pub fn addMatrix(self: Self, lhs: [][]f64, rhs: [][]f64) void {
-    _ = self;
-    assert(lhs.len == rhs.len);
-    assert(lhs[0].len == rhs[0].len);
-    for (lhs, rhs) |col1, col2| {
-        for (col1, col2) |*entry1, entry2| {
-            entry1.* += entry2;
-        }
-    }
-}
-
-test "Matrix.addMatrix" {
-    const Y = try Matrix.dupe(X);
-    defer Matrix.destroy(Y);
-    Matrix.addMatrix(Y, X);
-    try std.testing.expectEqualSlices(f64, &.{2 ,4 ,6 }, Y[0]);
-    try std.testing.expectEqualSlices(f64, &.{8 ,10,12}, Y[1]);
-    try std.testing.expectEqualSlices(f64, &.{14,16,18}, Y[2]);
-}
-
-/// Overwrites a matrix by multiplying a number to every entry.
-pub fn multiplyScalar(self: Self, matrix: [][]f64, scalar: f64) void {
-    _ = self;
-    for (matrix) |col| {
+/// Overwrites the matrix by multiplying a number to every entry.
+pub fn multiplyScalar(self: Self, scalar: f64) void {
+    for (self.data) |col| {
         for (col) |*entry| {
             entry.* *= scalar;
         }
@@ -234,27 +241,48 @@ pub fn multiplyScalar(self: Self, matrix: [][]f64, scalar: f64) void {
 }
 
 test "Matrix.multiplyScalar" {
-    const Y = try Matrix.dupe(X);
-    defer Matrix.destroy(Y);
-    Matrix.multiplyScalar(Y, 3);
-    try std.testing.expectEqualSlices(f64, &.{3 ,6 ,9 }, Y[0]);
-    try std.testing.expectEqualSlices(f64, &.{12,15,18}, Y[1]);
-    try std.testing.expectEqualSlices(f64, &.{21,24,27}, Y[2]);
+    const Y = try X.dupe();
+    defer Y.destroy();
+    Y.multiplyScalar(3);
+    try std.testing.expectEqualSlices(f64, &.{3 , 6 , 9 }, Y.data[0]);
+    try std.testing.expectEqualSlices(f64, &.{12, 15, 18}, Y.data[1]);
+    try std.testing.expectEqualSlices(f64, &.{21, 24, 27}, Y.data[2]);
+}
+
+/// Overwrites the matrix by adding another one to it,
+/// they must have the same amount of rows and columns.
+pub fn addMatrix(self: Self, rhs: Self) void {
+    assert(self.data.len == rhs.data.len);
+    assert(self.data[0].len == rhs.data[0].len);
+    for (self.data, rhs.data) |col1, col2| {
+        for (col1, col2) |*entry1, entry2| {
+            entry1.* += entry2;
+        }
+    }
+}
+
+test "Matrix.addMatrix" {
+    const Y = try X.dupe();
+    defer Y.destroy();
+    Y.addMatrix(X);
+    try std.testing.expectEqualSlices(f64, &.{2 , 4 , 6 }, Y.data[0]);
+    try std.testing.expectEqualSlices(f64, &.{8 , 10, 12}, Y.data[1]);
+    try std.testing.expectEqualSlices(f64, &.{14, 16, 18}, Y.data[2]);
 }
 
 /// Creates a new matrix by doing matrix multiplication between lhs and rhs
 /// number of columns of lhs must equal number of rows of rhs,
 /// result must be freed by the caller with `destroy`.
-pub fn multiplyMatrix(self: Self, lhs: [][]f64, rhs: [][]f64) ![][]f64 {
-    assert(lhs.len == rhs[0].len);
-    const rows = lhs[0].len;
-    const cols = rhs.len;
-    const result = try self.create(lhs[0].len, rhs.len);
+pub fn multiplyMatrix(self: Self, rhs: Self) !Self {
+    assert(self.data.len == rhs.data[0].len);
+    const rows = self.data[0].len;
+    const cols = rhs.data.len;
+    const result = try self.create(rows, cols);
     for (0..rows) |j| {
         for (0..cols) |i| {
-            result[j][i] = 0;
-            for (0..lhs.len) |k| {
-                result[j][i] += lhs[k][i] * rhs[j][k];
+            result.data[j][i] = 0;
+            for (0..self.data.len) |k| {
+                result.data[j][i] += self.data[k][i] * rhs.data[j][k];
             }
         }
     }
@@ -262,88 +290,88 @@ pub fn multiplyMatrix(self: Self, lhs: [][]f64, rhs: [][]f64) ![][]f64 {
 }
 
 test "Matrix.multiplyMatrix" {
-    const Y = try Matrix.multiplyMatrix(X, X);
-    defer Matrix.destroy(Y);
-    try std.testing.expectEqualSlices(f64, &.{30 ,36 ,42 }, Y[0]);
-    try std.testing.expectEqualSlices(f64, &.{66 ,81 ,96 }, Y[1]);
-    try std.testing.expectEqualSlices(f64, &.{102,126,150}, Y[2]);
+    const Y = try X.multiplyMatrix(X);
+    defer Y.destroy();
+    try std.testing.expectEqualSlices(f64, &.{30 , 36 , 42 }, Y.data[0]);
+    try std.testing.expectEqualSlices(f64, &.{66 , 81 , 96 }, Y.data[1]);
+    try std.testing.expectEqualSlices(f64, &.{102, 126, 150}, Y.data[2]);
 }
 
 /// Calculates the determinant of a square matrix.
-pub fn determinant(self: Self, matrix: [][]f64) !f64 {
-    assert(matrix.len == matrix[0].len);
-    const result = try self.dupe(matrix);
-    defer self.destroy(result);
-    const n = result.len;
+pub fn determinant(self: Self) !f64 {
+    assert(self.data.len == self.data[0].len);
+    const result = try self.dupe();
+    defer result.destroy();
+    const n = result.data.len;
     for (0..n - 1) |k| {
         for (k + 1..n) |j| {
             for (k + 1..n) |i| {
-                const num1 = result[j][i] * result[k][k];
-                const num2 = result[k][i] * result[j][k];
-                const den = if (k == 0) 1 else result[k - 1][k - 1];
-                result[j][i] = (num1 - num2) / den;
+                const num1 = result.data[j][i] * result.data[k][k];
+                const num2 = result.data[k][i] * result.data[j][k];
+                const den = if (k == 0) 1 else result.data[k - 1][k - 1];
+                result.data[j][i] = (num1 - num2) / den;
             }
         }
     }
-    return result[n - 1][n - 1];
+    return result.data[n - 1][n - 1];
 }
 
 test "Matrix.determinant" {
-    const Y = try Matrix.dupe(X);
-    defer Matrix.destroy(Y);
-    Y[1][1] = 55;
-    const det = try Matrix.determinant(Y);
+    const Y = try X.dupe();
+    defer Y.destroy();
+    Y.data[1][1] = 55;
+    const det = try Y.determinant();
     try std.testing.expectEqual(@as(f64, -600), det);
 }
 
 /// Creates a new matrix by removing a specified row and column by its index,
 /// result must be freed by the caller with `destroy`.
-pub fn minor(self: Self, matrix: [][]f64, row: usize, column: usize) ![][]f64 {
-    const rows = matrix[0].len - 1;
-    const cols = matrix.len - 1;
+pub fn minor(self: Self, row: usize, col: usize) !Self {
+    const rows = self.data[0].len - 1;
+    const cols = self.data.len - 1;
     const result = try self.create(rows, cols);
     for (0..cols) |j| {
-        const skippedcol = j + @intFromBool(j >= column);
+        const skippedcol = j + @intFromBool(j >= col);
         for (0..rows) |i| {
             const skippedrow = i + @intFromBool(i >= row);
-            result[j][i] = matrix[skippedcol][skippedrow];
+            result.data[j][i] = self.data[skippedcol][skippedrow];
         }
     }
     return result;
 }
 
 test "Matrix.minor" {
-    const Y = try Matrix.minor(X, 1, 1);
-    defer Matrix.destroy(Y);
-    try std.testing.expectEqualSlices(f64, &.{1,3}, Y[0]);
-    try std.testing.expectEqualSlices(f64, &.{7,9}, Y[1]);
+    const Y = try X.minor(1, 1);
+    defer Y.destroy();
+    try std.testing.expectEqualSlices(f64, &.{1, 3}, Y.data[0]);
+    try std.testing.expectEqualSlices(f64, &.{7, 9}, Y.data[1]);
 }
 
 /// Creates a new matrix that is the inverse of a square matrix,
 /// result must be freed by the caller with `destroy`.
-pub fn inverse(self: Self, matrix: [][]f64) ![][]f64 {
-    const det = try self.determinant(matrix);
-    const result = try self.dupe(matrix);
-    for (0..result.len) |j| {
-        for (0..result.len) |i| {
-            const minor_matrix = try self.minor(matrix, i, j);
-            defer self.destroy(minor_matrix);
-            const cofactor = try self.determinant(minor_matrix);
+pub fn inverse(self: Self) !Self {
+    const det = try self.determinant();
+    const result = try self.dupe();
+    for (0..result.data.len) |j| {
+        for (0..result.data.len) |i| {
+            const minor_matrix = try self.minor(i, j);
+            defer minor_matrix.destroy();
+            const cofactor = try minor_matrix.determinant();
             const sign: f64 = if ((i + j) % 2 == 0) 1 else -1;
-            result[i][j] = sign * cofactor / det;
+            result.data[i][j] = sign * cofactor / det;
         }
     }
     return result;
 }
 
 test "Matrix.inverse" {
-    const Y = try Matrix.dupe(X);
-    defer Matrix.destroy(Y);
-    Y[1][1] = 55;
-    const Z = try Matrix.inverse(Y);
-    defer Matrix.destroy(Z);
-    Matrix.multiplyScalar(Z, 1 / try Matrix.determinant(Z));
-    try std.testing.expectEqualSlices(f64, &.{ 447,   6, -153}, Z[0]);
-    try std.testing.expectEqualSlices(f64, &.{   6, -12,    6}, Z[1]);
-    try std.testing.expectEqualSlices(f64, &.{-353,   6,   47}, Z[2]);
+    const Y = try X.dupe();
+    defer Y.destroy();
+    Y.data[1][1] = 55;
+    const Z = try Y.inverse();
+    defer Z.destroy();
+    Z.multiplyScalar(1 / try Z.determinant());
+    try std.testing.expectEqualSlices(f64, &.{ 447,   6, -153}, Z.data[0]);
+    try std.testing.expectEqualSlices(f64, &.{   6, -12,    6}, Z.data[1]);
+    try std.testing.expectEqualSlices(f64, &.{-353,   6,   47}, Z.data[2]);
 }
