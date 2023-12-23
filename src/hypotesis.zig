@@ -1,5 +1,5 @@
 const std = @import("std");
-const rv = @import("main.zig");
+const rv = @import("root.zig");
 
 const Htest = struct {
     name: []const u8,

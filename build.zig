@@ -6,14 +6,14 @@ pub fn build(b: *std.Build) !void {
 
     const lib = b.addStaticLibrary(.{
         .name = "random_variable",
-        .root_source_file = .{.path = "src/main.zig"},
+        .root_source_file = .{.path = "src/root.zig"},
         .target = target,
         .optimize = optimize,
     });
     b.installArtifact(lib);
 
     const tests = b.addTest(.{
-        .root_source_file = .{.path = "src/main.zig"},
+        .root_source_file = .{.path = "src/root.zig"},
         .target = target,
         .optimize = optimize,
     });
@@ -24,7 +24,7 @@ pub fn build(b: *std.Build) !void {
     test_step.dependOn(&test_cmd.step);
 
     const docs_tests = b.addTest(.{
-        .root_source_file = .{.path = "src/main.zig"},
+        .root_source_file = .{.path = "src/root.zig"},
         .target = target,
         .optimize = optimize,
     });
