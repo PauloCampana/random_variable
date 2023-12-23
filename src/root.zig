@@ -10,6 +10,8 @@ pub const hypotesis = @import("hypotesis.zig");
 
 pub const Matrix = @import("Matrix.zig");
 
+pub const csv = @import("csv.zig");
+
 const std = @import("std");
 test {
     std.testing.refAllDecls(@This());

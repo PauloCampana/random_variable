@@ -25,20 +25,18 @@ pub fn setAllocator(allocator: std.mem.Allocator) Self {
 
 /// Prints a matrix in the correct orientation,
 /// output is customizable with `fmt`, such as "{d:.3}, ".
-pub fn print(self: Self, comptime fmt: []const u8) void {
-    const printf = std.debug.print;
+pub fn print(self: Self, writer: anytype, comptime fmt: []const u8) !void {
     const rows = self.data[0].len;
     const cols = self.data.len;
-    printf("[{} x {}] {{\n", .{rows, cols});
-    for (0..rows) |i| {
-        printf("    ", .{});
-        for (0..cols) |j| {
-            printf(fmt, .{self.data[j][i]});
+    try writer.print("[{} x {}] {{", .{rows, cols});
+    for (0..@min(rows, 10)) |i| {
+        try writer.print("\n    ", .{});
+        for (0..@min(cols, 10)) |j| {
+            try writer.print(fmt, .{self.data[j][i]});
         }
-        printf("\n", .{});
     }
-    printf("}}\n", .{});
-} // TODO change from debug.print to io.Writer
+    try writer.print("\n}}\n", .{});
+}
 
 /// Allocates memory for a rows×columns matrix,
 /// the memory is undefined and must first be written to before reading,
@@ -70,9 +68,9 @@ test "Matrix.create, Matrix.destroy" {
             y.* = x;
         }
     }
-    try std.testing.expectEqualSlices(f64, &.{1,2,3}, Y.data[0]);
-    try std.testing.expectEqualSlices(f64, &.{4,5,6}, Y.data[1]);
-    try std.testing.expectEqualSlices(f64, &.{7,8,9}, Y.data[2]);
+    try std.testing.expectEqualSlices(f64, &.{1, 2, 3}, Y.data[0]);
+    try std.testing.expectEqualSlices(f64, &.{4, 5, 6}, Y.data[1]);
+    try std.testing.expectEqualSlices(f64, &.{7, 8, 9}, Y.data[2]);
 }
 
 /// Creates a new matrix with the contents of another,
