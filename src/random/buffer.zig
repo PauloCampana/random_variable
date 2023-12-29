@@ -25,7 +25,7 @@ pub fn Buffer(comptime D: type, comptime C: type) type {
         generator: std.rand.Random,
 
         /// Specify an engine for random number generation
-        pub fn setGenerator(generator: std.rand.Random) Self {
+        pub fn init(generator: std.rand.Random) Self {
             return Self {.generator = generator};
         }
 

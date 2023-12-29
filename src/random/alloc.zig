@@ -27,7 +27,7 @@ pub fn Alloc(comptime D: type, comptime C: type) type {
 
         /// Specify an engine for random number generation
         /// and an allocator for the returning slices
-        pub fn setGeneratorAllocator(generator: std.rand.Random, allocator: std.mem.Allocator) Self {
+        pub fn init(generator: std.rand.Random, allocator: std.mem.Allocator) Self {
             return Self {
                 .generator = generator,
                 .allocator = allocator,

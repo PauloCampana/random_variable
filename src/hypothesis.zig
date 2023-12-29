@@ -1,21 +1,28 @@
 const std = @import("std");
 const rv = @import("root.zig");
 
-const Htest = struct {
+pub const Htest = struct {
     name: []const u8,
     H0: []const u8,
     statistic: f64,
     quantile: f64,
     pvalue: f64,
-};
 
-pub fn print(t: Htest, writer: anytype) !void {
-    try writer.print("{s}\n", .{t.name});
-    try writer.print("H0: {s}\n", .{t.H0});
-    try writer.print("statistic: {d:.3}\n", .{t.statistic});
-    try writer.print("quantile: {d:.3}\n", .{t.quantile});
-    try writer.print("pvalue: {d:.5}\n", .{t.pvalue});
-}
+    pub fn format(
+        self: Htest,
+        comptime fmt: []const u8,
+        options: std.fmt.FormatOptions,
+        writer: anytype,
+    ) !void {
+        _ = fmt;
+        _ = options;
+        try writer.print("{s}\n", .{self.name});
+        try writer.print("H0: {s}\n", .{self.H0});
+        try writer.print("statistic: {d:.3}\n", .{self.statistic});
+        try writer.print("quantile: {d:.3}\n", .{self.quantile});
+        try writer.print("pvalue: {d:.3}\n", .{self.pvalue});
+    }
+};
 
 pub fn ztest(slice: []f64, mu0: f64, sd: f64, significance: f64) !Htest {
     const len = @as(f64, @floatFromInt(slice.len));

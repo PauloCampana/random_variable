@@ -5,34 +5,47 @@ const assert = std.debug.assert;
 const Self = @This();
 
 // for testing purposes
-var Matrix = Self.setAllocator(std.testing.allocator);
-var first = [_]f64 {1, 2, 3};
-var secon = [_]f64 {4, 5, 6};
-var third = [_]f64 {7, 8, 9};
-var all = [_][]f64 {&first, &secon, &third};
-const X = Self {.allocator = std.testing.allocator, .data = &all};
+var Matrix = Self.init(std.testing.allocator);
+const X = Self {
+    .allocator = std.testing.allocator,
+    .data = blk: {
+        var first = [_]f64 {1, 2, 3};
+        var secon = [_]f64 {4, 5, 6};
+        var third = [_]f64 {7, 8, 9};
+        var all = [_][]f64 {&first, &secon, &third};
+        break :blk &all;
+    }
+};
 
 allocator: std.mem.Allocator,
 data: [][]f64,
 
 /// Specify an allocator for the returning matrices and slices.
-pub fn setAllocator(allocator: std.mem.Allocator) Self {
+pub fn init(allocator: std.mem.Allocator) Self {
     return Self {
         .allocator = allocator,
         .data = undefined,
     };
 }
 
-/// Prints a matrix in the correct orientation,
-/// output is customizable with `fmt`, such as "{d:.3}, ".
-pub fn print(self: Self, writer: anytype, comptime fmt: []const u8) !void {
+/// Function that gets used by `std.fmt.format` so you can print
+/// the matrix in the correct orientation by using a regular
+/// `print` function from any writer.
+pub fn format(
+    self: Self,
+    comptime fmt: []const u8,
+    options: std.fmt.FormatOptions,
+    writer: anytype,
+) !void {
+    _ = options;
+    const new_fmt = if (fmt.len == 0) "{d:10.3}" else fmt;
     const rows = self.data[0].len;
     const cols = self.data.len;
-    try writer.print("[{} x {}] {{", .{rows, cols});
+    try writer.print("[{}][{}]Matrix {{", .{rows, cols});
     for (0..@min(rows, 10)) |i| {
         try writer.print("\n    ", .{});
         for (0..@min(cols, 10)) |j| {
-            try writer.print(fmt, .{self.data[j][i]});
+            try writer.print(new_fmt, .{self.data[j][i]});
         }
     }
     try writer.print("\n}}\n", .{});
@@ -181,8 +194,8 @@ pub fn transpose(self: Self) !Self {
     const rows = self.data[0].len;
     const cols = self.data.len;
     const result = try self.create(cols, rows);
-    for (0..cols) |j| {
-        for (0..rows) |i| {
+    for (0..rows) |j| {
+        for (0..cols) |i| {
             result.data[j][i] = self.data[i][j];
         }
     }
@@ -268,6 +281,27 @@ test "Matrix.addMatrix" {
     try std.testing.expectEqualSlices(f64, &.{14, 16, 18}, Y.data[2]);
 }
 
+/// Overwrites the matrix by subtracting another one to it,
+/// they must have the same amount of rows and columns.
+pub fn subtractMatrix(self: Self, rhs: Self) void {
+    assert(self.data.len == rhs.data.len);
+    assert(self.data[0].len == rhs.data[0].len);
+    for (self.data, rhs.data) |col1, col2| {
+        for (col1, col2) |*entry1, entry2| {
+            entry1.* -= entry2;
+        }
+    }
+}
+
+test "Matrix.subtractMatrix" {
+    const Y = try X.dupe();
+    defer Y.destroy();
+    Y.subtractMatrix(X);
+    try std.testing.expectEqualSlices(f64, &.{0, 0, 0}, Y.data[0]);
+    try std.testing.expectEqualSlices(f64, &.{0, 0, 0}, Y.data[1]);
+    try std.testing.expectEqualSlices(f64, &.{0, 0, 0}, Y.data[2]);
+}
+
 /// Creates a new matrix by doing matrix multiplication between lhs and rhs
 /// number of columns of lhs must equal number of rows of rhs,
 /// result must be freed by the caller with `destroy`.
@@ -276,8 +310,8 @@ pub fn multiplyMatrix(self: Self, rhs: Self) !Self {
     const rows = self.data[0].len;
     const cols = rhs.data.len;
     const result = try self.create(rows, cols);
-    for (0..rows) |j| {
-        for (0..cols) |i| {
+    for (0..cols) |j| {
+        for (0..rows) |i| {
             result.data[j][i] = 0;
             for (0..self.data.len) |k| {
                 result.data[j][i] += self.data[k][i] * rhs.data[j][k];
