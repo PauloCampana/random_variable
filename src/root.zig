@@ -6,11 +6,11 @@ pub const distribution = @import("distribution.zig");
 pub const quantile = @import("quantile.zig");
 
 pub const descriptive = @import("descriptive.zig");
-pub const hypotesis = @import("hypotesis.zig");
+pub const hypotesis = @import("hypothesis.zig");
 
 pub const Matrix = @import("Matrix.zig");
-
 pub const csv = @import("csv.zig");
+pub const LinearModel = @import("LinearModel.zig");
 
 const std = @import("std");
 test {

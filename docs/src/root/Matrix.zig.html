@@ -1,0 +1,527 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">    <title>Matrix.zig - source view</title>
+    <link rel="icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAgklEQVR4AWMYWuD7EllJIM4G4g4g5oIJ/odhOJ8wToOxSTXgNxDHoeiBMfA4+wGShjyYOCkG/IGqWQziEzYAoUAeiF9D5U+DxEg14DRU7jWIT5IBIOdCxf+A+CQZAAoopEB7QJwBCBwHiip8UYmRdrAlDpIMgApwQZNnNii5Dq0MBgCxxycBnwEd+wAAAABJRU5ErkJggg==">
+    <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNTMgMTQwIj48ZyBmaWxsPSIjRjdBNDFEIj48Zz48cG9seWdvbiBwb2ludHM9IjQ2LDIyIDI4LDQ0IDE5LDMwIi8+PHBvbHlnb24gcG9pbnRzPSI0NiwyMiAzMywzMyAyOCw0NCAyMiw0NCAyMiw5NSAzMSw5NSAyMCwxMDAgMTIsMTE3IDAsMTE3IDAsMjIiIHNoYXBlLXJlbmRlcmluZz0iY3Jpc3BFZGdlcyIvPjxwb2x5Z29uIHBvaW50cz0iMzEsOTUgMTIsMTE3IDQsMTA2Ii8+PC9nPjxnPjxwb2x5Z29uIHBvaW50cz0iNTYsMjIgNjIsMzYgMzcsNDQiLz48cG9seWdvbiBwb2ludHM9IjU2LDIyIDExMSwyMiAxMTEsNDQgMzcsNDQgNTYsMzIiIHNoYXBlLXJlbmRlcmluZz0iY3Jpc3BFZGdlcyIvPjxwb2x5Z29uIHBvaW50cz0iMTE2LDk1IDk3LDExNyA5MCwxMDQiLz48cG9seWdvbiBwb2ludHM9IjExNiw5NSAxMDAsMTA0IDk3LDExNyA0MiwxMTcgNDIsOTUiIHNoYXBlLXJlbmRlcmluZz0iY3Jpc3BFZGdlcyIvPjxwb2x5Z29uIHBvaW50cz0iMTUwLDAgNTIsMTE3IDMsMTQwIDEwMSwyMiIvPjwvZz48Zz48cG9seWdvbiBwb2ludHM9IjE0MSwyMiAxNDAsNDAgMTIyLDQ1Ii8+PHBvbHlnb24gcG9pbnRzPSIxNTMsMjIgMTUzLDExNyAxMDYsMTE3IDEyMCwxMDUgMTI1LDk1IDEzMSw5NSAxMzEsNDUgMTIyLDQ1IDEzMiwzNiAxNDEsMjIiIHNoYXBlLXJlbmRlcmluZz0iY3Jpc3BFZGdlcyIvPjxwb2x5Z29uIHBvaW50cz0iMTI1LDk1IDEzMCwxMTAgMTA2LDExNyIvPjwvZz48L2c+PC9zdmc+">
+    <style>
+      body{
+        font-family: system-ui, -apple-system, Roboto, "Segoe UI", sans-serif;
+        margin: 0;
+        line-height: 1.5;
+      }
+
+      pre > code {
+        display: block;
+        overflow: auto;
+        line-height: normal;
+        margin: 0em;
+      }
+      .tok-kw {
+          color: #333;
+          font-weight: bold;
+      }
+      .tok-str {
+          color: #d14;
+      }
+      .tok-builtin {
+          color: #005C7A;
+      }
+      .tok-comment {
+          color: #545454;
+          font-style: italic;
+      }
+      .tok-fn {
+          color: #900;
+          font-weight: bold;
+      }
+      .tok-null {
+          color: #005C5C;
+      }
+      .tok-number {
+          color: #005C5C;
+      }
+      .tok-type {
+          color: #458;
+          font-weight: bold;
+      }
+      pre {
+        counter-reset: line;
+      }
+      pre .line:before {
+        counter-increment: line;
+        content: counter(line);
+        display: inline-block;
+        padding-right: 1em;
+        width: 2em;
+        text-align: right;
+        color: #999;
+      }
+      
+      .line {
+        width: 100%;
+        display: inline-block;
+      }
+      .line:target {
+        border-top: 1px solid #ccc;
+        border-bottom: 1px solid #ccc;
+        background: #fafafa;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        body{
+            background:#222;
+            color: #ccc;
+        }
+        pre > code {
+            color: #ccc;
+            background: #222;
+            border: unset;
+        }
+        .line:target {
+            border-top: 1px solid #444;
+            border-bottom: 1px solid #444;
+            background: #333;
+        }
+        .tok-kw {
+            color: #eee;
+        }
+        .tok-str {
+            color: #2e5;
+        }
+        .tok-builtin {
+            color: #ff894c;
+        }
+        .tok-comment {
+            color: #aa7;
+        }
+        .tok-fn {
+            color: #B1A0F8;
+        }
+        .tok-null {
+            color: #ff8080;
+        }
+        .tok-number {
+            color: #ff8080;
+        }
+        .tok-type {
+            color: #68f;
+        }
+      }
+    </style>
+</head>
+<body>
+<pre><code><span class="line" id="L1"><span class="tok-comment">//! Functions for manipulation of dynamically allocated matrices</span></span>
+<span class="line" id="L2"></span>
+<span class="line" id="L3"><span class="tok-kw">const</span> std = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;std&quot;</span>);</span>
+<span class="line" id="L4"><span class="tok-kw">const</span> assert = std.debug.assert;</span>
+<span class="line" id="L5"><span class="tok-kw">const</span> Self = <span class="tok-builtin">@This</span>();</span>
+<span class="line" id="L6"></span>
+<span class="line" id="L7"><span class="tok-comment">// for testing purposes</span>
+</span>
+<span class="line" id="L8"><span class="tok-kw">var</span> Matrix = Self.init(std.testing.allocator);</span>
+<span class="line" id="L9"><span class="tok-kw">const</span> X = Self {</span>
+<span class="line" id="L10">    .allocator = std.testing.allocator,</span>
+<span class="line" id="L11">    .data = blk: {</span>
+<span class="line" id="L12">        <span class="tok-kw">var</span> first = [_]<span class="tok-type">f64</span> {<span class="tok-number">1</span>, <span class="tok-number">2</span>, <span class="tok-number">3</span>};</span>
+<span class="line" id="L13">        <span class="tok-kw">var</span> secon = [_]<span class="tok-type">f64</span> {<span class="tok-number">4</span>, <span class="tok-number">5</span>, <span class="tok-number">6</span>};</span>
+<span class="line" id="L14">        <span class="tok-kw">var</span> third = [_]<span class="tok-type">f64</span> {<span class="tok-number">7</span>, <span class="tok-number">8</span>, <span class="tok-number">9</span>};</span>
+<span class="line" id="L15">        <span class="tok-kw">var</span> all = [_][]<span class="tok-type">f64</span> {&amp;first, &amp;secon, &amp;third};</span>
+<span class="line" id="L16">        <span class="tok-kw">break</span> :blk &amp;all;</span>
+<span class="line" id="L17">    }</span>
+<span class="line" id="L18">};</span>
+<span class="line" id="L19"></span>
+<span class="line" id="L20">allocator: std.mem.Allocator,</span>
+<span class="line" id="L21">data: [][]<span class="tok-type">f64</span>,</span>
+<span class="line" id="L22"></span>
+<span class="line" id="L23"><span class="tok-comment">/// Specify an allocator for the returning matrices and slices.</span></span>
+<span class="line" id="L24"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">init</span>(allocator: std.mem.Allocator) Self {</span>
+<span class="line" id="L25">    <span class="tok-kw">return</span> Self {</span>
+<span class="line" id="L26">        .allocator = allocator,</span>
+<span class="line" id="L27">        .data = <span class="tok-null">undefined</span>,</span>
+<span class="line" id="L28">    };</span>
+<span class="line" id="L29">}</span>
+<span class="line" id="L30"></span>
+<span class="line" id="L31"><span class="tok-comment">/// Function that gets used by `std.fmt.format` so you can print</span></span>
+<span class="line" id="L32"><span class="tok-comment">/// the matrix in the correct orientation by using a regular</span></span>
+<span class="line" id="L33"><span class="tok-comment">/// `print` function from any writer.</span></span>
+<span class="line" id="L34"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">format</span>(</span>
+<span class="line" id="L35">    self: Self,</span>
+<span class="line" id="L36">    <span class="tok-kw">comptime</span> fmt: []<span class="tok-kw">const</span> <span class="tok-type">u8</span>,</span>
+<span class="line" id="L37">    options: std.fmt.FormatOptions,</span>
+<span class="line" id="L38">    writer: <span class="tok-kw">anytype</span>,</span>
+<span class="line" id="L39">) !<span class="tok-type">void</span> {</span>
+<span class="line" id="L40">    _ = options;</span>
+<span class="line" id="L41">    <span class="tok-kw">const</span> new_fmt = <span class="tok-kw">if</span> (fmt.len == <span class="tok-number">0</span>) <span class="tok-str">&quot;{d:10.3}&quot;</span> <span class="tok-kw">else</span> fmt;</span>
+<span class="line" id="L42">    <span class="tok-kw">const</span> rows = self.data[<span class="tok-number">0</span>].len;</span>
+<span class="line" id="L43">    <span class="tok-kw">const</span> cols = self.data.len;</span>
+<span class="line" id="L44">    <span class="tok-kw">try</span> writer.print(<span class="tok-str">&quot;[{}][{}]Matrix {{&quot;</span>, .{rows, cols});</span>
+<span class="line" id="L45">    <span class="tok-kw">for</span> (<span class="tok-number">0</span>..<span class="tok-builtin">@min</span>(rows, <span class="tok-number">10</span>)) |i| {</span>
+<span class="line" id="L46">        <span class="tok-kw">try</span> writer.print(<span class="tok-str">&quot;\n    &quot;</span>, .{});</span>
+<span class="line" id="L47">        <span class="tok-kw">for</span> (<span class="tok-number">0</span>..<span class="tok-builtin">@min</span>(cols, <span class="tok-number">10</span>)) |j| {</span>
+<span class="line" id="L48">            <span class="tok-kw">try</span> writer.print(new_fmt, .{self.data[j][i]});</span>
+<span class="line" id="L49">        }</span>
+<span class="line" id="L50">    }</span>
+<span class="line" id="L51">    <span class="tok-kw">try</span> writer.print(<span class="tok-str">&quot;\n}}\n&quot;</span>, .{});</span>
+<span class="line" id="L52">}</span>
+<span class="line" id="L53"></span>
+<span class="line" id="L54"><span class="tok-comment">/// Allocates memory for a rows×columns matrix,</span></span>
+<span class="line" id="L55"><span class="tok-comment">/// the memory is undefined and must first be written to before reading,</span></span>
+<span class="line" id="L56"><span class="tok-comment">/// result must be freed by the caller with `destroy`.</span></span>
+<span class="line" id="L57"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">create</span>(self: Self, rows: <span class="tok-type">usize</span>, cols: <span class="tok-type">usize</span>) !Self {</span>
+<span class="line" id="L58">    <span class="tok-kw">const</span> data = <span class="tok-kw">try</span> self.allocator.alloc([]<span class="tok-type">f64</span>, cols);</span>
+<span class="line" id="L59">    <span class="tok-kw">for</span> (data) |*col| {</span>
+<span class="line" id="L60">        col.* = <span class="tok-kw">try</span> self.allocator.alloc(<span class="tok-type">f64</span>, rows);</span>
+<span class="line" id="L61">    }</span>
+<span class="line" id="L62">    <span class="tok-kw">return</span> Self {</span>
+<span class="line" id="L63">        .allocator = self.allocator,</span>
+<span class="line" id="L64">        .data = data,</span>
+<span class="line" id="L65">    };</span>
+<span class="line" id="L66">}</span>
+<span class="line" id="L67"></span>
+<span class="line" id="L68"><span class="tok-comment">/// Frees the allocated memory of a matrix.</span></span>
+<span class="line" id="L69"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">destroy</span>(self: Self) <span class="tok-type">void</span> {</span>
+<span class="line" id="L70">    <span class="tok-kw">for</span> (self.data) |col| {</span>
+<span class="line" id="L71">        self.allocator.free(col);</span>
+<span class="line" id="L72">    }</span>
+<span class="line" id="L73">    self.allocator.free(self.data);</span>
+<span class="line" id="L74">}</span>
+<span class="line" id="L75"></span>
+<span class="line" id="L76"><span class="tok-kw">test</span> <span class="tok-str">&quot;Matrix.create, Matrix.destroy&quot;</span> {</span>
+<span class="line" id="L77">    <span class="tok-kw">const</span> Y = <span class="tok-kw">try</span> Matrix.create(<span class="tok-number">3</span>, <span class="tok-number">3</span>);</span>
+<span class="line" id="L78">    <span class="tok-kw">defer</span> Y.destroy();</span>
+<span class="line" id="L79">    <span class="tok-kw">for</span> (Y.data, X.data) |coly, colx| {</span>
+<span class="line" id="L80">        <span class="tok-kw">for</span> (coly, colx) |*y, x| {</span>
+<span class="line" id="L81">            y.* = x;</span>
+<span class="line" id="L82">        }</span>
+<span class="line" id="L83">    }</span>
+<span class="line" id="L84">    <span class="tok-kw">try</span> std.testing.expectEqualSlices(<span class="tok-type">f64</span>, &amp;.{<span class="tok-number">1</span>, <span class="tok-number">2</span>, <span class="tok-number">3</span>}, Y.data[<span class="tok-number">0</span>]);</span>
+<span class="line" id="L85">    <span class="tok-kw">try</span> std.testing.expectEqualSlices(<span class="tok-type">f64</span>, &amp;.{<span class="tok-number">4</span>, <span class="tok-number">5</span>, <span class="tok-number">6</span>}, Y.data[<span class="tok-number">1</span>]);</span>
+<span class="line" id="L86">    <span class="tok-kw">try</span> std.testing.expectEqualSlices(<span class="tok-type">f64</span>, &amp;.{<span class="tok-number">7</span>, <span class="tok-number">8</span>, <span class="tok-number">9</span>}, Y.data[<span class="tok-number">2</span>]);</span>
+<span class="line" id="L87">}</span>
+<span class="line" id="L88"></span>
+<span class="line" id="L89"><span class="tok-comment">/// Creates a new matrix with the contents of another,</span></span>
+<span class="line" id="L90"><span class="tok-comment">/// result must be freed by the caller with `destroy`.</span></span>
+<span class="line" id="L91"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">dupe</span>(self: Self) !Self {</span>
+<span class="line" id="L92">    <span class="tok-kw">const</span> data = <span class="tok-kw">try</span> self.allocator.dupe([]<span class="tok-type">f64</span>, self.data);</span>
+<span class="line" id="L93">    <span class="tok-kw">for</span> (self.data, data) |old, *new| {</span>
+<span class="line" id="L94">        new.* = <span class="tok-kw">try</span> self.allocator.dupe(<span class="tok-type">f64</span>, old);</span>
+<span class="line" id="L95">    }</span>
+<span class="line" id="L96">    <span class="tok-kw">return</span> Self {</span>
+<span class="line" id="L97">        .allocator = self.allocator,</span>
+<span class="line" id="L98">        .data = data,</span>
+<span class="line" id="L99">    };</span>
+<span class="line" id="L100">}</span>
+<span class="line" id="L101"></span>
+<span class="line" id="L102"><span class="tok-kw">test</span> <span class="tok-str">&quot;Matrix.dupe&quot;</span> {</span>
+<span class="line" id="L103">    <span class="tok-kw">const</span> Y = <span class="tok-kw">try</span> X.dupe();</span>
+<span class="line" id="L104">    <span class="tok-kw">defer</span> Y.destroy();</span>
+<span class="line" id="L105">    Y.data[<span class="tok-number">1</span>][<span class="tok-number">1</span>] = <span class="tok-number">55</span>;</span>
+<span class="line" id="L106">    <span class="tok-kw">try</span> std.testing.expectEqual(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">55</span>), Y.data[<span class="tok-number">1</span>][<span class="tok-number">1</span>]);</span>
+<span class="line" id="L107">    <span class="tok-kw">try</span> std.testing.expectEqual(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">5</span> ), X.data[<span class="tok-number">1</span>][<span class="tok-number">1</span>]);</span>
+<span class="line" id="L108">}</span>
+<span class="line" id="L109"></span>
+<span class="line" id="L110"><span class="tok-comment">/// Creates a new matrix with the values of a slice,</span></span>
+<span class="line" id="L111"><span class="tok-comment">/// `slice.len` must be divisible by `cols`,</span></span>
+<span class="line" id="L112"><span class="tok-comment">/// result must be freed by the caller with `destroy`.</span></span>
+<span class="line" id="L113"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">createFromSlice</span>(self: Self, slice: []<span class="tok-kw">const</span> <span class="tok-type">f64</span>, cols: <span class="tok-type">usize</span>) !Self {</span>
+<span class="line" id="L114">    <span class="tok-kw">const</span> rows = <span class="tok-kw">try</span> std.math.divExact(<span class="tok-type">usize</span>, slice.len, cols);</span>
+<span class="line" id="L115">    <span class="tok-kw">const</span> result = <span class="tok-kw">try</span> self.create(rows, cols);</span>
+<span class="line" id="L116">    <span class="tok-kw">for</span> (<span class="tok-number">0</span>..cols) |j| {</span>
+<span class="line" id="L117">        <span class="tok-kw">const</span> toskip = j * rows;</span>
+<span class="line" id="L118">        <span class="tok-kw">for</span> (<span class="tok-number">0</span>..rows) |i| {</span>
+<span class="line" id="L119">            result.data[j][i] = slice[toskip + i];</span>
+<span class="line" id="L120">        }</span>
+<span class="line" id="L121">    }</span>
+<span class="line" id="L122">    <span class="tok-kw">return</span> result;</span>
+<span class="line" id="L123">}</span>
+<span class="line" id="L124"></span>
+<span class="line" id="L125"><span class="tok-kw">test</span> <span class="tok-str">&quot;Matrix.createFromSlice&quot;</span> {</span>
+<span class="line" id="L126">    <span class="tok-kw">const</span> Y = <span class="tok-kw">try</span> Matrix.createFromSlice(&amp;.{<span class="tok-number">1</span>, <span class="tok-number">2</span>, <span class="tok-number">3</span>, <span class="tok-number">4</span>, <span class="tok-number">5</span>, <span class="tok-number">6</span>, <span class="tok-number">7</span>, <span class="tok-number">8</span>, <span class="tok-number">9</span>}, <span class="tok-number">3</span>);</span>
+<span class="line" id="L127">    <span class="tok-kw">defer</span> Y.destroy();</span>
+<span class="line" id="L128">    <span class="tok-kw">try</span> std.testing.expectEqualSlices(<span class="tok-type">f64</span>, X.data[<span class="tok-number">0</span>], Y.data[<span class="tok-number">0</span>]);</span>
+<span class="line" id="L129">    <span class="tok-kw">try</span> std.testing.expectEqualSlices(<span class="tok-type">f64</span>, X.data[<span class="tok-number">1</span>], Y.data[<span class="tok-number">1</span>]);</span>
+<span class="line" id="L130">    <span class="tok-kw">try</span> std.testing.expectEqualSlices(<span class="tok-type">f64</span>, X.data[<span class="tok-number">2</span>], Y.data[<span class="tok-number">2</span>]);</span>
+<span class="line" id="L131">}</span>
+<span class="line" id="L132"></span>
+<span class="line" id="L133"><span class="tok-comment">/// Creates a new n×n identity matrix,</span></span>
+<span class="line" id="L134"><span class="tok-comment">/// result must be freed by the caller with `destroy`.</span></span>
+<span class="line" id="L135"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">createIdentity</span>(self: Self, n: <span class="tok-type">usize</span>) !Self {</span>
+<span class="line" id="L136">    <span class="tok-kw">const</span> result = <span class="tok-kw">try</span> self.create(n, n);</span>
+<span class="line" id="L137">    <span class="tok-kw">for</span> (<span class="tok-number">0</span>..n) |i| {</span>
+<span class="line" id="L138">        <span class="tok-builtin">@memset</span>(result.data[i], <span class="tok-number">0</span>);</span>
+<span class="line" id="L139">        result.data[i][i] = <span class="tok-number">1</span>;</span>
+<span class="line" id="L140">    }</span>
+<span class="line" id="L141">    <span class="tok-kw">return</span> result;</span>
+<span class="line" id="L142">}</span>
+<span class="line" id="L143"></span>
+<span class="line" id="L144"><span class="tok-kw">test</span> <span class="tok-str">&quot;Matrix.createIdentity&quot;</span> {</span>
+<span class="line" id="L145">    <span class="tok-kw">const</span> Y = <span class="tok-kw">try</span> Matrix.createIdentity(<span class="tok-number">3</span>);</span>
+<span class="line" id="L146">    <span class="tok-kw">defer</span> Y.destroy();</span>
+<span class="line" id="L147">    <span class="tok-kw">try</span> std.testing.expectEqualSlices(<span class="tok-type">f64</span>, &amp;.{<span class="tok-number">1</span>, <span class="tok-number">0</span>, <span class="tok-number">0</span>}, Y.data[<span class="tok-number">0</span>]);</span>
+<span class="line" id="L148">    <span class="tok-kw">try</span> std.testing.expectEqualSlices(<span class="tok-type">f64</span>, &amp;.{<span class="tok-number">0</span>, <span class="tok-number">1</span>, <span class="tok-number">0</span>}, Y.data[<span class="tok-number">1</span>]);</span>
+<span class="line" id="L149">    <span class="tok-kw">try</span> std.testing.expectEqualSlices(<span class="tok-type">f64</span>, &amp;.{<span class="tok-number">0</span>, <span class="tok-number">0</span>, <span class="tok-number">1</span>}, Y.data[<span class="tok-number">2</span>]);</span>
+<span class="line" id="L150">}</span>
+<span class="line" id="L151"></span>
+<span class="line" id="L152"><span class="tok-comment">/// Creates a new square matrix where the diagonal is taken from a slice,</span></span>
+<span class="line" id="L153"><span class="tok-comment">/// result must be freed by the caller with `destroy`.</span></span>
+<span class="line" id="L154"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">createDiagonal</span>(self: Self, slice: []<span class="tok-kw">const</span> <span class="tok-type">f64</span>) !Self {</span>
+<span class="line" id="L155">    <span class="tok-kw">const</span> n = slice.len;</span>
+<span class="line" id="L156">    <span class="tok-kw">const</span> result = <span class="tok-kw">try</span> self.create(n, n);</span>
+<span class="line" id="L157">    <span class="tok-kw">for</span> (<span class="tok-number">0</span>..n) |i| {</span>
+<span class="line" id="L158">        <span class="tok-builtin">@memset</span>(result.data[i], <span class="tok-number">0</span>);</span>
+<span class="line" id="L159">        result.data[i][i] = slice[i];</span>
+<span class="line" id="L160">    }</span>
+<span class="line" id="L161">    <span class="tok-kw">return</span> result;</span>
+<span class="line" id="L162">}</span>
+<span class="line" id="L163"></span>
+<span class="line" id="L164"><span class="tok-kw">test</span> <span class="tok-str">&quot;Matrix.createDiagonal&quot;</span> {</span>
+<span class="line" id="L165">    <span class="tok-kw">const</span> Y = <span class="tok-kw">try</span> Matrix.createDiagonal(&amp;.{<span class="tok-number">1</span>, <span class="tok-number">2</span>, <span class="tok-number">3</span>});</span>
+<span class="line" id="L166">    <span class="tok-kw">defer</span> Y.destroy();</span>
+<span class="line" id="L167">    <span class="tok-kw">try</span> std.testing.expectEqualSlices(<span class="tok-type">f64</span>, &amp;.{<span class="tok-number">1</span>, <span class="tok-number">0</span>, <span class="tok-number">0</span>}, Y.data[<span class="tok-number">0</span>]);</span>
+<span class="line" id="L168">    <span class="tok-kw">try</span> std.testing.expectEqualSlices(<span class="tok-type">f64</span>, &amp;.{<span class="tok-number">0</span>, <span class="tok-number">2</span>, <span class="tok-number">0</span>}, Y.data[<span class="tok-number">1</span>]);</span>
+<span class="line" id="L169">    <span class="tok-kw">try</span> std.testing.expectEqualSlices(<span class="tok-type">f64</span>, &amp;.{<span class="tok-number">0</span>, <span class="tok-number">0</span>, <span class="tok-number">3</span>}, Y.data[<span class="tok-number">2</span>]);</span>
+<span class="line" id="L170">}</span>
+<span class="line" id="L171"></span>
+<span class="line" id="L172"><span class="tok-comment">/// Returns the diagonal entries of the matrix as a slice,</span></span>
+<span class="line" id="L173"><span class="tok-comment">/// result must be freed by the caller.</span></span>
+<span class="line" id="L174"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">getDiagonal</span>(self: Self) ![]<span class="tok-type">f64</span> {</span>
+<span class="line" id="L175">    assert(self.data.len == self.data[<span class="tok-number">0</span>].len);</span>
+<span class="line" id="L176">    <span class="tok-kw">const</span> n = self.data.len;</span>
+<span class="line" id="L177">    <span class="tok-kw">const</span> result = <span class="tok-kw">try</span> self.allocator.alloc(<span class="tok-type">f64</span>, n);</span>
+<span class="line" id="L178">    <span class="tok-kw">for</span> (<span class="tok-number">0</span>..n) |i| {</span>
+<span class="line" id="L179">        result[i] = self.data[i][i];</span>
+<span class="line" id="L180">    }</span>
+<span class="line" id="L181">    <span class="tok-kw">return</span> result;</span>
+<span class="line" id="L182">}</span>
+<span class="line" id="L183"></span>
+<span class="line" id="L184"><span class="tok-kw">test</span> <span class="tok-str">&quot;Matrix.getDiagonal&quot;</span> {</span>
+<span class="line" id="L185">    <span class="tok-kw">const</span> slice = <span class="tok-kw">try</span> X.getDiagonal();</span>
+<span class="line" id="L186">    <span class="tok-kw">defer</span> std.testing.allocator.free(slice);</span>
+<span class="line" id="L187">    <span class="tok-kw">try</span> std.testing.expectEqualSlices(<span class="tok-type">f64</span>, &amp;.{<span class="tok-number">1</span>, <span class="tok-number">5</span>, <span class="tok-number">9</span>}, slice);</span>
+<span class="line" id="L188">}</span>
+<span class="line" id="L189"></span>
+<span class="line" id="L190"><span class="tok-comment">/// Creates a new flipped version of a matrix over its main diagonal,</span></span>
+<span class="line" id="L191"><span class="tok-comment">/// the transpose of a matrix of size a×b is size b×a,</span></span>
+<span class="line" id="L192"><span class="tok-comment">/// result must be freed by the caller with `destroy`.</span></span>
+<span class="line" id="L193"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">transpose</span>(self: Self) !Self {</span>
+<span class="line" id="L194">    <span class="tok-kw">const</span> rows = self.data[<span class="tok-number">0</span>].len;</span>
+<span class="line" id="L195">    <span class="tok-kw">const</span> cols = self.data.len;</span>
+<span class="line" id="L196">    <span class="tok-kw">const</span> result = <span class="tok-kw">try</span> self.create(cols, rows);</span>
+<span class="line" id="L197">    <span class="tok-kw">for</span> (<span class="tok-number">0</span>..rows) |j| {</span>
+<span class="line" id="L198">        <span class="tok-kw">for</span> (<span class="tok-number">0</span>..cols) |i| {</span>
+<span class="line" id="L199">            result.data[j][i] = self.data[i][j];</span>
+<span class="line" id="L200">        }</span>
+<span class="line" id="L201">    }</span>
+<span class="line" id="L202">    <span class="tok-kw">return</span> result;</span>
+<span class="line" id="L203">}</span>
+<span class="line" id="L204"></span>
+<span class="line" id="L205"><span class="tok-kw">test</span> <span class="tok-str">&quot;Matrix.transpose&quot;</span> {</span>
+<span class="line" id="L206">    <span class="tok-kw">const</span> Y = <span class="tok-kw">try</span> X.transpose();</span>
+<span class="line" id="L207">    <span class="tok-kw">defer</span> Y.destroy();</span>
+<span class="line" id="L208">    <span class="tok-kw">try</span> std.testing.expectEqualSlices(<span class="tok-type">f64</span>, &amp;.{<span class="tok-number">1</span>, <span class="tok-number">4</span>, <span class="tok-number">7</span>}, Y.data[<span class="tok-number">0</span>]);</span>
+<span class="line" id="L209">    <span class="tok-kw">try</span> std.testing.expectEqualSlices(<span class="tok-type">f64</span>, &amp;.{<span class="tok-number">2</span>, <span class="tok-number">5</span>, <span class="tok-number">8</span>}, Y.data[<span class="tok-number">1</span>]);</span>
+<span class="line" id="L210">    <span class="tok-kw">try</span> std.testing.expectEqualSlices(<span class="tok-type">f64</span>, &amp;.{<span class="tok-number">3</span>, <span class="tok-number">6</span>, <span class="tok-number">9</span>}, Y.data[<span class="tok-number">2</span>]);</span>
+<span class="line" id="L211">}</span>
+<span class="line" id="L212"></span>
+<span class="line" id="L213"><span class="tok-comment">/// Calculates the sum of the diagonal entries of a square matrix.</span></span>
+<span class="line" id="L214"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">trace</span>(self: Self) <span class="tok-type">f64</span> {</span>
+<span class="line" id="L215">    assert(self.data.len == self.data[<span class="tok-number">0</span>].len);</span>
+<span class="line" id="L216">    <span class="tok-kw">var</span> sum: <span class="tok-type">f64</span> = <span class="tok-number">0</span>;</span>
+<span class="line" id="L217">    <span class="tok-kw">for</span> (<span class="tok-number">0</span>..self.data.len) |i| {</span>
+<span class="line" id="L218">        sum += self.data[i][i];</span>
+<span class="line" id="L219">    }</span>
+<span class="line" id="L220">    <span class="tok-kw">return</span> sum;</span>
+<span class="line" id="L221">}</span>
+<span class="line" id="L222"></span>
+<span class="line" id="L223"><span class="tok-kw">test</span> <span class="tok-str">&quot;Matrix.trace&quot;</span> {</span>
+<span class="line" id="L224">    <span class="tok-kw">try</span> std.testing.expectEqual(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">15</span>), X.trace());</span>
+<span class="line" id="L225">}</span>
+<span class="line" id="L226"></span>
+<span class="line" id="L227"><span class="tok-comment">/// Overwrites the matrix by adding a number to every entry.</span></span>
+<span class="line" id="L228"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">addScalar</span>(self: Self, scalar: <span class="tok-type">f64</span>) <span class="tok-type">void</span> {</span>
+<span class="line" id="L229">    <span class="tok-kw">for</span> (self.data) |col| {</span>
+<span class="line" id="L230">        <span class="tok-kw">for</span> (col) |*entry| {</span>
+<span class="line" id="L231">            entry.* += scalar;</span>
+<span class="line" id="L232">        }</span>
+<span class="line" id="L233">    }</span>
+<span class="line" id="L234">}</span>
+<span class="line" id="L235"></span>
+<span class="line" id="L236"><span class="tok-kw">test</span> <span class="tok-str">&quot;Matrix.addScalar&quot;</span> {</span>
+<span class="line" id="L237">    <span class="tok-kw">const</span> Y = <span class="tok-kw">try</span> X.dupe();</span>
+<span class="line" id="L238">    <span class="tok-kw">defer</span> Y.destroy();</span>
+<span class="line" id="L239">    Y.addScalar(<span class="tok-number">3</span>);</span>
+<span class="line" id="L240">    <span class="tok-kw">try</span> std.testing.expectEqualSlices(<span class="tok-type">f64</span>, &amp;.{<span class="tok-number">4</span> , <span class="tok-number">5</span> , <span class="tok-number">6</span> }, Y.data[<span class="tok-number">0</span>]);</span>
+<span class="line" id="L241">    <span class="tok-kw">try</span> std.testing.expectEqualSlices(<span class="tok-type">f64</span>, &amp;.{<span class="tok-number">7</span> , <span class="tok-number">8</span> , <span class="tok-number">9</span> }, Y.data[<span class="tok-number">1</span>]);</span>
+<span class="line" id="L242">    <span class="tok-kw">try</span> std.testing.expectEqualSlices(<span class="tok-type">f64</span>, &amp;.{<span class="tok-number">10</span>, <span class="tok-number">11</span>, <span class="tok-number">12</span>}, Y.data[<span class="tok-number">2</span>]);</span>
+<span class="line" id="L243">}</span>
+<span class="line" id="L244"></span>
+<span class="line" id="L245"><span class="tok-comment">/// Overwrites the matrix by multiplying a number to every entry.</span></span>
+<span class="line" id="L246"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">multiplyScalar</span>(self: Self, scalar: <span class="tok-type">f64</span>) <span class="tok-type">void</span> {</span>
+<span class="line" id="L247">    <span class="tok-kw">for</span> (self.data) |col| {</span>
+<span class="line" id="L248">        <span class="tok-kw">for</span> (col) |*entry| {</span>
+<span class="line" id="L249">            entry.* *= scalar;</span>
+<span class="line" id="L250">        }</span>
+<span class="line" id="L251">    }</span>
+<span class="line" id="L252">}</span>
+<span class="line" id="L253"></span>
+<span class="line" id="L254"><span class="tok-kw">test</span> <span class="tok-str">&quot;Matrix.multiplyScalar&quot;</span> {</span>
+<span class="line" id="L255">    <span class="tok-kw">const</span> Y = <span class="tok-kw">try</span> X.dupe();</span>
+<span class="line" id="L256">    <span class="tok-kw">defer</span> Y.destroy();</span>
+<span class="line" id="L257">    Y.multiplyScalar(<span class="tok-number">3</span>);</span>
+<span class="line" id="L258">    <span class="tok-kw">try</span> std.testing.expectEqualSlices(<span class="tok-type">f64</span>, &amp;.{<span class="tok-number">3</span> , <span class="tok-number">6</span> , <span class="tok-number">9</span> }, Y.data[<span class="tok-number">0</span>]);</span>
+<span class="line" id="L259">    <span class="tok-kw">try</span> std.testing.expectEqualSlices(<span class="tok-type">f64</span>, &amp;.{<span class="tok-number">12</span>, <span class="tok-number">15</span>, <span class="tok-number">18</span>}, Y.data[<span class="tok-number">1</span>]);</span>
+<span class="line" id="L260">    <span class="tok-kw">try</span> std.testing.expectEqualSlices(<span class="tok-type">f64</span>, &amp;.{<span class="tok-number">21</span>, <span class="tok-number">24</span>, <span class="tok-number">27</span>}, Y.data[<span class="tok-number">2</span>]);</span>
+<span class="line" id="L261">}</span>
+<span class="line" id="L262"></span>
+<span class="line" id="L263"><span class="tok-comment">/// Overwrites the matrix by adding another one to it,</span></span>
+<span class="line" id="L264"><span class="tok-comment">/// they must have the same amount of rows and columns.</span></span>
+<span class="line" id="L265"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">addMatrix</span>(self: Self, rhs: Self) <span class="tok-type">void</span> {</span>
+<span class="line" id="L266">    assert(self.data.len == rhs.data.len);</span>
+<span class="line" id="L267">    assert(self.data[<span class="tok-number">0</span>].len == rhs.data[<span class="tok-number">0</span>].len);</span>
+<span class="line" id="L268">    <span class="tok-kw">for</span> (self.data, rhs.data) |col1, col2| {</span>
+<span class="line" id="L269">        <span class="tok-kw">for</span> (col1, col2) |*entry1, entry2| {</span>
+<span class="line" id="L270">            entry1.* += entry2;</span>
+<span class="line" id="L271">        }</span>
+<span class="line" id="L272">    }</span>
+<span class="line" id="L273">}</span>
+<span class="line" id="L274"></span>
+<span class="line" id="L275"><span class="tok-kw">test</span> <span class="tok-str">&quot;Matrix.addMatrix&quot;</span> {</span>
+<span class="line" id="L276">    <span class="tok-kw">const</span> Y = <span class="tok-kw">try</span> X.dupe();</span>
+<span class="line" id="L277">    <span class="tok-kw">defer</span> Y.destroy();</span>
+<span class="line" id="L278">    Y.addMatrix(X);</span>
+<span class="line" id="L279">    <span class="tok-kw">try</span> std.testing.expectEqualSlices(<span class="tok-type">f64</span>, &amp;.{<span class="tok-number">2</span> , <span class="tok-number">4</span> , <span class="tok-number">6</span> }, Y.data[<span class="tok-number">0</span>]);</span>
+<span class="line" id="L280">    <span class="tok-kw">try</span> std.testing.expectEqualSlices(<span class="tok-type">f64</span>, &amp;.{<span class="tok-number">8</span> , <span class="tok-number">10</span>, <span class="tok-number">12</span>}, Y.data[<span class="tok-number">1</span>]);</span>
+<span class="line" id="L281">    <span class="tok-kw">try</span> std.testing.expectEqualSlices(<span class="tok-type">f64</span>, &amp;.{<span class="tok-number">14</span>, <span class="tok-number">16</span>, <span class="tok-number">18</span>}, Y.data[<span class="tok-number">2</span>]);</span>
+<span class="line" id="L282">}</span>
+<span class="line" id="L283"></span>
+<span class="line" id="L284"><span class="tok-comment">/// Overwrites the matrix by subtracting another one to it,</span></span>
+<span class="line" id="L285"><span class="tok-comment">/// they must have the same amount of rows and columns.</span></span>
+<span class="line" id="L286"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">subtractMatrix</span>(self: Self, rhs: Self) <span class="tok-type">void</span> {</span>
+<span class="line" id="L287">    assert(self.data.len == rhs.data.len);</span>
+<span class="line" id="L288">    assert(self.data[<span class="tok-number">0</span>].len == rhs.data[<span class="tok-number">0</span>].len);</span>
+<span class="line" id="L289">    <span class="tok-kw">for</span> (self.data, rhs.data) |col1, col2| {</span>
+<span class="line" id="L290">        <span class="tok-kw">for</span> (col1, col2) |*entry1, entry2| {</span>
+<span class="line" id="L291">            entry1.* -= entry2;</span>
+<span class="line" id="L292">        }</span>
+<span class="line" id="L293">    }</span>
+<span class="line" id="L294">}</span>
+<span class="line" id="L295"></span>
+<span class="line" id="L296"><span class="tok-kw">test</span> <span class="tok-str">&quot;Matrix.subtractMatrix&quot;</span> {</span>
+<span class="line" id="L297">    <span class="tok-kw">const</span> Y = <span class="tok-kw">try</span> X.dupe();</span>
+<span class="line" id="L298">    <span class="tok-kw">defer</span> Y.destroy();</span>
+<span class="line" id="L299">    Y.subtractMatrix(X);</span>
+<span class="line" id="L300">    <span class="tok-kw">try</span> std.testing.expectEqualSlices(<span class="tok-type">f64</span>, &amp;.{<span class="tok-number">0</span>, <span class="tok-number">0</span>, <span class="tok-number">0</span>}, Y.data[<span class="tok-number">0</span>]);</span>
+<span class="line" id="L301">    <span class="tok-kw">try</span> std.testing.expectEqualSlices(<span class="tok-type">f64</span>, &amp;.{<span class="tok-number">0</span>, <span class="tok-number">0</span>, <span class="tok-number">0</span>}, Y.data[<span class="tok-number">1</span>]);</span>
+<span class="line" id="L302">    <span class="tok-kw">try</span> std.testing.expectEqualSlices(<span class="tok-type">f64</span>, &amp;.{<span class="tok-number">0</span>, <span class="tok-number">0</span>, <span class="tok-number">0</span>}, Y.data[<span class="tok-number">2</span>]);</span>
+<span class="line" id="L303">}</span>
+<span class="line" id="L304"></span>
+<span class="line" id="L305"><span class="tok-comment">/// Creates a new matrix by doing matrix multiplication between lhs and rhs</span></span>
+<span class="line" id="L306"><span class="tok-comment">/// number of columns of lhs must equal number of rows of rhs,</span></span>
+<span class="line" id="L307"><span class="tok-comment">/// result must be freed by the caller with `destroy`.</span></span>
+<span class="line" id="L308"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">multiplyMatrix</span>(self: Self, rhs: Self) !Self {</span>
+<span class="line" id="L309">    assert(self.data.len == rhs.data[<span class="tok-number">0</span>].len);</span>
+<span class="line" id="L310">    <span class="tok-kw">const</span> rows = self.data[<span class="tok-number">0</span>].len;</span>
+<span class="line" id="L311">    <span class="tok-kw">const</span> cols = rhs.data.len;</span>
+<span class="line" id="L312">    <span class="tok-kw">const</span> result = <span class="tok-kw">try</span> self.create(rows, cols);</span>
+<span class="line" id="L313">    <span class="tok-kw">for</span> (<span class="tok-number">0</span>..cols) |j| {</span>
+<span class="line" id="L314">        <span class="tok-kw">for</span> (<span class="tok-number">0</span>..rows) |i| {</span>
+<span class="line" id="L315">            result.data[j][i] = <span class="tok-number">0</span>;</span>
+<span class="line" id="L316">            <span class="tok-kw">for</span> (<span class="tok-number">0</span>..self.data.len) |k| {</span>
+<span class="line" id="L317">                result.data[j][i] += self.data[k][i] * rhs.data[j][k];</span>
+<span class="line" id="L318">            }</span>
+<span class="line" id="L319">        }</span>
+<span class="line" id="L320">    }</span>
+<span class="line" id="L321">    <span class="tok-kw">return</span> result;</span>
+<span class="line" id="L322">}</span>
+<span class="line" id="L323"></span>
+<span class="line" id="L324"><span class="tok-kw">test</span> <span class="tok-str">&quot;Matrix.multiplyMatrix&quot;</span> {</span>
+<span class="line" id="L325">    <span class="tok-kw">const</span> Y = <span class="tok-kw">try</span> X.multiplyMatrix(X);</span>
+<span class="line" id="L326">    <span class="tok-kw">defer</span> Y.destroy();</span>
+<span class="line" id="L327">    <span class="tok-kw">try</span> std.testing.expectEqualSlices(<span class="tok-type">f64</span>, &amp;.{<span class="tok-number">30</span> , <span class="tok-number">36</span> , <span class="tok-number">42</span> }, Y.data[<span class="tok-number">0</span>]);</span>
+<span class="line" id="L328">    <span class="tok-kw">try</span> std.testing.expectEqualSlices(<span class="tok-type">f64</span>, &amp;.{<span class="tok-number">66</span> , <span class="tok-number">81</span> , <span class="tok-number">96</span> }, Y.data[<span class="tok-number">1</span>]);</span>
+<span class="line" id="L329">    <span class="tok-kw">try</span> std.testing.expectEqualSlices(<span class="tok-type">f64</span>, &amp;.{<span class="tok-number">102</span>, <span class="tok-number">126</span>, <span class="tok-number">150</span>}, Y.data[<span class="tok-number">2</span>]);</span>
+<span class="line" id="L330">}</span>
+<span class="line" id="L331"></span>
+<span class="line" id="L332"><span class="tok-comment">/// Calculates the determinant of a square matrix.</span></span>
+<span class="line" id="L333"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">determinant</span>(self: Self) !<span class="tok-type">f64</span> {</span>
+<span class="line" id="L334">    assert(self.data.len == self.data[<span class="tok-number">0</span>].len);</span>
+<span class="line" id="L335">    <span class="tok-kw">const</span> result = <span class="tok-kw">try</span> self.dupe();</span>
+<span class="line" id="L336">    <span class="tok-kw">defer</span> result.destroy();</span>
+<span class="line" id="L337">    <span class="tok-kw">const</span> n = result.data.len;</span>
+<span class="line" id="L338">    <span class="tok-kw">for</span> (<span class="tok-number">0</span>..n - <span class="tok-number">1</span>) |k| {</span>
+<span class="line" id="L339">        <span class="tok-kw">for</span> (k + <span class="tok-number">1</span>..n) |j| {</span>
+<span class="line" id="L340">            <span class="tok-kw">for</span> (k + <span class="tok-number">1</span>..n) |i| {</span>
+<span class="line" id="L341">                <span class="tok-kw">const</span> num1 = result.data[j][i] * result.data[k][k];</span>
+<span class="line" id="L342">                <span class="tok-kw">const</span> num2 = result.data[k][i] * result.data[j][k];</span>
+<span class="line" id="L343">                <span class="tok-kw">const</span> den = <span class="tok-kw">if</span> (k == <span class="tok-number">0</span>) <span class="tok-number">1</span> <span class="tok-kw">else</span> result.data[k - <span class="tok-number">1</span>][k - <span class="tok-number">1</span>];</span>
+<span class="line" id="L344">                result.data[j][i] = (num1 - num2) / den;</span>
+<span class="line" id="L345">            }</span>
+<span class="line" id="L346">        }</span>
+<span class="line" id="L347">    }</span>
+<span class="line" id="L348">    <span class="tok-kw">return</span> result.data[n - <span class="tok-number">1</span>][n - <span class="tok-number">1</span>];</span>
+<span class="line" id="L349">}</span>
+<span class="line" id="L350"></span>
+<span class="line" id="L351"><span class="tok-kw">test</span> <span class="tok-str">&quot;Matrix.determinant&quot;</span> {</span>
+<span class="line" id="L352">    <span class="tok-kw">const</span> Y = <span class="tok-kw">try</span> X.dupe();</span>
+<span class="line" id="L353">    <span class="tok-kw">defer</span> Y.destroy();</span>
+<span class="line" id="L354">    Y.data[<span class="tok-number">1</span>][<span class="tok-number">1</span>] = <span class="tok-number">55</span>;</span>
+<span class="line" id="L355">    <span class="tok-kw">const</span> det = <span class="tok-kw">try</span> Y.determinant();</span>
+<span class="line" id="L356">    <span class="tok-kw">try</span> std.testing.expectEqual(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, -<span class="tok-number">600</span>), det);</span>
+<span class="line" id="L357">}</span>
+<span class="line" id="L358"></span>
+<span class="line" id="L359"><span class="tok-comment">/// Creates a new matrix by removing a specified row and column by its index,</span></span>
+<span class="line" id="L360"><span class="tok-comment">/// result must be freed by the caller with `destroy`.</span></span>
+<span class="line" id="L361"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">minor</span>(self: Self, row: <span class="tok-type">usize</span>, col: <span class="tok-type">usize</span>) !Self {</span>
+<span class="line" id="L362">    <span class="tok-kw">const</span> rows = self.data[<span class="tok-number">0</span>].len - <span class="tok-number">1</span>;</span>
+<span class="line" id="L363">    <span class="tok-kw">const</span> cols = self.data.len - <span class="tok-number">1</span>;</span>
+<span class="line" id="L364">    <span class="tok-kw">const</span> result = <span class="tok-kw">try</span> self.create(rows, cols);</span>
+<span class="line" id="L365">    <span class="tok-kw">for</span> (<span class="tok-number">0</span>..cols) |j| {</span>
+<span class="line" id="L366">        <span class="tok-kw">const</span> skippedcol = j + <span class="tok-builtin">@intFromBool</span>(j &gt;= col);</span>
+<span class="line" id="L367">        <span class="tok-kw">for</span> (<span class="tok-number">0</span>..rows) |i| {</span>
+<span class="line" id="L368">            <span class="tok-kw">const</span> skippedrow = i + <span class="tok-builtin">@intFromBool</span>(i &gt;= row);</span>
+<span class="line" id="L369">            result.data[j][i] = self.data[skippedcol][skippedrow];</span>
+<span class="line" id="L370">        }</span>
+<span class="line" id="L371">    }</span>
+<span class="line" id="L372">    <span class="tok-kw">return</span> result;</span>
+<span class="line" id="L373">}</span>
+<span class="line" id="L374"></span>
+<span class="line" id="L375"><span class="tok-kw">test</span> <span class="tok-str">&quot;Matrix.minor&quot;</span> {</span>
+<span class="line" id="L376">    <span class="tok-kw">const</span> Y = <span class="tok-kw">try</span> X.minor(<span class="tok-number">1</span>, <span class="tok-number">1</span>);</span>
+<span class="line" id="L377">    <span class="tok-kw">defer</span> Y.destroy();</span>
+<span class="line" id="L378">    <span class="tok-kw">try</span> std.testing.expectEqualSlices(<span class="tok-type">f64</span>, &amp;.{<span class="tok-number">1</span>, <span class="tok-number">3</span>}, Y.data[<span class="tok-number">0</span>]);</span>
+<span class="line" id="L379">    <span class="tok-kw">try</span> std.testing.expectEqualSlices(<span class="tok-type">f64</span>, &amp;.{<span class="tok-number">7</span>, <span class="tok-number">9</span>}, Y.data[<span class="tok-number">1</span>]);</span>
+<span class="line" id="L380">}</span>
+<span class="line" id="L381"></span>
+<span class="line" id="L382"><span class="tok-comment">/// Creates a new matrix that is the inverse of a square matrix,</span></span>
+<span class="line" id="L383"><span class="tok-comment">/// result must be freed by the caller with `destroy`.</span></span>
+<span class="line" id="L384"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">inverse</span>(self: Self) !Self {</span>
+<span class="line" id="L385">    <span class="tok-kw">const</span> det = <span class="tok-kw">try</span> self.determinant();</span>
+<span class="line" id="L386">    <span class="tok-kw">const</span> result = <span class="tok-kw">try</span> self.dupe();</span>
+<span class="line" id="L387">    <span class="tok-kw">for</span> (<span class="tok-number">0</span>..result.data.len) |j| {</span>
+<span class="line" id="L388">        <span class="tok-kw">for</span> (<span class="tok-number">0</span>..result.data.len) |i| {</span>
+<span class="line" id="L389">            <span class="tok-kw">const</span> minor_matrix = <span class="tok-kw">try</span> self.minor(i, j);</span>
+<span class="line" id="L390">            <span class="tok-kw">defer</span> minor_matrix.destroy();</span>
+<span class="line" id="L391">            <span class="tok-kw">const</span> cofactor = <span class="tok-kw">try</span> minor_matrix.determinant();</span>
+<span class="line" id="L392">            <span class="tok-kw">const</span> sign: <span class="tok-type">f64</span> = <span class="tok-kw">if</span> ((i + j) % <span class="tok-number">2</span> == <span class="tok-number">0</span>) <span class="tok-number">1</span> <span class="tok-kw">else</span> -<span class="tok-number">1</span>;</span>
+<span class="line" id="L393">            result.data[i][j] = sign * cofactor / det;</span>
+<span class="line" id="L394">        }</span>
+<span class="line" id="L395">    }</span>
+<span class="line" id="L396">    <span class="tok-kw">return</span> result;</span>
+<span class="line" id="L397">}</span>
+<span class="line" id="L398"></span>
+<span class="line" id="L399"><span class="tok-kw">test</span> <span class="tok-str">&quot;Matrix.inverse&quot;</span> {</span>
+<span class="line" id="L400">    <span class="tok-kw">const</span> Y = <span class="tok-kw">try</span> X.dupe();</span>
+<span class="line" id="L401">    <span class="tok-kw">defer</span> Y.destroy();</span>
+<span class="line" id="L402">    Y.data[<span class="tok-number">1</span>][<span class="tok-number">1</span>] = <span class="tok-number">55</span>;</span>
+<span class="line" id="L403">    <span class="tok-kw">const</span> Z = <span class="tok-kw">try</span> Y.inverse();</span>
+<span class="line" id="L404">    <span class="tok-kw">defer</span> Z.destroy();</span>
+<span class="line" id="L405">    Z.multiplyScalar(<span class="tok-number">1</span> / <span class="tok-kw">try</span> Z.determinant());</span>
+<span class="line" id="L406">    <span class="tok-kw">try</span> std.testing.expectEqualSlices(<span class="tok-type">f64</span>, &amp;.{ <span class="tok-number">447</span>,   <span class="tok-number">6</span>, -<span class="tok-number">153</span>}, Z.data[<span class="tok-number">0</span>]);</span>
+<span class="line" id="L407">    <span class="tok-kw">try</span> std.testing.expectEqualSlices(<span class="tok-type">f64</span>, &amp;.{   <span class="tok-number">6</span>, -<span class="tok-number">12</span>,    <span class="tok-number">6</span>}, Z.data[<span class="tok-number">1</span>]);</span>
+<span class="line" id="L408">    <span class="tok-kw">try</span> std.testing.expectEqualSlices(<span class="tok-type">f64</span>, &amp;.{-<span class="tok-number">353</span>,   <span class="tok-number">6</span>,   <span class="tok-number">47</span>}, Z.data[<span class="tok-number">2</span>]);</span>
+<span class="line" id="L409">}</span>
+<span class="line" id="L410"></span>
+</code></pre></body>
+</html>

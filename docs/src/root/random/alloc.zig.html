@@ -142,7 +142,7 @@
 <span class="line" id="L27"></span>
 <span class="line" id="L28">        <span class="tok-comment">/// Specify an engine for random number generation</span></span>
 <span class="line" id="L29">        <span class="tok-comment">/// and an allocator for the returning slices</span></span>
-<span class="line" id="L30">        <span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">setGeneratorAllocator</span>(generator: std.rand.Random, allocator: std.mem.Allocator) Self {</span>
+<span class="line" id="L30">        <span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">init</span>(generator: std.rand.Random, allocator: std.mem.Allocator) Self {</span>
 <span class="line" id="L31">            <span class="tok-kw">return</span> Self {</span>
 <span class="line" id="L32">                .generator = generator,</span>
 <span class="line" id="L33">                .allocator = allocator,</span>

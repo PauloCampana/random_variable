@@ -177,12 +177,10 @@ test "random.logistic" {
 
 pub fn gamma(comptime C: type, generator: std.rand.Random, shape: C, rate: C) C {
     const correct = shape >= 1;
-    const d = blk: {
-        const d0 = shape - 1.0 / 3.0;
-        break :blk if (shape >= 1) d0 else d0 + 1;
-    };
+    const increment: f64 = if (correct) 0 else 1;
+    const d = shape - 1.0 / 3.0 + increment;
     const c = 1 / (3 * @sqrt(d));
-    const gam = whl: while (true) {
+    const gam = blk: while (true) {
         var v: C = undefined;
         var z: C = undefined;
         while (true) {
@@ -197,7 +195,7 @@ pub fn gamma(comptime C: type, generator: std.rand.Random, shape: C, rate: C) C 
         const uni = generator.float(C);
         const cond0 = uni < 1 - 0.0331 * z * z;
         if (cond0 or @log(uni) < 0.5 * z + d * (1 - v + @log(v))) {
-            break :whl d * v;
+            break :blk d * v;
         }
     };
     if (correct) {

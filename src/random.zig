@@ -17,7 +17,7 @@ test Single {
 
     const rv = random
         .Single(u64, f64)
-        .setGenerator(generator);
+        .init(generator);
 
     const nor = rv.normal(0, 1);
     _ = nor;
@@ -29,7 +29,7 @@ test Buffer {
 
     const rv = random
         .Buffer(u64, f64)
-        .setGenerator(generator);
+        .init(generator);
 
     var buf: [100]f64 = undefined;
     const gam = rv.gamma(&buf, 3, 5);
@@ -46,7 +46,7 @@ test Alloc {
 
     const rv = random
         .Alloc(u64, f64)
-        .setGeneratorAllocator(generator, allocator);
+        .init(generator, allocator);
 
     const bin = try rv.binomial(100, 10, 0.2);
     defer allocator.free(bin);

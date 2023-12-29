@@ -131,7 +131,7 @@
 <span class="line" id="L17"></span>
 <span class="line" id="L18">    <span class="tok-kw">const</span> rv = random</span>
 <span class="line" id="L19">        .Single(<span class="tok-type">u64</span>, <span class="tok-type">f64</span>)</span>
-<span class="line" id="L20">        .setGenerator(generator);</span>
+<span class="line" id="L20">        .init(generator);</span>
 <span class="line" id="L21"></span>
 <span class="line" id="L22">    <span class="tok-kw">const</span> nor = rv.normal(<span class="tok-number">0</span>, <span class="tok-number">1</span>);</span>
 <span class="line" id="L23">    _ = nor;</span>
@@ -143,7 +143,7 @@
 <span class="line" id="L29"></span>
 <span class="line" id="L30">    <span class="tok-kw">const</span> rv = random</span>
 <span class="line" id="L31">        .Buffer(<span class="tok-type">u64</span>, <span class="tok-type">f64</span>)</span>
-<span class="line" id="L32">        .setGenerator(generator);</span>
+<span class="line" id="L32">        .init(generator);</span>
 <span class="line" id="L33"></span>
 <span class="line" id="L34">    <span class="tok-kw">var</span> buf: [<span class="tok-number">100</span>]<span class="tok-type">f64</span> = <span class="tok-null">undefined</span>;</span>
 <span class="line" id="L35">    <span class="tok-kw">const</span> gam = rv.gamma(&amp;buf, <span class="tok-number">3</span>, <span class="tok-number">5</span>);</span>
@@ -160,7 +160,7 @@
 <span class="line" id="L46"></span>
 <span class="line" id="L47">    <span class="tok-kw">const</span> rv = random</span>
 <span class="line" id="L48">        .Alloc(<span class="tok-type">u64</span>, <span class="tok-type">f64</span>)</span>
-<span class="line" id="L49">        .setGeneratorAllocator(generator, allocator);</span>
+<span class="line" id="L49">        .init(generator, allocator);</span>
 <span class="line" id="L50"></span>
 <span class="line" id="L51">    <span class="tok-kw">const</span> bin = <span class="tok-kw">try</span> rv.binomial(<span class="tok-number">100</span>, <span class="tok-number">10</span>, <span class="tok-number">0.2</span>);</span>
 <span class="line" id="L52">    <span class="tok-kw">defer</span> allocator.free(bin);</span>

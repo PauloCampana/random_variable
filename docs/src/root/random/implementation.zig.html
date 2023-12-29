@@ -291,129 +291,127 @@
 <span class="line" id="L177"></span>
 <span class="line" id="L178"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">gamma</span>(<span class="tok-kw">comptime</span> C: <span class="tok-type">type</span>, generator: std.rand.Random, shape: C, rate: C) C {</span>
 <span class="line" id="L179">    <span class="tok-kw">const</span> correct = shape &gt;= <span class="tok-number">1</span>;</span>
-<span class="line" id="L180">    <span class="tok-kw">const</span> d = blk: {</span>
-<span class="line" id="L181">        <span class="tok-kw">const</span> d0 = shape - <span class="tok-number">1.0</span> / <span class="tok-number">3.0</span>;</span>
-<span class="line" id="L182">        <span class="tok-kw">break</span> :blk <span class="tok-kw">if</span> (shape &gt;= <span class="tok-number">1</span>) d0 <span class="tok-kw">else</span> d0 + <span class="tok-number">1</span>;</span>
-<span class="line" id="L183">    };</span>
-<span class="line" id="L184">    <span class="tok-kw">const</span> c = <span class="tok-number">1</span> / (<span class="tok-number">3</span> * <span class="tok-builtin">@sqrt</span>(d));</span>
-<span class="line" id="L185">    <span class="tok-kw">const</span> gam = whl: <span class="tok-kw">while</span> (<span class="tok-null">true</span>) {</span>
-<span class="line" id="L186">        <span class="tok-kw">var</span> v: C = <span class="tok-null">undefined</span>;</span>
-<span class="line" id="L187">        <span class="tok-kw">var</span> z: C = <span class="tok-null">undefined</span>;</span>
-<span class="line" id="L188">        <span class="tok-kw">while</span> (<span class="tok-null">true</span>) {</span>
-<span class="line" id="L189">            z = generator.floatNorm(C);</span>
-<span class="line" id="L190">            v = <span class="tok-number">1</span> + c * z;</span>
-<span class="line" id="L191">            <span class="tok-kw">if</span> (v &gt; <span class="tok-number">0</span>) {</span>
-<span class="line" id="L192">                <span class="tok-kw">break</span>;</span>
-<span class="line" id="L193">            }</span>
-<span class="line" id="L194">        }</span>
-<span class="line" id="L195">        v *= v * v;</span>
-<span class="line" id="L196">        z *= z;</span>
-<span class="line" id="L197">        <span class="tok-kw">const</span> uni = generator.float(C);</span>
-<span class="line" id="L198">        <span class="tok-kw">const</span> cond0 = uni &lt; <span class="tok-number">1</span> - <span class="tok-number">0.0331</span> * z * z;</span>
-<span class="line" id="L199">        <span class="tok-kw">if</span> (cond0 <span class="tok-kw">or</span> <span class="tok-builtin">@log</span>(uni) &lt; <span class="tok-number">0.5</span> * z + d * (<span class="tok-number">1</span> - v + <span class="tok-builtin">@log</span>(v))) {</span>
-<span class="line" id="L200">            <span class="tok-kw">break</span> :whl d * v;</span>
-<span class="line" id="L201">        }</span>
-<span class="line" id="L202">    };</span>
-<span class="line" id="L203">    <span class="tok-kw">if</span> (correct) {</span>
-<span class="line" id="L204">        <span class="tok-kw">return</span> gam / rate;</span>
-<span class="line" id="L205">    } <span class="tok-kw">else</span> {</span>
-<span class="line" id="L206">        <span class="tok-kw">const</span> uni = generator.float(C);</span>
-<span class="line" id="L207">        <span class="tok-kw">const</span> correction = std.math.pow(C, uni, <span class="tok-number">1</span> / shape);</span>
-<span class="line" id="L208">        <span class="tok-kw">return</span> gam / rate * correction;</span>
-<span class="line" id="L209">    }</span>
-<span class="line" id="L210">}</span>
-<span class="line" id="L211"></span>
-<span class="line" id="L212"><span class="tok-kw">test</span> <span class="tok-str">&quot;random.gamma&quot;</span> {</span>
-<span class="line" id="L213">    <span class="tok-kw">var</span> prng = std.rand.DefaultPrng.init(<span class="tok-number">0</span>);</span>
-<span class="line" id="L214">    <span class="tok-kw">const</span> gen = prng.random();</span>
-<span class="line" id="L215">    <span class="tok-kw">try</span> expectApproxEqRel(gamma(<span class="tok-type">f64</span>, gen, <span class="tok-number">3</span>, <span class="tok-number">5</span>), <span class="tok-number">0x1.c5f1fac1e8796p-2</span>);</span>
-<span class="line" id="L216">    <span class="tok-kw">try</span> expectApproxEqRel(gamma(<span class="tok-type">f64</span>, gen, <span class="tok-number">3</span>, <span class="tok-number">5</span>), <span class="tok-number">0x1.ffa96ffd15766p-2</span>);</span>
-<span class="line" id="L217">    <span class="tok-kw">try</span> expectApproxEqRel(gamma(<span class="tok-type">f64</span>, gen, <span class="tok-number">3</span>, <span class="tok-number">5</span>), <span class="tok-number">0x1.0ff0a4d0472aap-1</span>);</span>
-<span class="line" id="L218">}</span>
-<span class="line" id="L219"></span>
-<span class="line" id="L220"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">chiSquared</span>(<span class="tok-kw">comptime</span> C: <span class="tok-type">type</span>, generator: std.rand.Random, df: C) C {</span>
-<span class="line" id="L221">    <span class="tok-kw">return</span> gamma(C, generator, <span class="tok-number">0.5</span> * df, <span class="tok-number">0.5</span>);</span>
-<span class="line" id="L222">}</span>
-<span class="line" id="L223"></span>
-<span class="line" id="L224"><span class="tok-kw">test</span> <span class="tok-str">&quot;random.chiSquared&quot;</span> {</span>
-<span class="line" id="L225">    <span class="tok-kw">var</span> prng = std.rand.DefaultPrng.init(<span class="tok-number">0</span>);</span>
-<span class="line" id="L226">    <span class="tok-kw">const</span> gen = prng.random();</span>
-<span class="line" id="L227">    <span class="tok-kw">try</span> expectApproxEqRel(chiSquared(<span class="tok-type">f64</span>, gen, <span class="tok-number">3</span>), <span class="tok-number">0x1.c198f554d3db5p+0</span>);</span>
-<span class="line" id="L228">    <span class="tok-kw">try</span> expectApproxEqRel(chiSquared(<span class="tok-type">f64</span>, gen, <span class="tok-number">3</span>), <span class="tok-number">0x1.0e7afeee50b89p+1</span>);</span>
-<span class="line" id="L229">    <span class="tok-kw">try</span> expectApproxEqRel(chiSquared(<span class="tok-type">f64</span>, gen, <span class="tok-number">3</span>), <span class="tok-number">0x1.28ce118715efcp+1</span>);</span>
-<span class="line" id="L230">}</span>
-<span class="line" id="L231"></span>
-<span class="line" id="L232"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">F</span>(<span class="tok-kw">comptime</span> C: <span class="tok-type">type</span>, generator: std.rand.Random, df1: C, df2: C) C {</span>
-<span class="line" id="L233">    <span class="tok-kw">const</span> chinum = chiSquared(C, generator, df1);</span>
-<span class="line" id="L234">    <span class="tok-kw">const</span> chiden = chiSquared(C, generator, df2);</span>
-<span class="line" id="L235">    <span class="tok-kw">return</span> chinum / chiden * df2 / df1;</span>
-<span class="line" id="L236">}</span>
-<span class="line" id="L237"></span>
-<span class="line" id="L238"><span class="tok-kw">test</span> <span class="tok-str">&quot;random.F&quot;</span> {</span>
-<span class="line" id="L239">    <span class="tok-kw">var</span> prng = std.rand.DefaultPrng.init(<span class="tok-number">0</span>);</span>
-<span class="line" id="L240">    <span class="tok-kw">const</span> gen = prng.random();</span>
-<span class="line" id="L241">    <span class="tok-kw">try</span> expectApproxEqRel(F(<span class="tok-type">f64</span>, gen, <span class="tok-number">3</span>, <span class="tok-number">5</span>), <span class="tok-number">0x1.73d1aa315be37p-1</span>);</span>
-<span class="line" id="L242">    <span class="tok-kw">try</span> expectApproxEqRel(F(<span class="tok-type">f64</span>, gen, <span class="tok-number">3</span>, <span class="tok-number">5</span>), <span class="tok-number">0x1.bf5ec1a08f87bp-2</span>);</span>
-<span class="line" id="L243">    <span class="tok-kw">try</span> expectApproxEqRel(F(<span class="tok-type">f64</span>, gen, <span class="tok-number">3</span>, <span class="tok-number">5</span>), <span class="tok-number">0x1.cbddabd676b5fp-1</span>);</span>
-<span class="line" id="L244">}</span>
-<span class="line" id="L245"></span>
-<span class="line" id="L246"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">beta</span>(<span class="tok-kw">comptime</span> C: <span class="tok-type">type</span>, generator: std.rand.Random, shape1: C, shape2: C) C {</span>
-<span class="line" id="L247">    <span class="tok-kw">const</span> gam1 = gamma(C, generator, shape1, <span class="tok-number">1</span>);</span>
-<span class="line" id="L248">    <span class="tok-kw">const</span> gam2 = gamma(C, generator, shape2, <span class="tok-number">1</span>);</span>
-<span class="line" id="L249">    <span class="tok-kw">return</span> gam1 / (gam1 + gam2);</span>
-<span class="line" id="L250">}</span>
-<span class="line" id="L251"></span>
-<span class="line" id="L252"><span class="tok-kw">test</span> <span class="tok-str">&quot;random.beta&quot;</span> {</span>
-<span class="line" id="L253">    <span class="tok-kw">var</span> prng = std.rand.DefaultPrng.init(<span class="tok-number">0</span>);</span>
-<span class="line" id="L254">    <span class="tok-kw">const</span> gen = prng.random();</span>
-<span class="line" id="L255">    <span class="tok-kw">try</span> expectApproxEqRel(beta(<span class="tok-type">f64</span>, gen, <span class="tok-number">3</span>, <span class="tok-number">5</span>), <span class="tok-number">0x1.54d531aa6eb30p-2</span>);</span>
-<span class="line" id="L256">    <span class="tok-kw">try</span> expectApproxEqRel(beta(<span class="tok-type">f64</span>, gen, <span class="tok-number">3</span>, <span class="tok-number">5</span>), <span class="tok-number">0x1.05f28586a9fadp-2</span>);</span>
-<span class="line" id="L257">    <span class="tok-kw">try</span> expectApproxEqRel(beta(<span class="tok-type">f64</span>, gen, <span class="tok-number">3</span>, <span class="tok-number">5</span>), <span class="tok-number">0x1.77ac6b3ffb648p-2</span>);</span>
-<span class="line" id="L258">}</span>
-<span class="line" id="L259"></span>
-<span class="line" id="L260"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">normal</span>(<span class="tok-kw">comptime</span> C: <span class="tok-type">type</span>, generator: std.rand.Random, mean: C, sd: C) C {</span>
-<span class="line" id="L261">    <span class="tok-kw">const</span> nor = generator.floatNorm(C);</span>
-<span class="line" id="L262">    <span class="tok-kw">return</span> mean + sd * nor;</span>
-<span class="line" id="L263">}</span>
-<span class="line" id="L264"></span>
-<span class="line" id="L265"><span class="tok-kw">test</span> <span class="tok-str">&quot;random.normal&quot;</span> {</span>
-<span class="line" id="L266">    <span class="tok-kw">var</span> prng = std.rand.DefaultPrng.init(<span class="tok-number">0</span>);</span>
-<span class="line" id="L267">    <span class="tok-kw">const</span> gen = prng.random();</span>
-<span class="line" id="L268">    <span class="tok-kw">try</span> expectApproxEqRel(normal(<span class="tok-type">f64</span>, gen, <span class="tok-number">0</span>, <span class="tok-number">1</span>), -<span class="tok-number">0x1.2bd4a0beac2dfp-2</span>);</span>
-<span class="line" id="L269">    <span class="tok-kw">try</span> expectApproxEqRel(normal(<span class="tok-type">f64</span>, gen, <span class="tok-number">0</span>, <span class="tok-number">1</span>), -<span class="tok-number">0x1.6d1e253ea4858p-1</span>);</span>
-<span class="line" id="L270">    <span class="tok-kw">try</span> expectApproxEqRel(normal(<span class="tok-type">f64</span>, gen, <span class="tok-number">0</span>, <span class="tok-number">1</span>), -<span class="tok-number">0x1.af653db4b3107p-4</span>);</span>
-<span class="line" id="L271">}</span>
-<span class="line" id="L272"></span>
-<span class="line" id="L273"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">logNormal</span>(<span class="tok-kw">comptime</span> C: <span class="tok-type">type</span>, generator: std.rand.Random, meanlog: C, sdlog: C) C {</span>
-<span class="line" id="L274">    <span class="tok-kw">const</span> nor = generator.floatNorm(C);</span>
-<span class="line" id="L275">    <span class="tok-kw">const</span> log = meanlog + sdlog * nor;</span>
-<span class="line" id="L276">    <span class="tok-kw">return</span> <span class="tok-builtin">@exp</span>(log);</span>
-<span class="line" id="L277">}</span>
-<span class="line" id="L278"></span>
-<span class="line" id="L279"><span class="tok-kw">test</span> <span class="tok-str">&quot;random.logNormal&quot;</span> {</span>
-<span class="line" id="L280">    <span class="tok-kw">var</span> prng = std.rand.DefaultPrng.init(<span class="tok-number">0</span>);</span>
-<span class="line" id="L281">    <span class="tok-kw">const</span> gen = prng.random();</span>
-<span class="line" id="L282">    <span class="tok-kw">try</span> expectApproxEqRel(logNormal(<span class="tok-type">f64</span>, gen, <span class="tok-number">0</span>, <span class="tok-number">1</span>), <span class="tok-number">0x1.7e09d992a530ep-1</span>);</span>
-<span class="line" id="L283">    <span class="tok-kw">try</span> expectApproxEqRel(logNormal(<span class="tok-type">f64</span>, gen, <span class="tok-number">0</span>, <span class="tok-number">1</span>), <span class="tok-number">0x1.f5e0036c64e29p-2</span>);</span>
-<span class="line" id="L284">    <span class="tok-kw">try</span> expectApproxEqRel(logNormal(<span class="tok-type">f64</span>, gen, <span class="tok-number">0</span>, <span class="tok-number">1</span>), <span class="tok-number">0x1.ccd17150549b1p-1</span>);</span>
-<span class="line" id="L285">}</span>
-<span class="line" id="L286"></span>
-<span class="line" id="L287"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">t</span>(<span class="tok-kw">comptime</span> C: <span class="tok-type">type</span>, generator: std.rand.Random, df: C) C {</span>
-<span class="line" id="L288">    <span class="tok-kw">if</span> (df == <span class="tok-number">1</span>) {</span>
-<span class="line" id="L289">        <span class="tok-kw">return</span> cauchy(C, generator, <span class="tok-number">0</span>, <span class="tok-number">1</span>);</span>
-<span class="line" id="L290">    }</span>
-<span class="line" id="L291">    <span class="tok-kw">const</span> nor = generator.floatNorm(C);</span>
-<span class="line" id="L292">    <span class="tok-kw">const</span> chi = chiSquared(C, generator, df);</span>
-<span class="line" id="L293">    <span class="tok-kw">return</span> nor * <span class="tok-builtin">@sqrt</span>(df / chi);</span>
-<span class="line" id="L294">}</span>
-<span class="line" id="L295"></span>
-<span class="line" id="L296"><span class="tok-kw">test</span> <span class="tok-str">&quot;random.t&quot;</span> {</span>
-<span class="line" id="L297">    <span class="tok-kw">var</span> prng = std.rand.DefaultPrng.init(<span class="tok-number">0</span>);</span>
-<span class="line" id="L298">    <span class="tok-kw">const</span> gen = prng.random();</span>
-<span class="line" id="L299">    <span class="tok-kw">try</span> expectApproxEqRel(t(<span class="tok-type">f64</span>, gen, <span class="tok-number">3</span>), -<span class="tok-number">0x1.ed977ce651337p-2</span>);</span>
-<span class="line" id="L300">    <span class="tok-kw">try</span> expectApproxEqRel(t(<span class="tok-type">f64</span>, gen, <span class="tok-number">3</span>), -<span class="tok-number">0x1.62bae37cf8d83p+1</span>);</span>
-<span class="line" id="L301">    <span class="tok-kw">try</span> expectApproxEqRel(t(<span class="tok-type">f64</span>, gen, <span class="tok-number">3</span>),  <span class="tok-number">0x1.a5797fad46fcap-1</span>);</span>
-<span class="line" id="L302">}</span>
-<span class="line" id="L303"></span>
+<span class="line" id="L180">    <span class="tok-kw">const</span> increment: <span class="tok-type">f64</span> = <span class="tok-kw">if</span> (correct) <span class="tok-number">0</span> <span class="tok-kw">else</span> <span class="tok-number">1</span>;</span>
+<span class="line" id="L181">    <span class="tok-kw">const</span> d = shape - <span class="tok-number">1.0</span> / <span class="tok-number">3.0</span> + increment;</span>
+<span class="line" id="L182">    <span class="tok-kw">const</span> c = <span class="tok-number">1</span> / (<span class="tok-number">3</span> * <span class="tok-builtin">@sqrt</span>(d));</span>
+<span class="line" id="L183">    <span class="tok-kw">const</span> gam = blk: <span class="tok-kw">while</span> (<span class="tok-null">true</span>) {</span>
+<span class="line" id="L184">        <span class="tok-kw">var</span> v: C = <span class="tok-null">undefined</span>;</span>
+<span class="line" id="L185">        <span class="tok-kw">var</span> z: C = <span class="tok-null">undefined</span>;</span>
+<span class="line" id="L186">        <span class="tok-kw">while</span> (<span class="tok-null">true</span>) {</span>
+<span class="line" id="L187">            z = generator.floatNorm(C);</span>
+<span class="line" id="L188">            v = <span class="tok-number">1</span> + c * z;</span>
+<span class="line" id="L189">            <span class="tok-kw">if</span> (v &gt; <span class="tok-number">0</span>) {</span>
+<span class="line" id="L190">                <span class="tok-kw">break</span>;</span>
+<span class="line" id="L191">            }</span>
+<span class="line" id="L192">        }</span>
+<span class="line" id="L193">        v *= v * v;</span>
+<span class="line" id="L194">        z *= z;</span>
+<span class="line" id="L195">        <span class="tok-kw">const</span> uni = generator.float(C);</span>
+<span class="line" id="L196">        <span class="tok-kw">const</span> cond0 = uni &lt; <span class="tok-number">1</span> - <span class="tok-number">0.0331</span> * z * z;</span>
+<span class="line" id="L197">        <span class="tok-kw">if</span> (cond0 <span class="tok-kw">or</span> <span class="tok-builtin">@log</span>(uni) &lt; <span class="tok-number">0.5</span> * z + d * (<span class="tok-number">1</span> - v + <span class="tok-builtin">@log</span>(v))) {</span>
+<span class="line" id="L198">            <span class="tok-kw">break</span> :blk d * v;</span>
+<span class="line" id="L199">        }</span>
+<span class="line" id="L200">    };</span>
+<span class="line" id="L201">    <span class="tok-kw">if</span> (correct) {</span>
+<span class="line" id="L202">        <span class="tok-kw">return</span> gam / rate;</span>
+<span class="line" id="L203">    } <span class="tok-kw">else</span> {</span>
+<span class="line" id="L204">        <span class="tok-kw">const</span> uni = generator.float(C);</span>
+<span class="line" id="L205">        <span class="tok-kw">const</span> correction = std.math.pow(C, uni, <span class="tok-number">1</span> / shape);</span>
+<span class="line" id="L206">        <span class="tok-kw">return</span> gam / rate * correction;</span>
+<span class="line" id="L207">    }</span>
+<span class="line" id="L208">}</span>
+<span class="line" id="L209"></span>
+<span class="line" id="L210"><span class="tok-kw">test</span> <span class="tok-str">&quot;random.gamma&quot;</span> {</span>
+<span class="line" id="L211">    <span class="tok-kw">var</span> prng = std.rand.DefaultPrng.init(<span class="tok-number">0</span>);</span>
+<span class="line" id="L212">    <span class="tok-kw">const</span> gen = prng.random();</span>
+<span class="line" id="L213">    <span class="tok-kw">try</span> expectApproxEqRel(gamma(<span class="tok-type">f64</span>, gen, <span class="tok-number">3</span>, <span class="tok-number">5</span>), <span class="tok-number">0x1.c5f1fac1e8796p-2</span>);</span>
+<span class="line" id="L214">    <span class="tok-kw">try</span> expectApproxEqRel(gamma(<span class="tok-type">f64</span>, gen, <span class="tok-number">3</span>, <span class="tok-number">5</span>), <span class="tok-number">0x1.ffa96ffd15766p-2</span>);</span>
+<span class="line" id="L215">    <span class="tok-kw">try</span> expectApproxEqRel(gamma(<span class="tok-type">f64</span>, gen, <span class="tok-number">3</span>, <span class="tok-number">5</span>), <span class="tok-number">0x1.0ff0a4d0472aap-1</span>);</span>
+<span class="line" id="L216">}</span>
+<span class="line" id="L217"></span>
+<span class="line" id="L218"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">chiSquared</span>(<span class="tok-kw">comptime</span> C: <span class="tok-type">type</span>, generator: std.rand.Random, df: C) C {</span>
+<span class="line" id="L219">    <span class="tok-kw">return</span> gamma(C, generator, <span class="tok-number">0.5</span> * df, <span class="tok-number">0.5</span>);</span>
+<span class="line" id="L220">}</span>
+<span class="line" id="L221"></span>
+<span class="line" id="L222"><span class="tok-kw">test</span> <span class="tok-str">&quot;random.chiSquared&quot;</span> {</span>
+<span class="line" id="L223">    <span class="tok-kw">var</span> prng = std.rand.DefaultPrng.init(<span class="tok-number">0</span>);</span>
+<span class="line" id="L224">    <span class="tok-kw">const</span> gen = prng.random();</span>
+<span class="line" id="L225">    <span class="tok-kw">try</span> expectApproxEqRel(chiSquared(<span class="tok-type">f64</span>, gen, <span class="tok-number">3</span>), <span class="tok-number">0x1.c198f554d3db5p+0</span>);</span>
+<span class="line" id="L226">    <span class="tok-kw">try</span> expectApproxEqRel(chiSquared(<span class="tok-type">f64</span>, gen, <span class="tok-number">3</span>), <span class="tok-number">0x1.0e7afeee50b89p+1</span>);</span>
+<span class="line" id="L227">    <span class="tok-kw">try</span> expectApproxEqRel(chiSquared(<span class="tok-type">f64</span>, gen, <span class="tok-number">3</span>), <span class="tok-number">0x1.28ce118715efcp+1</span>);</span>
+<span class="line" id="L228">}</span>
+<span class="line" id="L229"></span>
+<span class="line" id="L230"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">F</span>(<span class="tok-kw">comptime</span> C: <span class="tok-type">type</span>, generator: std.rand.Random, df1: C, df2: C) C {</span>
+<span class="line" id="L231">    <span class="tok-kw">const</span> chinum = chiSquared(C, generator, df1);</span>
+<span class="line" id="L232">    <span class="tok-kw">const</span> chiden = chiSquared(C, generator, df2);</span>
+<span class="line" id="L233">    <span class="tok-kw">return</span> chinum / chiden * df2 / df1;</span>
+<span class="line" id="L234">}</span>
+<span class="line" id="L235"></span>
+<span class="line" id="L236"><span class="tok-kw">test</span> <span class="tok-str">&quot;random.F&quot;</span> {</span>
+<span class="line" id="L237">    <span class="tok-kw">var</span> prng = std.rand.DefaultPrng.init(<span class="tok-number">0</span>);</span>
+<span class="line" id="L238">    <span class="tok-kw">const</span> gen = prng.random();</span>
+<span class="line" id="L239">    <span class="tok-kw">try</span> expectApproxEqRel(F(<span class="tok-type">f64</span>, gen, <span class="tok-number">3</span>, <span class="tok-number">5</span>), <span class="tok-number">0x1.73d1aa315be37p-1</span>);</span>
+<span class="line" id="L240">    <span class="tok-kw">try</span> expectApproxEqRel(F(<span class="tok-type">f64</span>, gen, <span class="tok-number">3</span>, <span class="tok-number">5</span>), <span class="tok-number">0x1.bf5ec1a08f87bp-2</span>);</span>
+<span class="line" id="L241">    <span class="tok-kw">try</span> expectApproxEqRel(F(<span class="tok-type">f64</span>, gen, <span class="tok-number">3</span>, <span class="tok-number">5</span>), <span class="tok-number">0x1.cbddabd676b5fp-1</span>);</span>
+<span class="line" id="L242">}</span>
+<span class="line" id="L243"></span>
+<span class="line" id="L244"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">beta</span>(<span class="tok-kw">comptime</span> C: <span class="tok-type">type</span>, generator: std.rand.Random, shape1: C, shape2: C) C {</span>
+<span class="line" id="L245">    <span class="tok-kw">const</span> gam1 = gamma(C, generator, shape1, <span class="tok-number">1</span>);</span>
+<span class="line" id="L246">    <span class="tok-kw">const</span> gam2 = gamma(C, generator, shape2, <span class="tok-number">1</span>);</span>
+<span class="line" id="L247">    <span class="tok-kw">return</span> gam1 / (gam1 + gam2);</span>
+<span class="line" id="L248">}</span>
+<span class="line" id="L249"></span>
+<span class="line" id="L250"><span class="tok-kw">test</span> <span class="tok-str">&quot;random.beta&quot;</span> {</span>
+<span class="line" id="L251">    <span class="tok-kw">var</span> prng = std.rand.DefaultPrng.init(<span class="tok-number">0</span>);</span>
+<span class="line" id="L252">    <span class="tok-kw">const</span> gen = prng.random();</span>
+<span class="line" id="L253">    <span class="tok-kw">try</span> expectApproxEqRel(beta(<span class="tok-type">f64</span>, gen, <span class="tok-number">3</span>, <span class="tok-number">5</span>), <span class="tok-number">0x1.54d531aa6eb30p-2</span>);</span>
+<span class="line" id="L254">    <span class="tok-kw">try</span> expectApproxEqRel(beta(<span class="tok-type">f64</span>, gen, <span class="tok-number">3</span>, <span class="tok-number">5</span>), <span class="tok-number">0x1.05f28586a9fadp-2</span>);</span>
+<span class="line" id="L255">    <span class="tok-kw">try</span> expectApproxEqRel(beta(<span class="tok-type">f64</span>, gen, <span class="tok-number">3</span>, <span class="tok-number">5</span>), <span class="tok-number">0x1.77ac6b3ffb648p-2</span>);</span>
+<span class="line" id="L256">}</span>
+<span class="line" id="L257"></span>
+<span class="line" id="L258"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">normal</span>(<span class="tok-kw">comptime</span> C: <span class="tok-type">type</span>, generator: std.rand.Random, mean: C, sd: C) C {</span>
+<span class="line" id="L259">    <span class="tok-kw">const</span> nor = generator.floatNorm(C);</span>
+<span class="line" id="L260">    <span class="tok-kw">return</span> mean + sd * nor;</span>
+<span class="line" id="L261">}</span>
+<span class="line" id="L262"></span>
+<span class="line" id="L263"><span class="tok-kw">test</span> <span class="tok-str">&quot;random.normal&quot;</span> {</span>
+<span class="line" id="L264">    <span class="tok-kw">var</span> prng = std.rand.DefaultPrng.init(<span class="tok-number">0</span>);</span>
+<span class="line" id="L265">    <span class="tok-kw">const</span> gen = prng.random();</span>
+<span class="line" id="L266">    <span class="tok-kw">try</span> expectApproxEqRel(normal(<span class="tok-type">f64</span>, gen, <span class="tok-number">0</span>, <span class="tok-number">1</span>), -<span class="tok-number">0x1.2bd4a0beac2dfp-2</span>);</span>
+<span class="line" id="L267">    <span class="tok-kw">try</span> expectApproxEqRel(normal(<span class="tok-type">f64</span>, gen, <span class="tok-number">0</span>, <span class="tok-number">1</span>), -<span class="tok-number">0x1.6d1e253ea4858p-1</span>);</span>
+<span class="line" id="L268">    <span class="tok-kw">try</span> expectApproxEqRel(normal(<span class="tok-type">f64</span>, gen, <span class="tok-number">0</span>, <span class="tok-number">1</span>), -<span class="tok-number">0x1.af653db4b3107p-4</span>);</span>
+<span class="line" id="L269">}</span>
+<span class="line" id="L270"></span>
+<span class="line" id="L271"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">logNormal</span>(<span class="tok-kw">comptime</span> C: <span class="tok-type">type</span>, generator: std.rand.Random, meanlog: C, sdlog: C) C {</span>
+<span class="line" id="L272">    <span class="tok-kw">const</span> nor = generator.floatNorm(C);</span>
+<span class="line" id="L273">    <span class="tok-kw">const</span> log = meanlog + sdlog * nor;</span>
+<span class="line" id="L274">    <span class="tok-kw">return</span> <span class="tok-builtin">@exp</span>(log);</span>
+<span class="line" id="L275">}</span>
+<span class="line" id="L276"></span>
+<span class="line" id="L277"><span class="tok-kw">test</span> <span class="tok-str">&quot;random.logNormal&quot;</span> {</span>
+<span class="line" id="L278">    <span class="tok-kw">var</span> prng = std.rand.DefaultPrng.init(<span class="tok-number">0</span>);</span>
+<span class="line" id="L279">    <span class="tok-kw">const</span> gen = prng.random();</span>
+<span class="line" id="L280">    <span class="tok-kw">try</span> expectApproxEqRel(logNormal(<span class="tok-type">f64</span>, gen, <span class="tok-number">0</span>, <span class="tok-number">1</span>), <span class="tok-number">0x1.7e09d992a530ep-1</span>);</span>
+<span class="line" id="L281">    <span class="tok-kw">try</span> expectApproxEqRel(logNormal(<span class="tok-type">f64</span>, gen, <span class="tok-number">0</span>, <span class="tok-number">1</span>), <span class="tok-number">0x1.f5e0036c64e29p-2</span>);</span>
+<span class="line" id="L282">    <span class="tok-kw">try</span> expectApproxEqRel(logNormal(<span class="tok-type">f64</span>, gen, <span class="tok-number">0</span>, <span class="tok-number">1</span>), <span class="tok-number">0x1.ccd17150549b1p-1</span>);</span>
+<span class="line" id="L283">}</span>
+<span class="line" id="L284"></span>
+<span class="line" id="L285"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">t</span>(<span class="tok-kw">comptime</span> C: <span class="tok-type">type</span>, generator: std.rand.Random, df: C) C {</span>
+<span class="line" id="L286">    <span class="tok-kw">if</span> (df == <span class="tok-number">1</span>) {</span>
+<span class="line" id="L287">        <span class="tok-kw">return</span> cauchy(C, generator, <span class="tok-number">0</span>, <span class="tok-number">1</span>);</span>
+<span class="line" id="L288">    }</span>
+<span class="line" id="L289">    <span class="tok-kw">const</span> nor = generator.floatNorm(C);</span>
+<span class="line" id="L290">    <span class="tok-kw">const</span> chi = chiSquared(C, generator, df);</span>
+<span class="line" id="L291">    <span class="tok-kw">return</span> nor * <span class="tok-builtin">@sqrt</span>(df / chi);</span>
+<span class="line" id="L292">}</span>
+<span class="line" id="L293"></span>
+<span class="line" id="L294"><span class="tok-kw">test</span> <span class="tok-str">&quot;random.t&quot;</span> {</span>
+<span class="line" id="L295">    <span class="tok-kw">var</span> prng = std.rand.DefaultPrng.init(<span class="tok-number">0</span>);</span>
+<span class="line" id="L296">    <span class="tok-kw">const</span> gen = prng.random();</span>
+<span class="line" id="L297">    <span class="tok-kw">try</span> expectApproxEqRel(t(<span class="tok-type">f64</span>, gen, <span class="tok-number">3</span>), -<span class="tok-number">0x1.ed977ce651337p-2</span>);</span>
+<span class="line" id="L298">    <span class="tok-kw">try</span> expectApproxEqRel(t(<span class="tok-type">f64</span>, gen, <span class="tok-number">3</span>), -<span class="tok-number">0x1.62bae37cf8d83p+1</span>);</span>
+<span class="line" id="L299">    <span class="tok-kw">try</span> expectApproxEqRel(t(<span class="tok-type">f64</span>, gen, <span class="tok-number">3</span>),  <span class="tok-number">0x1.a5797fad46fcap-1</span>);</span>
+<span class="line" id="L300">}</span>
+<span class="line" id="L301"></span>
 </code></pre></body>
 </html>
