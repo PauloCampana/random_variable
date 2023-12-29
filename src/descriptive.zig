@@ -37,7 +37,7 @@ pub fn mean(slice: []f64) f64 {
 pub fn meanGeometric(slice: []f64) f64 {
     const len = length(slice);
     const prodx = product(slice);
-    return std.math.pow(prodx, 1 / len);
+    return std.math.pow(f64, prodx, 1 / len);
 }
 
 pub fn meanHarmonic(slice: []f64) f64 {

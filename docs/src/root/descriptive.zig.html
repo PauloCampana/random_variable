@@ -151,7 +151,7 @@
 <span class="line" id="L37"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">meanGeometric</span>(slice: []<span class="tok-type">f64</span>) <span class="tok-type">f64</span> {</span>
 <span class="line" id="L38">    <span class="tok-kw">const</span> len = length(slice);</span>
 <span class="line" id="L39">    <span class="tok-kw">const</span> prodx = product(slice);</span>
-<span class="line" id="L40">    <span class="tok-kw">return</span> std.math.pow(prodx, <span class="tok-number">1</span> / len);</span>
+<span class="line" id="L40">    <span class="tok-kw">return</span> std.math.pow(<span class="tok-type">f64</span>, prodx, <span class="tok-number">1</span> / len);</span>
 <span class="line" id="L41">}</span>
 <span class="line" id="L42"></span>
 <span class="line" id="L43"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">meanHarmonic</span>(slice: []<span class="tok-type">f64</span>) <span class="tok-type">f64</span> {</span>
