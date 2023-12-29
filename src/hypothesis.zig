@@ -1,5 +1,6 @@
 const std = @import("std");
-const rv = @import("root.zig");
+const descriptive = @import("descriptive.zig");
+const distribution = @import("distribution.zig");
 
 pub const Htest = struct {
     name: []const u8,
@@ -24,12 +25,12 @@ pub const Htest = struct {
     }
 };
 
-pub fn ztest(slice: []f64, mu0: f64, sd: f64, significance: f64) !Htest {
+pub fn ztest(slice: []f64, mu0: f64, sd: f64, significance: f64) Htest {
     const len = @as(f64, @floatFromInt(slice.len));
-    const xbar = rv.descriptive.mean(f64, slice);
+    const xbar = descriptive.mean(slice);
     const statistic = (xbar - mu0) / sd * @sqrt(len);
-    const quantile = try rv.quantile.normal(1 - significance / 2, mu0, sd);
-    const pvalue = try rv.distribution.normal(-@abs(statistic), mu0, sd) * 2;
+    const quantile = distribution.quantile.normal(1 - significance / 2, mu0, sd);
+    const pvalue = distribution.probability.normal(-@abs(statistic), mu0, sd) * 2;
     return Htest {
         .name = "One sample ztest",
         .H0 = "True mean is equal to mu0",
@@ -39,13 +40,13 @@ pub fn ztest(slice: []f64, mu0: f64, sd: f64, significance: f64) !Htest {
     };
 }
 
-pub fn ttest(slice: []f64, mu0: f64, significance: f64) !Htest {
+pub fn ttest(slice: []f64, mu0: f64, significance: f64) Htest {
     const len = @as(f64, @floatFromInt(slice.len));
-    const xbar = rv.descriptive.mean(f64, slice);
-    const se = rv.descriptive.standardError(f64, slice);
+    const xbar = descriptive.mean(slice);
+    const se = descriptive.standardError(slice);
     const statistic = (xbar - mu0) / se;
-    const quantile = try rv.quantile.t(1 - significance / 2, len - 1);
-    const pvalue = try rv.distribution.t(-@abs(statistic), len - 1);
+    const quantile = distribution.quantile.t(1 - significance / 2, len - 1);
+    const pvalue = distribution.probability.t(-@abs(statistic), len - 1);
 
     return Htest {
         .name = "One sample ttest",
