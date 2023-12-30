@@ -2,7 +2,7 @@
 //! functions for common probability distributions
 //!
 //! Asserts invalid distribution parameters on Debug and ReleaseSafe modes
-//! such as ±NaN, ±Inf, probabilities outside of the [0,1] interval,
+//! such as ±NaN, ±Inf, probabilities outside of the [0,1] interval and
 //! certain parameters with value zero or negative.
 
 pub const density = @import("distribution/density.zig");

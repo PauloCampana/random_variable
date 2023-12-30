@@ -54,7 +54,7 @@ pub fn poisson(allocator: Allocator, random: Random, n: usize, lambda: f64) ![]f
 }
 
 /// size ∈ {0,1,2,⋯}, prob ∈ [0,1]
-pub fn binomial(allocator: Allocator, random: Random, n: usize, size: usize, prob: f64) ![]f64 {
+pub fn binomial(allocator: Allocator, random: Random, n: usize, size: u64, prob: f64) ![]f64 {
     assert(0 <= prob and prob <= 1);
     const slice = try allocator.alloc(f64, n);
     for (slice) |*x| {
@@ -64,7 +64,7 @@ pub fn binomial(allocator: Allocator, random: Random, n: usize, size: usize, pro
 }
 
 /// size ∈ {1,2,3,⋯}, prob ∈ (0,1]
-pub fn negativeBinomial(allocator: Allocator, random: Random, n: usize, size: usize, prob: f64) ![]f64 {
+pub fn negativeBinomial(allocator: Allocator, random: Random, n: usize, size: u64, prob: f64) ![]f64 {
     assert(0 < prob and prob <= 1);
     assert(size != 0);
     const slice = try allocator.alloc(f64, n);
