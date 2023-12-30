@@ -1,0 +1,11 @@
+.{
+    .name = "random_variable",
+    .version = "0.1.5",
+    .minimum_zig_version = "0.12.0-dev.1000",
+    .dependencies = .{},
+    .paths = .{
+        "build.zig",
+        "build.zig.zon",
+        "src",
+    },
+}

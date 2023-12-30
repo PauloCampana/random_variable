@@ -2,7 +2,7 @@
 //! also known as distribution or cumulative distribution.
 //!
 //! Represents the probability of a random variable X
-//! being less or equal than certain value: F(q) = P(X <= q).
+//! being less than or equal to a certain value: F(q) = P(X <= q).
 //!
 //! Maps every number into a probability, F(-∞) = 0 and F(∞) = 1.
 
