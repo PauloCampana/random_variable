@@ -4,6 +4,10 @@ pub fn build(b: *std.Build) !void {
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
 
+    _ = b.addModule("random_variable", .{
+        .source_file = .{.path = "src/root.zig"},
+    });
+
     const lib = b.addStaticLibrary(.{
         .name = "random_variable",
         .root_source_file = .{.path = "src/root.zig"},
