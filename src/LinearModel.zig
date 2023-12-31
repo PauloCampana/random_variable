@@ -87,7 +87,7 @@ pub fn rmse(self: Self) f64 {
 }
 
 pub fn r2(self: Self, adjusted: bool) f64 {
-    const mean = descriptive.mean(self.Y.data[0]);
+    const mean = descriptive.mean.arithmetic(self.Y.data[0]);
     var sum2tot: f64 = 0;
     for (self.Y.data[0]) |y| {
         const d = y - mean;
@@ -108,7 +108,7 @@ pub fn ftest(self: Self, significance: f64) hypothesis.Htest {
     const df1 = @as(f64, @floatFromInt(self.X.data.len));
     const df2 = @as(f64, @floatFromInt(self.X.data[0].len)) - df1 - 1;
     const statistic = blk: {
-        const mean = descriptive.mean(self.Y.data[0]);
+        const mean = descriptive.mean.arithmetic(self.Y.data[0]);
         var sum2reg: f64 = 0;
         for (self.P.data[0]) |p| {
             const d = p - mean;

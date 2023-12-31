@@ -19,11 +19,11 @@ Grab the commit hash of the version you want to use and in your `build.zig.zon`,
 ```zig
 .random_variable = .{
     .url = "https://github.com/paulocampana/random_variable/archive/{commit_hash_here}.tar.gz",
-    // .hash = "...",
+    // .hash = "leave this commented, compiler will tell you what to put here",
 },
 ```
 
-Run `zig build` and update the `.hash` field with the what the compiler says to use. You could also copy the whole repository somewhere and use the `.path` field instead of `.url`
+You could also copy the whole repository somewhere and use the `.path` field instead of `.url`
 
 Then, on your `build.zig`, add the `dependency` at the top and the `addModule` for every exe/lib/tests you need:
 
@@ -39,5 +39,5 @@ exe.addModule("random_variable", random_variable.module("random_variable"));
 You can then import the library where you need
 
 ```zig
-const rv = @import("random_variable);
+const rv = @import("random_variable");
 ```

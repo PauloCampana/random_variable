@@ -27,7 +27,7 @@ pub const Htest = struct {
 
 pub fn ztest(slice: []f64, mu0: f64, sd: f64, significance: f64) Htest {
     const len = @as(f64, @floatFromInt(slice.len));
-    const xbar = descriptive.mean(slice);
+    const xbar = descriptive.mean.arithmetic(slice);
     const statistic = (xbar - mu0) / sd * @sqrt(len);
     const quantile = distribution.quantile.normal(1 - significance / 2, mu0, sd);
     const pvalue = distribution.probability.normal(-@abs(statistic), mu0, sd) * 2;
@@ -42,7 +42,7 @@ pub fn ztest(slice: []f64, mu0: f64, sd: f64, significance: f64) Htest {
 
 pub fn ttest(slice: []f64, mu0: f64, significance: f64) Htest {
     const len = @as(f64, @floatFromInt(slice.len));
-    const xbar = descriptive.mean(slice);
+    const xbar = descriptive.mean.arithmetic(slice);
     const se = descriptive.standardError(slice);
     const statistic = (xbar - mu0) / se;
     const quantile = distribution.quantile.t(1 - significance / 2, len - 1);
