@@ -141,7 +141,7 @@
 <span class="line" id="L27"></span>
 <span class="line" id="L28"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">ztest</span>(slice: []<span class="tok-type">f64</span>, mu0: <span class="tok-type">f64</span>, sd: <span class="tok-type">f64</span>, significance: <span class="tok-type">f64</span>) Htest {</span>
 <span class="line" id="L29">    <span class="tok-kw">const</span> len = <span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-builtin">@floatFromInt</span>(slice.len));</span>
-<span class="line" id="L30">    <span class="tok-kw">const</span> xbar = descriptive.mean(slice);</span>
+<span class="line" id="L30">    <span class="tok-kw">const</span> xbar = descriptive.mean.arithmetic(slice);</span>
 <span class="line" id="L31">    <span class="tok-kw">const</span> statistic = (xbar - mu0) / sd * <span class="tok-builtin">@sqrt</span>(len);</span>
 <span class="line" id="L32">    <span class="tok-kw">const</span> quantile = distribution.quantile.normal(<span class="tok-number">1</span> - significance / <span class="tok-number">2</span>, mu0, sd);</span>
 <span class="line" id="L33">    <span class="tok-kw">const</span> pvalue = distribution.probability.normal(-<span class="tok-builtin">@abs</span>(statistic), mu0, sd) * <span class="tok-number">2</span>;</span>
@@ -156,7 +156,7 @@
 <span class="line" id="L42"></span>
 <span class="line" id="L43"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">ttest</span>(slice: []<span class="tok-type">f64</span>, mu0: <span class="tok-type">f64</span>, significance: <span class="tok-type">f64</span>) Htest {</span>
 <span class="line" id="L44">    <span class="tok-kw">const</span> len = <span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-builtin">@floatFromInt</span>(slice.len));</span>
-<span class="line" id="L45">    <span class="tok-kw">const</span> xbar = descriptive.mean(slice);</span>
+<span class="line" id="L45">    <span class="tok-kw">const</span> xbar = descriptive.mean.arithmetic(slice);</span>
 <span class="line" id="L46">    <span class="tok-kw">const</span> se = descriptive.standardError(slice);</span>
 <span class="line" id="L47">    <span class="tok-kw">const</span> statistic = (xbar - mu0) / se;</span>
 <span class="line" id="L48">    <span class="tok-kw">const</span> quantile = distribution.quantile.t(<span class="tok-number">1</span> - significance / <span class="tok-number">2</span>, len - <span class="tok-number">1</span>);</span>

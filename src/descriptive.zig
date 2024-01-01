@@ -1,7 +1,6 @@
-//! Descriptive statistics
+//! Estimators for common descriptive statistics.
 
 const std = @import("std");
-const assert = std.debug.assert;
 
 /// Convert a slice of bool/int/float into a slice of `f64`.
 pub fn toFloat(allocator: std.mem.Allocator, slice: anytype) ![]f64 {
@@ -11,120 +10,138 @@ pub fn toFloat(allocator: std.mem.Allocator, slice: anytype) ![]f64 {
             .Bool => @floatFromInt(@intFromBool(y)),
             .Int => @floatFromInt(y),
             .Float => @floatCast(y),
-            else => @compileError("bad type"),
+            else => @compileError("bad slice type"),
         };
     }
     return result;
 }
 
 /// Sample size as a `f64` instead of `usize`.
-pub fn length(slice: []const f64) f64 {
-    return @floatFromInt(slice.len);
+pub fn length(sample: []const f64) f64 {
+    return @floatFromInt(sample.len);
 }
 
-/// Sample sum of the elements.
-pub fn sum(slice: []const f64) f64 {
+/// Sample sum.
+pub fn sum(sample: []const f64) f64 {
     var sum1: f64 = 0;
-    for (slice) |x| {
+    for (sample) |x| {
         sum1 += x;
     }
     return sum1;
 }
 
-/// Sample product of the elements.
-pub fn product(slice: []const f64) f64 {
+/// Sample product.
+pub fn product(sample: []const f64) f64 {
     var prod: f64 = 1;
-    for (slice) |x| {
+    for (sample) |x| {
         prod *= x;
     }
     return prod;
 }
 
-/// Sample mean
+/// Estimators for sample position measures.
 pub const mean = struct {
     /// Arithmetic mean.
-    pub fn arithmetic(slice: []const f64) f64 {
-        const n = length(slice);
-        const sum1 = sum(slice);
+    pub fn arithmetic(sample: []const f64) f64 {
+        const n = length(sample);
+        const sum1 = sum(sample);
         return sum1 / n;
     }
 
     /// Geometric mean,
     /// elements must not be negative.
-    pub fn geometric(slice: []const f64) f64 {
-        const n = length(slice);
+    pub fn geometric(sample: []const f64) f64 {
+        const n = length(sample);
         var sum_log: f64 = 0;
-        for (slice) |x| {
+        for (sample) |x| {
             sum_log += @log(x);
         }
         return @exp(sum_log / n);
     }
 
     /// Harmonic mean.
-    pub fn harmonic(slice: []const f64) f64 {
-        const n = length(slice);
+    pub fn harmonic(sample: []const f64) f64 {
+        const n = length(sample);
         var sum_inv: f64 = 0;
-        for (slice) |x| {
+        for (sample) |x| {
             sum_inv += 1 / x;
         }
         return n / sum_inv;
     }
 };
 
-pub fn quantileInPlace(slice: []f64, p: f64) f64 {
-    std.mem.sortUnstable(f64, slice, {}, std.sort.asc(f64));
-    if (p == 1) {
-        return slice[slice.len - 1];
+/// Estimator for sample quantiles.
+pub fn quantile(allocator: std.mem.Allocator, sample: []const f64, p: f64) !f64 {
+    std.debug.assert(0 <= p and p <= 1);
+    const sorted = try allocator.dupe(f64, sample);
+    defer allocator.free(sorted);
+    std.mem.sortUnstable(f64, sorted, {}, std.sort.asc(f64));
+    const virtual_index = p * (length(sorted) - 1);
+    const lower = sorted[@intFromFloat(@floor(virtual_index))];
+    const upper = sorted[@intFromFloat(@ceil(virtual_index))];
+    const fractional_part = @rem(virtual_index, 1);
+    return lower + (upper - lower) * fractional_part;
+}
+
+/// Estimator for sample median.
+pub fn median(allocator: std.mem.Allocator, sample: []const f64) !f64 {
+    return quantile(allocator, sample, 0.5);
+}
+
+/// Estimator for sample minimum value.
+pub fn min(sample: []const f64) f64 {
+    var result = std.math.floatMax(f64);
+    for (sample) |x| {
+        if (x < result) {
+            result = x;
+        }
     }
-    const index = p * length(slice);
-    return slice[@intFromFloat(index)];
+    return result;
 }
 
-pub fn quantileAlloc(allocator: std.mem.Allocator, slice: []const f64, p: f64) !f64 {
-    const copy = try allocator.dupe(f64, slice);
-    defer allocator.free(copy);
-    return quantileInPlace(copy, p);
+/// Estimator for sample maximum value.
+pub fn max(sample: []const f64) f64 {
+    var result = -std.math.floatMax(f64);
+    for(sample) |x| {
+        if (x > result) {
+            result = x;
+        }
+    }
+    return result;
 }
 
-pub fn medianInPlace(slice: []f64) f64 {
-    return quantileInPlace(slice, 0.5);
-}
-
-pub fn medianAlloc(allocator: std.mem.Allocator, slice: []const f64) !f64 {
-    return quantileAlloc(allocator, slice, 0.5);
-}
-
-/// Sample variance
-pub fn variance(slice: []const f64) f64 {
-    const n = length(slice);
-    const sum1 = sum(slice);
+/// Estimator for sample variance.
+pub fn variance(sample: []const f64) f64 {
+    const n = length(sample);
+    var sum1: f64 = 0;
     var sum2: f64 = 0;
-    for (slice) |x| {
+    for (sample) |x| {
+        sum1 += x;
         sum2 += x * x;
     }
     return (sum2 - sum1 * sum1 / n) / (n - 1);
 }
 
-/// Sample standard deviation
-pub fn standardDeviation(slice: []const f64) f64 {
-    const s2 = variance(slice);
+/// Estimator for sample standard deviation.
+pub fn standardDeviation(sample: []const f64) f64 {
+    const s2 = variance(sample);
     return @sqrt(s2);
 }
 
-/// Sample standard error
-pub fn standardError(slice: []const f64) f64 {
-    const n = length(slice);
-    const s2 = variance(slice);
+/// Estimator for sample standard deviation or the mean.
+pub fn standardError(sample: []const f64) f64 {
+    const n = length(sample);
+    const s2 = variance(sample);
     return @sqrt(s2 / n);
 }
 
-/// Sample skewness
-pub fn skewness(slice: []const f64) f64 {
-    const n = length(slice);
-    const m = mean.arithmetic(slice);
+/// Estimator for sample third standardized moment (biased).
+pub fn skewness(sample: []const f64) f64 {
+    const n = length(sample);
+    const m = mean.arithmetic(sample);
     var sumd2: f64 = 0;
     var sumd3: f64 = 0;
-    for (slice) |x| {
+    for (sample) |x| {
         const d = x - m;
         sumd2 += d * d;
         sumd3 += d * d * d;
@@ -134,13 +151,13 @@ pub fn skewness(slice: []const f64) f64 {
     return num / (den * den * den);
 }
 
-/// Sample kurtosis
-pub fn kurtosis(slice: []const f64) f64 {
-    const n = length(slice);
-    const m = mean.arithmetic(slice);
+/// Estimator for sample fourth standardized moment (biased).
+pub fn kurtosis(sample: []const f64) f64 {
+    const n = length(sample);
+    const m = mean.arithmetic(sample);
     var sumd2: f64 = 0;
     var sumd4: f64 = 0;
-    for (slice) |x| {
+    for (sample) |x| {
         const d = x - m;
         const d2 = d * d;
         sumd2 += d2;
@@ -149,14 +166,13 @@ pub fn kurtosis(slice: []const f64) f64 {
     return n * sumd4 / (sumd2 * sumd2);
 }
 
-/// Sample covariance
-pub fn covariance(slice1: []const f64, slice2: []const f64) f64 {
-    assert(slice1.len == slice2.len);
-    const n = length(slice1);
+/// Estimator for sample covariance (pearson).
+pub fn covariance(sample1: []const f64, sample2: []const f64) f64 {
+    const n = length(sample1);
     var sumx: f64 = 0;
     var sumy: f64 = 0;
     var sumxy: f64 = 0;
-    for (slice1, slice2) |x, y| {
+    for (sample1, sample2) |x, y| {
         sumx += x;
         sumy += y;
         sumxy += x * y;
@@ -164,21 +180,21 @@ pub fn covariance(slice1: []const f64, slice2: []const f64) f64 {
     return (sumxy - sumx * sumy / n) / (n - 1);
 }
 
-/// Sample correlation,
+/// Estimators for sample correlation,
 /// ranges from -1 (perfect inverse correlation)
 /// to ±0 (no correlation)
 /// to +1 (perfect correlation).
 pub const correlation = struct {
     /// Standard correlation for linear relationships.
-    pub fn pearson(slice1: []const f64, slice2: []const f64) f64 {
-        assert(slice1.len == slice2.len);
-        const n = length(slice1);
+    pub fn pearson(sample1: []const f64, sample2: []const f64) f64 {
+        std.debug.assert(sample1.len == sample2.len);
+        const n = length(sample1);
         var sumx: f64 = 0;
         var sumy: f64 = 0;
         var sumxy: f64 = 0;
         var sumxx: f64 = 0;
         var sumyy: f64 = 0;
-        for (slice1, slice2) |x, y| {
+        for (sample1, sample2) |x, y| {
             sumx += x;
             sumy += y;
             sumxx += x * x;
@@ -191,35 +207,14 @@ pub const correlation = struct {
         return num / @sqrt(den1 * den2);
     }
 
-    /// Ranks starts at 1, averages them in case of ties.
-    fn rank(allocator: std.mem.Allocator, slice: []const f64) ![]f64 {
-        const sorted = try allocator.dupe(f64, slice);
-        defer allocator.free(sorted);
-        std.mem.sortUnstable(f64, sorted, {}, std.sort.asc(f64));
-        const ranked = try allocator.dupe(f64, slice);
-        errdefer allocator.free(ranked);
-        for (ranked) |*r| {
-            var rank_sum: f64 = 0;
-            var times_summed: f64 = 0;
-            for (sorted, 1..) |s, i| {
-                if (r.* == s) {
-                    rank_sum += @floatFromInt(i);
-                    times_summed += 1;
-                }
-            }
-            r.* = rank_sum / times_summed;
-        }
-        return ranked;
-    }
-
-    /// Concordance based correlation for monotonic relationships
-    pub fn kendall(slice1: []const f64, slice2: []const f64) f64 {
-        assert(slice1.len == slice2.len);
+    /// Concordance based correlation for monotonic relationships.
+    pub fn kendall(sample1: []const f64, sample2: []const f64) f64 {
+        std.debug.assert(sample1.len == sample2.len);
         var net_concordant: f64 = 0;
         var ties1: f64 = 0;
         var ties2: f64 = 0;
-        for (slice1, slice2, 0..) |xi, yi, i| {
-            for (slice1[i + 1..], slice2[i + 1..]) |xj, yj| {
+        for (sample1, sample2, 0..) |xi, yi, i| {
+            for (sample1[i + 1..], sample2[i + 1..]) |xj, yj| {
                 if (xi == xj) {
                     ties1 += 1;
                     if (yi == yj) {
@@ -234,7 +229,7 @@ pub const correlation = struct {
                 }
             }
         }
-        const n = length(slice1);
+        const n = length(sample1);
         const combinations = n * (n - 1) / 2;
         const den1 = combinations - ties1;
         const den2 = combinations - ties2;
@@ -242,18 +237,37 @@ pub const correlation = struct {
     }
 
     /// Rank based correlation for monotonic relationships.
-    pub fn spearman(allocator: std.mem.Allocator, slice1: []const f64, slice2: []const f64) !f64 {
-        assert(slice1.len == slice2.len);
-        const rank1 = try rank(allocator, slice1);
-        const rank2 = try rank(allocator, slice2);
+    pub fn spearman(allocator: std.mem.Allocator, sample1: []const f64, sample2: []const f64) !f64 {
+        std.debug.assert(sample1.len == sample2.len);
+        const rank1 = try rank(allocator, sample1);
+        const rank2 = try rank(allocator, sample2);
         defer allocator.free(rank1);
         defer allocator.free(rank2);
         return pearson(rank1, rank2);
     }
+
+    /// Ranks starts at 1, averages them in case of ties.
+    fn rank(allocator: std.mem.Allocator, sample: []const f64) ![]f64 {
+        const sorted = try allocator.dupe(f64, sample);
+        defer allocator.free(sorted);
+        std.mem.sortUnstable(f64, sorted, {}, std.sort.asc(f64));
+        const result = try allocator.dupe(f64, sample);
+        for (result) |*r| {
+            var rank_sum: f64 = 0;
+            var times_summed: f64 = 0;
+            for (sorted, 1..) |s, i| {
+                if (r.* == s) {
+                    rank_sum += @floatFromInt(i);
+                    times_summed += 1;
+                }
+            }
+            r.* = rank_sum / times_summed;
+        }
+        return result;
+    }
 };
 
 const ta = std.testing.allocator;
-const expectEqual = std.testing.expectEqual;
 const expectApproxEqRel = std.testing.expectApproxEqRel;
 const expectEqualSlices = std.testing.expectEqualSlices;
 const eps = 5e-14;
@@ -285,7 +299,7 @@ test "descriptive.toFloat" {
 }
 
 test "descriptive.lenght" {
-    try expectEqual(@as(f64, 11), length(anscombe.x1));
+    try expectApproxEqRel(@as(f64, 11), length(anscombe.x1), eps);
 }
 
 test "descriptive.sum" {
@@ -341,6 +355,37 @@ test "descriptive.mean.harmonic" {
     try expectApproxEqRel(@as(f64, 6.723295789626634), mean.harmonic(anscombe.y2), eps);
     try expectApproxEqRel(@as(f64, 7.119524800614420), mean.harmonic(anscombe.y3), eps);
     try expectApproxEqRel(@as(f64, 7.094886958518605), mean.harmonic(anscombe.y4), eps);
+}
+
+test "descriptive.quantile" {
+    try expectApproxEqRel(@as(f64, 4.26 ), try quantile(ta, anscombe.y1, 0   ), eps);
+    try expectApproxEqRel(@as(f64, 4.54 ), try quantile(ta, anscombe.y1, 0.05), eps);
+    try expectApproxEqRel(@as(f64, 4.82 ), try quantile(ta, anscombe.y1, 0.1 ), eps);
+    try expectApproxEqRel(@as(f64, 9.96 ), try quantile(ta, anscombe.y1, 0.9 ), eps);
+    try expectApproxEqRel(@as(f64, 10.4 ), try quantile(ta, anscombe.y1, 0.95), eps);
+    try expectApproxEqRel(@as(f64, 10.84), try quantile(ta, anscombe.y1, 1   ), eps);
+}
+
+test "descriptive.min" {
+    try expectApproxEqRel(@as(f64, 4   ), min(anscombe.x1), eps);
+    try expectApproxEqRel(@as(f64, 4   ), min(anscombe.x2), eps);
+    try expectApproxEqRel(@as(f64, 4   ), min(anscombe.x3), eps);
+    try expectApproxEqRel(@as(f64, 8   ), min(anscombe.x4), eps);
+    try expectApproxEqRel(@as(f64, 4.26), min(anscombe.y1), eps);
+    try expectApproxEqRel(@as(f64, 3.1 ), min(anscombe.y2), eps);
+    try expectApproxEqRel(@as(f64, 5.39), min(anscombe.y3), eps);
+    try expectApproxEqRel(@as(f64, 5.25), min(anscombe.y4), eps);
+}
+
+test "descriptive.max" {
+    try expectApproxEqRel(@as(f64, 14   ), max(anscombe.x1), eps);
+    try expectApproxEqRel(@as(f64, 14   ), max(anscombe.x2), eps);
+    try expectApproxEqRel(@as(f64, 14   ), max(anscombe.x3), eps);
+    try expectApproxEqRel(@as(f64, 19   ), max(anscombe.x4), eps);
+    try expectApproxEqRel(@as(f64, 10.84), max(anscombe.y1), eps);
+    try expectApproxEqRel(@as(f64,  9.26), max(anscombe.y2), eps);
+    try expectApproxEqRel(@as(f64, 12.74), max(anscombe.y3), eps);
+    try expectApproxEqRel(@as(f64, 12.5 ), max(anscombe.y4), eps);
 }
 
 test "descriptive.variance" {
@@ -410,4 +455,18 @@ test "descriptive.correlation.pearson" {
     try expectApproxEqRel(@as(f64, 0.8162365060002429), correlation.pearson(anscombe.x2, anscombe.y2), eps);
     try expectApproxEqRel(@as(f64, 0.8162867394895982), correlation.pearson(anscombe.x3, anscombe.y3), eps);
     try expectApproxEqRel(@as(f64, 0.8165214368885029), correlation.pearson(anscombe.x4, anscombe.y4), eps);
+}
+
+test "descriptive.correlation.kendall" {
+    try expectApproxEqRel(@as(f64, 0.6363636363636364), correlation.kendall(anscombe.x1, anscombe.y1), eps);
+    try expectApproxEqRel(@as(f64, 0.5636363636363636), correlation.kendall(anscombe.x2, anscombe.y2), eps);
+    try expectApproxEqRel(@as(f64, 0.9636363636363636), correlation.kendall(anscombe.x3, anscombe.y3), eps);
+    try expectApproxEqRel(@as(f64, 0.4264014327112208), correlation.kendall(anscombe.x4, anscombe.y4), eps);
+}
+
+test "descriptive.correlation.spearman" {
+    try expectApproxEqRel(@as(f64, 0.8181818181818182), try correlation.spearman(ta, anscombe.x1, anscombe.y1), eps);
+    try expectApproxEqRel(@as(f64, 0.6909090909090909), try correlation.spearman(ta, anscombe.x2, anscombe.y2), eps);
+    try expectApproxEqRel(@as(f64, 0.9909090909090909), try correlation.spearman(ta, anscombe.x3, anscombe.y3), eps);
+    try expectApproxEqRel(@as(f64, 0.5               ), try correlation.spearman(ta, anscombe.x4, anscombe.y4), eps);
 }
