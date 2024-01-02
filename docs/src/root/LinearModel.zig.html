@@ -137,14 +137,14 @@
 <span class="line" id="L23">    <span class="tok-kw">const</span> q = dependent.len;</span>
 <span class="line" id="L24">    <span class="tok-kw">const</span> p = <span class="tok-kw">if</span> (intercept) independent.len + <span class="tok-number">1</span> <span class="tok-kw">else</span> independent.len;</span>
 <span class="line" id="L25"></span>
-<span class="line" id="L26">    <span class="tok-kw">const</span> Y = <span class="tok-kw">try</span> data.create(n, q);</span>
-<span class="line" id="L27">    <span class="tok-kw">errdefer</span> Y.destroy();</span>
+<span class="line" id="L26">    <span class="tok-kw">const</span> Y = <span class="tok-kw">try</span> data.alloc(n, q);</span>
+<span class="line" id="L27">    <span class="tok-kw">errdefer</span> Y.free();</span>
 <span class="line" id="L28">    <span class="tok-kw">for</span> (Y.data, dependent) |*col, j| {</span>
 <span class="line" id="L29">        <span class="tok-builtin">@memcpy</span>(col.*, data.data[j]);</span>
 <span class="line" id="L30">    }</span>
 <span class="line" id="L31"></span>
-<span class="line" id="L32">    <span class="tok-kw">const</span> X = <span class="tok-kw">try</span> data.create(n, p);</span>
-<span class="line" id="L33">    <span class="tok-kw">errdefer</span> X.destroy();</span>
+<span class="line" id="L32">    <span class="tok-kw">const</span> X = <span class="tok-kw">try</span> data.alloc(n, p);</span>
+<span class="line" id="L33">    <span class="tok-kw">errdefer</span> X.free();</span>
 <span class="line" id="L34">    <span class="tok-kw">if</span> (intercept) {</span>
 <span class="line" id="L35">        <span class="tok-builtin">@memset</span>(X.data[<span class="tok-number">0</span>], <span class="tok-number">1</span>);</span>
 <span class="line" id="L36">    }</span>
@@ -153,20 +153,20 @@
 <span class="line" id="L39">    }</span>
 <span class="line" id="L40"></span>
 <span class="line" id="L41">    <span class="tok-kw">const</span> XT = <span class="tok-kw">try</span> X.transpose();</span>
-<span class="line" id="L42">    <span class="tok-kw">defer</span> XT.destroy();</span>
+<span class="line" id="L42">    <span class="tok-kw">defer</span> XT.free();</span>
 <span class="line" id="L43">    <span class="tok-kw">const</span> XTX = <span class="tok-kw">try</span> XT.multiplyMatrix(X);</span>
-<span class="line" id="L44">    <span class="tok-kw">defer</span> XTX.destroy();</span>
+<span class="line" id="L44">    <span class="tok-kw">defer</span> XTX.free();</span>
 <span class="line" id="L45">    <span class="tok-kw">const</span> XTXinv = <span class="tok-kw">try</span> XTX.inverse();</span>
-<span class="line" id="L46">    <span class="tok-kw">defer</span> XTXinv.destroy();</span>
+<span class="line" id="L46">    <span class="tok-kw">defer</span> XTXinv.free();</span>
 <span class="line" id="L47">    <span class="tok-kw">const</span> XTXinvXT = <span class="tok-kw">try</span> XTXinv.multiplyMatrix(XT);</span>
-<span class="line" id="L48">    <span class="tok-kw">defer</span> XTXinvXT.destroy();</span>
+<span class="line" id="L48">    <span class="tok-kw">defer</span> XTXinvXT.free();</span>
 <span class="line" id="L49">    <span class="tok-kw">const</span> B = <span class="tok-kw">try</span> XTXinvXT.multiplyMatrix(Y);</span>
-<span class="line" id="L50">    <span class="tok-kw">errdefer</span> B.destroy();</span>
+<span class="line" id="L50">    <span class="tok-kw">errdefer</span> B.free();</span>
 <span class="line" id="L51"></span>
 <span class="line" id="L52">    <span class="tok-kw">const</span> P = <span class="tok-kw">try</span> X.multiplyMatrix(B);</span>
-<span class="line" id="L53">    <span class="tok-kw">errdefer</span> P.destroy();</span>
+<span class="line" id="L53">    <span class="tok-kw">errdefer</span> P.free();</span>
 <span class="line" id="L54">    <span class="tok-kw">const</span> E = <span class="tok-kw">try</span> Y.dupe();</span>
-<span class="line" id="L55">    <span class="tok-kw">errdefer</span> E.destroy();</span>
+<span class="line" id="L55">    <span class="tok-kw">errdefer</span> E.free();</span>
 <span class="line" id="L56">    E.subtractMatrix(P);</span>
 <span class="line" id="L57"></span>
 <span class="line" id="L58">    <span class="tok-kw">return</span> Self {</span>
@@ -179,11 +179,11 @@
 <span class="line" id="L65">}</span>
 <span class="line" id="L66"></span>
 <span class="line" id="L67"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">free</span>(self: Self) <span class="tok-type">void</span> {</span>
-<span class="line" id="L68">    self.Y.destroy();</span>
-<span class="line" id="L69">    self.X.destroy();</span>
-<span class="line" id="L70">    self.B.destroy();</span>
-<span class="line" id="L71">    self.E.destroy();</span>
-<span class="line" id="L72">    self.P.destroy();</span>
+<span class="line" id="L68">    self.Y.free();</span>
+<span class="line" id="L69">    self.X.free();</span>
+<span class="line" id="L70">    self.B.free();</span>
+<span class="line" id="L71">    self.E.free();</span>
+<span class="line" id="L72">    self.P.free();</span>
 <span class="line" id="L73">}</span>
 <span class="line" id="L74"></span>
 <span class="line" id="L75"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">deviance</span>(self: Self) <span class="tok-type">f64</span> {</span>
@@ -293,7 +293,7 @@
 </span>
 <span class="line" id="L161">    <span class="tok-comment">// const diamonds = try csv.read(std.testing.allocator, &quot;data/diamonds_numeric.csv&quot;, .{});</span>
 </span>
-<span class="line" id="L162">    <span class="tok-comment">// defer diamonds.destroy();</span>
+<span class="line" id="L162">    <span class="tok-comment">// defer diamonds.free();</span>
 </span>
 <span class="line" id="L163"></span>
 <span class="line" id="L164">    <span class="tok-comment">// const model = try fit(diamonds, &amp;.{3}, &amp;.{0,1,2,4,5,6}, true);</span>

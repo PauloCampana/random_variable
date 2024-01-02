@@ -123,9 +123,34 @@
 <span class="line" id="L9"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> csv = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;csv.zig&quot;</span>);</span>
 <span class="line" id="L10"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> LinearModel = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;LinearModel.zig&quot;</span>);</span>
 <span class="line" id="L11"></span>
-<span class="line" id="L12"><span class="tok-kw">test</span> {</span>
-<span class="line" id="L13">    <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;std&quot;</span>).testing.refAllDeclsRecursive(<span class="tok-builtin">@This</span>());</span>
-<span class="line" id="L14">}</span>
-<span class="line" id="L15"></span>
+<span class="line" id="L12"><span class="tok-kw">const</span> std = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;std&quot;</span>);</span>
+<span class="line" id="L13"><span class="tok-kw">test</span> {</span>
+<span class="line" id="L14">    std.testing.refAllDeclsRecursive(<span class="tok-builtin">@This</span>());</span>
+<span class="line" id="L15">}</span>
+<span class="line" id="L16"></span>
+<span class="line" id="L17"><span class="tok-kw">test</span> descriptive {</span>
+<span class="line" id="L18">    <span class="tok-kw">const</span> carat = &amp;[_]<span class="tok-type">f64</span> {<span class="tok-number">0.23</span>, <span class="tok-number">0.21</span>, <span class="tok-number">0.23</span>, <span class="tok-number">0.29</span>, <span class="tok-number">0.31</span>};</span>
+<span class="line" id="L19">    <span class="tok-kw">const</span> price = &amp;[_]<span class="tok-type">f64</span> {<span class="tok-number">326</span>, <span class="tok-number">326</span>, <span class="tok-number">327</span>, <span class="tok-number">334</span>, <span class="tok-number">335</span>};</span>
+<span class="line" id="L20">    _ = descriptive.mean.arithmetic(carat);</span>
+<span class="line" id="L21">    _ = descriptive.variance(price);</span>
+<span class="line" id="L22">    _ = descriptive.correlation.kendall(carat, price);</span>
+<span class="line" id="L23">}</span>
+<span class="line" id="L24"></span>
+<span class="line" id="L25"><span class="tok-kw">test</span> Matrix {</span>
+<span class="line" id="L26">    <span class="tok-kw">const</span> X = <span class="tok-kw">try</span> Matrix</span>
+<span class="line" id="L27">        .init(std.testing.allocator)</span>
+<span class="line" id="L28">        .createFromSliceOfSlices(&amp;.{</span>
+<span class="line" id="L29">            &amp;.{<span class="tok-number">0.23</span>, <span class="tok-number">0.21</span>, <span class="tok-number">0.23</span>, <span class="tok-number">0.29</span>, <span class="tok-number">0.31</span>},</span>
+<span class="line" id="L30">            &amp;.{<span class="tok-number">326</span>, <span class="tok-number">326</span>, <span class="tok-number">327</span>, <span class="tok-number">334</span>, <span class="tok-number">335</span>},</span>
+<span class="line" id="L31">        });</span>
+<span class="line" id="L32">    <span class="tok-kw">defer</span> X.free();</span>
+<span class="line" id="L33">    <span class="tok-kw">const</span> XT = <span class="tok-kw">try</span> X.transpose();</span>
+<span class="line" id="L34">    <span class="tok-kw">defer</span> XT.free();</span>
+<span class="line" id="L35">    <span class="tok-kw">const</span> XTX = <span class="tok-kw">try</span> XT.multiplyMatrix(X);</span>
+<span class="line" id="L36">    <span class="tok-kw">defer</span> XTX.free();</span>
+<span class="line" id="L37">    <span class="tok-kw">const</span> XTXinv = <span class="tok-kw">try</span> XTX.inverse();</span>
+<span class="line" id="L38">    <span class="tok-kw">defer</span> XTXinv.free();</span>
+<span class="line" id="L39">}</span>
+<span class="line" id="L40"></span>
 </code></pre></body>
 </html>
