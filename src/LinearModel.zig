@@ -23,14 +23,14 @@ pub fn fit(
     const q = dependent.len;
     const p = if (intercept) independent.len + 1 else independent.len;
 
-    const Y = try data.create(n, q);
-    errdefer Y.destroy();
+    const Y = try data.alloc(n, q);
+    errdefer Y.free();
     for (Y.data, dependent) |*col, j| {
         @memcpy(col.*, data.data[j]);
     }
 
-    const X = try data.create(n, p);
-    errdefer X.destroy();
+    const X = try data.alloc(n, p);
+    errdefer X.free();
     if (intercept) {
         @memset(X.data[0], 1);
     }
@@ -39,20 +39,20 @@ pub fn fit(
     }
 
     const XT = try X.transpose();
-    defer XT.destroy();
+    defer XT.free();
     const XTX = try XT.multiplyMatrix(X);
-    defer XTX.destroy();
+    defer XTX.free();
     const XTXinv = try XTX.inverse();
-    defer XTXinv.destroy();
+    defer XTXinv.free();
     const XTXinvXT = try XTXinv.multiplyMatrix(XT);
-    defer XTXinvXT.destroy();
+    defer XTXinvXT.free();
     const B = try XTXinvXT.multiplyMatrix(Y);
-    errdefer B.destroy();
+    errdefer B.free();
 
     const P = try X.multiplyMatrix(B);
-    errdefer P.destroy();
+    errdefer P.free();
     const E = try Y.dupe();
-    errdefer E.destroy();
+    errdefer E.free();
     E.subtractMatrix(P);
 
     return Self {
@@ -65,11 +65,11 @@ pub fn fit(
 }
 
 pub fn free(self: Self) void {
-    self.Y.destroy();
-    self.X.destroy();
-    self.B.destroy();
-    self.E.destroy();
-    self.P.destroy();
+    self.Y.free();
+    self.X.free();
+    self.B.free();
+    self.E.free();
+    self.P.free();
 }
 
 pub fn deviance(self: Self) f64 {
@@ -159,7 +159,7 @@ pub fn coefficients(self: Self) []f64 {
 test "LinearModel" {
     // const csv = @import("csv.zig");
     // const diamonds = try csv.read(std.testing.allocator, "data/diamonds_numeric.csv", .{});
-    // defer diamonds.destroy();
+    // defer diamonds.free();
 
     // const model = try fit(diamonds, &.{3}, &.{0,1,2,4,5,6}, true);
     // defer model.free();

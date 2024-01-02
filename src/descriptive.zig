@@ -90,8 +90,8 @@ pub fn median(allocator: std.mem.Allocator, sample: []const f64) !f64 {
 
 /// Estimator for sample minimum value.
 pub fn min(sample: []const f64) f64 {
-    var result = std.math.floatMax(f64);
-    for (sample) |x| {
+    var result = sample[0];
+    for (sample[1..]) |x| {
         if (x < result) {
             result = x;
         }
@@ -101,8 +101,8 @@ pub fn min(sample: []const f64) f64 {
 
 /// Estimator for sample maximum value.
 pub fn max(sample: []const f64) f64 {
-    var result = -std.math.floatMax(f64);
-    for(sample) |x| {
+    var result = sample[0];
+    for(sample[1..]) |x| {
         if (x > result) {
             result = x;
         }
@@ -180,10 +180,7 @@ pub fn covariance(sample1: []const f64, sample2: []const f64) f64 {
     return (sumxy - sumx * sumy / n) / (n - 1);
 }
 
-/// Estimators for sample correlation,
-/// ranges from -1 (perfect inverse correlation)
-/// to ±0 (no correlation)
-/// to +1 (perfect correlation).
+/// Estimators for sample correlation.
 pub const correlation = struct {
     /// Standard correlation for linear relationships.
     pub fn pearson(sample1: []const f64, sample2: []const f64) f64 {
