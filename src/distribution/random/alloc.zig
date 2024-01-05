@@ -13,16 +13,6 @@ const Random = std.rand.Random;
 const assert = std.debug.assert;
 const isFinite = std.math.isFinite; // tests false for both inf and nan
 
-/// min and max ∈ (-∞,∞)
-pub fn uniform(allocator: Allocator, random: Random, n: usize, min: f64, max: f64) ![]f64 {
-    assert(isFinite(min) and isFinite(max));
-    const slice = try allocator.alloc(f64, n);
-    for (slice) |*x| {
-        x.* = implementation.uniform(random, min, max);
-    }
-    return slice;
-}
-
 /// prob ∈ [0,1]
 pub fn bernoulli(allocator: Allocator, random: Random, n: usize, prob: f64) ![]f64 {
     assert(0 <= prob and prob <= 1);
@@ -70,6 +60,16 @@ pub fn negativeBinomial(allocator: Allocator, random: Random, n: usize, size: u6
     const slice = try allocator.alloc(f64, n);
     for (slice) |*x| {
         x.* = implementation.negativeBinomial(random, size, prob);
+    }
+    return slice;
+}
+
+/// min and max ∈ (-∞,∞)
+pub fn uniform(allocator: Allocator, random: Random, n: usize, min: f64, max: f64) ![]f64 {
+    assert(isFinite(min) and isFinite(max));
+    const slice = try allocator.alloc(f64, n);
+    for (slice) |*x| {
+        x.* = implementation.uniform(random, min, max);
     }
     return slice;
 }
@@ -141,12 +141,12 @@ pub fn chiSquared(allocator: Allocator, random: Random, n: usize, df: f64) ![]f6
 }
 
 /// df1 and df2 ∈ (0,∞)
-pub fn F(allocator: Allocator, random: Random, n: usize, df1: f64, df2: f64) ![]f64 {
+pub fn f(allocator: Allocator, random: Random, n: usize, df1: f64, df2: f64) ![]f64 {
     assert(isFinite(df1) and isFinite(df2));
     assert(df1 > 0 and df2 > 0);
     const slice = try allocator.alloc(f64, n);
     for (slice) |*x| {
-        x.* = implementation.F(random, df1, df2);
+        x.* = implementation.f(random, df1, df2);
     }
     return slice;
 }
