@@ -125,42 +125,42 @@
 <span class="line" id="L11"><span class="tok-kw">const</span> isFinite = std.math.isFinite; <span class="tok-comment">// tests false for both inf and nan</span>
 </span>
 <span class="line" id="L12"></span>
-<span class="line" id="L13"><span class="tok-comment">/// min and max ∈ (-∞,∞)</span></span>
-<span class="line" id="L14"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">uniform</span>(random: Random, min: <span class="tok-type">f64</span>, max: <span class="tok-type">f64</span>) <span class="tok-type">f64</span> {</span>
-<span class="line" id="L15">    assert(isFinite(min) <span class="tok-kw">and</span> isFinite(max));</span>
-<span class="line" id="L16">    <span class="tok-kw">return</span> implementation.uniform(random, min, max);</span>
+<span class="line" id="L13"><span class="tok-comment">/// prob ∈ [0,1]</span></span>
+<span class="line" id="L14"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">bernoulli</span>(random: Random, prob: <span class="tok-type">f64</span>) <span class="tok-type">f64</span> {</span>
+<span class="line" id="L15">    assert(<span class="tok-number">0</span> &lt;= prob <span class="tok-kw">and</span> prob &lt;= <span class="tok-number">1</span>);</span>
+<span class="line" id="L16">    <span class="tok-kw">return</span> implementation.bernoulli(random, prob);</span>
 <span class="line" id="L17">}</span>
 <span class="line" id="L18"></span>
-<span class="line" id="L19"><span class="tok-comment">/// prob ∈ [0,1]</span></span>
-<span class="line" id="L20"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">bernoulli</span>(random: Random, prob: <span class="tok-type">f64</span>) <span class="tok-type">f64</span> {</span>
-<span class="line" id="L21">    assert(<span class="tok-number">0</span> &lt;= prob <span class="tok-kw">and</span> prob &lt;= <span class="tok-number">1</span>);</span>
-<span class="line" id="L22">    <span class="tok-kw">return</span> implementation.bernoulli(random, prob);</span>
+<span class="line" id="L19"><span class="tok-comment">/// prob ∈ (0,1]</span></span>
+<span class="line" id="L20"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">geometric</span>(random: Random, prob: <span class="tok-type">f64</span>) <span class="tok-type">f64</span> {</span>
+<span class="line" id="L21">    assert(<span class="tok-number">0</span> &lt; prob <span class="tok-kw">and</span> prob &lt;= <span class="tok-number">1</span>);</span>
+<span class="line" id="L22">    <span class="tok-kw">return</span> implementation.geometric(random, prob);</span>
 <span class="line" id="L23">}</span>
 <span class="line" id="L24"></span>
-<span class="line" id="L25"><span class="tok-comment">/// prob ∈ (0,1]</span></span>
-<span class="line" id="L26"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">geometric</span>(random: Random, prob: <span class="tok-type">f64</span>) <span class="tok-type">f64</span> {</span>
-<span class="line" id="L27">    assert(<span class="tok-number">0</span> &lt; prob <span class="tok-kw">and</span> prob &lt;= <span class="tok-number">1</span>);</span>
-<span class="line" id="L28">    <span class="tok-kw">return</span> implementation.geometric(random, prob);</span>
-<span class="line" id="L29">}</span>
-<span class="line" id="L30"></span>
-<span class="line" id="L31"><span class="tok-comment">/// lambda ∈ (0,∞)</span></span>
-<span class="line" id="L32"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">poisson</span>(random: Random, lambda: <span class="tok-type">f64</span>) <span class="tok-type">f64</span> {</span>
-<span class="line" id="L33">    assert(isFinite(lambda));</span>
-<span class="line" id="L34">    assert(lambda &gt; <span class="tok-number">0</span>);</span>
-<span class="line" id="L35">    <span class="tok-kw">return</span> implementation.poisson(random, lambda);</span>
+<span class="line" id="L25"><span class="tok-comment">/// lambda ∈ (0,∞)</span></span>
+<span class="line" id="L26"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">poisson</span>(random: Random, lambda: <span class="tok-type">f64</span>) <span class="tok-type">f64</span> {</span>
+<span class="line" id="L27">    assert(isFinite(lambda));</span>
+<span class="line" id="L28">    assert(lambda &gt; <span class="tok-number">0</span>);</span>
+<span class="line" id="L29">    <span class="tok-kw">return</span> implementation.poisson(random, lambda);</span>
+<span class="line" id="L30">}</span>
+<span class="line" id="L31"></span>
+<span class="line" id="L32"><span class="tok-comment">/// size ∈ {0,1,2,⋯}, prob ∈ [0,1]</span></span>
+<span class="line" id="L33"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">binomial</span>(random: Random, size: <span class="tok-type">u64</span>, prob: <span class="tok-type">f64</span>) <span class="tok-type">f64</span> {</span>
+<span class="line" id="L34">    assert(<span class="tok-number">0</span> &lt;= prob <span class="tok-kw">and</span> prob &lt;= <span class="tok-number">1</span>);</span>
+<span class="line" id="L35">    <span class="tok-kw">return</span> implementation.binomial(random, size, prob);</span>
 <span class="line" id="L36">}</span>
 <span class="line" id="L37"></span>
-<span class="line" id="L38"><span class="tok-comment">/// size ∈ {0,1,2,⋯}, prob ∈ [0,1]</span></span>
-<span class="line" id="L39"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">binomial</span>(random: Random, size: <span class="tok-type">u64</span>, prob: <span class="tok-type">f64</span>) <span class="tok-type">f64</span> {</span>
-<span class="line" id="L40">    assert(<span class="tok-number">0</span> &lt;= prob <span class="tok-kw">and</span> prob &lt;= <span class="tok-number">1</span>);</span>
-<span class="line" id="L41">    <span class="tok-kw">return</span> implementation.binomial(random, size, prob);</span>
-<span class="line" id="L42">}</span>
-<span class="line" id="L43"></span>
-<span class="line" id="L44"><span class="tok-comment">/// size ∈ {1,2,3,⋯}, prob ∈ (0,1]</span></span>
-<span class="line" id="L45"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">negativeBinomial</span>(random: Random, size: <span class="tok-type">u64</span>, prob: <span class="tok-type">f64</span>) <span class="tok-type">f64</span> {</span>
-<span class="line" id="L46">    assert(<span class="tok-number">0</span> &lt; prob <span class="tok-kw">and</span> prob &lt;= <span class="tok-number">1</span>);</span>
-<span class="line" id="L47">    assert(size != <span class="tok-number">0</span>);</span>
-<span class="line" id="L48">    <span class="tok-kw">return</span> implementation.negativeBinomial(random, size, prob);</span>
+<span class="line" id="L38"><span class="tok-comment">/// size ∈ {1,2,3,⋯}, prob ∈ (0,1]</span></span>
+<span class="line" id="L39"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">negativeBinomial</span>(random: Random, size: <span class="tok-type">u64</span>, prob: <span class="tok-type">f64</span>) <span class="tok-type">f64</span> {</span>
+<span class="line" id="L40">    assert(<span class="tok-number">0</span> &lt; prob <span class="tok-kw">and</span> prob &lt;= <span class="tok-number">1</span>);</span>
+<span class="line" id="L41">    assert(size != <span class="tok-number">0</span>);</span>
+<span class="line" id="L42">    <span class="tok-kw">return</span> implementation.negativeBinomial(random, size, prob);</span>
+<span class="line" id="L43">}</span>
+<span class="line" id="L44"></span>
+<span class="line" id="L45"><span class="tok-comment">/// min and max ∈ (-∞,∞)</span></span>
+<span class="line" id="L46"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">uniform</span>(random: Random, min: <span class="tok-type">f64</span>, max: <span class="tok-type">f64</span>) <span class="tok-type">f64</span> {</span>
+<span class="line" id="L47">    assert(isFinite(min) <span class="tok-kw">and</span> isFinite(max));</span>
+<span class="line" id="L48">    <span class="tok-kw">return</span> implementation.uniform(random, min, max);</span>
 <span class="line" id="L49">}</span>
 <span class="line" id="L50"></span>
 <span class="line" id="L51"><span class="tok-comment">/// rate ∈ (0,∞)</span></span>
@@ -206,10 +206,10 @@
 <span class="line" id="L91">}</span>
 <span class="line" id="L92"></span>
 <span class="line" id="L93"><span class="tok-comment">/// df1 and df2 ∈ (0,∞)</span></span>
-<span class="line" id="L94"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">F</span>(random: Random, df1: <span class="tok-type">f64</span>, df2: <span class="tok-type">f64</span>) <span class="tok-type">f64</span> {</span>
+<span class="line" id="L94"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">f</span>(random: Random, df1: <span class="tok-type">f64</span>, df2: <span class="tok-type">f64</span>) <span class="tok-type">f64</span> {</span>
 <span class="line" id="L95">    assert(isFinite(df1) <span class="tok-kw">and</span> isFinite(df2));</span>
 <span class="line" id="L96">    assert(df1 &gt; <span class="tok-number">0</span> <span class="tok-kw">and</span> df2 &gt; <span class="tok-number">0</span>);</span>
-<span class="line" id="L97">    <span class="tok-kw">return</span> implementation.F(random, df1, df2);</span>
+<span class="line" id="L97">    <span class="tok-kw">return</span> implementation.f(random, df1, df2);</span>
 <span class="line" id="L98">}</span>
 <span class="line" id="L99"></span>
 <span class="line" id="L100"><span class="tok-comment">/// shape1 and shape2 ∈ (0,∞)</span></span>

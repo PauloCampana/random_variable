@@ -128,63 +128,63 @@
 <span class="line" id="L14"><span class="tok-kw">const</span> isFinite = std.math.isFinite; <span class="tok-comment">// tests false for both inf and nan</span>
 </span>
 <span class="line" id="L15"></span>
-<span class="line" id="L16"><span class="tok-comment">/// min and max ∈ (-∞,∞)</span></span>
-<span class="line" id="L17"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">uniform</span>(allocator: Allocator, random: Random, n: <span class="tok-type">usize</span>, min: <span class="tok-type">f64</span>, max: <span class="tok-type">f64</span>) ![]<span class="tok-type">f64</span> {</span>
-<span class="line" id="L18">    assert(isFinite(min) <span class="tok-kw">and</span> isFinite(max));</span>
+<span class="line" id="L16"><span class="tok-comment">/// prob ∈ [0,1]</span></span>
+<span class="line" id="L17"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">bernoulli</span>(allocator: Allocator, random: Random, n: <span class="tok-type">usize</span>, prob: <span class="tok-type">f64</span>) ![]<span class="tok-type">f64</span> {</span>
+<span class="line" id="L18">    assert(<span class="tok-number">0</span> &lt;= prob <span class="tok-kw">and</span> prob &lt;= <span class="tok-number">1</span>);</span>
 <span class="line" id="L19">    <span class="tok-kw">const</span> slice = <span class="tok-kw">try</span> allocator.alloc(<span class="tok-type">f64</span>, n);</span>
 <span class="line" id="L20">    <span class="tok-kw">for</span> (slice) |*x| {</span>
-<span class="line" id="L21">        x.* = implementation.uniform(random, min, max);</span>
+<span class="line" id="L21">        x.* = implementation.bernoulli(random, prob);</span>
 <span class="line" id="L22">    }</span>
 <span class="line" id="L23">    <span class="tok-kw">return</span> slice;</span>
 <span class="line" id="L24">}</span>
 <span class="line" id="L25"></span>
-<span class="line" id="L26"><span class="tok-comment">/// prob ∈ [0,1]</span></span>
-<span class="line" id="L27"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">bernoulli</span>(allocator: Allocator, random: Random, n: <span class="tok-type">usize</span>, prob: <span class="tok-type">f64</span>) ![]<span class="tok-type">f64</span> {</span>
-<span class="line" id="L28">    assert(<span class="tok-number">0</span> &lt;= prob <span class="tok-kw">and</span> prob &lt;= <span class="tok-number">1</span>);</span>
+<span class="line" id="L26"><span class="tok-comment">/// prob ∈ (0,1]</span></span>
+<span class="line" id="L27"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">geometric</span>(allocator: Allocator, random: Random, n: <span class="tok-type">usize</span>, prob: <span class="tok-type">f64</span>) ![]<span class="tok-type">f64</span> {</span>
+<span class="line" id="L28">    assert(<span class="tok-number">0</span> &lt; prob <span class="tok-kw">and</span> prob &lt;= <span class="tok-number">1</span>);</span>
 <span class="line" id="L29">    <span class="tok-kw">const</span> slice = <span class="tok-kw">try</span> allocator.alloc(<span class="tok-type">f64</span>, n);</span>
 <span class="line" id="L30">    <span class="tok-kw">for</span> (slice) |*x| {</span>
-<span class="line" id="L31">        x.* = implementation.bernoulli(random, prob);</span>
+<span class="line" id="L31">        x.* = implementation.geometric(random, prob);</span>
 <span class="line" id="L32">    }</span>
 <span class="line" id="L33">    <span class="tok-kw">return</span> slice;</span>
 <span class="line" id="L34">}</span>
 <span class="line" id="L35"></span>
-<span class="line" id="L36"><span class="tok-comment">/// prob ∈ (0,1]</span></span>
-<span class="line" id="L37"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">geometric</span>(allocator: Allocator, random: Random, n: <span class="tok-type">usize</span>, prob: <span class="tok-type">f64</span>) ![]<span class="tok-type">f64</span> {</span>
-<span class="line" id="L38">    assert(<span class="tok-number">0</span> &lt; prob <span class="tok-kw">and</span> prob &lt;= <span class="tok-number">1</span>);</span>
+<span class="line" id="L36"><span class="tok-comment">/// lambda ∈ (0,∞)</span></span>
+<span class="line" id="L37"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">poisson</span>(allocator: Allocator, random: Random, n: <span class="tok-type">usize</span>, lambda: <span class="tok-type">f64</span>) ![]<span class="tok-type">f64</span> {</span>
+<span class="line" id="L38">    assert(isFinite(lambda));</span>
 <span class="line" id="L39">    <span class="tok-kw">const</span> slice = <span class="tok-kw">try</span> allocator.alloc(<span class="tok-type">f64</span>, n);</span>
 <span class="line" id="L40">    <span class="tok-kw">for</span> (slice) |*x| {</span>
-<span class="line" id="L41">        x.* = implementation.geometric(random, prob);</span>
+<span class="line" id="L41">        x.* = implementation.poisson(random, lambda);</span>
 <span class="line" id="L42">    }</span>
 <span class="line" id="L43">    <span class="tok-kw">return</span> slice;</span>
 <span class="line" id="L44">}</span>
 <span class="line" id="L45"></span>
-<span class="line" id="L46"><span class="tok-comment">/// lambda ∈ (0,∞)</span></span>
-<span class="line" id="L47"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">poisson</span>(allocator: Allocator, random: Random, n: <span class="tok-type">usize</span>, lambda: <span class="tok-type">f64</span>) ![]<span class="tok-type">f64</span> {</span>
-<span class="line" id="L48">    assert(isFinite(lambda));</span>
+<span class="line" id="L46"><span class="tok-comment">/// size ∈ {0,1,2,⋯}, prob ∈ [0,1]</span></span>
+<span class="line" id="L47"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">binomial</span>(allocator: Allocator, random: Random, n: <span class="tok-type">usize</span>, size: <span class="tok-type">u64</span>, prob: <span class="tok-type">f64</span>) ![]<span class="tok-type">f64</span> {</span>
+<span class="line" id="L48">    assert(<span class="tok-number">0</span> &lt;= prob <span class="tok-kw">and</span> prob &lt;= <span class="tok-number">1</span>);</span>
 <span class="line" id="L49">    <span class="tok-kw">const</span> slice = <span class="tok-kw">try</span> allocator.alloc(<span class="tok-type">f64</span>, n);</span>
 <span class="line" id="L50">    <span class="tok-kw">for</span> (slice) |*x| {</span>
-<span class="line" id="L51">        x.* = implementation.poisson(random, lambda);</span>
+<span class="line" id="L51">        x.* =  implementation.binomial(random, size, prob);</span>
 <span class="line" id="L52">    }</span>
 <span class="line" id="L53">    <span class="tok-kw">return</span> slice;</span>
 <span class="line" id="L54">}</span>
 <span class="line" id="L55"></span>
-<span class="line" id="L56"><span class="tok-comment">/// size ∈ {0,1,2,⋯}, prob ∈ [0,1]</span></span>
-<span class="line" id="L57"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">binomial</span>(allocator: Allocator, random: Random, n: <span class="tok-type">usize</span>, size: <span class="tok-type">u64</span>, prob: <span class="tok-type">f64</span>) ![]<span class="tok-type">f64</span> {</span>
-<span class="line" id="L58">    assert(<span class="tok-number">0</span> &lt;= prob <span class="tok-kw">and</span> prob &lt;= <span class="tok-number">1</span>);</span>
-<span class="line" id="L59">    <span class="tok-kw">const</span> slice = <span class="tok-kw">try</span> allocator.alloc(<span class="tok-type">f64</span>, n);</span>
-<span class="line" id="L60">    <span class="tok-kw">for</span> (slice) |*x| {</span>
-<span class="line" id="L61">        x.* =  implementation.binomial(random, size, prob);</span>
-<span class="line" id="L62">    }</span>
-<span class="line" id="L63">    <span class="tok-kw">return</span> slice;</span>
-<span class="line" id="L64">}</span>
-<span class="line" id="L65"></span>
-<span class="line" id="L66"><span class="tok-comment">/// size ∈ {1,2,3,⋯}, prob ∈ (0,1]</span></span>
-<span class="line" id="L67"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">negativeBinomial</span>(allocator: Allocator, random: Random, n: <span class="tok-type">usize</span>, size: <span class="tok-type">u64</span>, prob: <span class="tok-type">f64</span>) ![]<span class="tok-type">f64</span> {</span>
-<span class="line" id="L68">    assert(<span class="tok-number">0</span> &lt; prob <span class="tok-kw">and</span> prob &lt;= <span class="tok-number">1</span>);</span>
-<span class="line" id="L69">    assert(size != <span class="tok-number">0</span>);</span>
+<span class="line" id="L56"><span class="tok-comment">/// size ∈ {1,2,3,⋯}, prob ∈ (0,1]</span></span>
+<span class="line" id="L57"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">negativeBinomial</span>(allocator: Allocator, random: Random, n: <span class="tok-type">usize</span>, size: <span class="tok-type">u64</span>, prob: <span class="tok-type">f64</span>) ![]<span class="tok-type">f64</span> {</span>
+<span class="line" id="L58">    assert(<span class="tok-number">0</span> &lt; prob <span class="tok-kw">and</span> prob &lt;= <span class="tok-number">1</span>);</span>
+<span class="line" id="L59">    assert(size != <span class="tok-number">0</span>);</span>
+<span class="line" id="L60">    <span class="tok-kw">const</span> slice = <span class="tok-kw">try</span> allocator.alloc(<span class="tok-type">f64</span>, n);</span>
+<span class="line" id="L61">    <span class="tok-kw">for</span> (slice) |*x| {</span>
+<span class="line" id="L62">        x.* = implementation.negativeBinomial(random, size, prob);</span>
+<span class="line" id="L63">    }</span>
+<span class="line" id="L64">    <span class="tok-kw">return</span> slice;</span>
+<span class="line" id="L65">}</span>
+<span class="line" id="L66"></span>
+<span class="line" id="L67"><span class="tok-comment">/// min and max ∈ (-∞,∞)</span></span>
+<span class="line" id="L68"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">uniform</span>(allocator: Allocator, random: Random, n: <span class="tok-type">usize</span>, min: <span class="tok-type">f64</span>, max: <span class="tok-type">f64</span>) ![]<span class="tok-type">f64</span> {</span>
+<span class="line" id="L69">    assert(isFinite(min) <span class="tok-kw">and</span> isFinite(max));</span>
 <span class="line" id="L70">    <span class="tok-kw">const</span> slice = <span class="tok-kw">try</span> allocator.alloc(<span class="tok-type">f64</span>, n);</span>
 <span class="line" id="L71">    <span class="tok-kw">for</span> (slice) |*x| {</span>
-<span class="line" id="L72">        x.* = implementation.negativeBinomial(random, size, prob);</span>
+<span class="line" id="L72">        x.* = implementation.uniform(random, min, max);</span>
 <span class="line" id="L73">    }</span>
 <span class="line" id="L74">    <span class="tok-kw">return</span> slice;</span>
 <span class="line" id="L75">}</span>
@@ -256,12 +256,12 @@
 <span class="line" id="L141">}</span>
 <span class="line" id="L142"></span>
 <span class="line" id="L143"><span class="tok-comment">/// df1 and df2 ∈ (0,∞)</span></span>
-<span class="line" id="L144"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">F</span>(allocator: Allocator, random: Random, n: <span class="tok-type">usize</span>, df1: <span class="tok-type">f64</span>, df2: <span class="tok-type">f64</span>) ![]<span class="tok-type">f64</span> {</span>
+<span class="line" id="L144"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">f</span>(allocator: Allocator, random: Random, n: <span class="tok-type">usize</span>, df1: <span class="tok-type">f64</span>, df2: <span class="tok-type">f64</span>) ![]<span class="tok-type">f64</span> {</span>
 <span class="line" id="L145">    assert(isFinite(df1) <span class="tok-kw">and</span> isFinite(df2));</span>
 <span class="line" id="L146">    assert(df1 &gt; <span class="tok-number">0</span> <span class="tok-kw">and</span> df2 &gt; <span class="tok-number">0</span>);</span>
 <span class="line" id="L147">    <span class="tok-kw">const</span> slice = <span class="tok-kw">try</span> allocator.alloc(<span class="tok-type">f64</span>, n);</span>
 <span class="line" id="L148">    <span class="tok-kw">for</span> (slice) |*x| {</span>
-<span class="line" id="L149">        x.* = implementation.F(random, df1, df2);</span>
+<span class="line" id="L149">        x.* = implementation.f(random, df1, df2);</span>
 <span class="line" id="L150">    }</span>
 <span class="line" id="L151">    <span class="tok-kw">return</span> slice;</span>
 <span class="line" id="L152">}</span>

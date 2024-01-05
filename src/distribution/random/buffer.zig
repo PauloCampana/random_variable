@@ -11,15 +11,6 @@ const Random = std.rand.Random;
 const assert = std.debug.assert;
 const isFinite = std.math.isFinite; // tests false for both inf and nan
 
-/// min and max ∈ (-∞,∞)
-pub fn uniform(buf: []f64, random: Random, min: f64, max: f64) []f64 {
-    assert(isFinite(min) and isFinite(max));
-    for (buf) |*x| {
-        x.* = implementation.uniform(random, min, max);
-    }
-    return buf;
-}
-
 /// prob ∈ [0,1]
 pub fn bernoulli(buf: []f64, random: Random, prob: f64) []f64 {
     assert(0 <= prob and prob <= 1);
@@ -63,6 +54,15 @@ pub fn negativeBinomial(buf: []f64, random: Random, size: u64, prob: f64) []f64 
     assert(size != 0);
     for (buf) |*x| {
         x.* = implementation.negativeBinomial(random, size, prob);
+    }
+    return buf;
+}
+
+/// min and max ∈ (-∞,∞)
+pub fn uniform(buf: []f64, random: Random, min: f64, max: f64) []f64 {
+    assert(isFinite(min) and isFinite(max));
+    for (buf) |*x| {
+        x.* = implementation.uniform(random, min, max);
     }
     return buf;
 }
@@ -128,11 +128,11 @@ pub fn chiSquared(buf: []f64, random: Random, df: f64) []f64 {
 }
 
 /// df1 and df2 ∈ (0,∞)
-pub fn F(buf: []f64, random: Random, df1: f64, df2: f64) []f64 {
+pub fn f(buf: []f64, random: Random, df1: f64, df2: f64) []f64 {
     assert(isFinite(df1) and isFinite(df2));
     assert(df1 > 0 and df2 > 0);
     for (buf) |*x| {
-        x.* = implementation.F(random, df1, df2);
+        x.* = implementation.f(random, df1, df2);
     }
     return buf;
 }

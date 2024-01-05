@@ -1,5 +1,6 @@
 //! Y = XB + E
 
+// TODO split @This() into two: univariate and multivariate
 const std = @import("std");
 const Matrix = @import("Matrix.zig");
 const descriptive = @import("descriptive.zig");
@@ -119,8 +120,8 @@ pub fn ftest(self: Self, significance: f64) hypothesis.Htest {
         const mean2res = sum2res / df2;
         break :blk mean2reg / mean2res;
     };
-    const quantil = distribution.quantile.F(1 - significance, df1, df2);
-    const pvalue = 1 - distribution.probability.F(statistic, df1, df2);
+    const quantil = distribution.quantile.f(1 - significance, df1, df2);
+    const pvalue = 1 - distribution.probability.f(statistic, df1, df2);
     return hypothesis.Htest {
         .name = "F test for linear model adequacy",
         .H0 = "All model coefficients are equal to 0",
