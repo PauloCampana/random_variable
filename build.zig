@@ -25,13 +25,8 @@ pub fn build(b: *std.Build) !void {
     const test_step = b.step("test", "Run library tests");
     test_step.dependOn(&test_cmd.step);
 
-    const docs_tests = b.addTest(.{
-        .root_source_file = .{.path = "src/root.zig"},
-        .target = target,
-        .optimize = optimize,
-    });
     const docs_cmd = b.addInstallDirectory(.{
-        .source_dir = docs_tests.getEmittedDocs(),
+        .source_dir = lib.getEmittedDocs(),
         .install_dir = .{.custom = ".."},
         .install_subdir = "docs",
     });

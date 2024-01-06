@@ -138,8 +138,8 @@
 <span class="line" id="L24"></span>
 <span class="line" id="L25">    <span class="tok-kw">const</span> result = <span class="tok-kw">try</span> Matrix</span>
 <span class="line" id="L26">        .init(allocator)</span>
-<span class="line" id="L27">        .create(rows, cols);</span>
-<span class="line" id="L28">    <span class="tok-kw">errdefer</span> result.destroy();</span>
+<span class="line" id="L27">        .alloc(rows, cols);</span>
+<span class="line" id="L28">    <span class="tok-kw">errdefer</span> result.free();</span>
 <span class="line" id="L29"></span>
 <span class="line" id="L30">    <span class="tok-kw">var</span> i: <span class="tok-type">usize</span> = <span class="tok-number">0</span>;</span>
 <span class="line" id="L31">    <span class="tok-kw">while</span> (iterator_vertical.next()) |line| : (i += <span class="tok-number">1</span>) {</span>

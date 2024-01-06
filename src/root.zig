@@ -7,7 +7,7 @@ pub const hypotesis = @import("hypothesis.zig");
 
 pub const Matrix = @import("Matrix.zig");
 pub const csv = @import("csv.zig");
-pub const LinearModel = @import("LinearModel.zig");
+pub const linear_model = @import("linear_model.zig");
 
 const std = @import("std");
 test {
