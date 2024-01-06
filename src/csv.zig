@@ -24,8 +24,8 @@ pub fn read(allocator: std.mem.Allocator, path: []const u8, comptime config: Con
 
     const result = try Matrix
         .init(allocator)
-        .create(rows, cols);
-    errdefer result.destroy();
+        .alloc(rows, cols);
+    errdefer result.free();
 
     var i: usize = 0;
     while (iterator_vertical.next()) |line| : (i += 1) {
