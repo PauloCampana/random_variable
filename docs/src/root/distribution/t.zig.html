@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">    <title>distribution/t.zig - source view</title>
+    <link rel="icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAgklEQVR4AWMYWuD7EllJIM4G4g4g5oIJ/odhOJ8wToOxSTXgNxDHoeiBMfA4+wGShjyYOCkG/IGqWQziEzYAoUAeiF9D5U+DxEg14DRU7jWIT5IBIOdCxf+A+CQZAAoopEB7QJwBCBwHiip8UYmRdrAlDpIMgApwQZNnNii5Dq0MBgCxxycBnwEd+wAAAABJRU5ErkJggg==">
+    <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNTMgMTQwIj48ZyBmaWxsPSIjRjdBNDFEIj48Zz48cG9seWdvbiBwb2ludHM9IjQ2LDIyIDI4LDQ0IDE5LDMwIi8+PHBvbHlnb24gcG9pbnRzPSI0NiwyMiAzMywzMyAyOCw0NCAyMiw0NCAyMiw5NSAzMSw5NSAyMCwxMDAgMTIsMTE3IDAsMTE3IDAsMjIiIHNoYXBlLXJlbmRlcmluZz0iY3Jpc3BFZGdlcyIvPjxwb2x5Z29uIHBvaW50cz0iMzEsOTUgMTIsMTE3IDQsMTA2Ii8+PC9nPjxnPjxwb2x5Z29uIHBvaW50cz0iNTYsMjIgNjIsMzYgMzcsNDQiLz48cG9seWdvbiBwb2ludHM9IjU2LDIyIDExMSwyMiAxMTEsNDQgMzcsNDQgNTYsMzIiIHNoYXBlLXJlbmRlcmluZz0iY3Jpc3BFZGdlcyIvPjxwb2x5Z29uIHBvaW50cz0iMTE2LDk1IDk3LDExNyA5MCwxMDQiLz48cG9seWdvbiBwb2ludHM9IjExNiw5NSAxMDAsMTA0IDk3LDExNyA0MiwxMTcgNDIsOTUiIHNoYXBlLXJlbmRlcmluZz0iY3Jpc3BFZGdlcyIvPjxwb2x5Z29uIHBvaW50cz0iMTUwLDAgNTIsMTE3IDMsMTQwIDEwMSwyMiIvPjwvZz48Zz48cG9seWdvbiBwb2ludHM9IjE0MSwyMiAxNDAsNDAgMTIyLDQ1Ii8+PHBvbHlnb24gcG9pbnRzPSIxNTMsMjIgMTUzLDExNyAxMDYsMTE3IDEyMCwxMDUgMTI1LDk1IDEzMSw5NSAxMzEsNDUgMTIyLDQ1IDEzMiwzNiAxNDEsMjIiIHNoYXBlLXJlbmRlcmluZz0iY3Jpc3BFZGdlcyIvPjxwb2x5Z29uIHBvaW50cz0iMTI1LDk1IDEzMCwxMTAgMTA2LDExNyIvPjwvZz48L2c+PC9zdmc+">
+    <style>
+      body{
+        font-family: system-ui, -apple-system, Roboto, "Segoe UI", sans-serif;
+        margin: 0;
+        line-height: 1.5;
+      }
+
+      pre > code {
+        display: block;
+        overflow: auto;
+        line-height: normal;
+        margin: 0em;
+      }
+      .tok-kw {
+          color: #333;
+          font-weight: bold;
+      }
+      .tok-str {
+          color: #d14;
+      }
+      .tok-builtin {
+          color: #005C7A;
+      }
+      .tok-comment {
+          color: #545454;
+          font-style: italic;
+      }
+      .tok-fn {
+          color: #900;
+          font-weight: bold;
+      }
+      .tok-null {
+          color: #005C5C;
+      }
+      .tok-number {
+          color: #005C5C;
+      }
+      .tok-type {
+          color: #458;
+          font-weight: bold;
+      }
+      pre {
+        counter-reset: line;
+      }
+      pre .line:before {
+        counter-increment: line;
+        content: counter(line);
+        display: inline-block;
+        padding-right: 1em;
+        width: 2em;
+        text-align: right;
+        color: #999;
+      }
+      
+      .line {
+        width: 100%;
+        display: inline-block;
+      }
+      .line:target {
+        border-top: 1px solid #ccc;
+        border-bottom: 1px solid #ccc;
+        background: #fafafa;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        body{
+            background:#222;
+            color: #ccc;
+        }
+        pre > code {
+            color: #ccc;
+            background: #222;
+            border: unset;
+        }
+        .line:target {
+            border-top: 1px solid #444;
+            border-bottom: 1px solid #444;
+            background: #333;
+        }
+        .tok-kw {
+            color: #eee;
+        }
+        .tok-str {
+            color: #2e5;
+        }
+        .tok-builtin {
+            color: #ff894c;
+        }
+        .tok-comment {
+            color: #aa7;
+        }
+        .tok-fn {
+            color: #B1A0F8;
+        }
+        .tok-null {
+            color: #ff8080;
+        }
+        .tok-number {
+            color: #ff8080;
+        }
+        .tok-type {
+            color: #68f;
+        }
+      }
+    </style>
+</head>
+<body>
+<pre><code><span class="line" id="L1"><span class="tok-comment">//! t distribution.</span></span>
+<span class="line" id="L2"><span class="tok-comment">//!</span></span>
+<span class="line" id="L3"><span class="tok-comment">//! Parameters:</span></span>
+<span class="line" id="L4"><span class="tok-comment">//!     ν: `df` ∈ (0,∞)</span></span>
+<span class="line" id="L5"></span>
+<span class="line" id="L6"><span class="tok-kw">const</span> std = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;std&quot;</span>);</span>
+<span class="line" id="L7"><span class="tok-kw">const</span> gamma = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;gamma.zig&quot;</span>);</span>
+<span class="line" id="L8"><span class="tok-kw">const</span> lgamma = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;../thirdyparty/prob.zig&quot;</span>).lnGamma;</span>
+<span class="line" id="L9"><span class="tok-kw">const</span> incompleteBeta = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;../thirdyparty/prob.zig&quot;</span>).incompleteBeta;</span>
+<span class="line" id="L10"><span class="tok-kw">const</span> inverseIncompleteBeta = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;../thirdyparty/prob.zig&quot;</span>).inverseIncompleteBeta;</span>
+<span class="line" id="L11"><span class="tok-kw">const</span> assert = std.debug.assert;</span>
+<span class="line" id="L12"><span class="tok-kw">const</span> isFinite = std.math.isFinite;</span>
+<span class="line" id="L13"><span class="tok-kw">const</span> isNan = std.math.isNan;</span>
+<span class="line" id="L14"><span class="tok-kw">const</span> inf = std.math.inf(<span class="tok-type">f64</span>);</span>
+<span class="line" id="L15"></span>
+<span class="line" id="L16"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> parameters = <span class="tok-number">1</span>;</span>
+<span class="line" id="L17"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> support = [<span class="tok-number">2</span>]<span class="tok-type">f64</span> {-inf, inf};</span>
+<span class="line" id="L18"></span>
+<span class="line" id="L19"><span class="tok-comment">/// f(x) (ν / (ν + x^2))^((ν + 1) / 2) / (sqrt(ν) beta(ν / 2, 1 / 2)).</span></span>
+<span class="line" id="L20"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">density</span>(x: <span class="tok-type">f64</span>, df: <span class="tok-type">f64</span>) <span class="tok-type">f64</span> {</span>
+<span class="line" id="L21">    assert(isFinite(df));</span>
+<span class="line" id="L22">    assert(df &gt; <span class="tok-number">0</span>);</span>
+<span class="line" id="L23">    assert(!isNan(x));</span>
+<span class="line" id="L24">    <span class="tok-kw">const</span> df2 = <span class="tok-number">0.5</span> * df + <span class="tok-number">0.5</span>;</span>
+<span class="line" id="L25">    <span class="tok-kw">const</span> num = df2 * <span class="tok-builtin">@log</span>(df / (df + x * x)) - <span class="tok-number">0.5</span> * <span class="tok-builtin">@log</span>(df);</span>
+<span class="line" id="L26">    <span class="tok-kw">const</span> den = lgamma(<span class="tok-number">0.5</span> * df) + lgamma(<span class="tok-number">0.5</span>) - lgamma(df2);</span>
+<span class="line" id="L27">    <span class="tok-kw">return</span> <span class="tok-builtin">@exp</span>(num - den);</span>
+<span class="line" id="L28">}</span>
+<span class="line" id="L29"></span>
+<span class="line" id="L30"><span class="tok-comment">/// No closed form.</span></span>
+<span class="line" id="L31"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">probability</span>(q: <span class="tok-type">f64</span>, df: <span class="tok-type">f64</span>) <span class="tok-type">f64</span> {</span>
+<span class="line" id="L32">    assert(isFinite(df));</span>
+<span class="line" id="L33">    assert(df &gt; <span class="tok-number">0</span>);</span>
+<span class="line" id="L34">    assert(!isNan(q));</span>
+<span class="line" id="L35">    <span class="tok-kw">if</span> (std.math.isInf(q)) {</span>
+<span class="line" id="L36">        <span class="tok-kw">return</span> <span class="tok-kw">if</span> (q &lt; <span class="tok-number">0</span>) <span class="tok-number">0</span> <span class="tok-kw">else</span> <span class="tok-number">1</span>;</span>
+<span class="line" id="L37">    }</span>
+<span class="line" id="L38">    <span class="tok-kw">const</span> z = q * q;</span>
+<span class="line" id="L39">    <span class="tok-kw">if</span> (q &lt; <span class="tok-number">0</span>) {</span>
+<span class="line" id="L40">        <span class="tok-kw">const</span> p = df / (df + z);</span>
+<span class="line" id="L41">        <span class="tok-kw">return</span> <span class="tok-number">0.5</span> * incompleteBeta(<span class="tok-number">0.5</span> * df, <span class="tok-number">0.5</span>, p);</span>
+<span class="line" id="L42">    } <span class="tok-kw">else</span> {</span>
+<span class="line" id="L43">        <span class="tok-kw">const</span> p = z / (df + z);</span>
+<span class="line" id="L44">        <span class="tok-kw">return</span> <span class="tok-number">0.5</span> * incompleteBeta(<span class="tok-number">0.5</span>, <span class="tok-number">0.5</span> * df, p) + <span class="tok-number">0.5</span>;</span>
+<span class="line" id="L45">    }</span>
+<span class="line" id="L46">}</span>
+<span class="line" id="L47"></span>
+<span class="line" id="L48"><span class="tok-comment">/// No closed form.</span></span>
+<span class="line" id="L49"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">quantile</span>(p: <span class="tok-type">f64</span>, df: <span class="tok-type">f64</span>) <span class="tok-type">f64</span> {</span>
+<span class="line" id="L50">    assert(isFinite(df));</span>
+<span class="line" id="L51">    assert(df &gt; <span class="tok-number">0</span>);</span>
+<span class="line" id="L52">    assert(<span class="tok-number">0</span> &lt;= p <span class="tok-kw">and</span> p &lt;= <span class="tok-number">1</span>);</span>
+<span class="line" id="L53">    <span class="tok-kw">if</span> (p &lt; <span class="tok-number">0.5</span>) {</span>
+<span class="line" id="L54">        <span class="tok-kw">const</span> q = inverseIncompleteBeta(<span class="tok-number">0.5</span> * df, <span class="tok-number">0.5</span>, <span class="tok-number">2</span> * p);</span>
+<span class="line" id="L55">        <span class="tok-kw">return</span> -<span class="tok-builtin">@sqrt</span>(df / q - df);</span>
+<span class="line" id="L56">    } <span class="tok-kw">else</span> {</span>
+<span class="line" id="L57">        <span class="tok-kw">const</span> q = inverseIncompleteBeta(<span class="tok-number">0.5</span> * df, <span class="tok-number">0.5</span>, <span class="tok-number">2</span> - <span class="tok-number">2</span> * p);</span>
+<span class="line" id="L58">        <span class="tok-kw">return</span> <span class="tok-builtin">@sqrt</span>(df / q - df);</span>
+<span class="line" id="L59">    }</span>
+<span class="line" id="L60">}</span>
+<span class="line" id="L61"></span>
+<span class="line" id="L62"><span class="tok-comment">/// Uses the relation to Normal and Gamma distributions.</span></span>
+<span class="line" id="L63"><span class="tok-kw">const</span> random = <span class="tok-kw">struct</span> {</span>
+<span class="line" id="L64">    <span class="tok-kw">fn</span> <span class="tok-fn">implementation</span>(generator: std.rand.Random, df: <span class="tok-type">f64</span>) <span class="tok-type">f64</span> {</span>
+<span class="line" id="L65">        <span class="tok-kw">if</span> (df == <span class="tok-number">1</span>) {</span>
+<span class="line" id="L66">            <span class="tok-kw">const</span> uni = generator.float(<span class="tok-type">f64</span>);</span>
+<span class="line" id="L67">            <span class="tok-kw">return</span> <span class="tok-builtin">@tan</span>(std.math.pi * uni);</span>
+<span class="line" id="L68">        }</span>
+<span class="line" id="L69">        <span class="tok-kw">const</span> nor = generator.floatNorm(<span class="tok-type">f64</span>);</span>
+<span class="line" id="L70">        <span class="tok-kw">const</span> chi = gamma.random.implementation(generator, <span class="tok-number">0.5</span> * df, <span class="tok-number">0.5</span>);</span>
+<span class="line" id="L71">        <span class="tok-kw">return</span> nor * <span class="tok-builtin">@sqrt</span>(df / chi);</span>
+<span class="line" id="L72">    }</span>
+<span class="line" id="L73"></span>
+<span class="line" id="L74">    <span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">single</span>(generator: std.rand.Random, df: <span class="tok-type">f64</span>) <span class="tok-type">f64</span> {</span>
+<span class="line" id="L75">        assert(isFinite(df));</span>
+<span class="line" id="L76">        assert(df &gt; <span class="tok-number">0</span>);</span>
+<span class="line" id="L77">        <span class="tok-kw">return</span> implementation(generator, df);</span>
+<span class="line" id="L78">    }</span>
+<span class="line" id="L79"></span>
+<span class="line" id="L80">    <span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">buffer</span>(buf: []<span class="tok-type">f64</span>, generator: std.rand.Random, df: <span class="tok-type">f64</span>) []<span class="tok-type">f64</span> {</span>
+<span class="line" id="L81">        assert(isFinite(df));</span>
+<span class="line" id="L82">        assert(df &gt; <span class="tok-number">0</span>);</span>
+<span class="line" id="L83">        <span class="tok-kw">for</span> (buf) |*x| {</span>
+<span class="line" id="L84">            x.* = implementation(generator, df);</span>
+<span class="line" id="L85">        }</span>
+<span class="line" id="L86">        <span class="tok-kw">return</span> buf;</span>
+<span class="line" id="L87">    }</span>
+<span class="line" id="L88"></span>
+<span class="line" id="L89">    <span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">alloc</span>(allocator: std.mem.Allocator, generator: std.rand.Random, n: <span class="tok-type">usize</span>, df: <span class="tok-type">f64</span>) ![]<span class="tok-type">f64</span> {</span>
+<span class="line" id="L90">        <span class="tok-kw">const</span> slice = <span class="tok-kw">try</span> allocator.alloc(<span class="tok-type">f64</span>, n);</span>
+<span class="line" id="L91">        <span class="tok-kw">return</span> buffer(slice, generator, df);</span>
+<span class="line" id="L92">    }</span>
+<span class="line" id="L93">};</span>
+<span class="line" id="L94"></span>
+<span class="line" id="L95"><span class="tok-kw">const</span> expectEqual = std.testing.expectEqual;</span>
+<span class="line" id="L96"><span class="tok-kw">const</span> expectApproxEqRel = std.testing.expectApproxEqRel;</span>
+<span class="line" id="L97"><span class="tok-kw">const</span> eps = <span class="tok-number">10</span> * std.math.floatEps(<span class="tok-type">f64</span>); <span class="tok-comment">// 2.22 × 10^-15</span>
+</span>
+<span class="line" id="L98"></span>
+<span class="line" id="L99"><span class="tok-kw">test</span> <span class="tok-str">&quot;t.density&quot;</span> {</span>
+<span class="line" id="L100">    <span class="tok-kw">try</span> expectEqual(<span class="tok-number">0</span>, density(-inf, <span class="tok-number">3</span>));</span>
+<span class="line" id="L101">    <span class="tok-kw">try</span> expectEqual(<span class="tok-number">0</span>, density( inf, <span class="tok-number">3</span>));</span>
+<span class="line" id="L102"></span>
+<span class="line" id="L103">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0.3675525969478613</span>, density(<span class="tok-number">0</span>, <span class="tok-number">3</span>), eps);</span>
+<span class="line" id="L104">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0.2067483357831720</span>, density(<span class="tok-number">1</span>, <span class="tok-number">3</span>), eps);</span>
+<span class="line" id="L105">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0.0675096606638929</span>, density(<span class="tok-number">2</span>, <span class="tok-number">3</span>), eps);</span>
+<span class="line" id="L106">}</span>
+<span class="line" id="L107"></span>
+<span class="line" id="L108"><span class="tok-kw">test</span> <span class="tok-str">&quot;t.probability&quot;</span> {</span>
+<span class="line" id="L109">    <span class="tok-kw">try</span> expectEqual(<span class="tok-number">0</span>, probability(-inf, <span class="tok-number">3</span>));</span>
+<span class="line" id="L110">    <span class="tok-kw">try</span> expectEqual(<span class="tok-number">1</span>, probability( inf, <span class="tok-number">3</span>));</span>
+<span class="line" id="L111"></span>
+<span class="line" id="L112">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0.5</span>               , probability(<span class="tok-number">0</span>, <span class="tok-number">3</span>), eps);</span>
+<span class="line" id="L113">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0.8044988905221148</span>, probability(<span class="tok-number">1</span>, <span class="tok-number">3</span>), eps);</span>
+<span class="line" id="L114">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0.9303370157205784</span>, probability(<span class="tok-number">2</span>, <span class="tok-number">3</span>), eps);</span>
+<span class="line" id="L115">}</span>
+<span class="line" id="L116"></span>
+<span class="line" id="L117"><span class="tok-kw">test</span> <span class="tok-str">&quot;t.quantile&quot;</span> {</span>
+<span class="line" id="L118">    <span class="tok-kw">try</span> expectEqual      (-inf               , quantile(<span class="tok-number">0</span>  , <span class="tok-number">3</span>)     );</span>
+<span class="line" id="L119">    <span class="tok-kw">try</span> expectApproxEqRel(-<span class="tok-number">0.9784723123633045</span>, quantile(<span class="tok-number">0.2</span>, <span class="tok-number">3</span>), eps);</span>
+<span class="line" id="L120">    <span class="tok-kw">try</span> expectApproxEqRel(-<span class="tok-number">0.2766706623326898</span>, quantile(<span class="tok-number">0.4</span>, <span class="tok-number">3</span>), eps);</span>
+<span class="line" id="L121">    <span class="tok-kw">try</span> expectApproxEqRel( <span class="tok-number">0.2766706623326902</span>, quantile(<span class="tok-number">0.6</span>, <span class="tok-number">3</span>), eps);</span>
+<span class="line" id="L122">    <span class="tok-kw">try</span> expectApproxEqRel( <span class="tok-number">0.9784723123633039</span>, quantile(<span class="tok-number">0.8</span>, <span class="tok-number">3</span>), eps);</span>
+<span class="line" id="L123">    <span class="tok-kw">try</span> expectEqual      ( inf               , quantile(<span class="tok-number">1</span>  , <span class="tok-number">3</span>)     );</span>
+<span class="line" id="L124">}</span>
+<span class="line" id="L125"></span>
+<span class="line" id="L126"><span class="tok-kw">test</span> <span class="tok-str">&quot;t.random&quot;</span> {</span>
+<span class="line" id="L127">    <span class="tok-kw">var</span> prng = std.rand.DefaultPrng.init(<span class="tok-number">0</span>);</span>
+<span class="line" id="L128">    <span class="tok-kw">const</span> gen = prng.random();</span>
+<span class="line" id="L129">    <span class="tok-kw">try</span> expectApproxEqRel(-<span class="tok-number">0x1.ed977ce651337p-2</span>, random.implementation(gen, <span class="tok-number">3</span>), eps);</span>
+<span class="line" id="L130">    <span class="tok-kw">try</span> expectApproxEqRel(-<span class="tok-number">0x1.62bae37cf8d83p+1</span>, random.implementation(gen, <span class="tok-number">3</span>), eps);</span>
+<span class="line" id="L131">    <span class="tok-kw">try</span> expectApproxEqRel( <span class="tok-number">0x1.a5797fad46fcap-1</span>, random.implementation(gen, <span class="tok-number">3</span>), eps);</span>
+<span class="line" id="L132">}</span>
+<span class="line" id="L133"></span>
+</code></pre></body>
+</html>

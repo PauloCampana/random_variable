@@ -118,29 +118,29 @@
 <span class="line" id="L4"><span class="tok-comment">//! Asserts invalid distribution parameters on Debug and ReleaseSafe modes</span></span>
 <span class="line" id="L5"><span class="tok-comment">//! such as ±NaN, ±Inf, probabilities outside of the [0,1] interval and</span></span>
 <span class="line" id="L6"><span class="tok-comment">//! certain parameters with value zero or negative.</span></span>
-<span class="line" id="L7"></span>
-<span class="line" id="L8"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> density = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;distribution/density.zig&quot;</span>);</span>
-<span class="line" id="L9"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> probability = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;distribution/probability.zig&quot;</span>);</span>
-<span class="line" id="L10"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> quantile = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;distribution/quantile.zig&quot;</span>);</span>
-<span class="line" id="L11"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> random = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;distribution/random.zig&quot;</span>);</span>
+<span class="line" id="L7"><span class="tok-comment">//!</span></span>
+<span class="line" id="L8"><span class="tok-comment">//! Random variable generation has 3 flavours: `single`, `buffer` and `alloc`,</span></span>
+<span class="line" id="L9"><span class="tok-comment">//! `single` returns one generated number, `buffer` fills a slice with generated numbers,</span></span>
+<span class="line" id="L10"><span class="tok-comment">//! `alloc` takes an allocator and the quantity to be generated then returns a heap allocated</span></span>
+<span class="line" id="L11"><span class="tok-comment">//! slice, result must be freed by the caller.</span></span>
 <span class="line" id="L12"></span>
-<span class="line" id="L13"><span class="tok-kw">test</span> density {</span>
-<span class="line" id="L14">    _ = density.normal(<span class="tok-number">3</span>, <span class="tok-number">0</span>, <span class="tok-number">1</span>);</span>
-<span class="line" id="L15">    _ = density.gamma(<span class="tok-number">10</span>, <span class="tok-number">3</span>, <span class="tok-number">5</span>);</span>
-<span class="line" id="L16">    _ = density.binomial(<span class="tok-number">5</span>, <span class="tok-number">10</span>, <span class="tok-number">0.2</span>);</span>
-<span class="line" id="L17">}</span>
-<span class="line" id="L18"></span>
-<span class="line" id="L19"><span class="tok-kw">test</span> probability {</span>
-<span class="line" id="L20">    _ = probability.normal(<span class="tok-number">3</span>, <span class="tok-number">0</span>, <span class="tok-number">1</span>);</span>
-<span class="line" id="L21">    _ = probability.gamma(<span class="tok-number">10</span>, <span class="tok-number">3</span>, <span class="tok-number">5</span>);</span>
-<span class="line" id="L22">    _ = probability.binomial(<span class="tok-number">5</span>, <span class="tok-number">10</span>, <span class="tok-number">0.2</span>);</span>
-<span class="line" id="L23">}</span>
-<span class="line" id="L24"></span>
-<span class="line" id="L25"><span class="tok-kw">test</span> quantile {</span>
-<span class="line" id="L26">    _ = quantile.normal(<span class="tok-number">0.95</span>, <span class="tok-number">0</span>, <span class="tok-number">1</span>);</span>
-<span class="line" id="L27">    _ = quantile.gamma(<span class="tok-number">0.95</span>, <span class="tok-number">3</span>, <span class="tok-number">5</span>);</span>
-<span class="line" id="L28">    _ = quantile.binomial(<span class="tok-number">0.95</span>, <span class="tok-number">10</span>, <span class="tok-number">0.2</span>);</span>
-<span class="line" id="L29">}</span>
+<span class="line" id="L13"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> bernoulli = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;distribution/bernoulli.zig&quot;</span>);</span>
+<span class="line" id="L14"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> geometric = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;distribution/geometric.zig&quot;</span>);</span>
+<span class="line" id="L15"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> poisson = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;distribution/poisson.zig&quot;</span>);</span>
+<span class="line" id="L16"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> binomial = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;distribution/binomial.zig&quot;</span>);</span>
+<span class="line" id="L17"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> negativeBinomial = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;distribution/negativeBinomial.zig&quot;</span>);</span>
+<span class="line" id="L18"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> uniform = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;distribution/uniform.zig&quot;</span>);</span>
+<span class="line" id="L19"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> exponential = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;distribution/exponential.zig&quot;</span>);</span>
+<span class="line" id="L20"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> weibull = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;distribution/weibull.zig&quot;</span>);</span>
+<span class="line" id="L21"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> cauchy = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;distribution/cauchy.zig&quot;</span>);</span>
+<span class="line" id="L22"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> logistic = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;distribution/logistic.zig&quot;</span>);</span>
+<span class="line" id="L23"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> gamma = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;distribution/gamma.zig&quot;</span>);</span>
+<span class="line" id="L24"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> chiSquared = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;distribution/chiSquared.zig&quot;</span>);</span>
+<span class="line" id="L25"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> f = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;distribution/f.zig&quot;</span>);</span>
+<span class="line" id="L26"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> beta = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;distribution/beta.zig&quot;</span>);</span>
+<span class="line" id="L27"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> normal = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;distribution/normal.zig&quot;</span>);</span>
+<span class="line" id="L28"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> logNormal = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;distribution/logNormal.zig&quot;</span>);</span>
+<span class="line" id="L29"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> t = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;distribution/t.zig&quot;</span>);</span>
 <span class="line" id="L30"></span>
 </code></pre></body>
 </html>
