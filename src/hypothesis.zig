@@ -29,8 +29,8 @@ pub fn ztest(slice: []f64, mu0: f64, sd: f64, significance: f64) Htest {
     const len = @as(f64, @floatFromInt(slice.len));
     const xbar = descriptive.mean.arithmetic(slice);
     const statistic = (xbar - mu0) / sd * @sqrt(len);
-    const quantile = distribution.quantile.normal(1 - significance / 2, mu0, sd);
-    const pvalue = distribution.probability.normal(-@abs(statistic), mu0, sd) * 2;
+    const quantile = distribution.normal.quantile(1 - significance / 2, mu0, sd);
+    const pvalue = distribution.normal.probability(-@abs(statistic), mu0, sd) * 2;
     return Htest {
         .name = "One sample ztest",
         .H0 = "True mean is equal to mu0",
@@ -45,8 +45,8 @@ pub fn ttest(slice: []f64, mu0: f64, significance: f64) Htest {
     const xbar = descriptive.mean.arithmetic(slice);
     const se = descriptive.standardError(slice);
     const statistic = (xbar - mu0) / se;
-    const quantile = distribution.quantile.t(1 - significance / 2, len - 1);
-    const pvalue = distribution.probability.t(-@abs(statistic), len - 1);
+    const quantile = distribution.t.quantile(1 - significance / 2, len - 1);
+    const pvalue = distribution.t.probability(-@abs(statistic), len - 1);
 
     return Htest {
         .name = "One sample ttest",
