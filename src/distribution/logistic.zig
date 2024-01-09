@@ -104,7 +104,7 @@ test "logistic.quantile" {
 test "logistic.random" {
     var prng = std.rand.DefaultPrng.init(0);
     const gen = prng.random();
-    try expectApproxEqRel(@as(f64, -0x1.1b5814cb6fc9ap-1), random.implementation(gen, 0, 1), eps);
-    try expectApproxEqRel(@as(f64, -0x1.67d902cb3c67ep-2), random.implementation(gen, 0, 1), eps);
-    try expectApproxEqRel(@as(f64, -0x1.0370f3fe2a1a1p-7), random.implementation(gen, 0, 1), eps);
+    try expectApproxEqRel(-0x1.1b5814cb6fc9ap-1, random.implementation(gen, 0, 1), eps);
+    try expectApproxEqRel(-0x1.67d902cb3c67ep-2, random.implementation(gen, 0, 1), eps);
+    try expectApproxEqRel(-0x1.0370f3fe2a1a1p-7, random.implementation(gen, 0, 1), eps);
 }

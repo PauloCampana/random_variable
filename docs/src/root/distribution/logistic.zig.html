@@ -219,9 +219,9 @@
 <span class="line" id="L104"><span class="tok-kw">test</span> <span class="tok-str">&quot;logistic.random&quot;</span> {</span>
 <span class="line" id="L105">    <span class="tok-kw">var</span> prng = std.rand.DefaultPrng.init(<span class="tok-number">0</span>);</span>
 <span class="line" id="L106">    <span class="tok-kw">const</span> gen = prng.random();</span>
-<span class="line" id="L107">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, -<span class="tok-number">0x1.1b5814cb6fc9ap-1</span>), random.implementation(gen, <span class="tok-number">0</span>, <span class="tok-number">1</span>), eps);</span>
-<span class="line" id="L108">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, -<span class="tok-number">0x1.67d902cb3c67ep-2</span>), random.implementation(gen, <span class="tok-number">0</span>, <span class="tok-number">1</span>), eps);</span>
-<span class="line" id="L109">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, -<span class="tok-number">0x1.0370f3fe2a1a1p-7</span>), random.implementation(gen, <span class="tok-number">0</span>, <span class="tok-number">1</span>), eps);</span>
+<span class="line" id="L107">    <span class="tok-kw">try</span> expectApproxEqRel(-<span class="tok-number">0x1.1b5814cb6fc9ap-1</span>, random.implementation(gen, <span class="tok-number">0</span>, <span class="tok-number">1</span>), eps);</span>
+<span class="line" id="L108">    <span class="tok-kw">try</span> expectApproxEqRel(-<span class="tok-number">0x1.67d902cb3c67ep-2</span>, random.implementation(gen, <span class="tok-number">0</span>, <span class="tok-number">1</span>), eps);</span>
+<span class="line" id="L109">    <span class="tok-kw">try</span> expectApproxEqRel(-<span class="tok-number">0x1.0370f3fe2a1a1p-7</span>, random.implementation(gen, <span class="tok-number">0</span>, <span class="tok-number">1</span>), eps);</span>
 <span class="line" id="L110">}</span>
 <span class="line" id="L111"></span>
 </code></pre></body>

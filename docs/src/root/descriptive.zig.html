@@ -410,176 +410,176 @@
 <span class="line" id="L296">}</span>
 <span class="line" id="L297"></span>
 <span class="line" id="L298"><span class="tok-kw">test</span> <span class="tok-str">&quot;descriptive.lenght&quot;</span> {</span>
-<span class="line" id="L299">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">11</span>), length(anscombe.x1), eps);</span>
+<span class="line" id="L299">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">11</span>, length(anscombe.x1), eps);</span>
 <span class="line" id="L300">}</span>
 <span class="line" id="L301"></span>
 <span class="line" id="L302"><span class="tok-kw">test</span> <span class="tok-str">&quot;descriptive.sum&quot;</span> {</span>
-<span class="line" id="L303">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">99</span>   ), sum(anscombe.x1), eps);</span>
-<span class="line" id="L304">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">99</span>   ), sum(anscombe.x2), eps);</span>
-<span class="line" id="L305">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">99</span>   ), sum(anscombe.x3), eps);</span>
-<span class="line" id="L306">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">99</span>   ), sum(anscombe.x4), eps);</span>
-<span class="line" id="L307">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">82.51</span>), sum(anscombe.y1), eps);</span>
-<span class="line" id="L308">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">82.51</span>), sum(anscombe.y2), eps);</span>
-<span class="line" id="L309">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">82.5</span> ), sum(anscombe.y3), eps);</span>
-<span class="line" id="L310">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">82.51</span>), sum(anscombe.y4), eps);</span>
+<span class="line" id="L303">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">99</span>   , sum(anscombe.x1), eps);</span>
+<span class="line" id="L304">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">99</span>   , sum(anscombe.x2), eps);</span>
+<span class="line" id="L305">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">99</span>   , sum(anscombe.x3), eps);</span>
+<span class="line" id="L306">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">99</span>   , sum(anscombe.x4), eps);</span>
+<span class="line" id="L307">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">82.51</span>, sum(anscombe.y1), eps);</span>
+<span class="line" id="L308">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">82.51</span>, sum(anscombe.y2), eps);</span>
+<span class="line" id="L309">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">82.5</span> , sum(anscombe.y3), eps);</span>
+<span class="line" id="L310">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">82.51</span>, sum(anscombe.y4), eps);</span>
 <span class="line" id="L311">}</span>
 <span class="line" id="L312"></span>
 <span class="line" id="L313"><span class="tok-kw">test</span> <span class="tok-str">&quot;descriptive.product&quot;</span> {</span>
-<span class="line" id="L314">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">14529715200</span>       ), product(anscombe.x1), eps);</span>
-<span class="line" id="L315">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">14529715200</span>       ), product(anscombe.x2), eps);</span>
-<span class="line" id="L316">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">14529715200</span>       ), product(anscombe.x3), eps);</span>
-<span class="line" id="L317">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">20401094656</span>       ), product(anscombe.x4), eps);</span>
-<span class="line" id="L318">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>,  <span class="tok-number">2833760410.777853</span>), product(anscombe.y1), eps);</span>
-<span class="line" id="L319">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>,  <span class="tok-number">2553792107.502125</span>), product(anscombe.y2), eps);</span>
-<span class="line" id="L320">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>,  <span class="tok-number">3103197573.579096</span>), product(anscombe.y3), eps);</span>
-<span class="line" id="L321">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>,  <span class="tok-number">3063027549.622185</span>), product(anscombe.y4), eps);</span>
+<span class="line" id="L314">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">14529715200</span>       , product(anscombe.x1), eps);</span>
+<span class="line" id="L315">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">14529715200</span>       , product(anscombe.x2), eps);</span>
+<span class="line" id="L316">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">14529715200</span>       , product(anscombe.x3), eps);</span>
+<span class="line" id="L317">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">20401094656</span>       , product(anscombe.x4), eps);</span>
+<span class="line" id="L318">    <span class="tok-kw">try</span> expectApproxEqRel( <span class="tok-number">2833760410.777853</span>, product(anscombe.y1), eps);</span>
+<span class="line" id="L319">    <span class="tok-kw">try</span> expectApproxEqRel( <span class="tok-number">2553792107.502125</span>, product(anscombe.y2), eps);</span>
+<span class="line" id="L320">    <span class="tok-kw">try</span> expectApproxEqRel( <span class="tok-number">3103197573.579096</span>, product(anscombe.y3), eps);</span>
+<span class="line" id="L321">    <span class="tok-kw">try</span> expectApproxEqRel( <span class="tok-number">3063027549.622185</span>, product(anscombe.y4), eps);</span>
 <span class="line" id="L322">}</span>
 <span class="line" id="L323"></span>
 <span class="line" id="L324"><span class="tok-kw">test</span> <span class="tok-str">&quot;descriptive.mean.arithmetic&quot;</span> {</span>
-<span class="line" id="L325">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">9</span>                ), mean.arithmetic(anscombe.x1), eps);</span>
-<span class="line" id="L326">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">9</span>                ), mean.arithmetic(anscombe.x2), eps);</span>
-<span class="line" id="L327">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">9</span>                ), mean.arithmetic(anscombe.x3), eps);</span>
-<span class="line" id="L328">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">9</span>                ), mean.arithmetic(anscombe.x4), eps);</span>
-<span class="line" id="L329">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">7.500909090909091</span>), mean.arithmetic(anscombe.y1), eps);</span>
-<span class="line" id="L330">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">7.500909090909091</span>), mean.arithmetic(anscombe.y2), eps);</span>
-<span class="line" id="L331">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">7.5</span>              ), mean.arithmetic(anscombe.y3), eps);</span>
-<span class="line" id="L332">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">7.500909090909091</span>), mean.arithmetic(anscombe.y4), eps);</span>
+<span class="line" id="L325">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">9</span>                , mean.arithmetic(anscombe.x1), eps);</span>
+<span class="line" id="L326">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">9</span>                , mean.arithmetic(anscombe.x2), eps);</span>
+<span class="line" id="L327">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">9</span>                , mean.arithmetic(anscombe.x3), eps);</span>
+<span class="line" id="L328">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">9</span>                , mean.arithmetic(anscombe.x4), eps);</span>
+<span class="line" id="L329">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">7.500909090909091</span>, mean.arithmetic(anscombe.y1), eps);</span>
+<span class="line" id="L330">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">7.500909090909091</span>, mean.arithmetic(anscombe.y2), eps);</span>
+<span class="line" id="L331">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">7.5</span>              , mean.arithmetic(anscombe.y3), eps);</span>
+<span class="line" id="L332">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">7.500909090909091</span>, mean.arithmetic(anscombe.y4), eps);</span>
 <span class="line" id="L333">}</span>
 <span class="line" id="L334"></span>
 <span class="line" id="L335"><span class="tok-kw">test</span> <span class="tok-str">&quot;descriptive.mean.geometric&quot;</span> {</span>
-<span class="line" id="L336">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">8.391537790124792</span>), mean.geometric(anscombe.x1), eps);</span>
-<span class="line" id="L337">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">8.391537790124792</span>), mean.geometric(anscombe.x2), eps);</span>
-<span class="line" id="L338">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">8.391537790124792</span>), mean.geometric(anscombe.x3), eps);</span>
-<span class="line" id="L339">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">8.654484902031250</span>), mean.geometric(anscombe.x4), eps);</span>
-<span class="line" id="L340">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">7.232788054567219</span>), mean.geometric(anscombe.y1), eps);</span>
-<span class="line" id="L341">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">7.164711138020261</span>), mean.geometric(anscombe.y2), eps);</span>
-<span class="line" id="L342">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">7.292757391223743</span>), mean.geometric(anscombe.y3), eps);</span>
-<span class="line" id="L343">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">7.284124410831672</span>), mean.geometric(anscombe.y4), eps);</span>
+<span class="line" id="L336">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">8.391537790124792</span>, mean.geometric(anscombe.x1), eps);</span>
+<span class="line" id="L337">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">8.391537790124792</span>, mean.geometric(anscombe.x2), eps);</span>
+<span class="line" id="L338">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">8.391537790124792</span>, mean.geometric(anscombe.x3), eps);</span>
+<span class="line" id="L339">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">8.654484902031250</span>, mean.geometric(anscombe.x4), eps);</span>
+<span class="line" id="L340">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">7.232788054567219</span>, mean.geometric(anscombe.y1), eps);</span>
+<span class="line" id="L341">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">7.164711138020261</span>, mean.geometric(anscombe.y2), eps);</span>
+<span class="line" id="L342">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">7.292757391223743</span>, mean.geometric(anscombe.y3), eps);</span>
+<span class="line" id="L343">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">7.284124410831672</span>, mean.geometric(anscombe.y4), eps);</span>
 <span class="line" id="L344">}</span>
 <span class="line" id="L345"></span>
 <span class="line" id="L346"><span class="tok-kw">test</span> <span class="tok-str">&quot;descriptive.mean.harmonic&quot;</span> {</span>
-<span class="line" id="L347">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">7.756152252222285</span>), mean.harmonic(anscombe.x1), eps);</span>
-<span class="line" id="L348">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">7.756152252222285</span>), mean.harmonic(anscombe.x2), eps);</span>
-<span class="line" id="L349">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">7.756152252222285</span>), mean.harmonic(anscombe.x3), eps);</span>
-<span class="line" id="L350">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">8.444444444444445</span>), mean.harmonic(anscombe.x4), eps);</span>
-<span class="line" id="L351">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">6.949772613414747</span>), mean.harmonic(anscombe.y1), eps);</span>
-<span class="line" id="L352">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">6.723295789626634</span>), mean.harmonic(anscombe.y2), eps);</span>
-<span class="line" id="L353">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">7.119524800614420</span>), mean.harmonic(anscombe.y3), eps);</span>
-<span class="line" id="L354">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">7.094886958518605</span>), mean.harmonic(anscombe.y4), eps);</span>
+<span class="line" id="L347">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">7.756152252222285</span>, mean.harmonic(anscombe.x1), eps);</span>
+<span class="line" id="L348">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">7.756152252222285</span>, mean.harmonic(anscombe.x2), eps);</span>
+<span class="line" id="L349">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">7.756152252222285</span>, mean.harmonic(anscombe.x3), eps);</span>
+<span class="line" id="L350">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">8.444444444444445</span>, mean.harmonic(anscombe.x4), eps);</span>
+<span class="line" id="L351">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">6.949772613414747</span>, mean.harmonic(anscombe.y1), eps);</span>
+<span class="line" id="L352">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">6.723295789626634</span>, mean.harmonic(anscombe.y2), eps);</span>
+<span class="line" id="L353">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">7.119524800614420</span>, mean.harmonic(anscombe.y3), eps);</span>
+<span class="line" id="L354">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">7.094886958518605</span>, mean.harmonic(anscombe.y4), eps);</span>
 <span class="line" id="L355">}</span>
 <span class="line" id="L356"></span>
 <span class="line" id="L357"><span class="tok-kw">test</span> <span class="tok-str">&quot;descriptive.quantile&quot;</span> {</span>
-<span class="line" id="L358">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">4.26</span> ), <span class="tok-kw">try</span> quantile(ta, anscombe.y1, <span class="tok-number">0</span>   ), eps);</span>
-<span class="line" id="L359">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">4.54</span> ), <span class="tok-kw">try</span> quantile(ta, anscombe.y1, <span class="tok-number">0.05</span>), eps);</span>
-<span class="line" id="L360">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">4.82</span> ), <span class="tok-kw">try</span> quantile(ta, anscombe.y1, <span class="tok-number">0.1</span> ), eps);</span>
-<span class="line" id="L361">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">9.96</span> ), <span class="tok-kw">try</span> quantile(ta, anscombe.y1, <span class="tok-number">0.9</span> ), eps);</span>
-<span class="line" id="L362">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">10.4</span> ), <span class="tok-kw">try</span> quantile(ta, anscombe.y1, <span class="tok-number">0.95</span>), eps);</span>
-<span class="line" id="L363">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">10.84</span>), <span class="tok-kw">try</span> quantile(ta, anscombe.y1, <span class="tok-number">1</span>   ), eps);</span>
+<span class="line" id="L358">    <span class="tok-kw">try</span> expectApproxEqRel( <span class="tok-number">4.26</span>, <span class="tok-kw">try</span> quantile(ta, anscombe.y1, <span class="tok-number">0</span>   ), eps);</span>
+<span class="line" id="L359">    <span class="tok-kw">try</span> expectApproxEqRel( <span class="tok-number">4.54</span>, <span class="tok-kw">try</span> quantile(ta, anscombe.y1, <span class="tok-number">0.05</span>), eps);</span>
+<span class="line" id="L360">    <span class="tok-kw">try</span> expectApproxEqRel( <span class="tok-number">4.82</span>, <span class="tok-kw">try</span> quantile(ta, anscombe.y1, <span class="tok-number">0.1</span> ), eps);</span>
+<span class="line" id="L361">    <span class="tok-kw">try</span> expectApproxEqRel( <span class="tok-number">9.96</span>, <span class="tok-kw">try</span> quantile(ta, anscombe.y1, <span class="tok-number">0.9</span> ), eps);</span>
+<span class="line" id="L362">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">10.4</span> , <span class="tok-kw">try</span> quantile(ta, anscombe.y1, <span class="tok-number">0.95</span>), eps);</span>
+<span class="line" id="L363">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">10.84</span>, <span class="tok-kw">try</span> quantile(ta, anscombe.y1, <span class="tok-number">1</span>   ), eps);</span>
 <span class="line" id="L364">}</span>
 <span class="line" id="L365"></span>
 <span class="line" id="L366"><span class="tok-kw">test</span> <span class="tok-str">&quot;descriptive.min&quot;</span> {</span>
-<span class="line" id="L367">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">4</span>   ), min(anscombe.x1), eps);</span>
-<span class="line" id="L368">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">4</span>   ), min(anscombe.x2), eps);</span>
-<span class="line" id="L369">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">4</span>   ), min(anscombe.x3), eps);</span>
-<span class="line" id="L370">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">8</span>   ), min(anscombe.x4), eps);</span>
-<span class="line" id="L371">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">4.26</span>), min(anscombe.y1), eps);</span>
-<span class="line" id="L372">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">3.1</span> ), min(anscombe.y2), eps);</span>
-<span class="line" id="L373">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">5.39</span>), min(anscombe.y3), eps);</span>
-<span class="line" id="L374">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">5.25</span>), min(anscombe.y4), eps);</span>
+<span class="line" id="L367">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">4</span>   , min(anscombe.x1), eps);</span>
+<span class="line" id="L368">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">4</span>   , min(anscombe.x2), eps);</span>
+<span class="line" id="L369">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">4</span>   , min(anscombe.x3), eps);</span>
+<span class="line" id="L370">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">8</span>   , min(anscombe.x4), eps);</span>
+<span class="line" id="L371">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">4.26</span>, min(anscombe.y1), eps);</span>
+<span class="line" id="L372">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">3.1</span> , min(anscombe.y2), eps);</span>
+<span class="line" id="L373">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">5.39</span>, min(anscombe.y3), eps);</span>
+<span class="line" id="L374">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">5.25</span>, min(anscombe.y4), eps);</span>
 <span class="line" id="L375">}</span>
 <span class="line" id="L376"></span>
 <span class="line" id="L377"><span class="tok-kw">test</span> <span class="tok-str">&quot;descriptive.max&quot;</span> {</span>
-<span class="line" id="L378">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">14</span>   ), max(anscombe.x1), eps);</span>
-<span class="line" id="L379">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">14</span>   ), max(anscombe.x2), eps);</span>
-<span class="line" id="L380">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">14</span>   ), max(anscombe.x3), eps);</span>
-<span class="line" id="L381">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">19</span>   ), max(anscombe.x4), eps);</span>
-<span class="line" id="L382">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">10.84</span>), max(anscombe.y1), eps);</span>
-<span class="line" id="L383">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>,  <span class="tok-number">9.26</span>), max(anscombe.y2), eps);</span>
-<span class="line" id="L384">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">12.74</span>), max(anscombe.y3), eps);</span>
-<span class="line" id="L385">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">12.5</span> ), max(anscombe.y4), eps);</span>
+<span class="line" id="L378">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">14</span>   , max(anscombe.x1), eps);</span>
+<span class="line" id="L379">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">14</span>   , max(anscombe.x2), eps);</span>
+<span class="line" id="L380">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">14</span>   , max(anscombe.x3), eps);</span>
+<span class="line" id="L381">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">19</span>   , max(anscombe.x4), eps);</span>
+<span class="line" id="L382">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">10.84</span>, max(anscombe.y1), eps);</span>
+<span class="line" id="L383">    <span class="tok-kw">try</span> expectApproxEqRel( <span class="tok-number">9.26</span>, max(anscombe.y2), eps);</span>
+<span class="line" id="L384">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">12.74</span>, max(anscombe.y3), eps);</span>
+<span class="line" id="L385">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">12.5</span> , max(anscombe.y4), eps);</span>
 <span class="line" id="L386">}</span>
 <span class="line" id="L387"></span>
 <span class="line" id="L388"><span class="tok-kw">test</span> <span class="tok-str">&quot;descriptive.variance&quot;</span> {</span>
-<span class="line" id="L389">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">11</span>               ), variance(anscombe.x1), eps);</span>
-<span class="line" id="L390">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">11</span>               ), variance(anscombe.x2), eps);</span>
-<span class="line" id="L391">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">11</span>               ), variance(anscombe.x3), eps);</span>
-<span class="line" id="L392">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">11</span>               ), variance(anscombe.x4), eps);</span>
-<span class="line" id="L393">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">4.127269090909091</span>), variance(anscombe.y1), eps);</span>
-<span class="line" id="L394">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">4.127629090909091</span>), variance(anscombe.y2), eps);</span>
-<span class="line" id="L395">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">4.12262</span>          ), variance(anscombe.y3), eps);</span>
-<span class="line" id="L396">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">4.123249090909091</span>), variance(anscombe.y4), eps);</span>
+<span class="line" id="L389">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">11</span>               , variance(anscombe.x1), eps);</span>
+<span class="line" id="L390">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">11</span>               , variance(anscombe.x2), eps);</span>
+<span class="line" id="L391">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">11</span>               , variance(anscombe.x3), eps);</span>
+<span class="line" id="L392">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">11</span>               , variance(anscombe.x4), eps);</span>
+<span class="line" id="L393">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">4.127269090909091</span>, variance(anscombe.y1), eps);</span>
+<span class="line" id="L394">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">4.127629090909091</span>, variance(anscombe.y2), eps);</span>
+<span class="line" id="L395">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">4.12262</span>          , variance(anscombe.y3), eps);</span>
+<span class="line" id="L396">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">4.123249090909091</span>, variance(anscombe.y4), eps);</span>
 <span class="line" id="L397">}</span>
 <span class="line" id="L398"></span>
 <span class="line" id="L399"><span class="tok-kw">test</span> <span class="tok-str">&quot;descriptive.standardDeviation&quot;</span> {</span>
-<span class="line" id="L400">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">3.316624790355400</span>), standardDeviation(anscombe.x1), eps);</span>
-<span class="line" id="L401">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">3.316624790355400</span>), standardDeviation(anscombe.x2), eps);</span>
-<span class="line" id="L402">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">3.316624790355400</span>), standardDeviation(anscombe.x3), eps);</span>
-<span class="line" id="L403">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">3.316624790355400</span>), standardDeviation(anscombe.x4), eps);</span>
-<span class="line" id="L404">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">2.031568135925815</span>), standardDeviation(anscombe.y1), eps);</span>
-<span class="line" id="L405">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">2.031656735501618</span>), standardDeviation(anscombe.y2), eps);</span>
-<span class="line" id="L406">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">2.030423601123667</span>), standardDeviation(anscombe.y3), eps);</span>
-<span class="line" id="L407">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">2.030578511387602</span>), standardDeviation(anscombe.y4), eps);</span>
+<span class="line" id="L400">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">3.316624790355400</span>, standardDeviation(anscombe.x1), eps);</span>
+<span class="line" id="L401">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">3.316624790355400</span>, standardDeviation(anscombe.x2), eps);</span>
+<span class="line" id="L402">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">3.316624790355400</span>, standardDeviation(anscombe.x3), eps);</span>
+<span class="line" id="L403">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">3.316624790355400</span>, standardDeviation(anscombe.x4), eps);</span>
+<span class="line" id="L404">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">2.031568135925815</span>, standardDeviation(anscombe.y1), eps);</span>
+<span class="line" id="L405">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">2.031656735501618</span>, standardDeviation(anscombe.y2), eps);</span>
+<span class="line" id="L406">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">2.030423601123667</span>, standardDeviation(anscombe.y3), eps);</span>
+<span class="line" id="L407">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">2.030578511387602</span>, standardDeviation(anscombe.y4), eps);</span>
 <span class="line" id="L408">}</span>
 <span class="line" id="L409"></span>
 <span class="line" id="L410"><span class="tok-kw">test</span> <span class="tok-str">&quot;descriptive.standardError&quot;</span> {</span>
-<span class="line" id="L411">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">1</span>                 ), standardError(anscombe.x1), eps);</span>
-<span class="line" id="L412">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">1</span>                 ), standardError(anscombe.x2), eps);</span>
-<span class="line" id="L413">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">1</span>                 ), standardError(anscombe.x3), eps);</span>
-<span class="line" id="L414">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">1</span>                 ), standardError(anscombe.x4), eps);</span>
-<span class="line" id="L415">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">0.6125408402643334</span>), standardError(anscombe.y1), eps);</span>
-<span class="line" id="L416">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">0.6125675540415626</span>), standardError(anscombe.y2), eps);</span>
-<span class="line" id="L417">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">0.6121957500372217</span>), standardError(anscombe.y3), eps);</span>
-<span class="line" id="L418">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">0.6122424572391897</span>), standardError(anscombe.y4), eps);</span>
+<span class="line" id="L411">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">1</span>                 , standardError(anscombe.x1), eps);</span>
+<span class="line" id="L412">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">1</span>                 , standardError(anscombe.x2), eps);</span>
+<span class="line" id="L413">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">1</span>                 , standardError(anscombe.x3), eps);</span>
+<span class="line" id="L414">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">1</span>                 , standardError(anscombe.x4), eps);</span>
+<span class="line" id="L415">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0.6125408402643334</span>, standardError(anscombe.y1), eps);</span>
+<span class="line" id="L416">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0.6125675540415626</span>, standardError(anscombe.y2), eps);</span>
+<span class="line" id="L417">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0.6121957500372217</span>, standardError(anscombe.y3), eps);</span>
+<span class="line" id="L418">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0.6122424572391897</span>, standardError(anscombe.y4), eps);</span>
 <span class="line" id="L419">}</span>
 <span class="line" id="L420"></span>
 <span class="line" id="L421"><span class="tok-kw">test</span> <span class="tok-str">&quot;descriptive.skewness&quot;</span> {</span>
-<span class="line" id="L422">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>,  <span class="tok-number">0</span>                  ), skewness(anscombe.x1), eps);</span>
-<span class="line" id="L423">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>,  <span class="tok-number">0</span>                  ), skewness(anscombe.x2), eps);</span>
-<span class="line" id="L424">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>,  <span class="tok-number">0</span>                  ), skewness(anscombe.x3), eps);</span>
-<span class="line" id="L425">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>,  <span class="tok-number">2.84604989415154153</span>), skewness(anscombe.x4), eps);</span>
-<span class="line" id="L426">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, -<span class="tok-number">0.05580806588592109</span>), skewness(anscombe.y1), eps);</span>
-<span class="line" id="L427">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, -<span class="tok-number">1.12910800171669234</span>), skewness(anscombe.y2), eps);</span>
-<span class="line" id="L428">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>,  <span class="tok-number">1.59223073581644159</span>), skewness(anscombe.y3), eps);</span>
-<span class="line" id="L429">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>,  <span class="tok-number">1.29302528963786001</span>), skewness(anscombe.y4), eps);</span>
+<span class="line" id="L422">    <span class="tok-kw">try</span> expectApproxEqRel( <span class="tok-number">0</span>                  , skewness(anscombe.x1), eps);</span>
+<span class="line" id="L423">    <span class="tok-kw">try</span> expectApproxEqRel( <span class="tok-number">0</span>                  , skewness(anscombe.x2), eps);</span>
+<span class="line" id="L424">    <span class="tok-kw">try</span> expectApproxEqRel( <span class="tok-number">0</span>                  , skewness(anscombe.x3), eps);</span>
+<span class="line" id="L425">    <span class="tok-kw">try</span> expectApproxEqRel( <span class="tok-number">2.84604989415154153</span>, skewness(anscombe.x4), eps);</span>
+<span class="line" id="L426">    <span class="tok-kw">try</span> expectApproxEqRel(-<span class="tok-number">0.05580806588592109</span>, skewness(anscombe.y1), eps);</span>
+<span class="line" id="L427">    <span class="tok-kw">try</span> expectApproxEqRel(-<span class="tok-number">1.12910800171669234</span>, skewness(anscombe.y2), eps);</span>
+<span class="line" id="L428">    <span class="tok-kw">try</span> expectApproxEqRel( <span class="tok-number">1.59223073581644159</span>, skewness(anscombe.y3), eps);</span>
+<span class="line" id="L429">    <span class="tok-kw">try</span> expectApproxEqRel( <span class="tok-number">1.29302528963786001</span>, skewness(anscombe.y4), eps);</span>
 <span class="line" id="L430">}</span>
 <span class="line" id="L431"></span>
 <span class="line" id="L432"><span class="tok-kw">test</span> <span class="tok-str">&quot;descriptive.kurtosis&quot;</span> {</span>
-<span class="line" id="L433">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">1.78</span>             ), kurtosis(anscombe.x1), eps);</span>
-<span class="line" id="L434">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">1.78</span>             ), kurtosis(anscombe.x2), eps);</span>
-<span class="line" id="L435">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">1.78</span>             ), kurtosis(anscombe.x3), eps);</span>
-<span class="line" id="L436">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">9.1</span>              ), kurtosis(anscombe.x4), eps);</span>
-<span class="line" id="L437">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">2.179061359376356</span>), kurtosis(anscombe.y1), eps);</span>
-<span class="line" id="L438">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">3.007673939693123</span>), kurtosis(anscombe.y2), eps);</span>
-<span class="line" id="L439">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">5.130453167839065</span>), kurtosis(anscombe.y3), eps);</span>
-<span class="line" id="L440">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">4.390788953777712</span>), kurtosis(anscombe.y4), eps);</span>
+<span class="line" id="L433">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">1.78</span>             , kurtosis(anscombe.x1), eps);</span>
+<span class="line" id="L434">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">1.78</span>             , kurtosis(anscombe.x2), eps);</span>
+<span class="line" id="L435">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">1.78</span>             , kurtosis(anscombe.x3), eps);</span>
+<span class="line" id="L436">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">9.1</span>              , kurtosis(anscombe.x4), eps);</span>
+<span class="line" id="L437">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">2.179061359376356</span>, kurtosis(anscombe.y1), eps);</span>
+<span class="line" id="L438">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">3.007673939693123</span>, kurtosis(anscombe.y2), eps);</span>
+<span class="line" id="L439">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">5.130453167839065</span>, kurtosis(anscombe.y3), eps);</span>
+<span class="line" id="L440">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">4.390788953777712</span>, kurtosis(anscombe.y4), eps);</span>
 <span class="line" id="L441">}</span>
 <span class="line" id="L442"></span>
 <span class="line" id="L443"><span class="tok-kw">test</span> <span class="tok-str">&quot;descriptive.covariance&quot;</span> {</span>
-<span class="line" id="L444">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">5.501</span>), covariance(anscombe.x1, anscombe.y1), eps);</span>
-<span class="line" id="L445">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">5.5</span>  ), covariance(anscombe.x2, anscombe.y2), eps);</span>
-<span class="line" id="L446">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">5.497</span>), covariance(anscombe.x3, anscombe.y3), eps);</span>
-<span class="line" id="L447">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">5.499</span>), covariance(anscombe.x4, anscombe.y4), eps);</span>
+<span class="line" id="L444">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">5.501</span>, covariance(anscombe.x1, anscombe.y1), eps);</span>
+<span class="line" id="L445">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">5.5</span>  , covariance(anscombe.x2, anscombe.y2), eps);</span>
+<span class="line" id="L446">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">5.497</span>, covariance(anscombe.x3, anscombe.y3), eps);</span>
+<span class="line" id="L447">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">5.499</span>, covariance(anscombe.x4, anscombe.y4), eps);</span>
 <span class="line" id="L448">}</span>
 <span class="line" id="L449"></span>
 <span class="line" id="L450"><span class="tok-kw">test</span> <span class="tok-str">&quot;descriptive.correlation.pearson&quot;</span> {</span>
-<span class="line" id="L451">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">0.8164205163448399</span>), correlation.pearson(anscombe.x1, anscombe.y1), eps);</span>
-<span class="line" id="L452">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">0.8162365060002429</span>), correlation.pearson(anscombe.x2, anscombe.y2), eps);</span>
-<span class="line" id="L453">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">0.8162867394895982</span>), correlation.pearson(anscombe.x3, anscombe.y3), eps);</span>
-<span class="line" id="L454">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">0.8165214368885029</span>), correlation.pearson(anscombe.x4, anscombe.y4), eps);</span>
+<span class="line" id="L451">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0.8164205163448399</span>, correlation.pearson(anscombe.x1, anscombe.y1), eps);</span>
+<span class="line" id="L452">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0.8162365060002429</span>, correlation.pearson(anscombe.x2, anscombe.y2), eps);</span>
+<span class="line" id="L453">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0.8162867394895982</span>, correlation.pearson(anscombe.x3, anscombe.y3), eps);</span>
+<span class="line" id="L454">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0.8165214368885029</span>, correlation.pearson(anscombe.x4, anscombe.y4), eps);</span>
 <span class="line" id="L455">}</span>
 <span class="line" id="L456"></span>
 <span class="line" id="L457"><span class="tok-kw">test</span> <span class="tok-str">&quot;descriptive.correlation.kendall&quot;</span> {</span>
-<span class="line" id="L458">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">0.6363636363636364</span>), correlation.kendall(anscombe.x1, anscombe.y1), eps);</span>
-<span class="line" id="L459">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">0.5636363636363636</span>), correlation.kendall(anscombe.x2, anscombe.y2), eps);</span>
-<span class="line" id="L460">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">0.9636363636363636</span>), correlation.kendall(anscombe.x3, anscombe.y3), eps);</span>
-<span class="line" id="L461">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">0.4264014327112208</span>), correlation.kendall(anscombe.x4, anscombe.y4), eps);</span>
+<span class="line" id="L458">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0.6363636363636364</span>, correlation.kendall(anscombe.x1, anscombe.y1), eps);</span>
+<span class="line" id="L459">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0.5636363636363636</span>, correlation.kendall(anscombe.x2, anscombe.y2), eps);</span>
+<span class="line" id="L460">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0.9636363636363636</span>, correlation.kendall(anscombe.x3, anscombe.y3), eps);</span>
+<span class="line" id="L461">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0.4264014327112208</span>, correlation.kendall(anscombe.x4, anscombe.y4), eps);</span>
 <span class="line" id="L462">}</span>
 <span class="line" id="L463"></span>
 <span class="line" id="L464"><span class="tok-kw">test</span> <span class="tok-str">&quot;descriptive.correlation.spearman&quot;</span> {</span>
-<span class="line" id="L465">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">0.8181818181818182</span>), <span class="tok-kw">try</span> correlation.spearman(ta, anscombe.x1, anscombe.y1), eps);</span>
-<span class="line" id="L466">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">0.6909090909090909</span>), <span class="tok-kw">try</span> correlation.spearman(ta, anscombe.x2, anscombe.y2), eps);</span>
-<span class="line" id="L467">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">0.9909090909090909</span>), <span class="tok-kw">try</span> correlation.spearman(ta, anscombe.x3, anscombe.y3), eps);</span>
-<span class="line" id="L468">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-number">0.5</span>               ), <span class="tok-kw">try</span> correlation.spearman(ta, anscombe.x4, anscombe.y4), eps);</span>
+<span class="line" id="L465">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0.8181818181818182</span>, <span class="tok-kw">try</span> correlation.spearman(ta, anscombe.x1, anscombe.y1), eps);</span>
+<span class="line" id="L466">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0.6909090909090909</span>, <span class="tok-kw">try</span> correlation.spearman(ta, anscombe.x2, anscombe.y2), eps);</span>
+<span class="line" id="L467">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0.9909090909090909</span>, <span class="tok-kw">try</span> correlation.spearman(ta, anscombe.x3, anscombe.y3), eps);</span>
+<span class="line" id="L468">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0.5</span>               , <span class="tok-kw">try</span> correlation.spearman(ta, anscombe.x4, anscombe.y4), eps);</span>
 <span class="line" id="L469">}</span>
 <span class="line" id="L470"></span>
 </code></pre></body>
