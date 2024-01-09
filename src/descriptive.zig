@@ -296,174 +296,174 @@ test "descriptive.toFloat" {
 }
 
 test "descriptive.lenght" {
-    try expectApproxEqRel(@as(f64, 11), length(anscombe.x1), eps);
+    try expectApproxEqRel(11, length(anscombe.x1), eps);
 }
 
 test "descriptive.sum" {
-    try expectApproxEqRel(@as(f64, 99   ), sum(anscombe.x1), eps);
-    try expectApproxEqRel(@as(f64, 99   ), sum(anscombe.x2), eps);
-    try expectApproxEqRel(@as(f64, 99   ), sum(anscombe.x3), eps);
-    try expectApproxEqRel(@as(f64, 99   ), sum(anscombe.x4), eps);
-    try expectApproxEqRel(@as(f64, 82.51), sum(anscombe.y1), eps);
-    try expectApproxEqRel(@as(f64, 82.51), sum(anscombe.y2), eps);
-    try expectApproxEqRel(@as(f64, 82.5 ), sum(anscombe.y3), eps);
-    try expectApproxEqRel(@as(f64, 82.51), sum(anscombe.y4), eps);
+    try expectApproxEqRel(99   , sum(anscombe.x1), eps);
+    try expectApproxEqRel(99   , sum(anscombe.x2), eps);
+    try expectApproxEqRel(99   , sum(anscombe.x3), eps);
+    try expectApproxEqRel(99   , sum(anscombe.x4), eps);
+    try expectApproxEqRel(82.51, sum(anscombe.y1), eps);
+    try expectApproxEqRel(82.51, sum(anscombe.y2), eps);
+    try expectApproxEqRel(82.5 , sum(anscombe.y3), eps);
+    try expectApproxEqRel(82.51, sum(anscombe.y4), eps);
 }
 
 test "descriptive.product" {
-    try expectApproxEqRel(@as(f64, 14529715200       ), product(anscombe.x1), eps);
-    try expectApproxEqRel(@as(f64, 14529715200       ), product(anscombe.x2), eps);
-    try expectApproxEqRel(@as(f64, 14529715200       ), product(anscombe.x3), eps);
-    try expectApproxEqRel(@as(f64, 20401094656       ), product(anscombe.x4), eps);
-    try expectApproxEqRel(@as(f64,  2833760410.777853), product(anscombe.y1), eps);
-    try expectApproxEqRel(@as(f64,  2553792107.502125), product(anscombe.y2), eps);
-    try expectApproxEqRel(@as(f64,  3103197573.579096), product(anscombe.y3), eps);
-    try expectApproxEqRel(@as(f64,  3063027549.622185), product(anscombe.y4), eps);
+    try expectApproxEqRel(14529715200       , product(anscombe.x1), eps);
+    try expectApproxEqRel(14529715200       , product(anscombe.x2), eps);
+    try expectApproxEqRel(14529715200       , product(anscombe.x3), eps);
+    try expectApproxEqRel(20401094656       , product(anscombe.x4), eps);
+    try expectApproxEqRel( 2833760410.777853, product(anscombe.y1), eps);
+    try expectApproxEqRel( 2553792107.502125, product(anscombe.y2), eps);
+    try expectApproxEqRel( 3103197573.579096, product(anscombe.y3), eps);
+    try expectApproxEqRel( 3063027549.622185, product(anscombe.y4), eps);
 }
 
 test "descriptive.mean.arithmetic" {
-    try expectApproxEqRel(@as(f64, 9                ), mean.arithmetic(anscombe.x1), eps);
-    try expectApproxEqRel(@as(f64, 9                ), mean.arithmetic(anscombe.x2), eps);
-    try expectApproxEqRel(@as(f64, 9                ), mean.arithmetic(anscombe.x3), eps);
-    try expectApproxEqRel(@as(f64, 9                ), mean.arithmetic(anscombe.x4), eps);
-    try expectApproxEqRel(@as(f64, 7.500909090909091), mean.arithmetic(anscombe.y1), eps);
-    try expectApproxEqRel(@as(f64, 7.500909090909091), mean.arithmetic(anscombe.y2), eps);
-    try expectApproxEqRel(@as(f64, 7.5              ), mean.arithmetic(anscombe.y3), eps);
-    try expectApproxEqRel(@as(f64, 7.500909090909091), mean.arithmetic(anscombe.y4), eps);
+    try expectApproxEqRel(9                , mean.arithmetic(anscombe.x1), eps);
+    try expectApproxEqRel(9                , mean.arithmetic(anscombe.x2), eps);
+    try expectApproxEqRel(9                , mean.arithmetic(anscombe.x3), eps);
+    try expectApproxEqRel(9                , mean.arithmetic(anscombe.x4), eps);
+    try expectApproxEqRel(7.500909090909091, mean.arithmetic(anscombe.y1), eps);
+    try expectApproxEqRel(7.500909090909091, mean.arithmetic(anscombe.y2), eps);
+    try expectApproxEqRel(7.5              , mean.arithmetic(anscombe.y3), eps);
+    try expectApproxEqRel(7.500909090909091, mean.arithmetic(anscombe.y4), eps);
 }
 
 test "descriptive.mean.geometric" {
-    try expectApproxEqRel(@as(f64, 8.391537790124792), mean.geometric(anscombe.x1), eps);
-    try expectApproxEqRel(@as(f64, 8.391537790124792), mean.geometric(anscombe.x2), eps);
-    try expectApproxEqRel(@as(f64, 8.391537790124792), mean.geometric(anscombe.x3), eps);
-    try expectApproxEqRel(@as(f64, 8.654484902031250), mean.geometric(anscombe.x4), eps);
-    try expectApproxEqRel(@as(f64, 7.232788054567219), mean.geometric(anscombe.y1), eps);
-    try expectApproxEqRel(@as(f64, 7.164711138020261), mean.geometric(anscombe.y2), eps);
-    try expectApproxEqRel(@as(f64, 7.292757391223743), mean.geometric(anscombe.y3), eps);
-    try expectApproxEqRel(@as(f64, 7.284124410831672), mean.geometric(anscombe.y4), eps);
+    try expectApproxEqRel(8.391537790124792, mean.geometric(anscombe.x1), eps);
+    try expectApproxEqRel(8.391537790124792, mean.geometric(anscombe.x2), eps);
+    try expectApproxEqRel(8.391537790124792, mean.geometric(anscombe.x3), eps);
+    try expectApproxEqRel(8.654484902031250, mean.geometric(anscombe.x4), eps);
+    try expectApproxEqRel(7.232788054567219, mean.geometric(anscombe.y1), eps);
+    try expectApproxEqRel(7.164711138020261, mean.geometric(anscombe.y2), eps);
+    try expectApproxEqRel(7.292757391223743, mean.geometric(anscombe.y3), eps);
+    try expectApproxEqRel(7.284124410831672, mean.geometric(anscombe.y4), eps);
 }
 
 test "descriptive.mean.harmonic" {
-    try expectApproxEqRel(@as(f64, 7.756152252222285), mean.harmonic(anscombe.x1), eps);
-    try expectApproxEqRel(@as(f64, 7.756152252222285), mean.harmonic(anscombe.x2), eps);
-    try expectApproxEqRel(@as(f64, 7.756152252222285), mean.harmonic(anscombe.x3), eps);
-    try expectApproxEqRel(@as(f64, 8.444444444444445), mean.harmonic(anscombe.x4), eps);
-    try expectApproxEqRel(@as(f64, 6.949772613414747), mean.harmonic(anscombe.y1), eps);
-    try expectApproxEqRel(@as(f64, 6.723295789626634), mean.harmonic(anscombe.y2), eps);
-    try expectApproxEqRel(@as(f64, 7.119524800614420), mean.harmonic(anscombe.y3), eps);
-    try expectApproxEqRel(@as(f64, 7.094886958518605), mean.harmonic(anscombe.y4), eps);
+    try expectApproxEqRel(7.756152252222285, mean.harmonic(anscombe.x1), eps);
+    try expectApproxEqRel(7.756152252222285, mean.harmonic(anscombe.x2), eps);
+    try expectApproxEqRel(7.756152252222285, mean.harmonic(anscombe.x3), eps);
+    try expectApproxEqRel(8.444444444444445, mean.harmonic(anscombe.x4), eps);
+    try expectApproxEqRel(6.949772613414747, mean.harmonic(anscombe.y1), eps);
+    try expectApproxEqRel(6.723295789626634, mean.harmonic(anscombe.y2), eps);
+    try expectApproxEqRel(7.119524800614420, mean.harmonic(anscombe.y3), eps);
+    try expectApproxEqRel(7.094886958518605, mean.harmonic(anscombe.y4), eps);
 }
 
 test "descriptive.quantile" {
-    try expectApproxEqRel(@as(f64, 4.26 ), try quantile(ta, anscombe.y1, 0   ), eps);
-    try expectApproxEqRel(@as(f64, 4.54 ), try quantile(ta, anscombe.y1, 0.05), eps);
-    try expectApproxEqRel(@as(f64, 4.82 ), try quantile(ta, anscombe.y1, 0.1 ), eps);
-    try expectApproxEqRel(@as(f64, 9.96 ), try quantile(ta, anscombe.y1, 0.9 ), eps);
-    try expectApproxEqRel(@as(f64, 10.4 ), try quantile(ta, anscombe.y1, 0.95), eps);
-    try expectApproxEqRel(@as(f64, 10.84), try quantile(ta, anscombe.y1, 1   ), eps);
+    try expectApproxEqRel( 4.26, try quantile(ta, anscombe.y1, 0   ), eps);
+    try expectApproxEqRel( 4.54, try quantile(ta, anscombe.y1, 0.05), eps);
+    try expectApproxEqRel( 4.82, try quantile(ta, anscombe.y1, 0.1 ), eps);
+    try expectApproxEqRel( 9.96, try quantile(ta, anscombe.y1, 0.9 ), eps);
+    try expectApproxEqRel(10.4 , try quantile(ta, anscombe.y1, 0.95), eps);
+    try expectApproxEqRel(10.84, try quantile(ta, anscombe.y1, 1   ), eps);
 }
 
 test "descriptive.min" {
-    try expectApproxEqRel(@as(f64, 4   ), min(anscombe.x1), eps);
-    try expectApproxEqRel(@as(f64, 4   ), min(anscombe.x2), eps);
-    try expectApproxEqRel(@as(f64, 4   ), min(anscombe.x3), eps);
-    try expectApproxEqRel(@as(f64, 8   ), min(anscombe.x4), eps);
-    try expectApproxEqRel(@as(f64, 4.26), min(anscombe.y1), eps);
-    try expectApproxEqRel(@as(f64, 3.1 ), min(anscombe.y2), eps);
-    try expectApproxEqRel(@as(f64, 5.39), min(anscombe.y3), eps);
-    try expectApproxEqRel(@as(f64, 5.25), min(anscombe.y4), eps);
+    try expectApproxEqRel(4   , min(anscombe.x1), eps);
+    try expectApproxEqRel(4   , min(anscombe.x2), eps);
+    try expectApproxEqRel(4   , min(anscombe.x3), eps);
+    try expectApproxEqRel(8   , min(anscombe.x4), eps);
+    try expectApproxEqRel(4.26, min(anscombe.y1), eps);
+    try expectApproxEqRel(3.1 , min(anscombe.y2), eps);
+    try expectApproxEqRel(5.39, min(anscombe.y3), eps);
+    try expectApproxEqRel(5.25, min(anscombe.y4), eps);
 }
 
 test "descriptive.max" {
-    try expectApproxEqRel(@as(f64, 14   ), max(anscombe.x1), eps);
-    try expectApproxEqRel(@as(f64, 14   ), max(anscombe.x2), eps);
-    try expectApproxEqRel(@as(f64, 14   ), max(anscombe.x3), eps);
-    try expectApproxEqRel(@as(f64, 19   ), max(anscombe.x4), eps);
-    try expectApproxEqRel(@as(f64, 10.84), max(anscombe.y1), eps);
-    try expectApproxEqRel(@as(f64,  9.26), max(anscombe.y2), eps);
-    try expectApproxEqRel(@as(f64, 12.74), max(anscombe.y3), eps);
-    try expectApproxEqRel(@as(f64, 12.5 ), max(anscombe.y4), eps);
+    try expectApproxEqRel(14   , max(anscombe.x1), eps);
+    try expectApproxEqRel(14   , max(anscombe.x2), eps);
+    try expectApproxEqRel(14   , max(anscombe.x3), eps);
+    try expectApproxEqRel(19   , max(anscombe.x4), eps);
+    try expectApproxEqRel(10.84, max(anscombe.y1), eps);
+    try expectApproxEqRel( 9.26, max(anscombe.y2), eps);
+    try expectApproxEqRel(12.74, max(anscombe.y3), eps);
+    try expectApproxEqRel(12.5 , max(anscombe.y4), eps);
 }
 
 test "descriptive.variance" {
-    try expectApproxEqRel(@as(f64, 11               ), variance(anscombe.x1), eps);
-    try expectApproxEqRel(@as(f64, 11               ), variance(anscombe.x2), eps);
-    try expectApproxEqRel(@as(f64, 11               ), variance(anscombe.x3), eps);
-    try expectApproxEqRel(@as(f64, 11               ), variance(anscombe.x4), eps);
-    try expectApproxEqRel(@as(f64, 4.127269090909091), variance(anscombe.y1), eps);
-    try expectApproxEqRel(@as(f64, 4.127629090909091), variance(anscombe.y2), eps);
-    try expectApproxEqRel(@as(f64, 4.12262          ), variance(anscombe.y3), eps);
-    try expectApproxEqRel(@as(f64, 4.123249090909091), variance(anscombe.y4), eps);
+    try expectApproxEqRel(11               , variance(anscombe.x1), eps);
+    try expectApproxEqRel(11               , variance(anscombe.x2), eps);
+    try expectApproxEqRel(11               , variance(anscombe.x3), eps);
+    try expectApproxEqRel(11               , variance(anscombe.x4), eps);
+    try expectApproxEqRel(4.127269090909091, variance(anscombe.y1), eps);
+    try expectApproxEqRel(4.127629090909091, variance(anscombe.y2), eps);
+    try expectApproxEqRel(4.12262          , variance(anscombe.y3), eps);
+    try expectApproxEqRel(4.123249090909091, variance(anscombe.y4), eps);
 }
 
 test "descriptive.standardDeviation" {
-    try expectApproxEqRel(@as(f64, 3.316624790355400), standardDeviation(anscombe.x1), eps);
-    try expectApproxEqRel(@as(f64, 3.316624790355400), standardDeviation(anscombe.x2), eps);
-    try expectApproxEqRel(@as(f64, 3.316624790355400), standardDeviation(anscombe.x3), eps);
-    try expectApproxEqRel(@as(f64, 3.316624790355400), standardDeviation(anscombe.x4), eps);
-    try expectApproxEqRel(@as(f64, 2.031568135925815), standardDeviation(anscombe.y1), eps);
-    try expectApproxEqRel(@as(f64, 2.031656735501618), standardDeviation(anscombe.y2), eps);
-    try expectApproxEqRel(@as(f64, 2.030423601123667), standardDeviation(anscombe.y3), eps);
-    try expectApproxEqRel(@as(f64, 2.030578511387602), standardDeviation(anscombe.y4), eps);
+    try expectApproxEqRel(3.316624790355400, standardDeviation(anscombe.x1), eps);
+    try expectApproxEqRel(3.316624790355400, standardDeviation(anscombe.x2), eps);
+    try expectApproxEqRel(3.316624790355400, standardDeviation(anscombe.x3), eps);
+    try expectApproxEqRel(3.316624790355400, standardDeviation(anscombe.x4), eps);
+    try expectApproxEqRel(2.031568135925815, standardDeviation(anscombe.y1), eps);
+    try expectApproxEqRel(2.031656735501618, standardDeviation(anscombe.y2), eps);
+    try expectApproxEqRel(2.030423601123667, standardDeviation(anscombe.y3), eps);
+    try expectApproxEqRel(2.030578511387602, standardDeviation(anscombe.y4), eps);
 }
 
 test "descriptive.standardError" {
-    try expectApproxEqRel(@as(f64, 1                 ), standardError(anscombe.x1), eps);
-    try expectApproxEqRel(@as(f64, 1                 ), standardError(anscombe.x2), eps);
-    try expectApproxEqRel(@as(f64, 1                 ), standardError(anscombe.x3), eps);
-    try expectApproxEqRel(@as(f64, 1                 ), standardError(anscombe.x4), eps);
-    try expectApproxEqRel(@as(f64, 0.6125408402643334), standardError(anscombe.y1), eps);
-    try expectApproxEqRel(@as(f64, 0.6125675540415626), standardError(anscombe.y2), eps);
-    try expectApproxEqRel(@as(f64, 0.6121957500372217), standardError(anscombe.y3), eps);
-    try expectApproxEqRel(@as(f64, 0.6122424572391897), standardError(anscombe.y4), eps);
+    try expectApproxEqRel(1                 , standardError(anscombe.x1), eps);
+    try expectApproxEqRel(1                 , standardError(anscombe.x2), eps);
+    try expectApproxEqRel(1                 , standardError(anscombe.x3), eps);
+    try expectApproxEqRel(1                 , standardError(anscombe.x4), eps);
+    try expectApproxEqRel(0.6125408402643334, standardError(anscombe.y1), eps);
+    try expectApproxEqRel(0.6125675540415626, standardError(anscombe.y2), eps);
+    try expectApproxEqRel(0.6121957500372217, standardError(anscombe.y3), eps);
+    try expectApproxEqRel(0.6122424572391897, standardError(anscombe.y4), eps);
 }
 
 test "descriptive.skewness" {
-    try expectApproxEqRel(@as(f64,  0                  ), skewness(anscombe.x1), eps);
-    try expectApproxEqRel(@as(f64,  0                  ), skewness(anscombe.x2), eps);
-    try expectApproxEqRel(@as(f64,  0                  ), skewness(anscombe.x3), eps);
-    try expectApproxEqRel(@as(f64,  2.84604989415154153), skewness(anscombe.x4), eps);
-    try expectApproxEqRel(@as(f64, -0.05580806588592109), skewness(anscombe.y1), eps);
-    try expectApproxEqRel(@as(f64, -1.12910800171669234), skewness(anscombe.y2), eps);
-    try expectApproxEqRel(@as(f64,  1.59223073581644159), skewness(anscombe.y3), eps);
-    try expectApproxEqRel(@as(f64,  1.29302528963786001), skewness(anscombe.y4), eps);
+    try expectApproxEqRel( 0                  , skewness(anscombe.x1), eps);
+    try expectApproxEqRel( 0                  , skewness(anscombe.x2), eps);
+    try expectApproxEqRel( 0                  , skewness(anscombe.x3), eps);
+    try expectApproxEqRel( 2.84604989415154153, skewness(anscombe.x4), eps);
+    try expectApproxEqRel(-0.05580806588592109, skewness(anscombe.y1), eps);
+    try expectApproxEqRel(-1.12910800171669234, skewness(anscombe.y2), eps);
+    try expectApproxEqRel( 1.59223073581644159, skewness(anscombe.y3), eps);
+    try expectApproxEqRel( 1.29302528963786001, skewness(anscombe.y4), eps);
 }
 
 test "descriptive.kurtosis" {
-    try expectApproxEqRel(@as(f64, 1.78             ), kurtosis(anscombe.x1), eps);
-    try expectApproxEqRel(@as(f64, 1.78             ), kurtosis(anscombe.x2), eps);
-    try expectApproxEqRel(@as(f64, 1.78             ), kurtosis(anscombe.x3), eps);
-    try expectApproxEqRel(@as(f64, 9.1              ), kurtosis(anscombe.x4), eps);
-    try expectApproxEqRel(@as(f64, 2.179061359376356), kurtosis(anscombe.y1), eps);
-    try expectApproxEqRel(@as(f64, 3.007673939693123), kurtosis(anscombe.y2), eps);
-    try expectApproxEqRel(@as(f64, 5.130453167839065), kurtosis(anscombe.y3), eps);
-    try expectApproxEqRel(@as(f64, 4.390788953777712), kurtosis(anscombe.y4), eps);
+    try expectApproxEqRel(1.78             , kurtosis(anscombe.x1), eps);
+    try expectApproxEqRel(1.78             , kurtosis(anscombe.x2), eps);
+    try expectApproxEqRel(1.78             , kurtosis(anscombe.x3), eps);
+    try expectApproxEqRel(9.1              , kurtosis(anscombe.x4), eps);
+    try expectApproxEqRel(2.179061359376356, kurtosis(anscombe.y1), eps);
+    try expectApproxEqRel(3.007673939693123, kurtosis(anscombe.y2), eps);
+    try expectApproxEqRel(5.130453167839065, kurtosis(anscombe.y3), eps);
+    try expectApproxEqRel(4.390788953777712, kurtosis(anscombe.y4), eps);
 }
 
 test "descriptive.covariance" {
-    try expectApproxEqRel(@as(f64, 5.501), covariance(anscombe.x1, anscombe.y1), eps);
-    try expectApproxEqRel(@as(f64, 5.5  ), covariance(anscombe.x2, anscombe.y2), eps);
-    try expectApproxEqRel(@as(f64, 5.497), covariance(anscombe.x3, anscombe.y3), eps);
-    try expectApproxEqRel(@as(f64, 5.499), covariance(anscombe.x4, anscombe.y4), eps);
+    try expectApproxEqRel(5.501, covariance(anscombe.x1, anscombe.y1), eps);
+    try expectApproxEqRel(5.5  , covariance(anscombe.x2, anscombe.y2), eps);
+    try expectApproxEqRel(5.497, covariance(anscombe.x3, anscombe.y3), eps);
+    try expectApproxEqRel(5.499, covariance(anscombe.x4, anscombe.y4), eps);
 }
 
 test "descriptive.correlation.pearson" {
-    try expectApproxEqRel(@as(f64, 0.8164205163448399), correlation.pearson(anscombe.x1, anscombe.y1), eps);
-    try expectApproxEqRel(@as(f64, 0.8162365060002429), correlation.pearson(anscombe.x2, anscombe.y2), eps);
-    try expectApproxEqRel(@as(f64, 0.8162867394895982), correlation.pearson(anscombe.x3, anscombe.y3), eps);
-    try expectApproxEqRel(@as(f64, 0.8165214368885029), correlation.pearson(anscombe.x4, anscombe.y4), eps);
+    try expectApproxEqRel(0.8164205163448399, correlation.pearson(anscombe.x1, anscombe.y1), eps);
+    try expectApproxEqRel(0.8162365060002429, correlation.pearson(anscombe.x2, anscombe.y2), eps);
+    try expectApproxEqRel(0.8162867394895982, correlation.pearson(anscombe.x3, anscombe.y3), eps);
+    try expectApproxEqRel(0.8165214368885029, correlation.pearson(anscombe.x4, anscombe.y4), eps);
 }
 
 test "descriptive.correlation.kendall" {
-    try expectApproxEqRel(@as(f64, 0.6363636363636364), correlation.kendall(anscombe.x1, anscombe.y1), eps);
-    try expectApproxEqRel(@as(f64, 0.5636363636363636), correlation.kendall(anscombe.x2, anscombe.y2), eps);
-    try expectApproxEqRel(@as(f64, 0.9636363636363636), correlation.kendall(anscombe.x3, anscombe.y3), eps);
-    try expectApproxEqRel(@as(f64, 0.4264014327112208), correlation.kendall(anscombe.x4, anscombe.y4), eps);
+    try expectApproxEqRel(0.6363636363636364, correlation.kendall(anscombe.x1, anscombe.y1), eps);
+    try expectApproxEqRel(0.5636363636363636, correlation.kendall(anscombe.x2, anscombe.y2), eps);
+    try expectApproxEqRel(0.9636363636363636, correlation.kendall(anscombe.x3, anscombe.y3), eps);
+    try expectApproxEqRel(0.4264014327112208, correlation.kendall(anscombe.x4, anscombe.y4), eps);
 }
 
 test "descriptive.correlation.spearman" {
-    try expectApproxEqRel(@as(f64, 0.8181818181818182), try correlation.spearman(ta, anscombe.x1, anscombe.y1), eps);
-    try expectApproxEqRel(@as(f64, 0.6909090909090909), try correlation.spearman(ta, anscombe.x2, anscombe.y2), eps);
-    try expectApproxEqRel(@as(f64, 0.9909090909090909), try correlation.spearman(ta, anscombe.x3, anscombe.y3), eps);
-    try expectApproxEqRel(@as(f64, 0.5               ), try correlation.spearman(ta, anscombe.x4, anscombe.y4), eps);
+    try expectApproxEqRel(0.8181818181818182, try correlation.spearman(ta, anscombe.x1, anscombe.y1), eps);
+    try expectApproxEqRel(0.6909090909090909, try correlation.spearman(ta, anscombe.x2, anscombe.y2), eps);
+    try expectApproxEqRel(0.9909090909090909, try correlation.spearman(ta, anscombe.x3, anscombe.y3), eps);
+    try expectApproxEqRel(0.5               , try correlation.spearman(ta, anscombe.x4, anscombe.y4), eps);
 }
