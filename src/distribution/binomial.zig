@@ -80,8 +80,8 @@ pub fn quantile(p: f64, size: u64, prob: f64) f64 {
 }
 
 /// Uses the quantile function.
-const random = struct {
-    pub fn implementation(generator: std.rand.Random, size: u64, prob: f64) f64 {
+pub const random = struct {
+    fn implementation(generator: std.rand.Random, size: u64, prob: f64) f64 {
         if (prob == 1) {
             return @floatFromInt(size);
         }
@@ -164,33 +164,33 @@ test "binomial.probability" {
 }
 
 test "binomial.quantile" {
-    try expectEqual(0 , quantile(0  , 0 , 0.2));
-    try expectEqual(0 , quantile(0.5, 0 , 0.2));
-    try expectEqual(0 , quantile(1  , 0 , 0.2));
-    try expectEqual(0 , quantile(0  , 10, 0  ));
-    try expectEqual(0 , quantile(0.5, 10, 0  ));
+    try expectEqual( 0, quantile(0  ,  0, 0.2));
+    try expectEqual( 0, quantile(0.5,  0, 0.2));
+    try expectEqual( 0, quantile(1  ,  0, 0.2));
+    try expectEqual( 0, quantile(0  , 10, 0  ));
+    try expectEqual( 0, quantile(0.5, 10, 0  ));
     try expectEqual(10, quantile(1  , 10, 0  ));
-    try expectEqual(0 , quantile(0  , 10, 1  ));
+    try expectEqual( 0, quantile(0  , 10, 1  ));
     try expectEqual(10, quantile(0.5, 10, 1  ));
     try expectEqual(10, quantile(1  , 10, 1  ));
 
-    try expectApproxEqRel(0 , quantile(0           , 10, 0.2), eps);
-    try expectApproxEqRel(0 , quantile(0.1073741823, 10, 0.2), eps);
-    try expectApproxEqRel(0 , quantile(0.1073741824, 10, 0.2), eps);
-    try expectApproxEqRel(1 , quantile(0.1073741825, 10, 0.2), eps);
-    try expectApproxEqRel(1 , quantile(0.3758096383, 10, 0.2), eps);
-    try expectApproxEqRel(1 , quantile(0.3758096384, 10, 0.2), eps);
-    try expectApproxEqRel(2 , quantile(0.3758096385, 10, 0.2), eps);
-    try expectApproxEqRel(10, quantile(1           , 10, 0.2), eps);
+    try expectEqual( 0, quantile(0           , 10, 0.2));
+    try expectEqual( 0, quantile(0.1073741823, 10, 0.2));
+    try expectEqual( 0, quantile(0.1073741824, 10, 0.2));
+    try expectEqual( 1, quantile(0.1073741825, 10, 0.2));
+    try expectEqual( 1, quantile(0.3758096383, 10, 0.2));
+    try expectEqual( 1, quantile(0.3758096384, 10, 0.2));
+    try expectEqual( 2, quantile(0.3758096385, 10, 0.2));
+    try expectEqual(10, quantile(1           , 10, 0.2));
 }
 
 test "binomial.random" {
     var prng = std.rand.DefaultPrng.init(0);
     const gen = prng.random();
-    try expectEqual(1 , random.implementation(gen, 10, 0.2));
-    try expectEqual(2 , random.implementation(gen, 10, 0.2));
-    try expectEqual(2 , random.implementation(gen, 10, 0.2));
-    try expectEqual(0 , random.implementation(gen, 0 , 0.2));
-    try expectEqual(0 , random.implementation(gen, 10, 0  ));
+    try expectEqual( 1, random.implementation(gen, 10, 0.2));
+    try expectEqual( 2, random.implementation(gen, 10, 0.2));
+    try expectEqual( 2, random.implementation(gen, 10, 0.2));
+    try expectEqual( 0, random.implementation(gen,  0, 0.2));
+    try expectEqual( 0, random.implementation(gen, 10, 0  ));
     try expectEqual(10, random.implementation(gen, 10, 1  ));
 }

@@ -15,6 +15,7 @@ pub const geometric = @import("distribution/geometric.zig");
 pub const poisson = @import("distribution/poisson.zig");
 pub const binomial = @import("distribution/binomial.zig");
 pub const negativeBinomial = @import("distribution/negativeBinomial.zig");
+pub const hypergeometric = @import("distribution/hypergeometric.zig");
 pub const uniform = @import("distribution/uniform.zig");
 pub const exponential = @import("distribution/exponential.zig");
 pub const weibull = @import("distribution/weibull.zig");

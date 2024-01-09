@@ -43,7 +43,7 @@ pub fn quantile(p: f64, location: f64, scale: f64) f64 {
 }
 
 /// Uses the quantile function.
-const random = struct {
+pub const random = struct {
     fn implementation(generator: std.rand.Random, location: f64, scale: f64) f64 {
         const uni = generator.float(f64);
         return location + scale * @log(uni / (1 - uni));
@@ -52,14 +52,14 @@ const random = struct {
     pub fn single(generator: std.rand.Random, location: f64, scale: f64) f64 {
         assert(isFinite(location) and isFinite(scale));
         assert(scale > 0);
-        return implementation.logistic(generator, location, scale);
+        return implementation(generator, location, scale);
     }
 
     pub fn buffer(buf: []f64, generator: std.rand.Random, location: f64, scale: f64) []f64 {
         assert(isFinite(location) and isFinite(scale));
         assert(scale > 0);
         for (buf) |*x| {
-            x.* = implementation.logistic(generator, location, scale);
+            x.* = implementation(generator, location, scale);
         }
         return buf;
     }
@@ -75,12 +75,12 @@ const expectApproxEqRel = std.testing.expectApproxEqRel;
 const eps = 10 * std.math.floatEps(f64); // 2.22 × 10^-15
 
 test "logistic.density" {
-    try expectEqual(@as(f64, 0), density(-inf, 0, 1));
-    try expectEqual(@as(f64, 0), density( inf, 0, 1));
+    try expectEqual(0, density(-inf, 0, 1));
+    try expectEqual(0, density( inf, 0, 1));
 
-    try expectApproxEqRel(@as(f64, 0.25              ), density(0, 0, 1), eps);
-    try expectApproxEqRel(@as(f64, 0.1966119332414819), density(1, 0, 1), eps);
-    try expectApproxEqRel(@as(f64, 0.1049935854035065), density(2, 0, 1), eps);
+    try expectApproxEqRel(0.25              , density(0, 0, 1), eps);
+    try expectApproxEqRel(0.1966119332414819, density(1, 0, 1), eps);
+    try expectApproxEqRel(0.1049935854035065, density(2, 0, 1), eps);
 }
 
 test "logistic.probability" {

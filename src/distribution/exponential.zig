@@ -45,7 +45,7 @@ pub fn quantile(p: f64, rate: f64) f64 {
 }
 
 /// Uses the Ziggurat method.
-const random = struct {
+pub const random = struct {
     fn implementation(generator: std.rand.Random, rate: f64) f64 {
         const exp = generator.floatExp(f64);
         return exp / rate;

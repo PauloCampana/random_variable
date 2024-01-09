@@ -60,7 +60,7 @@ pub fn quantile(p: f64, lambda: f64) f64 {
 }
 
 /// Uses the quantile function.
-const random = struct {
+pub const random = struct {
     fn implementation(generator: std.rand.Random, lambda: f64) f64 {
         const uni = generator.float(f64);
         var mass = @exp(-lambda);
@@ -123,14 +123,14 @@ test "poisson.probability" {
 }
 
 test "poisson.quantile" {
-    try expectApproxEqRel(0  , quantile(0                 , 3), eps);
-    try expectApproxEqRel(0  , quantile(0.0497870683678638, 3), eps);
-    try expectApproxEqRel(0  , quantile(0.0497870683678639, 3), eps);
-    try expectApproxEqRel(1  , quantile(0.0497870683678640, 3), eps);
-    try expectApproxEqRel(1  , quantile(0.1991482734714556, 3), eps);
-    try expectApproxEqRel(1  , quantile(0.1991482734714557, 3), eps);
-    try expectApproxEqRel(2  , quantile(0.1991482734714558, 3), eps);
-    try expectEqual      (inf, quantile(1                 , 3)     );
+    try expectEqual(  0, quantile(0                 , 3));
+    try expectEqual(  0, quantile(0.0497870683678638, 3));
+    try expectEqual(  0, quantile(0.0497870683678639, 3));
+    try expectEqual(  1, quantile(0.0497870683678640, 3));
+    try expectEqual(  1, quantile(0.1991482734714556, 3));
+    try expectEqual(  1, quantile(0.1991482734714557, 3));
+    try expectEqual(  2, quantile(0.1991482734714558, 3));
+    try expectEqual(inf, quantile(1                 , 3));
 }
 
 test "poisson.random" {

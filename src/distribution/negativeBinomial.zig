@@ -72,8 +72,8 @@ pub fn quantile(p: f64, size: u64, prob: f64) f64 {
 }
 
 /// Uses the quantile function.
-const random = struct {
-    pub fn implementation(generator: std.rand.Random, size: u64, prob: f64) f64 {
+pub const random = struct {
+    fn implementation(generator: std.rand.Random, size: u64, prob: f64) f64 {
         const uni = generator.float(f64);
         const n = @as(f64, @floatFromInt(size));
         const nm1 = n - 1;
@@ -132,8 +132,8 @@ test "negativeBinomial.probability" {
     try expectEqual(0, probability(-inf, 10, 0.2));
     try expectEqual(1, probability( inf, 10, 0.2));
 
-    try expectEqual(1, probability( 0, 10, 1  ));
-    try expectEqual(1, probability( 1, 10, 1  ));
+    try expectEqual(1, probability(0, 10, 1));
+    try expectEqual(1, probability(1, 10, 1));
 
     try expectApproxEqRel(0           , probability(-0.1, 10, 0.2), eps);
     try expectApproxEqRel(0.0000001024, probability( 0  , 10, 0.2), eps);
@@ -148,14 +148,14 @@ test "negativeBinomial.quantile" {
     try expectEqual(0, quantile(0.5, 10, 1));
     try expectEqual(0, quantile(1  , 10, 1));
 
-    try expectApproxEqRel(0  , quantile(0           , 10, 0.2), eps);
-    try expectApproxEqRel(0  , quantile(0.0000001023, 10, 0.2), eps);
-    try expectApproxEqRel(0  , quantile(0.0000001024, 10, 0.2), eps);
-    try expectApproxEqRel(1  , quantile(0.0000001025, 10, 0.2), eps);
-    try expectApproxEqRel(1  , quantile(0.0000009215, 10, 0.2), eps);
-    try expectApproxEqRel(1  , quantile(0.0000009216, 10, 0.2), eps);
-    try expectApproxEqRel(2  , quantile(0.0000009217, 10, 0.2), eps);
-    try expectEqual      (inf, quantile(1           , 10, 0.2)     );
+    try expectEqual(  0, quantile(0           , 10, 0.2));
+    try expectEqual(  0, quantile(0.0000001023, 10, 0.2));
+    try expectEqual(  0, quantile(0.0000001024, 10, 0.2));
+    try expectEqual(  1, quantile(0.0000001025, 10, 0.2));
+    try expectEqual(  1, quantile(0.0000009215, 10, 0.2));
+    try expectEqual(  1, quantile(0.0000009216, 10, 0.2));
+    try expectEqual(  2, quantile(0.0000009217, 10, 0.2));
+    try expectEqual(inf, quantile(1           , 10, 0.2));
 }
 
 test "negativeBinomial.random" {
@@ -164,5 +164,5 @@ test "negativeBinomial.random" {
     try expectEqual(34, random.implementation(gen, 10, 0.2));
     try expectEqual(36, random.implementation(gen, 10, 0.2));
     try expectEqual(38, random.implementation(gen, 10, 0.2));
-    try expectEqual(0 , random.implementation(gen, 10, 1  ));
+    try expectEqual( 0, random.implementation(gen, 10, 1  ));
 }
