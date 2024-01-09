@@ -128,8 +128,8 @@ test "gamma.density" {
     try expectEqual(0, density( inf, 3, 5));
 
     try expectEqual(inf, density(0, 0.9, 5));
-    try expectEqual(5  , density(0, 1  , 5));
-    try expectEqual(0  , density(0, 1.1, 5));
+    try expectEqual(  5, density(0, 1  , 5));
+    try expectEqual(  0, density(0, 1.1, 5));
 
     try expectApproxEqRel(0                 , density(0, 3, 5), eps);
     try expectApproxEqRel(0.4211216874428417, density(1, 3, 5), eps);

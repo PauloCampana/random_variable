@@ -164,7 +164,7 @@
 <span class="line" id="L50">}</span>
 <span class="line" id="L51"></span>
 <span class="line" id="L52"><span class="tok-comment">/// Uses the relation to Normal distribution.</span></span>
-<span class="line" id="L53"><span class="tok-kw">const</span> random = <span class="tok-kw">struct</span> {</span>
+<span class="line" id="L53"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> random = <span class="tok-kw">struct</span> {</span>
 <span class="line" id="L54">    <span class="tok-kw">fn</span> <span class="tok-fn">implementation</span>(generator: std.rand.Random, log_location: <span class="tok-type">f64</span>, log_scale: <span class="tok-type">f64</span>) <span class="tok-type">f64</span> {</span>
 <span class="line" id="L55">        <span class="tok-kw">const</span> nor = generator.floatNorm(<span class="tok-type">f64</span>);</span>
 <span class="line" id="L56">        <span class="tok-kw">const</span> log = log_location + log_scale * nor;</span>

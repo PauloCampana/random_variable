@@ -50,7 +50,7 @@ pub fn quantile(p: f64, log_location: f64, log_scale: f64) f64 {
 }
 
 /// Uses the relation to Normal distribution.
-const random = struct {
+pub const random = struct {
     fn implementation(generator: std.rand.Random, log_location: f64, log_scale: f64) f64 {
         const nor = generator.floatNorm(f64);
         const log = log_location + log_scale * nor;

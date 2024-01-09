@@ -46,7 +46,7 @@ pub fn quantile(p: f64, prob: f64) f64 {
 }
 
 /// Uses the relation to Exponential distribution.
-const random = struct {
+pub const random = struct {
     fn implementation(generator: std.rand.Random, prob: f64) f64 {
         const rate = -std.math.log1p(-prob);
         const exp = generator.floatExp(f64);
@@ -108,14 +108,14 @@ test "geometric.probability" {
 }
 
 test "geometric.quantile" {
-    try expectApproxEqRel(0  , quantile(0   , 0.2), eps);
-    try expectApproxEqRel(0  , quantile(0.19, 0.2), eps);
-    try expectApproxEqRel(0  , quantile(0.2 , 0.2), eps);
-    try expectApproxEqRel(1  , quantile(0.21, 0.2), eps);
-    try expectApproxEqRel(1  , quantile(0.35, 0.2), eps);
-    try expectApproxEqRel(1  , quantile(0.36, 0.2), eps);
-    try expectApproxEqRel(2  , quantile(0.37, 0.2), eps);
-    try expectEqual      (inf, quantile(1   , 0.2)     );
+    try expectEqual(  0, quantile(0   , 0.2));
+    try expectEqual(  0, quantile(0.19, 0.2));
+    try expectEqual(  0, quantile(0.2 , 0.2));
+    try expectEqual(  1, quantile(0.21, 0.2));
+    try expectEqual(  1, quantile(0.35, 0.2));
+    try expectEqual(  1, quantile(0.36, 0.2));
+    try expectEqual(  2, quantile(0.37, 0.2));
+    try expectEqual(inf, quantile(1   , 0.2));
 }
 
 test "geometric.random" {

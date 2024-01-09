@@ -95,9 +95,6 @@ pub const random = struct {
     }
 };
 
-
-
-
 const expectEqual = std.testing.expectEqual;
 const expectApproxEqRel = std.testing.expectApproxEqRel;
 const eps = 10 * std.math.floatEps(f64); // 2.22 × 10^-15
@@ -107,8 +104,8 @@ test "f.density" {
     try expectEqual(0, density( inf, 3, 5));
 
     try expectEqual(inf, density(0, 1.8, 5));
-    try expectEqual(1  , density(0, 2  , 5));
-    try expectEqual(0  , density(0, 2.2, 5));
+    try expectEqual(  1, density(0, 2  , 5));
+    try expectEqual(  0, density(0, 2.2, 5));
 
     try expectApproxEqRel(0                 , density(0, 3, 5), eps);
     try expectApproxEqRel(0.3611744789422851, density(1, 3, 5), eps);

@@ -58,7 +58,7 @@ pub fn quantile(p: f64, shape: f64, rate: f64) f64 {
 }
 
 /// Uses the Ziggurat method and the quantile function.
-const random = struct {
+pub const random = struct {
     fn implementation(generator: std.rand.Random, shape: f64, rate: f64) f64 {
         const exp = generator.floatExp(f64);
         const wei = std.math.pow(f64, exp, 1 / shape);

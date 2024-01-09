@@ -1,4 +1,4 @@
-//! Continuous uniform distribution.
+//! Uniform distribution.
 //!
 //! Parameters:
 //!     a: `min` ∈ (-∞,∞)
@@ -43,7 +43,7 @@ pub fn quantile(p: f64, min: f64, max: f64) f64 {
 }
 
 /// Uses the quantile function.
-const random = struct {
+pub const random = struct {
     fn implementation(generator: std.rand.Random, min: f64, max: f64) f64 {
         const uni = generator.float(f64);
         return min + (max - min) * uni;

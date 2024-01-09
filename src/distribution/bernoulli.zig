@@ -52,7 +52,7 @@ pub fn quantile(p: f64, prob: f64) f64 {
 }
 
 /// Uses the quantile function.
-const random = struct {
+pub const random = struct {
     fn implementation(generator: std.rand.Random, prob: f64) f64 {
         const uni = generator.float(f64);
         const ber = @intFromBool(uni < prob);
@@ -107,11 +107,11 @@ test "bernoulli.probability" {
 }
 
 test "bernoulli.quantile" {
-    try expectApproxEqRel(0, quantile(0   , 0.2), eps);
-    try expectApproxEqRel(0, quantile(0.79, 0.2), eps);
-    try expectApproxEqRel(0, quantile(0.8 , 0.2), eps);
-    try expectApproxEqRel(1, quantile(0.81, 0.2), eps);
-    try expectApproxEqRel(1, quantile(1   , 0.2), eps);
+    try expectEqual(0, quantile(0   , 0.2));
+    try expectEqual(0, quantile(0.79, 0.2));
+    try expectEqual(0, quantile(0.8 , 0.2));
+    try expectEqual(1, quantile(0.81, 0.2));
+    try expectEqual(1, quantile(1   , 0.2));
 }
 
 test "bernoulli.random" {

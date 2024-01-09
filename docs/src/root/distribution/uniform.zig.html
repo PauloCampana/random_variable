@@ -112,7 +112,7 @@
     </style>
 </head>
 <body>
-<pre><code><span class="line" id="L1"><span class="tok-comment">//! Continuous uniform distribution.</span></span>
+<pre><code><span class="line" id="L1"><span class="tok-comment">//! Uniform distribution.</span></span>
 <span class="line" id="L2"><span class="tok-comment">//!</span></span>
 <span class="line" id="L3"><span class="tok-comment">//! Parameters:</span></span>
 <span class="line" id="L4"><span class="tok-comment">//!     a: `min` ∈ (-∞,∞)</span></span>
@@ -157,7 +157,7 @@
 <span class="line" id="L43">}</span>
 <span class="line" id="L44"></span>
 <span class="line" id="L45"><span class="tok-comment">/// Uses the quantile function.</span></span>
-<span class="line" id="L46"><span class="tok-kw">const</span> random = <span class="tok-kw">struct</span> {</span>
+<span class="line" id="L46"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> random = <span class="tok-kw">struct</span> {</span>
 <span class="line" id="L47">    <span class="tok-kw">fn</span> <span class="tok-fn">implementation</span>(generator: std.rand.Random, min: <span class="tok-type">f64</span>, max: <span class="tok-type">f64</span>) <span class="tok-type">f64</span> {</span>
 <span class="line" id="L48">        <span class="tok-kw">const</span> uni = generator.float(<span class="tok-type">f64</span>);</span>
 <span class="line" id="L49">        <span class="tok-kw">return</span> min + (max - min) * uni;</span>

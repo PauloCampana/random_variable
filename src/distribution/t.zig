@@ -60,7 +60,7 @@ pub fn quantile(p: f64, df: f64) f64 {
 }
 
 /// Uses the relation to Normal and Gamma distributions.
-const random = struct {
+pub const random = struct {
     fn implementation(generator: std.rand.Random, df: f64) f64 {
         if (df == 1) {
             const uni = generator.float(f64);

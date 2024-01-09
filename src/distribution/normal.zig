@@ -43,7 +43,7 @@ pub fn quantile(p: f64, location: f64, scale: f64) f64 {
     return location + scale * q;
 }
 
-const random = struct {
+pub const random = struct {
     fn implementation(generator: std.rand.Random, location: f64, scale: f64) f64 {
         const nor = generator.floatNorm(f64);
         return location + scale * nor;

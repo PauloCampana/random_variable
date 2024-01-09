@@ -157,7 +157,7 @@
 <span class="line" id="L43">    <span class="tok-kw">return</span> location + scale * q;</span>
 <span class="line" id="L44">}</span>
 <span class="line" id="L45"></span>
-<span class="line" id="L46"><span class="tok-kw">const</span> random = <span class="tok-kw">struct</span> {</span>
+<span class="line" id="L46"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> random = <span class="tok-kw">struct</span> {</span>
 <span class="line" id="L47">    <span class="tok-kw">fn</span> <span class="tok-fn">implementation</span>(generator: std.rand.Random, location: <span class="tok-type">f64</span>, scale: <span class="tok-type">f64</span>) <span class="tok-type">f64</span> {</span>
 <span class="line" id="L48">        <span class="tok-kw">const</span> nor = generator.floatNorm(<span class="tok-type">f64</span>);</span>
 <span class="line" id="L49">        <span class="tok-kw">return</span> location + scale * nor;</span>

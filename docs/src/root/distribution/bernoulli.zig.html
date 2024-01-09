@@ -166,7 +166,7 @@
 <span class="line" id="L52">}</span>
 <span class="line" id="L53"></span>
 <span class="line" id="L54"><span class="tok-comment">/// Uses the quantile function.</span></span>
-<span class="line" id="L55"><span class="tok-kw">const</span> random = <span class="tok-kw">struct</span> {</span>
+<span class="line" id="L55"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> random = <span class="tok-kw">struct</span> {</span>
 <span class="line" id="L56">    <span class="tok-kw">fn</span> <span class="tok-fn">implementation</span>(generator: std.rand.Random, prob: <span class="tok-type">f64</span>) <span class="tok-type">f64</span> {</span>
 <span class="line" id="L57">        <span class="tok-kw">const</span> uni = generator.float(<span class="tok-type">f64</span>);</span>
 <span class="line" id="L58">        <span class="tok-kw">const</span> ber = <span class="tok-builtin">@intFromBool</span>(uni &lt; prob);</span>
@@ -222,11 +222,11 @@
 <span class="line" id="L107">}</span>
 <span class="line" id="L108"></span>
 <span class="line" id="L109"><span class="tok-kw">test</span> <span class="tok-str">&quot;bernoulli.quantile&quot;</span> {</span>
-<span class="line" id="L110">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0</span>, quantile(<span class="tok-number">0</span>   , <span class="tok-number">0.2</span>), eps);</span>
-<span class="line" id="L111">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0</span>, quantile(<span class="tok-number">0.79</span>, <span class="tok-number">0.2</span>), eps);</span>
-<span class="line" id="L112">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0</span>, quantile(<span class="tok-number">0.8</span> , <span class="tok-number">0.2</span>), eps);</span>
-<span class="line" id="L113">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">1</span>, quantile(<span class="tok-number">0.81</span>, <span class="tok-number">0.2</span>), eps);</span>
-<span class="line" id="L114">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">1</span>, quantile(<span class="tok-number">1</span>   , <span class="tok-number">0.2</span>), eps);</span>
+<span class="line" id="L110">    <span class="tok-kw">try</span> expectEqual(<span class="tok-number">0</span>, quantile(<span class="tok-number">0</span>   , <span class="tok-number">0.2</span>));</span>
+<span class="line" id="L111">    <span class="tok-kw">try</span> expectEqual(<span class="tok-number">0</span>, quantile(<span class="tok-number">0.79</span>, <span class="tok-number">0.2</span>));</span>
+<span class="line" id="L112">    <span class="tok-kw">try</span> expectEqual(<span class="tok-number">0</span>, quantile(<span class="tok-number">0.8</span> , <span class="tok-number">0.2</span>));</span>
+<span class="line" id="L113">    <span class="tok-kw">try</span> expectEqual(<span class="tok-number">1</span>, quantile(<span class="tok-number">0.81</span>, <span class="tok-number">0.2</span>));</span>
+<span class="line" id="L114">    <span class="tok-kw">try</span> expectEqual(<span class="tok-number">1</span>, quantile(<span class="tok-number">1</span>   , <span class="tok-number">0.2</span>));</span>
 <span class="line" id="L115">}</span>
 <span class="line" id="L116"></span>
 <span class="line" id="L117"><span class="tok-kw">test</span> <span class="tok-str">&quot;bernoulli.random&quot;</span> {</span>

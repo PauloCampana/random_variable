@@ -103,11 +103,11 @@ test "beta.density" {
     try expectEqual(0, density( inf, 3, 5));
 
     try expectEqual(inf, density(0, 0.9, 5  ));
-    try expectEqual(5  , density(0, 1  , 5  ));
-    try expectEqual(0  , density(0, 1.1, 5  ));
+    try expectEqual(  5, density(0, 1  , 5  ));
+    try expectEqual(  0, density(0, 1.1, 5  ));
     try expectEqual(inf, density(1, 3  , 0.9));
-    try expectEqual(3  , density(1, 3  , 1  ));
-    try expectEqual(0  , density(1, 3  , 1.1));
+    try expectEqual(  3, density(1, 3  , 1  ));
+    try expectEqual(  0, density(1, 3  , 1.1));
 
     try expectApproxEqRel(0      , density(0  , 3, 5), eps);
     try expectApproxEqRel(1.72032, density(0.2, 3, 5), eps);

@@ -160,7 +160,7 @@
 <span class="line" id="L46">}</span>
 <span class="line" id="L47"></span>
 <span class="line" id="L48"><span class="tok-comment">/// Uses the relation to Exponential distribution.</span></span>
-<span class="line" id="L49"><span class="tok-kw">const</span> random = <span class="tok-kw">struct</span> {</span>
+<span class="line" id="L49"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> random = <span class="tok-kw">struct</span> {</span>
 <span class="line" id="L50">    <span class="tok-kw">fn</span> <span class="tok-fn">implementation</span>(generator: std.rand.Random, prob: <span class="tok-type">f64</span>) <span class="tok-type">f64</span> {</span>
 <span class="line" id="L51">        <span class="tok-kw">const</span> rate = -std.math.log1p(-prob);</span>
 <span class="line" id="L52">        <span class="tok-kw">const</span> exp = generator.floatExp(<span class="tok-type">f64</span>);</span>
@@ -223,14 +223,14 @@
 <span class="line" id="L108">}</span>
 <span class="line" id="L109"></span>
 <span class="line" id="L110"><span class="tok-kw">test</span> <span class="tok-str">&quot;geometric.quantile&quot;</span> {</span>
-<span class="line" id="L111">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0</span>  , quantile(<span class="tok-number">0</span>   , <span class="tok-number">0.2</span>), eps);</span>
-<span class="line" id="L112">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0</span>  , quantile(<span class="tok-number">0.19</span>, <span class="tok-number">0.2</span>), eps);</span>
-<span class="line" id="L113">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0</span>  , quantile(<span class="tok-number">0.2</span> , <span class="tok-number">0.2</span>), eps);</span>
-<span class="line" id="L114">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">1</span>  , quantile(<span class="tok-number">0.21</span>, <span class="tok-number">0.2</span>), eps);</span>
-<span class="line" id="L115">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">1</span>  , quantile(<span class="tok-number">0.35</span>, <span class="tok-number">0.2</span>), eps);</span>
-<span class="line" id="L116">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">1</span>  , quantile(<span class="tok-number">0.36</span>, <span class="tok-number">0.2</span>), eps);</span>
-<span class="line" id="L117">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">2</span>  , quantile(<span class="tok-number">0.37</span>, <span class="tok-number">0.2</span>), eps);</span>
-<span class="line" id="L118">    <span class="tok-kw">try</span> expectEqual      (inf, quantile(<span class="tok-number">1</span>   , <span class="tok-number">0.2</span>)     );</span>
+<span class="line" id="L111">    <span class="tok-kw">try</span> expectEqual(  <span class="tok-number">0</span>, quantile(<span class="tok-number">0</span>   , <span class="tok-number">0.2</span>));</span>
+<span class="line" id="L112">    <span class="tok-kw">try</span> expectEqual(  <span class="tok-number">0</span>, quantile(<span class="tok-number">0.19</span>, <span class="tok-number">0.2</span>));</span>
+<span class="line" id="L113">    <span class="tok-kw">try</span> expectEqual(  <span class="tok-number">0</span>, quantile(<span class="tok-number">0.2</span> , <span class="tok-number">0.2</span>));</span>
+<span class="line" id="L114">    <span class="tok-kw">try</span> expectEqual(  <span class="tok-number">1</span>, quantile(<span class="tok-number">0.21</span>, <span class="tok-number">0.2</span>));</span>
+<span class="line" id="L115">    <span class="tok-kw">try</span> expectEqual(  <span class="tok-number">1</span>, quantile(<span class="tok-number">0.35</span>, <span class="tok-number">0.2</span>));</span>
+<span class="line" id="L116">    <span class="tok-kw">try</span> expectEqual(  <span class="tok-number">1</span>, quantile(<span class="tok-number">0.36</span>, <span class="tok-number">0.2</span>));</span>
+<span class="line" id="L117">    <span class="tok-kw">try</span> expectEqual(  <span class="tok-number">2</span>, quantile(<span class="tok-number">0.37</span>, <span class="tok-number">0.2</span>));</span>
+<span class="line" id="L118">    <span class="tok-kw">try</span> expectEqual(inf, quantile(<span class="tok-number">1</span>   , <span class="tok-number">0.2</span>));</span>
 <span class="line" id="L119">}</span>
 <span class="line" id="L120"></span>
 <span class="line" id="L121"><span class="tok-kw">test</span> <span class="tok-str">&quot;geometric.random&quot;</span> {</span>
