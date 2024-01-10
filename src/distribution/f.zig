@@ -1,8 +1,6 @@
-//! F distribution.
-//!
 //! Parameters:
-//!     n: `df1` ∈ (0,∞)
-//!     m: `df2` ∈ (0,∞)
+//! - n: `df1` ∈ (0,∞)
+//! - m: `df2` ∈ (0,∞)
 
 const std = @import("std");
 const gamma = @import("gamma.zig");

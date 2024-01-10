@@ -1,7 +1,5 @@
-//! Exponential distribution.
-//!
 //! Parameters:
-//!     λ: `rate` ∈ (0,∞)
+//! - λ: `rate` ∈ (0,∞)
 
 const std = @import("std");
 const assert = std.debug.assert;

@@ -1,7 +1,5 @@
-//! t distribution.
-//!
 //! Parameters:
-//!     ν: `df` ∈ (0,∞)
+//! - ν: `df` ∈ (0,∞)
 
 const std = @import("std");
 const gamma = @import("gamma.zig");

@@ -1,7 +1,5 @@
-//! Geometric distribution.
-//!
 //! Parameters:
-//!     p: `prob` ∈ (0,1]
+//! - p: `prob` ∈ (0,1]
 
 const std = @import("std");
 const assert = std.debug.assert;

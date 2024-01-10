@@ -1,7 +1,5 @@
-//! Poisson distribution.
-//!
 //! Parameters:
-//!     λ: `scale` ∈ (0,∞)
+//! - λ: `scale` ∈ (0,∞)
 
 const std = @import("std");
 const lgamma = @import("../thirdyparty/prob.zig").lnGamma;

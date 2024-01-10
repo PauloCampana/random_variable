@@ -8,14 +8,6 @@ pub fn build(b: *std.Build) !void {
         .root_source_file = .{.path = "src/root.zig"},
     });
 
-    const lib = b.addStaticLibrary(.{
-        .name = "random_variable",
-        .root_source_file = .{.path = "src/root.zig"},
-        .target = target,
-        .optimize = optimize,
-    });
-    b.installArtifact(lib);
-
     const tests = b.addTest(.{
         .root_source_file = .{.path = "src/root.zig"},
         .target = target,
@@ -27,13 +19,11 @@ pub fn build(b: *std.Build) !void {
 
     const docs_tests = b.addTest(.{
         .root_source_file = .{.path = "src/root.zig"},
-        .target = target,
-        .optimize = optimize,
     });
     const docs_cmd = b.addInstallDirectory(.{
         .source_dir = docs_tests.getEmittedDocs(),
-        .install_dir = .{.custom = ".."},
-        .install_subdir = "docs",
+        .install_dir = .prefix,
+        .install_subdir = "../docs",
     });
     const docs_step = b.step("docs", "Generate documentation");
     docs_step.dependOn(&docs_cmd.step);

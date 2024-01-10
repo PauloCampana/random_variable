@@ -1,8 +1,6 @@
-//! Log-normal distribution.
-//!
 //! Parameters:
-//!     μ: `log_location` ∈ (-∞,∞)
-//!     σ: `log_scale`    ∈ ( 0,∞)
+//! - μ: `log_location` ∈ (-∞,∞)
+//! - σ: `log_scale`    ∈ ( 0,∞)
 
 const std = @import("std");
 const normalDist = @import("../thirdyparty/prob.zig").normalDist;
