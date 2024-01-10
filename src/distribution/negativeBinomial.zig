@@ -1,8 +1,6 @@
-//! Negative Binomial distribution.
-//!
 //! Parameters:
-//!     n: `size` ∈ {0,1,2,⋯}
-//!     p: `prob` ∈ (0,1]
+//! - n: `size` ∈ {0,1,2,⋯}
+//! - p: `prob` ∈ (0,1]
 
 const std = @import("std");
 const lgamma = @import("../thirdyparty/prob.zig").lnGamma;

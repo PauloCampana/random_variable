@@ -1,8 +1,6 @@
-//! Beta distribution.
-//!
 //! Parameters:
-//!     α: `shape1` ∈ (0,∞)
-//!     β: `shape2` ∈ (0,∞)
+//! - α: `shape1` ∈ (0,∞)
+//! - β: `shape2` ∈ (0,∞)
 
 const std = @import("std");
 const gamma = @import("gamma.zig");

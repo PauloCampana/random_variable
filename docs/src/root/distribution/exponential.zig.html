@@ -112,119 +112,117 @@
     </style>
 </head>
 <body>
-<pre><code><span class="line" id="L1"><span class="tok-comment">//! Exponential distribution.</span></span>
-<span class="line" id="L2"><span class="tok-comment">//!</span></span>
-<span class="line" id="L3"><span class="tok-comment">//! Parameters:</span></span>
-<span class="line" id="L4"><span class="tok-comment">//!     λ: `rate` ∈ (0,∞)</span></span>
-<span class="line" id="L5"></span>
-<span class="line" id="L6"><span class="tok-kw">const</span> std = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;std&quot;</span>);</span>
-<span class="line" id="L7"><span class="tok-kw">const</span> assert = std.debug.assert;</span>
-<span class="line" id="L8"><span class="tok-kw">const</span> isFinite = std.math.isFinite;</span>
-<span class="line" id="L9"><span class="tok-kw">const</span> isNan = std.math.isNan;</span>
-<span class="line" id="L10"><span class="tok-kw">const</span> inf = std.math.inf(<span class="tok-type">f64</span>);</span>
-<span class="line" id="L11"></span>
-<span class="line" id="L12"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> parameters = <span class="tok-number">1</span>;</span>
-<span class="line" id="L13"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> support = [<span class="tok-number">2</span>]<span class="tok-type">f64</span> {<span class="tok-number">0</span>, inf};</span>
-<span class="line" id="L14"></span>
-<span class="line" id="L15"><span class="tok-comment">/// f(x) = λ exp(-λx).</span></span>
-<span class="line" id="L16"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">density</span>(x: <span class="tok-type">f64</span>, rate: <span class="tok-type">f64</span>) <span class="tok-type">f64</span> {</span>
-<span class="line" id="L17">    assert(isFinite(rate));</span>
-<span class="line" id="L18">    assert(rate &gt; <span class="tok-number">0</span>);</span>
-<span class="line" id="L19">    assert(!isNan(x));</span>
-<span class="line" id="L20">    <span class="tok-kw">if</span> (x &lt; <span class="tok-number">0</span>) {</span>
-<span class="line" id="L21">        <span class="tok-kw">return</span> <span class="tok-number">0</span>;</span>
-<span class="line" id="L22">    }</span>
-<span class="line" id="L23">    <span class="tok-kw">return</span> rate * <span class="tok-builtin">@exp</span>(-rate * x);</span>
-<span class="line" id="L24">}</span>
-<span class="line" id="L25"></span>
-<span class="line" id="L26"><span class="tok-comment">/// F(q) = 1 - exp(-λq).</span></span>
-<span class="line" id="L27"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">probability</span>(q: <span class="tok-type">f64</span>, rate: <span class="tok-type">f64</span>) <span class="tok-type">f64</span> {</span>
-<span class="line" id="L28">    assert(isFinite(rate));</span>
-<span class="line" id="L29">    assert(rate &gt; <span class="tok-number">0</span>);</span>
-<span class="line" id="L30">    assert(!isNan(q));</span>
-<span class="line" id="L31">    <span class="tok-kw">if</span> (q &lt;= <span class="tok-number">0</span>) {</span>
-<span class="line" id="L32">        <span class="tok-kw">return</span> <span class="tok-number">0</span>;</span>
-<span class="line" id="L33">    }</span>
-<span class="line" id="L34">    <span class="tok-kw">const</span> z = rate * q;</span>
-<span class="line" id="L35">    <span class="tok-kw">return</span> -std.math.expm1(-z);</span>
-<span class="line" id="L36">}</span>
-<span class="line" id="L37"></span>
-<span class="line" id="L38"><span class="tok-comment">/// Q(p) = -ln(1 - p) / λ.</span></span>
-<span class="line" id="L39"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">quantile</span>(p: <span class="tok-type">f64</span>, rate: <span class="tok-type">f64</span>) <span class="tok-type">f64</span> {</span>
-<span class="line" id="L40">    assert(isFinite(rate));</span>
-<span class="line" id="L41">    assert(rate &gt;= <span class="tok-number">0</span>);</span>
-<span class="line" id="L42">    assert(<span class="tok-number">0</span> &lt;= p <span class="tok-kw">and</span> p &lt;= <span class="tok-number">1</span>);</span>
-<span class="line" id="L43">    <span class="tok-kw">const</span> q = -std.math.log1p(-p);</span>
-<span class="line" id="L44">    <span class="tok-kw">return</span> q / rate;</span>
-<span class="line" id="L45">}</span>
-<span class="line" id="L46"></span>
-<span class="line" id="L47"><span class="tok-comment">/// Uses the Ziggurat method.</span></span>
-<span class="line" id="L48"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> random = <span class="tok-kw">struct</span> {</span>
-<span class="line" id="L49">    <span class="tok-kw">fn</span> <span class="tok-fn">implementation</span>(generator: std.rand.Random, rate: <span class="tok-type">f64</span>) <span class="tok-type">f64</span> {</span>
-<span class="line" id="L50">        <span class="tok-kw">const</span> exp = generator.floatExp(<span class="tok-type">f64</span>);</span>
-<span class="line" id="L51">        <span class="tok-kw">return</span> exp / rate;</span>
-<span class="line" id="L52">    }</span>
-<span class="line" id="L53"></span>
-<span class="line" id="L54">    <span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">single</span>(generator:  std.rand.Random, rate: <span class="tok-type">f64</span>) <span class="tok-type">f64</span> {</span>
-<span class="line" id="L55">        assert(isFinite(rate));</span>
-<span class="line" id="L56">        assert(rate &gt; <span class="tok-number">0</span>);</span>
-<span class="line" id="L57">        <span class="tok-kw">return</span> implementation(generator, rate);</span>
-<span class="line" id="L58">    }</span>
-<span class="line" id="L59"></span>
-<span class="line" id="L60">    <span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">buffer</span>(buf: []<span class="tok-type">f64</span>, generator:  std.rand.Random, rate: <span class="tok-type">f64</span>) []<span class="tok-type">f64</span> {</span>
-<span class="line" id="L61">        assert(isFinite(rate));</span>
-<span class="line" id="L62">        assert(rate &gt; <span class="tok-number">0</span>);</span>
-<span class="line" id="L63">        <span class="tok-kw">for</span> (buf) |*x| {</span>
-<span class="line" id="L64">            x.* = implementation(generator, rate);</span>
-<span class="line" id="L65">        }</span>
-<span class="line" id="L66">        <span class="tok-kw">return</span> buf;</span>
-<span class="line" id="L67">    }</span>
-<span class="line" id="L68"></span>
-<span class="line" id="L69">    <span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">alloc</span>(allocator: std.mem.Allocator, generator:  std.rand.Random, n: <span class="tok-type">usize</span>, rate: <span class="tok-type">f64</span>) ![]<span class="tok-type">f64</span> {</span>
-<span class="line" id="L70">        <span class="tok-kw">const</span> slice = <span class="tok-kw">try</span> allocator.alloc(<span class="tok-type">f64</span>, n);</span>
-<span class="line" id="L71">        <span class="tok-kw">return</span> buffer(slice, generator, rate);</span>
-<span class="line" id="L72">    }</span>
-<span class="line" id="L73">};</span>
-<span class="line" id="L74"></span>
-<span class="line" id="L75"><span class="tok-kw">const</span> expectEqual = std.testing.expectEqual;</span>
-<span class="line" id="L76"><span class="tok-kw">const</span> expectApproxEqRel = std.testing.expectApproxEqRel;</span>
-<span class="line" id="L77"><span class="tok-kw">const</span> eps = <span class="tok-number">10</span> * std.math.floatEps(<span class="tok-type">f64</span>); <span class="tok-comment">// 2.22 × 10^-15</span>
+<pre><code><span class="line" id="L1"><span class="tok-comment">//! Parameters:</span></span>
+<span class="line" id="L2"><span class="tok-comment">//! - λ: `rate` ∈ (0,∞)</span></span>
+<span class="line" id="L3"></span>
+<span class="line" id="L4"><span class="tok-kw">const</span> std = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;std&quot;</span>);</span>
+<span class="line" id="L5"><span class="tok-kw">const</span> assert = std.debug.assert;</span>
+<span class="line" id="L6"><span class="tok-kw">const</span> isFinite = std.math.isFinite;</span>
+<span class="line" id="L7"><span class="tok-kw">const</span> isNan = std.math.isNan;</span>
+<span class="line" id="L8"><span class="tok-kw">const</span> inf = std.math.inf(<span class="tok-type">f64</span>);</span>
+<span class="line" id="L9"></span>
+<span class="line" id="L10"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> parameters = <span class="tok-number">1</span>;</span>
+<span class="line" id="L11"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> support = [<span class="tok-number">2</span>]<span class="tok-type">f64</span> {<span class="tok-number">0</span>, inf};</span>
+<span class="line" id="L12"></span>
+<span class="line" id="L13"><span class="tok-comment">/// f(x) = λ exp(-λx).</span></span>
+<span class="line" id="L14"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">density</span>(x: <span class="tok-type">f64</span>, rate: <span class="tok-type">f64</span>) <span class="tok-type">f64</span> {</span>
+<span class="line" id="L15">    assert(isFinite(rate));</span>
+<span class="line" id="L16">    assert(rate &gt; <span class="tok-number">0</span>);</span>
+<span class="line" id="L17">    assert(!isNan(x));</span>
+<span class="line" id="L18">    <span class="tok-kw">if</span> (x &lt; <span class="tok-number">0</span>) {</span>
+<span class="line" id="L19">        <span class="tok-kw">return</span> <span class="tok-number">0</span>;</span>
+<span class="line" id="L20">    }</span>
+<span class="line" id="L21">    <span class="tok-kw">return</span> rate * <span class="tok-builtin">@exp</span>(-rate * x);</span>
+<span class="line" id="L22">}</span>
+<span class="line" id="L23"></span>
+<span class="line" id="L24"><span class="tok-comment">/// F(q) = 1 - exp(-λq).</span></span>
+<span class="line" id="L25"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">probability</span>(q: <span class="tok-type">f64</span>, rate: <span class="tok-type">f64</span>) <span class="tok-type">f64</span> {</span>
+<span class="line" id="L26">    assert(isFinite(rate));</span>
+<span class="line" id="L27">    assert(rate &gt; <span class="tok-number">0</span>);</span>
+<span class="line" id="L28">    assert(!isNan(q));</span>
+<span class="line" id="L29">    <span class="tok-kw">if</span> (q &lt;= <span class="tok-number">0</span>) {</span>
+<span class="line" id="L30">        <span class="tok-kw">return</span> <span class="tok-number">0</span>;</span>
+<span class="line" id="L31">    }</span>
+<span class="line" id="L32">    <span class="tok-kw">const</span> z = rate * q;</span>
+<span class="line" id="L33">    <span class="tok-kw">return</span> -std.math.expm1(-z);</span>
+<span class="line" id="L34">}</span>
+<span class="line" id="L35"></span>
+<span class="line" id="L36"><span class="tok-comment">/// Q(p) = -ln(1 - p) / λ.</span></span>
+<span class="line" id="L37"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">quantile</span>(p: <span class="tok-type">f64</span>, rate: <span class="tok-type">f64</span>) <span class="tok-type">f64</span> {</span>
+<span class="line" id="L38">    assert(isFinite(rate));</span>
+<span class="line" id="L39">    assert(rate &gt;= <span class="tok-number">0</span>);</span>
+<span class="line" id="L40">    assert(<span class="tok-number">0</span> &lt;= p <span class="tok-kw">and</span> p &lt;= <span class="tok-number">1</span>);</span>
+<span class="line" id="L41">    <span class="tok-kw">const</span> q = -std.math.log1p(-p);</span>
+<span class="line" id="L42">    <span class="tok-kw">return</span> q / rate;</span>
+<span class="line" id="L43">}</span>
+<span class="line" id="L44"></span>
+<span class="line" id="L45"><span class="tok-comment">/// Uses the Ziggurat method.</span></span>
+<span class="line" id="L46"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> random = <span class="tok-kw">struct</span> {</span>
+<span class="line" id="L47">    <span class="tok-kw">fn</span> <span class="tok-fn">implementation</span>(generator: std.rand.Random, rate: <span class="tok-type">f64</span>) <span class="tok-type">f64</span> {</span>
+<span class="line" id="L48">        <span class="tok-kw">const</span> exp = generator.floatExp(<span class="tok-type">f64</span>);</span>
+<span class="line" id="L49">        <span class="tok-kw">return</span> exp / rate;</span>
+<span class="line" id="L50">    }</span>
+<span class="line" id="L51"></span>
+<span class="line" id="L52">    <span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">single</span>(generator:  std.rand.Random, rate: <span class="tok-type">f64</span>) <span class="tok-type">f64</span> {</span>
+<span class="line" id="L53">        assert(isFinite(rate));</span>
+<span class="line" id="L54">        assert(rate &gt; <span class="tok-number">0</span>);</span>
+<span class="line" id="L55">        <span class="tok-kw">return</span> implementation(generator, rate);</span>
+<span class="line" id="L56">    }</span>
+<span class="line" id="L57"></span>
+<span class="line" id="L58">    <span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">buffer</span>(buf: []<span class="tok-type">f64</span>, generator:  std.rand.Random, rate: <span class="tok-type">f64</span>) []<span class="tok-type">f64</span> {</span>
+<span class="line" id="L59">        assert(isFinite(rate));</span>
+<span class="line" id="L60">        assert(rate &gt; <span class="tok-number">0</span>);</span>
+<span class="line" id="L61">        <span class="tok-kw">for</span> (buf) |*x| {</span>
+<span class="line" id="L62">            x.* = implementation(generator, rate);</span>
+<span class="line" id="L63">        }</span>
+<span class="line" id="L64">        <span class="tok-kw">return</span> buf;</span>
+<span class="line" id="L65">    }</span>
+<span class="line" id="L66"></span>
+<span class="line" id="L67">    <span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">alloc</span>(allocator: std.mem.Allocator, generator:  std.rand.Random, n: <span class="tok-type">usize</span>, rate: <span class="tok-type">f64</span>) ![]<span class="tok-type">f64</span> {</span>
+<span class="line" id="L68">        <span class="tok-kw">const</span> slice = <span class="tok-kw">try</span> allocator.alloc(<span class="tok-type">f64</span>, n);</span>
+<span class="line" id="L69">        <span class="tok-kw">return</span> buffer(slice, generator, rate);</span>
+<span class="line" id="L70">    }</span>
+<span class="line" id="L71">};</span>
+<span class="line" id="L72"></span>
+<span class="line" id="L73"><span class="tok-kw">const</span> expectEqual = std.testing.expectEqual;</span>
+<span class="line" id="L74"><span class="tok-kw">const</span> expectApproxEqRel = std.testing.expectApproxEqRel;</span>
+<span class="line" id="L75"><span class="tok-kw">const</span> eps = <span class="tok-number">10</span> * std.math.floatEps(<span class="tok-type">f64</span>); <span class="tok-comment">// 2.22 × 10^-15</span>
 </span>
-<span class="line" id="L78"></span>
-<span class="line" id="L79"><span class="tok-kw">test</span> <span class="tok-str">&quot;exponential.density&quot;</span> {</span>
-<span class="line" id="L80">    <span class="tok-kw">try</span> expectEqual(<span class="tok-number">0</span>, density(-inf, <span class="tok-number">3</span>));</span>
-<span class="line" id="L81">    <span class="tok-kw">try</span> expectEqual(<span class="tok-number">0</span>, density( inf, <span class="tok-number">3</span>));</span>
-<span class="line" id="L82"></span>
-<span class="line" id="L83">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">3</span>                   , density(<span class="tok-number">0</span>, <span class="tok-number">3</span>), eps);</span>
-<span class="line" id="L84">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0.149361205103591900</span>, density(<span class="tok-number">1</span>, <span class="tok-number">3</span>), eps);</span>
-<span class="line" id="L85">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0.007436256529999075</span>, density(<span class="tok-number">2</span>, <span class="tok-number">3</span>), eps);</span>
-<span class="line" id="L86">}</span>
-<span class="line" id="L87"></span>
-<span class="line" id="L88"><span class="tok-kw">test</span> <span class="tok-str">&quot;exponential.probability&quot;</span> {</span>
-<span class="line" id="L89">    <span class="tok-kw">try</span> expectEqual(<span class="tok-number">0</span>, probability(-inf, <span class="tok-number">3</span>));</span>
-<span class="line" id="L90">    <span class="tok-kw">try</span> expectEqual(<span class="tok-number">1</span>, probability( inf, <span class="tok-number">3</span>));</span>
-<span class="line" id="L91"></span>
-<span class="line" id="L92">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0</span>                 , probability(<span class="tok-number">0</span>, <span class="tok-number">3</span>), eps);</span>
-<span class="line" id="L93">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0.9502129316321360</span>, probability(<span class="tok-number">1</span>, <span class="tok-number">3</span>), eps);</span>
-<span class="line" id="L94">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0.9975212478233336</span>, probability(<span class="tok-number">2</span>, <span class="tok-number">3</span>), eps);</span>
-<span class="line" id="L95">}</span>
-<span class="line" id="L96"></span>
-<span class="line" id="L97"><span class="tok-kw">test</span> <span class="tok-str">&quot;exponential.quantile&quot;</span> {</span>
-<span class="line" id="L98">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0</span>                  , quantile(<span class="tok-number">0</span>  , <span class="tok-number">3</span>), eps);</span>
-<span class="line" id="L99">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0.07438118377140325</span>, quantile(<span class="tok-number">0.2</span>, <span class="tok-number">3</span>), eps);</span>
-<span class="line" id="L100">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0.17027520792199691</span>, quantile(<span class="tok-number">0.4</span>, <span class="tok-number">3</span>), eps);</span>
-<span class="line" id="L101">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0.30543024395805174</span>, quantile(<span class="tok-number">0.6</span>, <span class="tok-number">3</span>), eps);</span>
-<span class="line" id="L102">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0.53647930414470013</span>, quantile(<span class="tok-number">0.8</span>, <span class="tok-number">3</span>), eps);</span>
-<span class="line" id="L103">    <span class="tok-kw">try</span> expectEqual      (inf                , quantile(<span class="tok-number">1</span>  , <span class="tok-number">3</span>)     );</span>
-<span class="line" id="L104">}</span>
-<span class="line" id="L105"></span>
-<span class="line" id="L106"><span class="tok-kw">test</span> <span class="tok-str">&quot;exponential.random&quot;</span> {</span>
-<span class="line" id="L107">    <span class="tok-kw">var</span> prng = std.rand.DefaultPrng.init(<span class="tok-number">0</span>);</span>
-<span class="line" id="L108">    <span class="tok-kw">const</span> gen = prng.random();</span>
-<span class="line" id="L109">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0x1.0d10389b44e27p-4</span>, random.implementation(gen, <span class="tok-number">3</span>), eps);</span>
-<span class="line" id="L110">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0x1.65addca068349p-1</span>, random.implementation(gen, <span class="tok-number">3</span>), eps);</span>
-<span class="line" id="L111">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0x1.444f149040ffap-6</span>, random.implementation(gen, <span class="tok-number">3</span>), eps);</span>
-<span class="line" id="L112">}</span>
-<span class="line" id="L113"></span>
+<span class="line" id="L76"></span>
+<span class="line" id="L77"><span class="tok-kw">test</span> <span class="tok-str">&quot;exponential.density&quot;</span> {</span>
+<span class="line" id="L78">    <span class="tok-kw">try</span> expectEqual(<span class="tok-number">0</span>, density(-inf, <span class="tok-number">3</span>));</span>
+<span class="line" id="L79">    <span class="tok-kw">try</span> expectEqual(<span class="tok-number">0</span>, density( inf, <span class="tok-number">3</span>));</span>
+<span class="line" id="L80"></span>
+<span class="line" id="L81">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">3</span>                   , density(<span class="tok-number">0</span>, <span class="tok-number">3</span>), eps);</span>
+<span class="line" id="L82">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0.149361205103591900</span>, density(<span class="tok-number">1</span>, <span class="tok-number">3</span>), eps);</span>
+<span class="line" id="L83">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0.007436256529999075</span>, density(<span class="tok-number">2</span>, <span class="tok-number">3</span>), eps);</span>
+<span class="line" id="L84">}</span>
+<span class="line" id="L85"></span>
+<span class="line" id="L86"><span class="tok-kw">test</span> <span class="tok-str">&quot;exponential.probability&quot;</span> {</span>
+<span class="line" id="L87">    <span class="tok-kw">try</span> expectEqual(<span class="tok-number">0</span>, probability(-inf, <span class="tok-number">3</span>));</span>
+<span class="line" id="L88">    <span class="tok-kw">try</span> expectEqual(<span class="tok-number">1</span>, probability( inf, <span class="tok-number">3</span>));</span>
+<span class="line" id="L89"></span>
+<span class="line" id="L90">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0</span>                 , probability(<span class="tok-number">0</span>, <span class="tok-number">3</span>), eps);</span>
+<span class="line" id="L91">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0.9502129316321360</span>, probability(<span class="tok-number">1</span>, <span class="tok-number">3</span>), eps);</span>
+<span class="line" id="L92">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0.9975212478233336</span>, probability(<span class="tok-number">2</span>, <span class="tok-number">3</span>), eps);</span>
+<span class="line" id="L93">}</span>
+<span class="line" id="L94"></span>
+<span class="line" id="L95"><span class="tok-kw">test</span> <span class="tok-str">&quot;exponential.quantile&quot;</span> {</span>
+<span class="line" id="L96">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0</span>                  , quantile(<span class="tok-number">0</span>  , <span class="tok-number">3</span>), eps);</span>
+<span class="line" id="L97">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0.07438118377140325</span>, quantile(<span class="tok-number">0.2</span>, <span class="tok-number">3</span>), eps);</span>
+<span class="line" id="L98">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0.17027520792199691</span>, quantile(<span class="tok-number">0.4</span>, <span class="tok-number">3</span>), eps);</span>
+<span class="line" id="L99">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0.30543024395805174</span>, quantile(<span class="tok-number">0.6</span>, <span class="tok-number">3</span>), eps);</span>
+<span class="line" id="L100">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0.53647930414470013</span>, quantile(<span class="tok-number">0.8</span>, <span class="tok-number">3</span>), eps);</span>
+<span class="line" id="L101">    <span class="tok-kw">try</span> expectEqual      (inf                , quantile(<span class="tok-number">1</span>  , <span class="tok-number">3</span>)     );</span>
+<span class="line" id="L102">}</span>
+<span class="line" id="L103"></span>
+<span class="line" id="L104"><span class="tok-kw">test</span> <span class="tok-str">&quot;exponential.random&quot;</span> {</span>
+<span class="line" id="L105">    <span class="tok-kw">var</span> prng = std.rand.DefaultPrng.init(<span class="tok-number">0</span>);</span>
+<span class="line" id="L106">    <span class="tok-kw">const</span> gen = prng.random();</span>
+<span class="line" id="L107">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0x1.0d10389b44e27p-4</span>, random.implementation(gen, <span class="tok-number">3</span>), eps);</span>
+<span class="line" id="L108">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0x1.65addca068349p-1</span>, random.implementation(gen, <span class="tok-number">3</span>), eps);</span>
+<span class="line" id="L109">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0x1.444f149040ffap-6</span>, random.implementation(gen, <span class="tok-number">3</span>), eps);</span>
+<span class="line" id="L110">}</span>
+<span class="line" id="L111"></span>
 </code></pre></body>
 </html>

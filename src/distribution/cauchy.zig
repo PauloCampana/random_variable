@@ -1,8 +1,6 @@
-//! Cauchy distribution.
-//!
 //! Parameters:
-//!     μ: `location` ∈ (-∞,∞)
-//!     σ: `scale`    ∈ ( 0,∞)
+//! - μ: `location` ∈ (-∞,∞)
+//! - σ: `scale`    ∈ ( 0,∞)
 
 const std = @import("std");
 const assert = std.debug.assert;

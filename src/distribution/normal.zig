@@ -1,8 +1,6 @@
-//! Normal distribution.
-//!
 //! Parameters:
-//!     μ: `location` ∈ (-∞,∞)
-//!     σ: `scale`    ∈ ( 0,∞)
+//! - μ: `location` ∈ (-∞,∞)
+//! - σ: `scale`    ∈ ( 0,∞)
 
 const std = @import("std");
 const normalDist = @import("../thirdyparty/prob.zig").normalDist;

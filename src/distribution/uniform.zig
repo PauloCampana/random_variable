@@ -1,8 +1,6 @@
-//! Uniform distribution.
-//!
 //! Parameters:
-//!     a: `min` ∈ (-∞,∞)
-//!     b: `max` ∈ (-∞,∞)
+//! - a: `min` ∈ (-∞,∞)
+//! - b: `max` ∈ (-∞,∞)
 
 const std = @import("std");
 const assert = std.debug.assert;

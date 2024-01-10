@@ -1,9 +1,7 @@
-//! Hypergeometric distribution.
-//!
 //! Parameters:
-//!     N: `N` ∈ {0,1,2,⋯}
-//!     K: `K` ∈ {0,1,⋯,N}
-//!     n: `n` ∈ {0,1,⋯,N}
+//! - N: `N` ∈ {0,1,2,⋯}
+//! - K: `K` ∈ {0,1,⋯,N}
+//! - n: `n` ∈ {0,1,⋯,N}
 
 const std = @import("std");
 const lgamma = @import("../thirdyparty/prob.zig").lnGamma;
@@ -13,7 +11,7 @@ const inf = std.math.inf(f64);
 
 pub const parameters = 3;
 
-/// f(x) = (K x) (N - K n - x) / (N n).
+/// p(x) = (K x) (N - K n - x) / (N n).
 pub fn density(x: f64, N: u64, K: u64, n: u64) f64 {
     assert(K <= N and n <= N);
     assert(!isNan(x));

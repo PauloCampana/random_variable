@@ -1,8 +1,6 @@
-//! Weibull distribution.
-//!
 //! Parameters:
-//!     α: `shape` ∈ (0,∞)
-//!     λ: `rate`  ∈ (0,∞)
+//! - α: `shape` ∈ (0,∞)
+//! - λ: `rate`  ∈ (0,∞)
 
 const std = @import("std");
 const assert = std.debug.assert;
