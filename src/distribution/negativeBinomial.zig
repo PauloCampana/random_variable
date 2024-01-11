@@ -115,8 +115,8 @@ test "negativeBinomial.density" {
     try expectEqual(0, density(-inf, 10, 0.2));
     try expectEqual(0, density( inf, 10, 0.2));
 
-    try expectEqual(1, density( 0, 10, 1  ));
-    try expectEqual(0, density( 1, 10, 1  ));
+    try expectEqual(1, density(0, 10, 1));
+    try expectEqual(0, density(1, 10, 1));
 
     try expectApproxEqRel(0           , density(-0.1, 10, 0.2), eps);
     try expectApproxEqRel(0.0000001024, density( 0  , 10, 0.2), eps);
@@ -159,8 +159,11 @@ test "negativeBinomial.quantile" {
 test "negativeBinomial.random" {
     var prng = std.rand.DefaultPrng.init(0);
     const gen = prng.random();
-    try expectEqual(34, random.implementation(gen, 10, 0.2));
-    try expectEqual(36, random.implementation(gen, 10, 0.2));
-    try expectEqual(38, random.implementation(gen, 10, 0.2));
-    try expectEqual( 0, random.implementation(gen, 10, 1  ));
+    try expectEqual(0, random.implementation(gen, 10, 1));
+    try expectEqual(0, random.implementation(gen, 10, 1));
+    try expectEqual(0, random.implementation(gen, 10, 1));
+
+    try expectEqual(15, random.implementation(gen, 10, 0.2));
+    try expectEqual(35, random.implementation(gen, 10, 0.2));
+    try expectEqual(16, random.implementation(gen, 10, 0.2));
 }

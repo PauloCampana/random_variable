@@ -115,9 +115,14 @@ test "bernoulli.quantile" {
 test "bernoulli.random" {
     var prng = std.rand.DefaultPrng.init(0);
     const gen = prng.random();
+    try expectEqual(0, random.implementation(gen, 0));
+    try expectEqual(0, random.implementation(gen, 0));
+    try expectEqual(0, random.implementation(gen, 0));
+    try expectEqual(1, random.implementation(gen, 1));
+    try expectEqual(1, random.implementation(gen, 1));
+    try expectEqual(1, random.implementation(gen, 1));
+
     try expectEqual(0, random.implementation(gen, 0.2));
     try expectEqual(0, random.implementation(gen, 0.2));
     try expectEqual(0, random.implementation(gen, 0.2));
-    try expectEqual(0, random.implementation(gen, 0  ));
-    try expectEqual(1, random.implementation(gen, 1  ));
 }

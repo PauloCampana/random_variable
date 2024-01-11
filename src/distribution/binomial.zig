@@ -185,10 +185,17 @@ test "binomial.quantile" {
 test "binomial.random" {
     var prng = std.rand.DefaultPrng.init(0);
     const gen = prng.random();
-    try expectEqual( 1, random.implementation(gen, 10, 0.2));
-    try expectEqual( 2, random.implementation(gen, 10, 0.2));
-    try expectEqual( 2, random.implementation(gen, 10, 0.2));
+    try expectEqual( 0, random.implementation(gen,  0, 0.2));
+    try expectEqual( 0, random.implementation(gen,  0, 0.2));
     try expectEqual( 0, random.implementation(gen,  0, 0.2));
     try expectEqual( 0, random.implementation(gen, 10, 0  ));
+    try expectEqual( 0, random.implementation(gen, 10, 0  ));
+    try expectEqual( 0, random.implementation(gen, 10, 0  ));
     try expectEqual(10, random.implementation(gen, 10, 1  ));
+    try expectEqual(10, random.implementation(gen, 10, 1  ));
+    try expectEqual(10, random.implementation(gen, 10, 1  ));
+
+    try expectEqual(2, random.implementation(gen, 10, 0.2));
+    try expectEqual(2, random.implementation(gen, 10, 0.2));
+    try expectEqual(2, random.implementation(gen, 10, 0.2));
 }

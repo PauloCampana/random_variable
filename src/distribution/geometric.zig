@@ -19,7 +19,7 @@ pub fn density(x: f64, prob: f64) f64 {
     return prob * std.math.pow(f64, (1 - prob), x);
 }
 
-/// F(q) = 1 - (1 - p)^(floor(q) + 1).
+/// F(q) = 1 - (1 - p)^(⌊q⌋ + 1).
 pub fn probability(q: f64, prob: f64) f64 {
     assert(0 < prob and prob <= 1);
     assert(!isNan(q));
@@ -30,7 +30,7 @@ pub fn probability(q: f64, prob: f64) f64 {
     return -std.math.expm1(p);
 }
 
-/// Q(x) = floor(ln(1 - x) / ln(1 - p)).
+/// Q(x) = ⌊ln(1 - x) / ln(1 - p)⌋.
 pub fn quantile(p: f64, prob: f64) f64 {
     assert(0 < prob and prob <= 1);
     assert(0 <= p and p <= 1);
@@ -119,8 +119,11 @@ test "geometric.quantile" {
 test "geometric.random" {
     var prng = std.rand.DefaultPrng.init(0);
     const gen = prng.random();
+    try expectEqual(0, random.implementation(gen, 1));
+    try expectEqual(0, random.implementation(gen, 1));
+    try expectEqual(0, random.implementation(gen, 1));
+
     try expectEqual(0, random.implementation(gen, 0.2));
-    try expectEqual(9, random.implementation(gen, 0.2));
+    try expectEqual(1, random.implementation(gen, 0.2));
     try expectEqual(0, random.implementation(gen, 0.2));
-    try expectEqual(0, random.implementation(gen, 1  ));
 }
