@@ -33,10 +33,9 @@ pub const beta = @import("distribution/beta.zig");
 pub const normal = @import("distribution/normal.zig");
 pub const logNormal = @import("distribution/logNormal.zig");
 pub const t = @import("distribution/t.zig");
+pub const betaprime = @import("distribution/betaprime.zig");
 
-// Beta-binomial
 // Categorical
-// Hypergeometric
 // Negative hypergeometric
 // Fisher's noncentral hypergeometric
 // Wallenius' noncentral hypergeometric
@@ -61,17 +60,14 @@ pub const t = @import("distribution/t.zig");
 // Gauss-Kuzmin
 // General Poisson binomial
 // Generalized log-series
-// Geometric
 // Hardy
 // Hermite
 // Hyper-Poisson
 // Logarithmic (series)
 // Mixed Poisson
-// Negative binomial
 // Panjer
 // Polya-Eggenberger
 // Parabolic fractal
-// Poisson
 // Poisson type
 // Yule-Simon
 // Skellam
@@ -82,11 +78,10 @@ pub const t = @import("distribution/t.zig");
 // Degenerate
 
 // Maxwell-Boltzmann
-// Beta
 // Four-parameter Beta
+// Generalized beta prime
 // Arcsine
 // PERT
-// Uniform
 // Irwin–Hall
 // Bates
 // Logit-normal
@@ -118,23 +113,18 @@ pub const t = @import("distribution/t.zig");
 // Wrapped asymmetric Laplace
 // Dirac comb
 
-// Beta prime
 // Birnbaum-Saunders
 // Burr
 // Chi
 // Noncentral chi
-// Chi-squared
 // Inverse-chi-squared
 // Noncentral chi-squared
 // Scaled inverse chi-squared
 // Dagum
-// Exponential
 // Exponential-logarithmic
-// F
 // Noncentral F
 // Folded normal
 // Fréchet
-// Gamma
 // Erlang
 // Inverse-gamma
 // Generalized gamma
@@ -150,7 +140,6 @@ pub const t = @import("distribution/t.zig");
 // Log-Laplace
 // Log-logistic
 // Log-metalog
-// Log-normal
 // Lomax
 // Mittag-Leffler
 // Nakagami
@@ -165,13 +154,11 @@ pub const t = @import("distribution/t.zig");
 // Rice
 // Shifted Gompertz
 // Type-2 Gumbel
-// Weibull
 // Modified half-normal
 // Polya-Gamma
 // Modified Polya-gamma
 
 // Behrens-Fisher
-// Cauchy
 // Centralized inverse-Fano
 // Chernoff's
 // Exponentially modified Gaussian
@@ -192,17 +179,14 @@ pub const t = @import("distribution/t.zig");
 // Laplace
 // Lévy skew alpha-stable
 // Linnik
-// Logistic
 // Map-Airy
 // Metalog
-// Normal
 // Normal-exponential-gamma
 // Normal-inverse Gaussian
 // Pearson Type IV
 // Pearson distributions
 // Quantile-parameterized
 // Skew normal distribution
-// t
 // Noncentral t
 // Skew t distribution
 // Skew laplace
