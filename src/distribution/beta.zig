@@ -4,7 +4,7 @@
 
 const std = @import("std");
 const gamma = @import("gamma.zig");
-const lgamma = @import("../thirdyparty/prob.zig").lnGamma;
+const math = @import("math.zig");
 const incompleteBeta = @import("../thirdyparty/prob.zig").incompleteBeta;
 const inverseIncompleteBeta = @import("../thirdyparty/prob.zig").inverseIncompleteBeta;
 const assert = std.debug.assert;
@@ -37,7 +37,7 @@ pub fn density(x: f64, shape1: f64, shape2: f64) f64 {
         return if (shape2 < 1) inf else 0;
     }
     const num = (shape1 - 1) * @log(x) + (shape2 - 1) * std.math.log1p(-x);
-    const den = lgamma(shape1) + lgamma(shape2) - lgamma(shape1 + shape2);
+    const den = math.lbeta(shape1, shape2);
     return @exp(num - den);
 }
 

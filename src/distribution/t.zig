@@ -3,7 +3,7 @@
 
 const std = @import("std");
 const gamma = @import("gamma.zig");
-const lgamma = @import("../thirdyparty/prob.zig").lnGamma;
+const math = @import("math.zig");
 const incompleteBeta = @import("../thirdyparty/prob.zig").incompleteBeta;
 const inverseIncompleteBeta = @import("../thirdyparty/prob.zig").inverseIncompleteBeta;
 const assert = std.debug.assert;
@@ -19,9 +19,8 @@ pub fn density(x: f64, df: f64) f64 {
     assert(isFinite(df));
     assert(df > 0);
     assert(!isNan(x));
-    const df2 = 0.5 * df + 0.5;
-    const num = df2 * @log(df / (df + x * x)) - 0.5 * @log(df);
-    const den = lgamma(0.5 * df) + lgamma(0.5) - lgamma(df2);
+    const num = (0.5 * df + 0.5) * @log(df / (df + x * x));
+    const den = 0.5 * @log(df) + math.lbeta(0.5 * df, 0.5);
     return @exp(num - den);
 }
 

@@ -3,7 +3,7 @@
 //! - p: `prob` ∈ (0,1]
 
 const std = @import("std");
-const lgamma = @import("../thirdyparty/prob.zig").lnGamma;
+const math = @import("math.zig");
 const incompleteBeta = @import("../thirdyparty/prob.zig").incompleteBeta;
 const assert = std.debug.assert;
 const isNan = std.math.isNan;
@@ -24,9 +24,9 @@ pub fn density(x: f64, size: u64, prob: f64) f64 {
     if (prob == 1) {
         return if (x == 0) 1 else 0;
     }
-    const fsize = @as(f64, @floatFromInt(size));
-    const binom = lgamma(fsize + x) - lgamma(fsize) - lgamma(x + 1);
-    const log = binom + fsize * @log(prob) + x * std.math.log1p(-prob);
+    const n = @as(f64, @floatFromInt(size));
+    const binom = math.lbinomial(n + x - 1, x);
+    const log = binom + n * @log(prob) + x * std.math.log1p(-prob);
     return @exp(log);
 }
 
@@ -41,8 +41,8 @@ pub fn probability(q: f64, size: u64, prob: f64) f64 {
     if (isInf(q) or prob == 1) {
         return 1;
     }
-    const fsize = @as(f64, @floatFromInt(size));
-    return incompleteBeta(fsize, @floor(q) + 1, prob);
+    const n = @as(f64, @floatFromInt(size));
+    return incompleteBeta(n, @floor(q) + 1, prob);
 }
 
 /// No closed form.
