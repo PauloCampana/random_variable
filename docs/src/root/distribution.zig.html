@@ -124,24 +124,406 @@
 <span class="line" id="L10"><span class="tok-comment">//! `alloc` takes an allocator and the quantity to be generated then returns a heap allocated</span></span>
 <span class="line" id="L11"><span class="tok-comment">//! slice, result must be freed by the caller.</span></span>
 <span class="line" id="L12"></span>
-<span class="line" id="L13"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> bernoulli = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;distribution/bernoulli.zig&quot;</span>);</span>
-<span class="line" id="L14"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> geometric = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;distribution/geometric.zig&quot;</span>);</span>
-<span class="line" id="L15"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> poisson = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;distribution/poisson.zig&quot;</span>);</span>
+<span class="line" id="L13"><span class="tok-comment">// discrete</span>
+</span>
+<span class="line" id="L14"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> bernoulli = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;distribution/bernoulli.zig&quot;</span>);</span>
+<span class="line" id="L15"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> geometric = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;distribution/geometric.zig&quot;</span>);</span>
 <span class="line" id="L16"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> binomial = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;distribution/binomial.zig&quot;</span>);</span>
 <span class="line" id="L17"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> negativeBinomial = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;distribution/negativeBinomial.zig&quot;</span>);</span>
-<span class="line" id="L18"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> hypergeometric = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;distribution/hypergeometric.zig&quot;</span>);</span>
-<span class="line" id="L19"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> uniform = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;distribution/uniform.zig&quot;</span>);</span>
-<span class="line" id="L20"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> exponential = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;distribution/exponential.zig&quot;</span>);</span>
-<span class="line" id="L21"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> weibull = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;distribution/weibull.zig&quot;</span>);</span>
-<span class="line" id="L22"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> cauchy = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;distribution/cauchy.zig&quot;</span>);</span>
-<span class="line" id="L23"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> logistic = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;distribution/logistic.zig&quot;</span>);</span>
-<span class="line" id="L24"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> gamma = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;distribution/gamma.zig&quot;</span>);</span>
-<span class="line" id="L25"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> chiSquared = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;distribution/chiSquared.zig&quot;</span>);</span>
-<span class="line" id="L26"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> f = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;distribution/f.zig&quot;</span>);</span>
-<span class="line" id="L27"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> beta = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;distribution/beta.zig&quot;</span>);</span>
-<span class="line" id="L28"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> normal = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;distribution/normal.zig&quot;</span>);</span>
-<span class="line" id="L29"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> logNormal = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;distribution/logNormal.zig&quot;</span>);</span>
-<span class="line" id="L30"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> t = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;distribution/t.zig&quot;</span>);</span>
-<span class="line" id="L31"></span>
+<span class="line" id="L18"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> poisson = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;distribution/poisson.zig&quot;</span>);</span>
+<span class="line" id="L19"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> hypergeometric = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;distribution/hypergeometric.zig&quot;</span>);</span>
+<span class="line" id="L20"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> benford = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;distribution/benford.zig&quot;</span>);</span>
+<span class="line" id="L21"></span>
+<span class="line" id="L22"><span class="tok-comment">// continuous</span>
+</span>
+<span class="line" id="L23"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> uniform = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;distribution/uniform.zig&quot;</span>);</span>
+<span class="line" id="L24"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> exponential = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;distribution/exponential.zig&quot;</span>);</span>
+<span class="line" id="L25"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> weibull = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;distribution/weibull.zig&quot;</span>);</span>
+<span class="line" id="L26"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> cauchy = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;distribution/cauchy.zig&quot;</span>);</span>
+<span class="line" id="L27"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> logistic = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;distribution/logistic.zig&quot;</span>);</span>
+<span class="line" id="L28"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> gamma = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;distribution/gamma.zig&quot;</span>);</span>
+<span class="line" id="L29"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> chiSquared = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;distribution/chiSquared.zig&quot;</span>);</span>
+<span class="line" id="L30"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> f = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;distribution/f.zig&quot;</span>);</span>
+<span class="line" id="L31"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> beta = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;distribution/beta.zig&quot;</span>);</span>
+<span class="line" id="L32"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> normal = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;distribution/normal.zig&quot;</span>);</span>
+<span class="line" id="L33"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> logNormal = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;distribution/logNormal.zig&quot;</span>);</span>
+<span class="line" id="L34"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> t = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;distribution/t.zig&quot;</span>);</span>
+<span class="line" id="L35"></span>
+<span class="line" id="L36"><span class="tok-comment">// Beta-binomial</span>
+</span>
+<span class="line" id="L37"><span class="tok-comment">// Categorical</span>
+</span>
+<span class="line" id="L38"><span class="tok-comment">// Hypergeometric</span>
+</span>
+<span class="line" id="L39"><span class="tok-comment">// Negative hypergeometric</span>
+</span>
+<span class="line" id="L40"><span class="tok-comment">// Fisher's noncentral hypergeometric</span>
+</span>
+<span class="line" id="L41"><span class="tok-comment">// Wallenius' noncentral hypergeometric</span>
+</span>
+<span class="line" id="L42"><span class="tok-comment">// Poisson binomial</span>
+</span>
+<span class="line" id="L43"><span class="tok-comment">// Rademacher</span>
+</span>
+<span class="line" id="L44"><span class="tok-comment">// Soliton (ideal and robust)</span>
+</span>
+<span class="line" id="L45"><span class="tok-comment">// Discrete uniform</span>
+</span>
+<span class="line" id="L46"><span class="tok-comment">// Zipf's</span>
+</span>
+<span class="line" id="L47"><span class="tok-comment">// Zipf-Mandelbrot</span>
+</span>
+<span class="line" id="L48"></span>
+<span class="line" id="L49"><span class="tok-comment">// Beta negative binomial</span>
+</span>
+<span class="line" id="L50"><span class="tok-comment">// Boltzmann</span>
+</span>
+<span class="line" id="L51"><span class="tok-comment">// Gibbs</span>
+</span>
+<span class="line" id="L52"><span class="tok-comment">// Borel</span>
+</span>
+<span class="line" id="L53"><span class="tok-comment">// Conway-Maxwell-Poisson</span>
+</span>
+<span class="line" id="L54"><span class="tok-comment">// Delaporte</span>
+</span>
+<span class="line" id="L55"><span class="tok-comment">// Discrete compound Poisson</span>
+</span>
+<span class="line" id="L56"><span class="tok-comment">// Discrete phase-type</span>
+</span>
+<span class="line" id="L57"><span class="tok-comment">// Displaced Poisson</span>
+</span>
+<span class="line" id="L58"><span class="tok-comment">// Extended negative binomial</span>
+</span>
+<span class="line" id="L59"><span class="tok-comment">// Flory-Schulz</span>
+</span>
+<span class="line" id="L60"><span class="tok-comment">// Gauss-Kuzmin</span>
+</span>
+<span class="line" id="L61"><span class="tok-comment">// General Poisson binomial</span>
+</span>
+<span class="line" id="L62"><span class="tok-comment">// Generalized log-series</span>
+</span>
+<span class="line" id="L63"><span class="tok-comment">// Geometric</span>
+</span>
+<span class="line" id="L64"><span class="tok-comment">// Hardy</span>
+</span>
+<span class="line" id="L65"><span class="tok-comment">// Hermite</span>
+</span>
+<span class="line" id="L66"><span class="tok-comment">// Hyper-Poisson</span>
+</span>
+<span class="line" id="L67"><span class="tok-comment">// Logarithmic (series)</span>
+</span>
+<span class="line" id="L68"><span class="tok-comment">// Mixed Poisson</span>
+</span>
+<span class="line" id="L69"><span class="tok-comment">// Negative binomial</span>
+</span>
+<span class="line" id="L70"><span class="tok-comment">// Panjer</span>
+</span>
+<span class="line" id="L71"><span class="tok-comment">// Polya-Eggenberger</span>
+</span>
+<span class="line" id="L72"><span class="tok-comment">// Parabolic fractal</span>
+</span>
+<span class="line" id="L73"><span class="tok-comment">// Poisson</span>
+</span>
+<span class="line" id="L74"><span class="tok-comment">// Poisson type</span>
+</span>
+<span class="line" id="L75"><span class="tok-comment">// Yule-Simon</span>
+</span>
+<span class="line" id="L76"><span class="tok-comment">// Skellam</span>
+</span>
+<span class="line" id="L77"><span class="tok-comment">// Skew elliptical</span>
+</span>
+<span class="line" id="L78"><span class="tok-comment">// Zero-truncated Poisson</span>
+</span>
+<span class="line" id="L79"><span class="tok-comment">// Zeta</span>
+</span>
+<span class="line" id="L80"></span>
+<span class="line" id="L81"><span class="tok-comment">// Degenerate</span>
+</span>
+<span class="line" id="L82"></span>
+<span class="line" id="L83"><span class="tok-comment">// Maxwell-Boltzmann</span>
+</span>
+<span class="line" id="L84"><span class="tok-comment">// Beta</span>
+</span>
+<span class="line" id="L85"><span class="tok-comment">// Four-parameter Beta</span>
+</span>
+<span class="line" id="L86"><span class="tok-comment">// Arcsine</span>
+</span>
+<span class="line" id="L87"><span class="tok-comment">// PERT</span>
+</span>
+<span class="line" id="L88"><span class="tok-comment">// Uniform</span>
+</span>
+<span class="line" id="L89"><span class="tok-comment">// Irwin–Hall</span>
+</span>
+<span class="line" id="L90"><span class="tok-comment">// Bates</span>
+</span>
+<span class="line" id="L91"><span class="tok-comment">// Logit-normal</span>
+</span>
+<span class="line" id="L92"><span class="tok-comment">// Dirac delta</span>
+</span>
+<span class="line" id="L93"><span class="tok-comment">// Ken</span>
+</span>
+<span class="line" id="L94"><span class="tok-comment">// Kumaraswamy</span>
+</span>
+<span class="line" id="L95"><span class="tok-comment">// Logit metalog</span>
+</span>
+<span class="line" id="L96"><span class="tok-comment">// Marchenko-Pastur</span>
+</span>
+<span class="line" id="L97"><span class="tok-comment">// Bounded quantile-parameterized</span>
+</span>
+<span class="line" id="L98"><span class="tok-comment">// Raised cosine</span>
+</span>
+<span class="line" id="L99"><span class="tok-comment">// Reciprocal</span>
+</span>
+<span class="line" id="L100"><span class="tok-comment">// Triangular</span>
+</span>
+<span class="line" id="L101"><span class="tok-comment">// Trapezoidal</span>
+</span>
+<span class="line" id="L102"><span class="tok-comment">// Truncated normal</span>
+</span>
+<span class="line" id="L103"><span class="tok-comment">// U-quadratic</span>
+</span>
+<span class="line" id="L104"><span class="tok-comment">// Von Mises-Fisher</span>
+</span>
+<span class="line" id="L105"><span class="tok-comment">// Bingham</span>
+</span>
+<span class="line" id="L106"><span class="tok-comment">// Wigner semicircle</span>
+</span>
+<span class="line" id="L107"><span class="tok-comment">// Continuous Bernoulli</span>
+</span>
+<span class="line" id="L108"></span>
+<span class="line" id="L109"><span class="tok-comment">// Henyey-Greenstein phase function</span>
+</span>
+<span class="line" id="L110"><span class="tok-comment">// Mie phase function</span>
+</span>
+<span class="line" id="L111"><span class="tok-comment">// Von Mises</span>
+</span>
+<span class="line" id="L112"><span class="tok-comment">// Wrapped normal</span>
+</span>
+<span class="line" id="L113"><span class="tok-comment">// Wrapped exponential</span>
+</span>
+<span class="line" id="L114"><span class="tok-comment">// Wrapped Lévy</span>
+</span>
+<span class="line" id="L115"><span class="tok-comment">// Wrapped Cauchy</span>
+</span>
+<span class="line" id="L116"><span class="tok-comment">// Wrapped Laplace</span>
+</span>
+<span class="line" id="L117"><span class="tok-comment">// Wrapped asymmetric Laplace</span>
+</span>
+<span class="line" id="L118"><span class="tok-comment">// Dirac comb</span>
+</span>
+<span class="line" id="L119"></span>
+<span class="line" id="L120"><span class="tok-comment">// Beta prime</span>
+</span>
+<span class="line" id="L121"><span class="tok-comment">// Birnbaum-Saunders</span>
+</span>
+<span class="line" id="L122"><span class="tok-comment">// Burr</span>
+</span>
+<span class="line" id="L123"><span class="tok-comment">// Chi</span>
+</span>
+<span class="line" id="L124"><span class="tok-comment">// Noncentral chi</span>
+</span>
+<span class="line" id="L125"><span class="tok-comment">// Chi-squared</span>
+</span>
+<span class="line" id="L126"><span class="tok-comment">// Inverse-chi-squared</span>
+</span>
+<span class="line" id="L127"><span class="tok-comment">// Noncentral chi-squared</span>
+</span>
+<span class="line" id="L128"><span class="tok-comment">// Scaled inverse chi-squared</span>
+</span>
+<span class="line" id="L129"><span class="tok-comment">// Dagum</span>
+</span>
+<span class="line" id="L130"><span class="tok-comment">// Exponential</span>
+</span>
+<span class="line" id="L131"><span class="tok-comment">// Exponential-logarithmic</span>
+</span>
+<span class="line" id="L132"><span class="tok-comment">// F</span>
+</span>
+<span class="line" id="L133"><span class="tok-comment">// Noncentral F</span>
+</span>
+<span class="line" id="L134"><span class="tok-comment">// Folded normal</span>
+</span>
+<span class="line" id="L135"><span class="tok-comment">// Fréchet</span>
+</span>
+<span class="line" id="L136"><span class="tok-comment">// Gamma</span>
+</span>
+<span class="line" id="L137"><span class="tok-comment">// Erlang</span>
+</span>
+<span class="line" id="L138"><span class="tok-comment">// Inverse-gamma</span>
+</span>
+<span class="line" id="L139"><span class="tok-comment">// Generalized gamma</span>
+</span>
+<span class="line" id="L140"><span class="tok-comment">// Generalized Pareto</span>
+</span>
+<span class="line" id="L141"><span class="tok-comment">// Gamma/Gompertz</span>
+</span>
+<span class="line" id="L142"><span class="tok-comment">// Gompertz</span>
+</span>
+<span class="line" id="L143"><span class="tok-comment">// Half-normal</span>
+</span>
+<span class="line" id="L144"><span class="tok-comment">// Hotelling's T-squared</span>
+</span>
+<span class="line" id="L145"><span class="tok-comment">// Inverse Gaussian (Wald)</span>
+</span>
+<span class="line" id="L146"><span class="tok-comment">// Lévy</span>
+</span>
+<span class="line" id="L147"><span class="tok-comment">// Lindley</span>
+</span>
+<span class="line" id="L148"><span class="tok-comment">// Log-Cauchy</span>
+</span>
+<span class="line" id="L149"><span class="tok-comment">// Log-Laplace</span>
+</span>
+<span class="line" id="L150"><span class="tok-comment">// Log-logistic</span>
+</span>
+<span class="line" id="L151"><span class="tok-comment">// Log-metalog</span>
+</span>
+<span class="line" id="L152"><span class="tok-comment">// Log-normal</span>
+</span>
+<span class="line" id="L153"><span class="tok-comment">// Lomax</span>
+</span>
+<span class="line" id="L154"><span class="tok-comment">// Mittag-Leffler</span>
+</span>
+<span class="line" id="L155"><span class="tok-comment">// Nakagami</span>
+</span>
+<span class="line" id="L156"><span class="tok-comment">// Pareto</span>
+</span>
+<span class="line" id="L157"><span class="tok-comment">// Pearson Type III</span>
+</span>
+<span class="line" id="L158"><span class="tok-comment">// Phase-type</span>
+</span>
+<span class="line" id="L159"><span class="tok-comment">// Phased bi-exponential</span>
+</span>
+<span class="line" id="L160"><span class="tok-comment">// Phased bi-Weibull</span>
+</span>
+<span class="line" id="L161"><span class="tok-comment">// Semi-bounded quantile-parameterized distributions</span>
+</span>
+<span class="line" id="L162"><span class="tok-comment">// Rayleigh</span>
+</span>
+<span class="line" id="L163"><span class="tok-comment">// Rayleigh mixture</span>
+</span>
+<span class="line" id="L164"><span class="tok-comment">// Rice</span>
+</span>
+<span class="line" id="L165"><span class="tok-comment">// Shifted Gompertz</span>
+</span>
+<span class="line" id="L166"><span class="tok-comment">// Type-2 Gumbel</span>
+</span>
+<span class="line" id="L167"><span class="tok-comment">// Weibull</span>
+</span>
+<span class="line" id="L168"><span class="tok-comment">// Modified half-normal</span>
+</span>
+<span class="line" id="L169"><span class="tok-comment">// Polya-Gamma</span>
+</span>
+<span class="line" id="L170"><span class="tok-comment">// Modified Polya-gamma</span>
+</span>
+<span class="line" id="L171"></span>
+<span class="line" id="L172"><span class="tok-comment">// Behrens-Fisher</span>
+</span>
+<span class="line" id="L173"><span class="tok-comment">// Cauchy</span>
+</span>
+<span class="line" id="L174"><span class="tok-comment">// Centralized inverse-Fano</span>
+</span>
+<span class="line" id="L175"><span class="tok-comment">// Chernoff's</span>
+</span>
+<span class="line" id="L176"><span class="tok-comment">// Exponentially modified Gaussian</span>
+</span>
+<span class="line" id="L177"><span class="tok-comment">// Expectile</span>
+</span>
+<span class="line" id="L178"><span class="tok-comment">// Fisher-Tippett, (extreme value, log-Weibull)</span>
+</span>
+<span class="line" id="L179"><span class="tok-comment">// Fisher's z</span>
+</span>
+<span class="line" id="L180"><span class="tok-comment">// skewed generalized t</span>
+</span>
+<span class="line" id="L181"><span class="tok-comment">// Gamma-difference</span>
+</span>
+<span class="line" id="L182"><span class="tok-comment">// Generalized logistic</span>
+</span>
+<span class="line" id="L183"><span class="tok-comment">// Generalized normal</span>
+</span>
+<span class="line" id="L184"><span class="tok-comment">// Geometric stable</span>
+</span>
+<span class="line" id="L185"><span class="tok-comment">// Gumbel</span>
+</span>
+<span class="line" id="L186"><span class="tok-comment">// Holtsmark</span>
+</span>
+<span class="line" id="L187"><span class="tok-comment">// Hyperbolic</span>
+</span>
+<span class="line" id="L188"><span class="tok-comment">// Hyperbolic secant</span>
+</span>
+<span class="line" id="L189"><span class="tok-comment">// Johnson SU</span>
+</span>
+<span class="line" id="L190"><span class="tok-comment">// Landau</span>
+</span>
+<span class="line" id="L191"><span class="tok-comment">// Laplace</span>
+</span>
+<span class="line" id="L192"><span class="tok-comment">// Lévy skew alpha-stable</span>
+</span>
+<span class="line" id="L193"><span class="tok-comment">// Linnik</span>
+</span>
+<span class="line" id="L194"><span class="tok-comment">// Logistic</span>
+</span>
+<span class="line" id="L195"><span class="tok-comment">// Map-Airy</span>
+</span>
+<span class="line" id="L196"><span class="tok-comment">// Metalog</span>
+</span>
+<span class="line" id="L197"><span class="tok-comment">// Normal</span>
+</span>
+<span class="line" id="L198"><span class="tok-comment">// Normal-exponential-gamma</span>
+</span>
+<span class="line" id="L199"><span class="tok-comment">// Normal-inverse Gaussian</span>
+</span>
+<span class="line" id="L200"><span class="tok-comment">// Pearson Type IV</span>
+</span>
+<span class="line" id="L201"><span class="tok-comment">// Pearson distributions</span>
+</span>
+<span class="line" id="L202"><span class="tok-comment">// Quantile-parameterized</span>
+</span>
+<span class="line" id="L203"><span class="tok-comment">// Skew normal distribution</span>
+</span>
+<span class="line" id="L204"><span class="tok-comment">// t</span>
+</span>
+<span class="line" id="L205"><span class="tok-comment">// Noncentral t</span>
+</span>
+<span class="line" id="L206"><span class="tok-comment">// Skew t distribution</span>
+</span>
+<span class="line" id="L207"><span class="tok-comment">// Skew laplace</span>
+</span>
+<span class="line" id="L208"><span class="tok-comment">// Champernowne</span>
+</span>
+<span class="line" id="L209"><span class="tok-comment">// Type-1 Gumbel</span>
+</span>
+<span class="line" id="L210"><span class="tok-comment">// Tracy-Widom</span>
+</span>
+<span class="line" id="L211"><span class="tok-comment">// Voigt</span>
+</span>
+<span class="line" id="L212"><span class="tok-comment">// Chen</span>
+</span>
+<span class="line" id="L213"></span>
+<span class="line" id="L214"><span class="tok-comment">// Generalized extreme value</span>
+</span>
+<span class="line" id="L215"><span class="tok-comment">// Generalized Pareto</span>
+</span>
+<span class="line" id="L216"><span class="tok-comment">// Metalog</span>
+</span>
+<span class="line" id="L217"><span class="tok-comment">// Tukey lambda</span>
+</span>
+<span class="line" id="L218"><span class="tok-comment">// Wakeby</span>
+</span>
+<span class="line" id="L219"></span>
+<span class="line" id="L220"><span class="tok-comment">// Rectified Gaussian</span>
+</span>
+<span class="line" id="L221"><span class="tok-comment">// Compound poisson-gamma (Tweedie)</span>
+</span>
+<span class="line" id="L222"></span>
+<span class="line" id="L223"><span class="tok-comment">// Cantor</span>
+</span>
+<span class="line" id="L224"><span class="tok-comment">// generalized logistic family</span>
+</span>
+<span class="line" id="L225"><span class="tok-comment">// metalog family</span>
+</span>
+<span class="line" id="L226"><span class="tok-comment">// Pearson family</span>
+</span>
+<span class="line" id="L227"><span class="tok-comment">// phase-type</span>
+</span>
+<span class="line" id="L228"></span>
 </code></pre></body>
 </html>

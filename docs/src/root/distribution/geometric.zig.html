@@ -133,7 +133,7 @@
 <span class="line" id="L19">    <span class="tok-kw">return</span> prob * std.math.pow(<span class="tok-type">f64</span>, (<span class="tok-number">1</span> - prob), x);</span>
 <span class="line" id="L20">}</span>
 <span class="line" id="L21"></span>
-<span class="line" id="L22"><span class="tok-comment">/// F(q) = 1 - (1 - p)^(floor(q) + 1).</span></span>
+<span class="line" id="L22"><span class="tok-comment">/// F(q) = 1 - (1 - p)^(⌊q⌋ + 1).</span></span>
 <span class="line" id="L23"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">probability</span>(q: <span class="tok-type">f64</span>, prob: <span class="tok-type">f64</span>) <span class="tok-type">f64</span> {</span>
 <span class="line" id="L24">    assert(<span class="tok-number">0</span> &lt; prob <span class="tok-kw">and</span> prob &lt;= <span class="tok-number">1</span>);</span>
 <span class="line" id="L25">    assert(!isNan(q));</span>
@@ -144,7 +144,7 @@
 <span class="line" id="L30">    <span class="tok-kw">return</span> -std.math.expm1(p);</span>
 <span class="line" id="L31">}</span>
 <span class="line" id="L32"></span>
-<span class="line" id="L33"><span class="tok-comment">/// Q(x) = floor(ln(1 - x) / ln(1 - p)).</span></span>
+<span class="line" id="L33"><span class="tok-comment">/// Q(x) = ⌊ln(1 - x) / ln(1 - p)⌋.</span></span>
 <span class="line" id="L34"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">quantile</span>(p: <span class="tok-type">f64</span>, prob: <span class="tok-type">f64</span>) <span class="tok-type">f64</span> {</span>
 <span class="line" id="L35">    assert(<span class="tok-number">0</span> &lt; prob <span class="tok-kw">and</span> prob &lt;= <span class="tok-number">1</span>);</span>
 <span class="line" id="L36">    assert(<span class="tok-number">0</span> &lt;= p <span class="tok-kw">and</span> p &lt;= <span class="tok-number">1</span>);</span>
@@ -234,11 +234,14 @@
 <span class="line" id="L119"><span class="tok-kw">test</span> <span class="tok-str">&quot;geometric.random&quot;</span> {</span>
 <span class="line" id="L120">    <span class="tok-kw">var</span> prng = std.rand.DefaultPrng.init(<span class="tok-number">0</span>);</span>
 <span class="line" id="L121">    <span class="tok-kw">const</span> gen = prng.random();</span>
-<span class="line" id="L122">    <span class="tok-kw">try</span> expectEqual(<span class="tok-number">0</span>, random.implementation(gen, <span class="tok-number">0.2</span>));</span>
-<span class="line" id="L123">    <span class="tok-kw">try</span> expectEqual(<span class="tok-number">9</span>, random.implementation(gen, <span class="tok-number">0.2</span>));</span>
-<span class="line" id="L124">    <span class="tok-kw">try</span> expectEqual(<span class="tok-number">0</span>, random.implementation(gen, <span class="tok-number">0.2</span>));</span>
-<span class="line" id="L125">    <span class="tok-kw">try</span> expectEqual(<span class="tok-number">0</span>, random.implementation(gen, <span class="tok-number">1</span>  ));</span>
-<span class="line" id="L126">}</span>
-<span class="line" id="L127"></span>
+<span class="line" id="L122">    <span class="tok-kw">try</span> expectEqual(<span class="tok-number">0</span>, random.implementation(gen, <span class="tok-number">1</span>));</span>
+<span class="line" id="L123">    <span class="tok-kw">try</span> expectEqual(<span class="tok-number">0</span>, random.implementation(gen, <span class="tok-number">1</span>));</span>
+<span class="line" id="L124">    <span class="tok-kw">try</span> expectEqual(<span class="tok-number">0</span>, random.implementation(gen, <span class="tok-number">1</span>));</span>
+<span class="line" id="L125"></span>
+<span class="line" id="L126">    <span class="tok-kw">try</span> expectEqual(<span class="tok-number">0</span>, random.implementation(gen, <span class="tok-number">0.2</span>));</span>
+<span class="line" id="L127">    <span class="tok-kw">try</span> expectEqual(<span class="tok-number">1</span>, random.implementation(gen, <span class="tok-number">0.2</span>));</span>
+<span class="line" id="L128">    <span class="tok-kw">try</span> expectEqual(<span class="tok-number">0</span>, random.implementation(gen, <span class="tok-number">0.2</span>));</span>
+<span class="line" id="L129">}</span>
+<span class="line" id="L130"></span>
 </code></pre></body>
 </html>

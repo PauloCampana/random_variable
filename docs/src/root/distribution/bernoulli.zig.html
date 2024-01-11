@@ -230,12 +230,17 @@
 <span class="line" id="L115"><span class="tok-kw">test</span> <span class="tok-str">&quot;bernoulli.random&quot;</span> {</span>
 <span class="line" id="L116">    <span class="tok-kw">var</span> prng = std.rand.DefaultPrng.init(<span class="tok-number">0</span>);</span>
 <span class="line" id="L117">    <span class="tok-kw">const</span> gen = prng.random();</span>
-<span class="line" id="L118">    <span class="tok-kw">try</span> expectEqual(<span class="tok-number">0</span>, random.implementation(gen, <span class="tok-number">0.2</span>));</span>
-<span class="line" id="L119">    <span class="tok-kw">try</span> expectEqual(<span class="tok-number">0</span>, random.implementation(gen, <span class="tok-number">0.2</span>));</span>
-<span class="line" id="L120">    <span class="tok-kw">try</span> expectEqual(<span class="tok-number">0</span>, random.implementation(gen, <span class="tok-number">0.2</span>));</span>
-<span class="line" id="L121">    <span class="tok-kw">try</span> expectEqual(<span class="tok-number">0</span>, random.implementation(gen, <span class="tok-number">0</span>  ));</span>
-<span class="line" id="L122">    <span class="tok-kw">try</span> expectEqual(<span class="tok-number">1</span>, random.implementation(gen, <span class="tok-number">1</span>  ));</span>
-<span class="line" id="L123">}</span>
+<span class="line" id="L118">    <span class="tok-kw">try</span> expectEqual(<span class="tok-number">0</span>, random.implementation(gen, <span class="tok-number">0</span>));</span>
+<span class="line" id="L119">    <span class="tok-kw">try</span> expectEqual(<span class="tok-number">0</span>, random.implementation(gen, <span class="tok-number">0</span>));</span>
+<span class="line" id="L120">    <span class="tok-kw">try</span> expectEqual(<span class="tok-number">0</span>, random.implementation(gen, <span class="tok-number">0</span>));</span>
+<span class="line" id="L121">    <span class="tok-kw">try</span> expectEqual(<span class="tok-number">1</span>, random.implementation(gen, <span class="tok-number">1</span>));</span>
+<span class="line" id="L122">    <span class="tok-kw">try</span> expectEqual(<span class="tok-number">1</span>, random.implementation(gen, <span class="tok-number">1</span>));</span>
+<span class="line" id="L123">    <span class="tok-kw">try</span> expectEqual(<span class="tok-number">1</span>, random.implementation(gen, <span class="tok-number">1</span>));</span>
 <span class="line" id="L124"></span>
+<span class="line" id="L125">    <span class="tok-kw">try</span> expectEqual(<span class="tok-number">0</span>, random.implementation(gen, <span class="tok-number">0.2</span>));</span>
+<span class="line" id="L126">    <span class="tok-kw">try</span> expectEqual(<span class="tok-number">0</span>, random.implementation(gen, <span class="tok-number">0.2</span>));</span>
+<span class="line" id="L127">    <span class="tok-kw">try</span> expectEqual(<span class="tok-number">0</span>, random.implementation(gen, <span class="tok-number">0.2</span>));</span>
+<span class="line" id="L128">}</span>
+<span class="line" id="L129"></span>
 </code></pre></body>
 </html>
