@@ -60,15 +60,15 @@ pub fn quantile(p: f64, lambda: f64) f64 {
 /// Uses the quantile function.
 pub const random = struct {
     fn implementation(generator: std.rand.Random, lambda: f64) f64 {
-        const uni = generator.float(f64);
         var mass = @exp(-lambda);
         var cumu = mass;
-        var poi: f64 = 1;
+        var poi: f64 = 0;
+        const uni = generator.float(f64);
         while (uni >= cumu) : (poi += 1) {
-            mass *= lambda / poi;
+            mass *= lambda / (poi + 1);
             cumu += mass;
         }
-        return poi - 1;
+        return poi;
     }
 
     pub fn single(generator: std.rand.Random, lambda: f64) f64 {

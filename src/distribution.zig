@@ -18,6 +18,7 @@ pub const negativeBinomial = @import("distribution/negativeBinomial.zig");
 pub const poisson = @import("distribution/poisson.zig");
 pub const hypergeometric = @import("distribution/hypergeometric.zig");
 pub const benford = @import("distribution/benford.zig");
+pub const betabinomial = @import("distribution/betabinomial.zig");
 
 // continuous
 pub const uniform = @import("distribution/uniform.zig");
