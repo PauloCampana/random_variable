@@ -126,36 +126,36 @@
 <span class="line" id="L12"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">density</span>(x: <span class="tok-type">f64</span>, base: <span class="tok-type">u64</span>) <span class="tok-type">f64</span> {</span>
 <span class="line" id="L13">    assert(base &gt;= <span class="tok-number">2</span>);</span>
 <span class="line" id="L14">    assert(!isNan(x));</span>
-<span class="line" id="L15">    <span class="tok-kw">const</span> fbase = <span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-builtin">@floatFromInt</span>(base));</span>
-<span class="line" id="L16">    <span class="tok-kw">if</span> (x &lt; <span class="tok-number">1</span> <span class="tok-kw">or</span> x &gt; fbase - <span class="tok-number">1</span> <span class="tok-kw">or</span> x != <span class="tok-builtin">@round</span>(x)) {</span>
+<span class="line" id="L15">    <span class="tok-kw">const</span> b = <span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-builtin">@floatFromInt</span>(base));</span>
+<span class="line" id="L16">    <span class="tok-kw">if</span> (x &lt; <span class="tok-number">1</span> <span class="tok-kw">or</span> x &gt; b - <span class="tok-number">1</span> <span class="tok-kw">or</span> x != <span class="tok-builtin">@round</span>(x)) {</span>
 <span class="line" id="L17">        <span class="tok-kw">return</span> <span class="tok-number">0</span>;</span>
 <span class="line" id="L18">    }</span>
-<span class="line" id="L19">    <span class="tok-kw">return</span> std.math.log(<span class="tok-type">f64</span>, fbase, <span class="tok-number">1</span> + <span class="tok-number">1</span> / x);</span>
+<span class="line" id="L19">    <span class="tok-kw">return</span> std.math.log(<span class="tok-type">f64</span>, b, <span class="tok-number">1</span> + <span class="tok-number">1</span> / x);</span>
 <span class="line" id="L20">}</span>
 <span class="line" id="L21"></span>
 <span class="line" id="L22"><span class="tok-comment">/// F(q) = log_b(1 + ⌊q⌋).</span></span>
 <span class="line" id="L23"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">probability</span>(q: <span class="tok-type">f64</span>, base: <span class="tok-type">u64</span>) <span class="tok-type">f64</span> {</span>
 <span class="line" id="L24">    assert(base &gt;= <span class="tok-number">2</span>);</span>
 <span class="line" id="L25">    assert(!isNan(q));</span>
-<span class="line" id="L26">    <span class="tok-kw">const</span> fbase = <span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-builtin">@floatFromInt</span>(base));</span>
+<span class="line" id="L26">    <span class="tok-kw">const</span> b = <span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-builtin">@floatFromInt</span>(base));</span>
 <span class="line" id="L27">    <span class="tok-kw">if</span> (q &lt; <span class="tok-number">1</span>) {</span>
 <span class="line" id="L28">        <span class="tok-kw">return</span> <span class="tok-number">0</span>;</span>
 <span class="line" id="L29">    }</span>
-<span class="line" id="L30">    <span class="tok-kw">if</span> (q &gt;= fbase - <span class="tok-number">1</span>) {</span>
+<span class="line" id="L30">    <span class="tok-kw">if</span> (q &gt;= b - <span class="tok-number">1</span>) {</span>
 <span class="line" id="L31">        <span class="tok-kw">return</span> <span class="tok-number">1</span>;</span>
 <span class="line" id="L32">    }</span>
-<span class="line" id="L33">    <span class="tok-kw">return</span> std.math.log(<span class="tok-type">f64</span>, fbase, <span class="tok-number">1</span> + <span class="tok-builtin">@floor</span>(q));</span>
+<span class="line" id="L33">    <span class="tok-kw">return</span> std.math.log(<span class="tok-type">f64</span>, b, <span class="tok-number">1</span> + <span class="tok-builtin">@floor</span>(q));</span>
 <span class="line" id="L34">}</span>
 <span class="line" id="L35"></span>
 <span class="line" id="L36"><span class="tok-comment">/// Q(p) = ⌈b^p⌉ - 1.</span></span>
 <span class="line" id="L37"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">quantile</span>(p: <span class="tok-type">f64</span>, base: <span class="tok-type">u64</span>) <span class="tok-type">f64</span> {</span>
 <span class="line" id="L38">    assert(base &gt;= <span class="tok-number">2</span>);</span>
 <span class="line" id="L39">    assert(<span class="tok-number">0</span> &lt;= p <span class="tok-kw">and</span> p &lt;= <span class="tok-number">1</span>);</span>
-<span class="line" id="L40">    <span class="tok-kw">const</span> fbase = <span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-builtin">@floatFromInt</span>(base));</span>
+<span class="line" id="L40">    <span class="tok-kw">const</span> b = <span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-builtin">@floatFromInt</span>(base));</span>
 <span class="line" id="L41">    <span class="tok-kw">if</span> (p == <span class="tok-number">0</span>) {</span>
 <span class="line" id="L42">        <span class="tok-kw">return</span> <span class="tok-number">1</span>;</span>
 <span class="line" id="L43">    }</span>
-<span class="line" id="L44">    <span class="tok-kw">const</span> bp = std.math.pow(<span class="tok-type">f64</span>, fbase, p);</span>
+<span class="line" id="L44">    <span class="tok-kw">const</span> bp = std.math.pow(<span class="tok-type">f64</span>, b, p);</span>
 <span class="line" id="L45">    <span class="tok-kw">return</span> <span class="tok-builtin">@ceil</span>(bp) - <span class="tok-number">1</span>;</span>
 <span class="line" id="L46">}</span>
 <span class="line" id="L47"></span>

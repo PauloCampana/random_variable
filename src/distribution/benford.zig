@@ -12,36 +12,36 @@ pub const parameters = 1;
 pub fn density(x: f64, base: u64) f64 {
     assert(base >= 2);
     assert(!isNan(x));
-    const fbase = @as(f64, @floatFromInt(base));
-    if (x < 1 or x > fbase - 1 or x != @round(x)) {
+    const b = @as(f64, @floatFromInt(base));
+    if (x < 1 or x > b - 1 or x != @round(x)) {
         return 0;
     }
-    return std.math.log(f64, fbase, 1 + 1 / x);
+    return std.math.log(f64, b, 1 + 1 / x);
 }
 
 /// F(q) = log_b(1 + ⌊q⌋).
 pub fn probability(q: f64, base: u64) f64 {
     assert(base >= 2);
     assert(!isNan(q));
-    const fbase = @as(f64, @floatFromInt(base));
+    const b = @as(f64, @floatFromInt(base));
     if (q < 1) {
         return 0;
     }
-    if (q >= fbase - 1) {
+    if (q >= b - 1) {
         return 1;
     }
-    return std.math.log(f64, fbase, 1 + @floor(q));
+    return std.math.log(f64, b, 1 + @floor(q));
 }
 
 /// Q(p) = ⌈b^p⌉ - 1.
 pub fn quantile(p: f64, base: u64) f64 {
     assert(base >= 2);
     assert(0 <= p and p <= 1);
-    const fbase = @as(f64, @floatFromInt(base));
+    const b = @as(f64, @floatFromInt(base));
     if (p == 0) {
         return 1;
     }
-    const bp = std.math.pow(f64, fbase, p);
+    const bp = std.math.pow(f64, b, p);
     return @ceil(bp) - 1;
 }
 

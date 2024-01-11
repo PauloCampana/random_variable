@@ -15,18 +15,18 @@ pub const parameters = 2;
 pub fn density(x: f64, size: u64, prob: f64) f64 {
     assert(0 <= prob and prob <= 1);
     assert(!isNan(x));
-    const fsize = @as(f64, @floatFromInt(size));
-    if (x < 0 or x > fsize or x != @round(x)) {
+    const n = @as(f64, @floatFromInt(size));
+    if (x < 0 or x > n or x != @round(x)) {
         return 0;
     }
     if (prob == 0) {
         return if (x == 0) 1 else 0;
     }
     if (prob == 1) {
-        return if (x == fsize) 1 else 0;
+        return if (x == n) 1 else 0;
     }
-    const diff = fsize - x;
-    const binom = lgamma(fsize + 1) - lgamma(x + 1) - lgamma(diff + 1);
+    const diff = n - x;
+    const binom = lgamma(n + 1) - lgamma(x + 1) - lgamma(diff + 1);
     const log = binom + x * @log(prob) + diff * std.math.log1p(-prob);
     return @exp(log);
 }
@@ -35,11 +35,11 @@ pub fn density(x: f64, size: u64, prob: f64) f64 {
 pub fn probability(q: f64, size: u64, prob: f64) f64 {
     assert(0 <= prob and prob <= 1);
     assert(!isNan(q));
-    const fsize = @as(f64, @floatFromInt(size));
+    const n = @as(f64, @floatFromInt(size));
     if (q < 0) {
         return 0;
     }
-    if (q >= fsize) {
+    if (q >= n) {
         return 1;
     }
     if (prob == 0) {
@@ -49,53 +49,48 @@ pub fn probability(q: f64, size: u64, prob: f64) f64 {
         return 0;
     }
     const fq = @floor(q);
-    return incompleteBeta(fsize - fq, fq + 1, 1 - prob);
+    return incompleteBeta(n - fq, fq + 1, 1 - prob);
 }
 
 /// No closed form
 pub fn quantile(p: f64, size: u64, prob: f64) f64 {
     assert(0 <= prob and prob <= 1);
     assert(0 <= p and p <= 1);
-    const fsize = @as(f64, @floatFromInt(size));
     if (p == 0) {
         return 0;
     }
-    if (p == 1 or prob == 1) {
-        return fsize;
-    }
     const n = @as(f64, @floatFromInt(size));
-    const np1 = n + 1;
-    const qrob = 1 - prob;
-    const pq = prob / qrob;
-    var mass = std.math.pow(f64, qrob, n);
+    if (p == 1 or prob == 1) {
+        return n;
+    }
+    const pq = prob / (1 - prob);
+    var mass = std.math.pow(f64, 1 - prob, n);
     var cumu = mass;
-    var bin: f64 = 1;
+    var bin: f64 = 0;
     while (p >= cumu) : (bin += 1) {
-        mass *= pq * (np1 - bin) / bin;
+        mass *= pq * (n - bin) / (bin + 1);
         cumu += mass;
     }
-    return bin - 1;
+    return bin;
 }
 
 /// Uses the quantile function.
 pub const random = struct {
     fn implementation(generator: std.rand.Random, size: u64, prob: f64) f64 {
-        if (prob == 1) {
-            return @floatFromInt(size);
-        }
-        const uni = generator.float(f64);
         const n = @as(f64, @floatFromInt(size));
-        const np1 = n + 1;
-        const qrob = 1 - prob;
-        const pq = prob / qrob;
-        var mass = std.math.pow(f64, qrob, n);
+        if (prob == 1) {
+            return n;
+        }
+        const pq = prob / (1 - prob);
+        var mass = std.math.pow(f64, 1 - prob, n);
         var cumu = mass;
-        var bin: f64 = 1;
+        var bin: f64 = 0;
+        const uni = generator.float(f64);
         while (uni >= cumu) : (bin += 1) {
-            mass *= pq * (np1 - bin) / bin;
+            mass *= pq * (n - bin) / (bin + 1);
             cumu += mass;
         }
-        return bin - 1;
+        return bin;
     }
 
     pub fn single(generator: std.rand.Random, size: u64, prob: f64) f64 {

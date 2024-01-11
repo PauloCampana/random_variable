@@ -174,15 +174,15 @@
 <span class="line" id="L60"><span class="tok-comment">/// Uses the quantile function.</span></span>
 <span class="line" id="L61"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> random = <span class="tok-kw">struct</span> {</span>
 <span class="line" id="L62">    <span class="tok-kw">fn</span> <span class="tok-fn">implementation</span>(generator: std.rand.Random, lambda: <span class="tok-type">f64</span>) <span class="tok-type">f64</span> {</span>
-<span class="line" id="L63">        <span class="tok-kw">const</span> uni = generator.float(<span class="tok-type">f64</span>);</span>
-<span class="line" id="L64">        <span class="tok-kw">var</span> mass = <span class="tok-builtin">@exp</span>(-lambda);</span>
-<span class="line" id="L65">        <span class="tok-kw">var</span> cumu = mass;</span>
-<span class="line" id="L66">        <span class="tok-kw">var</span> poi: <span class="tok-type">f64</span> = <span class="tok-number">1</span>;</span>
+<span class="line" id="L63">        <span class="tok-kw">var</span> mass = <span class="tok-builtin">@exp</span>(-lambda);</span>
+<span class="line" id="L64">        <span class="tok-kw">var</span> cumu = mass;</span>
+<span class="line" id="L65">        <span class="tok-kw">var</span> poi: <span class="tok-type">f64</span> = <span class="tok-number">0</span>;</span>
+<span class="line" id="L66">        <span class="tok-kw">const</span> uni = generator.float(<span class="tok-type">f64</span>);</span>
 <span class="line" id="L67">        <span class="tok-kw">while</span> (uni &gt;= cumu) : (poi += <span class="tok-number">1</span>) {</span>
-<span class="line" id="L68">            mass *= lambda / poi;</span>
+<span class="line" id="L68">            mass *= lambda / (poi + <span class="tok-number">1</span>);</span>
 <span class="line" id="L69">            cumu += mass;</span>
 <span class="line" id="L70">        }</span>
-<span class="line" id="L71">        <span class="tok-kw">return</span> poi - <span class="tok-number">1</span>;</span>
+<span class="line" id="L71">        <span class="tok-kw">return</span> poi;</span>
 <span class="line" id="L72">    }</span>
 <span class="line" id="L73"></span>
 <span class="line" id="L74">    <span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">single</span>(generator: std.rand.Random, lambda: <span class="tok-type">f64</span>) <span class="tok-type">f64</span> {</span>

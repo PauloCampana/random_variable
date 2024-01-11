@@ -57,33 +57,31 @@ pub fn quantile(p: f64, size: u64, prob: f64) f64 {
         return inf;
     }
     const n = @as(f64, @floatFromInt(size));
-    const nm1 = n - 1;
-    const qrob = 1 - prob;
+    const q = 1 - prob;
     var mass = std.math.pow(f64, prob, n);
     var cumu = mass;
-    var nbi: f64 = 1;
+    var nbi: f64 = 0;
     while (p >= cumu) : (nbi += 1) {
-        mass *= qrob * (nm1 + nbi) / nbi;
+        mass *= q * (n + nbi) / (nbi + 1);
         cumu += mass;
     }
-    return nbi - 1;
+    return nbi;
 }
 
 /// Uses the quantile function.
 pub const random = struct {
     fn implementation(generator: std.rand.Random, size: u64, prob: f64) f64 {
-        const uni = generator.float(f64);
         const n = @as(f64, @floatFromInt(size));
-        const nm1 = n - 1;
-        const qrob = 1 - prob;
+        const q = 1 - prob;
         var mass = std.math.pow(f64, prob, n);
         var cumu = mass;
-        var nbi: f64 = 1;
+        var nbi: f64 = 0;
+        const uni = generator.float(f64);
         while (uni >= cumu) : (nbi += 1) {
-            mass *= qrob * (nm1 + nbi) / nbi;
+            mass *= q * (n + nbi) / (nbi + 1);
             cumu += mass;
         }
-        return nbi - 1;
+        return nbi;
     }
 
     pub fn single(generator: std.rand.Random, size: u64, prob: f64) f64 {
