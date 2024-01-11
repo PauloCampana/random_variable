@@ -4,7 +4,7 @@
 
 const std = @import("std");
 const gamma = @import("gamma.zig");
-const lgamma = @import("../thirdyparty/prob.zig").lnGamma;
+const math = @import("math.zig");
 const incompleteBeta = @import("../thirdyparty/prob.zig").incompleteBeta;
 const inverseIncompleteBeta = @import("../thirdyparty/prob.zig").inverseIncompleteBeta;
 const assert = std.debug.assert;
@@ -30,12 +30,11 @@ pub fn density(x: f64, df1: f64, df2: f64) f64 {
         }
         return if (df1 < 2) inf else 0;
     }
-    const df3 = df1 / 2;
-    const df4 = df2 / 2;
-    const df5 = df3 + df4;
-    const num1 = df3 * @log(df1) + df4 * @log(df2) + (df3 - 1) * @log(x);
-    const num2 = -df5 * @log(df2 + df1 * x);
-    const den = lgamma(df3) + lgamma(df4) - lgamma(df5);
+    const hdf1 = df1 / 2;
+    const hdf2 = df2 / 2;
+    const num1 = hdf1 * @log(df1) + hdf2 * @log(df2) + (hdf1 - 1) * @log(x);
+    const num2 = -(hdf1 + hdf2) * @log(df2 + df1 * x);
+    const den = math.lbeta(hdf1, hdf2);
     return @exp(num1 + num2 - den);
 }
 

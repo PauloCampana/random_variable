@@ -2,7 +2,6 @@
 //! - λ: `scale` ∈ (0,∞)
 
 const std = @import("std");
-const lgamma = @import("../thirdyparty/prob.zig").lnGamma;
 const incompleteGamma = @import("../thirdyparty/prob.zig").incompleteGamma;
 const assert = std.debug.assert;
 const isFinite = std.math.isFinite;
@@ -21,7 +20,7 @@ pub fn density(x: f64, lambda: f64) f64 {
     if (x < 0 or isInf(x) or x != @round(x)) {
         return 0;
     }
-    const log = -lambda + x * @log(lambda) - lgamma(x + 1);
+    const log = -lambda + x * @log(lambda) - std.math.lgamma(f64, x + 1);
     return @exp(log);
 }
 

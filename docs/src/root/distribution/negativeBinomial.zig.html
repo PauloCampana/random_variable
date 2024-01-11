@@ -117,7 +117,7 @@
 <span class="line" id="L3"><span class="tok-comment">//! - p: `prob` ∈ (0,1]</span></span>
 <span class="line" id="L4"></span>
 <span class="line" id="L5"><span class="tok-kw">const</span> std = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;std&quot;</span>);</span>
-<span class="line" id="L6"><span class="tok-kw">const</span> lgamma = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;../thirdyparty/prob.zig&quot;</span>).lnGamma;</span>
+<span class="line" id="L6"><span class="tok-kw">const</span> math = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;math.zig&quot;</span>);</span>
 <span class="line" id="L7"><span class="tok-kw">const</span> incompleteBeta = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;../thirdyparty/prob.zig&quot;</span>).incompleteBeta;</span>
 <span class="line" id="L8"><span class="tok-kw">const</span> assert = std.debug.assert;</span>
 <span class="line" id="L9"><span class="tok-kw">const</span> isNan = std.math.isNan;</span>
@@ -138,9 +138,9 @@
 <span class="line" id="L24">    <span class="tok-kw">if</span> (prob == <span class="tok-number">1</span>) {</span>
 <span class="line" id="L25">        <span class="tok-kw">return</span> <span class="tok-kw">if</span> (x == <span class="tok-number">0</span>) <span class="tok-number">1</span> <span class="tok-kw">else</span> <span class="tok-number">0</span>;</span>
 <span class="line" id="L26">    }</span>
-<span class="line" id="L27">    <span class="tok-kw">const</span> fsize = <span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-builtin">@floatFromInt</span>(size));</span>
-<span class="line" id="L28">    <span class="tok-kw">const</span> binom = lgamma(fsize + x) - lgamma(fsize) - lgamma(x + <span class="tok-number">1</span>);</span>
-<span class="line" id="L29">    <span class="tok-kw">const</span> log = binom + fsize * <span class="tok-builtin">@log</span>(prob) + x * std.math.log1p(-prob);</span>
+<span class="line" id="L27">    <span class="tok-kw">const</span> n = <span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-builtin">@floatFromInt</span>(size));</span>
+<span class="line" id="L28">    <span class="tok-kw">const</span> binom = math.lbinomial(n + x - <span class="tok-number">1</span>, x);</span>
+<span class="line" id="L29">    <span class="tok-kw">const</span> log = binom + n * <span class="tok-builtin">@log</span>(prob) + x * std.math.log1p(-prob);</span>
 <span class="line" id="L30">    <span class="tok-kw">return</span> <span class="tok-builtin">@exp</span>(log);</span>
 <span class="line" id="L31">}</span>
 <span class="line" id="L32"></span>
@@ -155,8 +155,8 @@
 <span class="line" id="L41">    <span class="tok-kw">if</span> (isInf(q) <span class="tok-kw">or</span> prob == <span class="tok-number">1</span>) {</span>
 <span class="line" id="L42">        <span class="tok-kw">return</span> <span class="tok-number">1</span>;</span>
 <span class="line" id="L43">    }</span>
-<span class="line" id="L44">    <span class="tok-kw">const</span> fsize = <span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-builtin">@floatFromInt</span>(size));</span>
-<span class="line" id="L45">    <span class="tok-kw">return</span> incompleteBeta(fsize, <span class="tok-builtin">@floor</span>(q) + <span class="tok-number">1</span>, prob);</span>
+<span class="line" id="L44">    <span class="tok-kw">const</span> n = <span class="tok-builtin">@as</span>(<span class="tok-type">f64</span>, <span class="tok-builtin">@floatFromInt</span>(size));</span>
+<span class="line" id="L45">    <span class="tok-kw">return</span> incompleteBeta(n, <span class="tok-builtin">@floor</span>(q) + <span class="tok-number">1</span>, prob);</span>
 <span class="line" id="L46">}</span>
 <span class="line" id="L47"></span>
 <span class="line" id="L48"><span class="tok-comment">/// No closed form.</span></span>

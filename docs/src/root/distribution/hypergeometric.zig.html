@@ -118,7 +118,7 @@
 <span class="line" id="L4"><span class="tok-comment">//! - n: `n` ∈ {0,1,⋯,N}</span></span>
 <span class="line" id="L5"></span>
 <span class="line" id="L6"><span class="tok-kw">const</span> std = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;std&quot;</span>);</span>
-<span class="line" id="L7"><span class="tok-kw">const</span> lgamma = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;../thirdyparty/prob.zig&quot;</span>).lnGamma;</span>
+<span class="line" id="L7"><span class="tok-kw">const</span> math = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;math.zig&quot;</span>);</span>
 <span class="line" id="L8"><span class="tok-kw">const</span> assert = std.debug.assert;</span>
 <span class="line" id="L9"><span class="tok-kw">const</span> isNan = std.math.isNan;</span>
 <span class="line" id="L10"><span class="tok-kw">const</span> inf = std.math.inf(<span class="tok-type">f64</span>);</span>
@@ -135,9 +135,9 @@
 <span class="line" id="L21">    <span class="tok-kw">if</span> (x &lt; <span class="tok-number">0</span> <span class="tok-kw">or</span> x &gt; nf <span class="tok-kw">or</span> x &gt; Kf <span class="tok-kw">or</span> x != <span class="tok-builtin">@round</span>(x)) {</span>
 <span class="line" id="L22">        <span class="tok-kw">return</span> <span class="tok-number">0</span>;</span>
 <span class="line" id="L23">    }</span>
-<span class="line" id="L24">    <span class="tok-kw">const</span> num1 = lgamma(Kf + <span class="tok-number">1</span>) - lgamma(x + <span class="tok-number">1</span>) - lgamma(Kf - x + <span class="tok-number">1</span>);</span>
-<span class="line" id="L25">    <span class="tok-kw">const</span> num2 = lgamma(Nf - Kf + <span class="tok-number">1</span>) - lgamma(nf - x + <span class="tok-number">1</span>) - lgamma(x + <span class="tok-number">1</span> + Nf - Kf - nf);</span>
-<span class="line" id="L26">    <span class="tok-kw">const</span> den = lgamma(Nf + <span class="tok-number">1</span>) - lgamma(nf + <span class="tok-number">1</span>) - lgamma(Nf - nf + <span class="tok-number">1</span>);</span>
+<span class="line" id="L24">    <span class="tok-kw">const</span> num1 = math.lbinomial(Kf, x);</span>
+<span class="line" id="L25">    <span class="tok-kw">const</span> num2 = math.lbinomial(Nf - Kf, nf - x);</span>
+<span class="line" id="L26">    <span class="tok-kw">const</span> den = math.lbinomial(Nf, nf);</span>
 <span class="line" id="L27">    <span class="tok-kw">return</span> <span class="tok-builtin">@exp</span>(num1 + num2 - den);</span>
 <span class="line" id="L28">}</span>
 <span class="line" id="L29"></span>
@@ -157,9 +157,9 @@
 <span class="line" id="L43">    <span class="tok-kw">if</span> (K == N <span class="tok-kw">or</span> n == N) {</span>
 <span class="line" id="L44">        <span class="tok-kw">return</span> <span class="tok-number">0</span>;</span>
 <span class="line" id="L45">    }</span>
-<span class="line" id="L46">    <span class="tok-kw">const</span> p0_num = lgamma(Nf - Kf + <span class="tok-number">1</span>) - lgamma(nf + <span class="tok-number">1</span>) - lgamma(Nf - Kf - nf + <span class="tok-number">1</span>);</span>
-<span class="line" id="L47">    <span class="tok-kw">const</span> p0_den = lgamma(Nf + <span class="tok-number">1</span>) - lgamma(nf + <span class="tok-number">1</span>) - lgamma(Nf - nf + <span class="tok-number">1</span>);</span>
-<span class="line" id="L48">    <span class="tok-kw">var</span> mass = <span class="tok-builtin">@exp</span>(p0_num - p0_den);</span>
+<span class="line" id="L46">    <span class="tok-kw">const</span> mass_num = math.lbinomial(Nf - Kf, nf);</span>
+<span class="line" id="L47">    <span class="tok-kw">const</span> mass_den = math.lbinomial(Nf, nf);</span>
+<span class="line" id="L48">    <span class="tok-kw">var</span> mass = <span class="tok-builtin">@exp</span>(mass_num - mass_den);</span>
 <span class="line" id="L49">    <span class="tok-kw">var</span> cumu: <span class="tok-type">f64</span> = mass;</span>
 <span class="line" id="L50">    <span class="tok-kw">const</span> qu = <span class="tok-builtin">@as</span>(<span class="tok-type">usize</span>, <span class="tok-builtin">@intFromFloat</span>(q));</span>
 <span class="line" id="L51">    <span class="tok-kw">for</span> (<span class="tok-number">0</span>..qu) |x| {</span>
@@ -190,9 +190,9 @@
 <span class="line" id="L76">    <span class="tok-kw">if</span> (p == <span class="tok-number">1</span>) {</span>
 <span class="line" id="L77">        <span class="tok-kw">return</span> <span class="tok-builtin">@min</span>(nf, Kf);</span>
 <span class="line" id="L78">    }</span>
-<span class="line" id="L79">    <span class="tok-kw">const</span> p0_num = lgamma(Nf - Kf + <span class="tok-number">1</span>) - lgamma(nf + <span class="tok-number">1</span>) - lgamma(Nf - Kf - nf + <span class="tok-number">1</span>);</span>
-<span class="line" id="L80">    <span class="tok-kw">const</span> p0_den = lgamma(Nf + <span class="tok-number">1</span>) - lgamma(nf + <span class="tok-number">1</span>) - lgamma(Nf - nf + <span class="tok-number">1</span>);</span>
-<span class="line" id="L81">    <span class="tok-kw">var</span> mass = <span class="tok-builtin">@exp</span>(p0_num - p0_den);</span>
+<span class="line" id="L79">    <span class="tok-kw">const</span> mass_num = math.lbinomial(Nf - Kf, nf);</span>
+<span class="line" id="L80">    <span class="tok-kw">const</span> mass_den = math.lbinomial(Nf, nf);</span>
+<span class="line" id="L81">    <span class="tok-kw">var</span> mass = <span class="tok-builtin">@exp</span>(mass_num - mass_den);</span>
 <span class="line" id="L82">    <span class="tok-kw">var</span> cumu = mass;</span>
 <span class="line" id="L83">    <span class="tok-kw">var</span> hyper: <span class="tok-type">u64</span> = <span class="tok-number">0</span>;</span>
 <span class="line" id="L84">    <span class="tok-kw">while</span> (p &gt;= cumu) : (hyper += <span class="tok-number">1</span>) {</span>
@@ -219,9 +219,9 @@
 <span class="line" id="L105">        <span class="tok-kw">if</span> (n == N) {</span>
 <span class="line" id="L106">            <span class="tok-kw">return</span> Kf;</span>
 <span class="line" id="L107">        }</span>
-<span class="line" id="L108">        <span class="tok-kw">const</span> p0_num = lgamma(Nf - Kf + <span class="tok-number">1</span>) - lgamma(nf + <span class="tok-number">1</span>) - lgamma(Nf - Kf - nf + <span class="tok-number">1</span>);</span>
-<span class="line" id="L109">        <span class="tok-kw">const</span> p0_den = lgamma(Nf + <span class="tok-number">1</span>) - lgamma(nf + <span class="tok-number">1</span>) - lgamma(Nf - nf + <span class="tok-number">1</span>);</span>
-<span class="line" id="L110">        <span class="tok-kw">var</span> mass = <span class="tok-builtin">@exp</span>(p0_num - p0_den);</span>
+<span class="line" id="L108">        <span class="tok-kw">const</span> mass_num = math.lbinomial(Nf - Kf, nf);</span>
+<span class="line" id="L109">        <span class="tok-kw">const</span> mass_den = math.lbinomial(Nf, nf);</span>
+<span class="line" id="L110">        <span class="tok-kw">var</span> mass = <span class="tok-builtin">@exp</span>(mass_num - mass_den);</span>
 <span class="line" id="L111">        <span class="tok-kw">var</span> cumu = mass;</span>
 <span class="line" id="L112">        <span class="tok-kw">var</span> hyper: <span class="tok-type">u64</span> = <span class="tok-number">0</span>;</span>
 <span class="line" id="L113">        <span class="tok-kw">const</span> uni = generator.float(<span class="tok-type">f64</span>);</span>

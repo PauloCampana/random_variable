@@ -3,7 +3,6 @@
 //! - λ: `rate`  ∈ (0,∞)
 
 const std = @import("std");
-const lgamma = @import("../thirdyparty/prob.zig").lnGamma;
 const incompleteGamma = @import("../thirdyparty/prob.zig").incompleteGamma;
 const inverseComplementedIncompleteGamma = @import("../thirdyparty/prob.zig").inverseComplementedIncompleteGamma;
 const assert = std.debug.assert;
@@ -31,7 +30,7 @@ pub fn density(x: f64, shape: f64, rate: f64) f64 {
     }
     const z = rate * x;
     const num = @log(rate) + (shape - 1) * @log(z) - z;
-    const den = lgamma(shape);
+    const den = std.math.lgamma(f64, shape);
     return @exp(num - den);
 }
 

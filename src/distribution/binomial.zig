@@ -3,7 +3,7 @@
 //! - p: `prob` ∈ [0,1]
 
 const std = @import("std");
-const lgamma = @import("../thirdyparty/prob.zig").lnGamma;
+const math = @import("math.zig");
 const incompleteBeta = @import("../thirdyparty/prob.zig").incompleteBeta;
 const assert = std.debug.assert;
 const isNan = std.math.isNan;
@@ -25,9 +25,8 @@ pub fn density(x: f64, size: u64, prob: f64) f64 {
     if (prob == 1) {
         return if (x == n) 1 else 0;
     }
-    const diff = n - x;
-    const binom = lgamma(n + 1) - lgamma(x + 1) - lgamma(diff + 1);
-    const log = binom + x * @log(prob) + diff * std.math.log1p(-prob);
+    const binom = math.lbinomial(n, x);
+    const log = binom + x * @log(prob) + (n - x) * std.math.log1p(-prob);
     return @exp(log);
 }
 

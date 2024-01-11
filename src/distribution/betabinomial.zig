@@ -4,14 +4,10 @@
 //! - β: `shape2` ∈ (0,∞)
 
 const std = @import("std");
-// const gamma = @import("gamma.zig");
-const lgamma = std.math.lgamma;
-// const incompleteBeta = @import("../thirdyparty/prob.zig").incompleteBeta;
-// const inverseIncompleteBeta = @import("../thirdyparty/prob.zig").inverseIncompleteBeta;
+const math = @import("math.zig");
 const assert = std.debug.assert;
 const isFinite = std.math.isFinite;
 const isNan = std.math.isNan;
-// const isInf = std.math.isInf;
 const inf = std.math.inf(f64);
 
 pub const parameters = 3;
@@ -25,9 +21,9 @@ pub fn density(x: f64, size: u64, shape1: f64, shape2: f64) f64 {
     if (x < 0 or x > n or x != @round(x)) {
         return 0;
     }
-    const binom = lgamma(f64, n + 1) - lgamma(f64, x + 1) - lgamma(f64, n - x + 1);
-    const beta1 = lgamma(f64, x + shape1) + lgamma(f64, n - x + shape2) - lgamma(f64, n + shape1 + shape2);
-    const beta2 = lgamma(f64, shape1) + lgamma(f64, shape2) - lgamma(f64, shape1 + shape2);
+    const binom = math.lbinomial(n, x);
+    const beta1 = math.lbeta(x + shape1, n - x + shape2);
+    const beta2 = math.lbeta(shape1, shape2);
     return @exp(binom + beta1 - beta2);
 }
 
@@ -43,9 +39,9 @@ pub fn probability(q: f64, size: u64, shape1: f64, shape2: f64) f64 {
     if (q >= n) {
         return 1;
     }
-    const p0_num = lgamma(f64, shape1 + shape2) + lgamma(f64, n + shape2);
-    const p0_den = lgamma(f64, shape1 + shape2 + n) + lgamma(f64, shape2);
-    var mass = @exp(p0_num - p0_den);
+    const mass_num = math.lbeta(shape1, shape2 + n);
+    const mass_den = math.lbeta(shape1, shape2);
+    var mass = @exp(mass_num - mass_den);
     var cumu: f64 = mass;
     const qu = @as(usize, @intFromFloat(q));
     for (0..qu) |x| {
@@ -70,9 +66,9 @@ pub fn quantile(p: f64, size: u64, shape1: f64, shape2: f64) f64 {
     if (p == 1) {
         return n;
     }
-    const p0_num = lgamma(f64, shape1 + shape2) + lgamma(f64, n + shape2);
-    const p0_den = lgamma(f64, shape1 + shape2 + n) + lgamma(f64, shape2);
-    var mass = @exp(p0_num - p0_den);
+    const mass_num = math.lbeta(shape1, shape2 + n);
+    const mass_den = math.lbeta(shape1, shape2);
+    var mass = @exp(mass_num - mass_den);
     var cumu: f64 = mass;
     var bb: f64 = 0;
     while (p >= cumu) : (bb += 1) {
@@ -91,9 +87,9 @@ pub const random = struct {
         if (n == 0) {
             return 0;
         }
-        const p0_num = lgamma(f64, shape1 + shape2) + lgamma(f64, n + shape2);
-        const p0_den = lgamma(f64, shape1 + shape2 + n) + lgamma(f64, shape2);
-        var mass = @exp(p0_num - p0_den);
+        const mass_num = math.lbeta(shape1, shape2 + n);
+        const mass_den = math.lbeta(shape1, shape2);
+        var mass = @exp(mass_num - mass_den);
         var cumu: f64 = mass;
         var bb: f64 = 0;
         const uni = generator.float(f64);
@@ -170,9 +166,9 @@ test "betabinomial.quantile" {
     try expectEqual( 0, quantile(0.051470588235292, 10, 3, 5));
     try expectEqual( 0, quantile(0.051470588235293, 10, 3, 5));
     try expectEqual( 1, quantile(0.051470588235294, 10, 3, 5));
-    try expectEqual( 1, quantile(0.161764705882350, 10, 3, 5));
     try expectEqual( 1, quantile(0.161764705882351, 10, 3, 5));
-    try expectEqual( 2, quantile(0.161764705882352, 10, 3, 5));
+    try expectEqual( 1, quantile(0.161764705882352, 10, 3, 5));
+    try expectEqual( 2, quantile(0.161764705882353, 10, 3, 5));
     try expectEqual(10, quantile(1                , 10, 3, 5));
 }
 

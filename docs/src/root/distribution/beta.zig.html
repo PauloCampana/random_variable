@@ -118,7 +118,7 @@
 <span class="line" id="L4"></span>
 <span class="line" id="L5"><span class="tok-kw">const</span> std = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;std&quot;</span>);</span>
 <span class="line" id="L6"><span class="tok-kw">const</span> gamma = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;gamma.zig&quot;</span>);</span>
-<span class="line" id="L7"><span class="tok-kw">const</span> lgamma = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;../thirdyparty/prob.zig&quot;</span>).lnGamma;</span>
+<span class="line" id="L7"><span class="tok-kw">const</span> math = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;math.zig&quot;</span>);</span>
 <span class="line" id="L8"><span class="tok-kw">const</span> incompleteBeta = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;../thirdyparty/prob.zig&quot;</span>).incompleteBeta;</span>
 <span class="line" id="L9"><span class="tok-kw">const</span> inverseIncompleteBeta = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;../thirdyparty/prob.zig&quot;</span>).inverseIncompleteBeta;</span>
 <span class="line" id="L10"><span class="tok-kw">const</span> assert = std.debug.assert;</span>
@@ -151,7 +151,7 @@
 <span class="line" id="L37">        <span class="tok-kw">return</span> <span class="tok-kw">if</span> (shape2 &lt; <span class="tok-number">1</span>) inf <span class="tok-kw">else</span> <span class="tok-number">0</span>;</span>
 <span class="line" id="L38">    }</span>
 <span class="line" id="L39">    <span class="tok-kw">const</span> num = (shape1 - <span class="tok-number">1</span>) * <span class="tok-builtin">@log</span>(x) + (shape2 - <span class="tok-number">1</span>) * std.math.log1p(-x);</span>
-<span class="line" id="L40">    <span class="tok-kw">const</span> den = lgamma(shape1) + lgamma(shape2) - lgamma(shape1 + shape2);</span>
+<span class="line" id="L40">    <span class="tok-kw">const</span> den = math.lbeta(shape1, shape2);</span>
 <span class="line" id="L41">    <span class="tok-kw">return</span> <span class="tok-builtin">@exp</span>(num - den);</span>
 <span class="line" id="L42">}</span>
 <span class="line" id="L43"></span>

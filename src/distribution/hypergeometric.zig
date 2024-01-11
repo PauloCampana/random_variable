@@ -4,7 +4,7 @@
 //! - n: `n` ∈ {0,1,⋯,N}
 
 const std = @import("std");
-const lgamma = @import("../thirdyparty/prob.zig").lnGamma;
+const math = @import("math.zig");
 const assert = std.debug.assert;
 const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
@@ -21,9 +21,9 @@ pub fn density(x: f64, N: u64, K: u64, n: u64) f64 {
     if (x < 0 or x > nf or x > Kf or x != @round(x)) {
         return 0;
     }
-    const num1 = lgamma(Kf + 1) - lgamma(x + 1) - lgamma(Kf - x + 1);
-    const num2 = lgamma(Nf - Kf + 1) - lgamma(nf - x + 1) - lgamma(x + 1 + Nf - Kf - nf);
-    const den = lgamma(Nf + 1) - lgamma(nf + 1) - lgamma(Nf - nf + 1);
+    const num1 = math.lbinomial(Kf, x);
+    const num2 = math.lbinomial(Nf - Kf, nf - x);
+    const den = math.lbinomial(Nf, nf);
     return @exp(num1 + num2 - den);
 }
 
@@ -43,9 +43,9 @@ pub fn probability(q: f64, N: u64, K: u64, n: u64) f64 {
     if (K == N or n == N) {
         return 0;
     }
-    const p0_num = lgamma(Nf - Kf + 1) - lgamma(nf + 1) - lgamma(Nf - Kf - nf + 1);
-    const p0_den = lgamma(Nf + 1) - lgamma(nf + 1) - lgamma(Nf - nf + 1);
-    var mass = @exp(p0_num - p0_den);
+    const mass_num = math.lbinomial(Nf - Kf, nf);
+    const mass_den = math.lbinomial(Nf, nf);
+    var mass = @exp(mass_num - mass_den);
     var cumu: f64 = mass;
     const qu = @as(usize, @intFromFloat(q));
     for (0..qu) |x| {
@@ -76,9 +76,9 @@ pub fn quantile(p: f64, N: u64, K: u64, n: u64) f64 {
     if (p == 1) {
         return @min(nf, Kf);
     }
-    const p0_num = lgamma(Nf - Kf + 1) - lgamma(nf + 1) - lgamma(Nf - Kf - nf + 1);
-    const p0_den = lgamma(Nf + 1) - lgamma(nf + 1) - lgamma(Nf - nf + 1);
-    var mass = @exp(p0_num - p0_den);
+    const mass_num = math.lbinomial(Nf - Kf, nf);
+    const mass_den = math.lbinomial(Nf, nf);
+    var mass = @exp(mass_num - mass_den);
     var cumu = mass;
     var hyper: u64 = 0;
     while (p >= cumu) : (hyper += 1) {
@@ -105,9 +105,9 @@ pub const random = struct {
         if (n == N) {
             return Kf;
         }
-        const p0_num = lgamma(Nf - Kf + 1) - lgamma(nf + 1) - lgamma(Nf - Kf - nf + 1);
-        const p0_den = lgamma(Nf + 1) - lgamma(nf + 1) - lgamma(Nf - nf + 1);
-        var mass = @exp(p0_num - p0_den);
+        const mass_num = math.lbinomial(Nf - Kf, nf);
+        const mass_den = math.lbinomial(Nf, nf);
+        var mass = @exp(mass_num - mass_den);
         var cumu = mass;
         var hyper: u64 = 0;
         const uni = generator.float(f64);
