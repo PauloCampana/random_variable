@@ -4,7 +4,7 @@
 //! - n: `n` ∈ {0,1,⋯,N}
 
 const std = @import("std");
-const math = @import("math.zig");
+const math = @import("../math.zig");
 const assert = std.debug.assert;
 const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
