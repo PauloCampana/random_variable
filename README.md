@@ -1,4 +1,3 @@
-# Random Variable
 ![](image.png)
 
 For over 20 probability distributions, this library provides:
