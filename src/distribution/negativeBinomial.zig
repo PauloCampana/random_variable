@@ -3,7 +3,7 @@
 //! - p: `prob` ∈ (0,1]
 
 const std = @import("std");
-const math = @import("math.zig");
+const math = @import("../math.zig");
 const incompleteBeta = @import("../thirdyparty/prob.zig").incompleteBeta;
 const assert = std.debug.assert;
 const isNan = std.math.isNan;

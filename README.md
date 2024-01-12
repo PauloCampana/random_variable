@@ -1,14 +1,10 @@
-# random_variable
-For common probability distributions, this library provides:
+# Random Variable
+![](image.png)
+
+For over 20 probability distributions, this library provides:
 
 * Random variable generation
 * Density, Distribution and Quantile functions
-
-Descriptive statistics.
-
-Multiple linear regression.
-
-Implementation of dynamically allocated matrices.
 
 # Documentation
 Avaliable on <https://paulocampana.github.io/random_variable>
@@ -28,12 +24,13 @@ You could also copy the whole repository somewhere and use the `.path` field ins
 Then, on your `build.zig`, add the `dependency` at the top and the `addModule` for every exe/lib/tests you need:
 
 ```zig
+// ...
 const random_variable = b.dependency("random_variable", .{
     .target = target,
     .optimize = optimize,
 });
-
-exe.addModule("random_variable", random_variable.module("random_variable"));
+// ...
+exe.root_module.addImport("random_variable", random_variable.module("random_variable"));
 ```
 
 You can then import the library where you need

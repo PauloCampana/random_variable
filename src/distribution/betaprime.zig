@@ -4,7 +4,7 @@
 
 const std = @import("std");
 const gamma = @import("gamma.zig");
-const math = @import("math.zig");
+const math = @import("../math.zig");
 const incompleteBeta = @import("../thirdyparty/prob.zig").incompleteBeta;
 const inverseIncompleteBeta = @import("../thirdyparty/prob.zig").inverseIncompleteBeta;
 const assert = std.debug.assert;

@@ -48,12 +48,12 @@ pub fn quantile(p: f64, lambda: f64) f64 {
     }
     var mass = @exp(-lambda);
     var cumu = mass;
-    var poi: f64 = 1;
+    var poi: f64 = 0;
     while (p >= cumu) : (poi += 1) {
-        mass *= lambda / poi;
+        mass *= lambda / (poi + 1);
         cumu += mass;
     }
-    return poi - 1;
+    return poi;
 }
 
 /// Uses the quantile function.

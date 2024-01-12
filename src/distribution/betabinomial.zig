@@ -4,7 +4,7 @@
 //! - β: `shape2` ∈ (0,∞)
 
 const std = @import("std");
-const math = @import("math.zig");
+const math = @import("../math.zig");
 const assert = std.debug.assert;
 const isFinite = std.math.isFinite;
 const isNan = std.math.isNan;
