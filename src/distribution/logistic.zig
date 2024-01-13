@@ -22,7 +22,7 @@ pub fn density(x: f64, location: f64, scale: f64) f64 {
     return expz / (scale * expzp1 * expzp1);
 }
 
-/// F(q) = 1 / (1 + exp(-(x - μ) / σ)).
+/// F(q) = 1 / (1 + exp(-(q - μ) / σ)).
 pub fn probability(q: f64, location: f64, scale: f64) f64 {
     assert(isFinite(location) and isFinite(scale));
     assert(scale > 0);

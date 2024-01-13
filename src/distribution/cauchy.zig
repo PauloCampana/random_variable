@@ -20,7 +20,7 @@ pub fn density(x: f64, location: f64, scale: f64) f64 {
     return 1 / (std.math.pi * scale * (1 + z * z));
 }
 
-/// F(q) = 0.5 + arctan((x - μ) / σ) / π.
+/// F(q) = 0.5 + arctan((q - μ) / σ) / π.
 pub fn probability(q: f64, location: f64, scale: f64) f64 {
     assert(isFinite(location) and isFinite(scale));
     assert(scale > 0);

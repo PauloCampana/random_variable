@@ -9,6 +9,7 @@ For over 20 probability distributions, this library provides:
 Avaliable on <https://paulocampana.github.io/random_variable>
 
 # Importing library
+Requires Zig version 0.12.0-dev.2133 or above.
 Grab the commit hash of the version you want to use and in your `build.zig.zon`, add inside the dependencies:
 
 ```zig
@@ -20,7 +21,7 @@ Grab the commit hash of the version you want to use and in your `build.zig.zon`,
 
 You could also copy the whole repository somewhere and use the `.path` field instead of `.url`
 
-Then, on your `build.zig`, add the `dependency` at the top and the `addModule` for every exe/lib/tests you need:
+Then, on your `build.zig`, add the `dependency` at the top and the `addImport` for every exe/lib/tests you need:
 
 ```zig
 // ...
