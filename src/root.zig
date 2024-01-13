@@ -34,6 +34,8 @@ pub const normal = @import("distribution/normal.zig");
 pub const logNormal = @import("distribution/logNormal.zig");
 pub const t = @import("distribution/t.zig");
 pub const betaprime = @import("distribution/betaprime.zig");
+pub const continuousBernoulli = @import("distribution/continuousBernoulli.zig");
+pub const pareto = @import("distribution/pareto.zig");
 
 test {
     @import("std").testing.refAllDeclsRecursive(@This());
@@ -104,7 +106,6 @@ test {
 // Von Mises-Fisher
 // Bingham
 // Wigner semicircle
-// Continuous Bernoulli
 
 // Henyey-Greenstein phase function
 // Mie phase function

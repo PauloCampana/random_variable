@@ -59,12 +59,6 @@ pub fn quantile(p: f64, shape1: f64, shape2: f64) f64 {
     return q / (1 - q);
 }
 
-// b' = b / (1 - b)
-// b' = (x1 / (x1 + x2)) / (1 - x1 / (x1 + x2))
-// b' = (x1 / (x1 + x2)) / ((x1 + x2) / (x1 + x2) - x1 / (x1 + x2))
-// b' = (x1 / (x1 + x2)) / (x2 / (x1 + x2))
-// b' = x1 / x2
-
 /// Uses the relation to Gamma distribution.
 pub const random = struct {
     fn implementation(generator: std.rand.Random, shape1: f64, shape2: f64) f64 {

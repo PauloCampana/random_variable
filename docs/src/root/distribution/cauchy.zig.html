@@ -134,7 +134,7 @@
 <span class="line" id="L20">    <span class="tok-kw">return</span> <span class="tok-number">1</span> / (std.math.pi * scale * (<span class="tok-number">1</span> + z * z));</span>
 <span class="line" id="L21">}</span>
 <span class="line" id="L22"></span>
-<span class="line" id="L23"><span class="tok-comment">/// F(q) = 0.5 + arctan((x - μ) / σ) / π.</span></span>
+<span class="line" id="L23"><span class="tok-comment">/// F(q) = 0.5 + arctan((q - μ) / σ) / π.</span></span>
 <span class="line" id="L24"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">probability</span>(q: <span class="tok-type">f64</span>, location: <span class="tok-type">f64</span>, scale: <span class="tok-type">f64</span>) <span class="tok-type">f64</span> {</span>
 <span class="line" id="L25">    assert(isFinite(location) <span class="tok-kw">and</span> isFinite(scale));</span>
 <span class="line" id="L26">    assert(scale &gt; <span class="tok-number">0</span>);</span>
