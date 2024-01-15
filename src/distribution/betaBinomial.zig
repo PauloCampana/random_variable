@@ -45,12 +45,12 @@ pub fn probability(q: f64, size: u64, shape1: f64, shape2: f64) f64 {
     const mass_num = math.lbeta(shape1, shape2 + n);
     const mass_den = math.lbeta(shape1, shape2);
     var mass = @exp(mass_num - mass_den);
-    var cumu: f64 = mass;
-    const qu = @as(usize, @intFromFloat(q));
-    for (0..qu) |x| {
-        const fx = @as(f64, @floatFromInt(x));
-        const num = (n - fx) * (shape1 + fx);
-        const den = (fx + 1) * (shape2 + n - fx - 1);
+    var cumu = mass;
+    var bbin: f64 = 0;
+    for (0..@intFromFloat(q)) |_| {
+        const num = (n - bbin) * (shape1 + bbin);
+        bbin += 1;
+        const den = bbin * (shape2 + n - bbin);
         mass *= num / den;
         cumu += mass;
     }
@@ -63,73 +63,69 @@ pub fn quantile(p: f64, size: u64, shape1: f64, shape2: f64) f64 {
     assert(shape1 > 0 and shape2 > 0);
     assert(0 <= p and p <= 1);
     const n = @as(f64, @floatFromInt(size));
-    if (p == 0 or n == 0) {
-        return 0;
-    }
-    if (p == 1) {
-        return n;
+    if (p == 0 or p == 1 or size == 0) {
+        return n * p;
     }
     const mass_num = math.lbeta(shape1, shape2 + n);
     const mass_den = math.lbeta(shape1, shape2);
-    var mass = @exp(mass_num - mass_den);
-    var cumu: f64 = mass;
-    var bb: f64 = 0;
-    while (p >= cumu) : (bb += 1) {
-        const num = (n - bb) * (shape1 + bb);
-        const den = (bb + 1) * (shape2 + n - bb - 1);
-        mass *= num / den;
-        cumu += mass;
-    }
-    return bb;
+    const initial_mass = @exp(mass_num - mass_den);
+    return linearSearch(p, n, shape1, shape2, initial_mass);
 }
 
 /// Uses the quantile function.
 pub const random = struct {
-    fn implementation(generator: std.rand.Random, size: u64, shape1: f64, shape2: f64) f64 {
-        const n = @as(f64, @floatFromInt(size));
-        if (n == 0) {
-            return 0;
-        }
-        const mass_num = math.lbeta(shape1, shape2 + n);
-        const mass_den = math.lbeta(shape1, shape2);
-        var mass = @exp(mass_num - mass_den);
-        var cumu: f64 = mass;
-        var bb: f64 = 0;
-        const uni = generator.float(f64);
-        while (uni >= cumu) : (bb += 1) {
-            const num = (n - bb) * (shape1 + bb);
-            const den = (bb + 1) * (shape2 + n - bb - 1);
-            mass *= num / den;
-            cumu += mass;
-        }
-        return bb;
-    }
-
     pub fn single(generator: std.rand.Random, size: u64, shape1: f64, shape2: f64) f64 {
         assert(isFinite(shape1) and isFinite(shape2));
         assert(shape1 > 0 and shape2 > 0);
-        return implementation(generator, size, shape1, shape2);
+        if (size == 0) {
+            return 0;
+        }
+        const n = @as(f64, @floatFromInt(size));
+        const mass_num = math.lbeta(shape1, shape2 + n);
+        const mass_den = math.lbeta(shape1, shape2);
+        const initial_mass = @exp(mass_num - mass_den);
+        const uni = generator.float(f64);
+        return linearSearch(uni, n, shape1, shape2, initial_mass);
     }
 
-    pub fn buffer(buf: []f64, generator: std.rand.Random, size: u64, shape1: f64, shape2: f64) []f64 {
+    pub fn fill(buffer: []f64, generator: std.rand.Random, size: u64, shape1: f64, shape2: f64) []f64 {
         assert(isFinite(shape1) and isFinite(shape2));
         assert(shape1 > 0 and shape2 > 0);
-        for (buf) |*x| {
-            x.* = implementation(generator, size, shape1, shape2);
+        if (size == 0) {
+            @memset(buffer, 0);
+            return buffer;
         }
-        return buf;
-    }
-
-    pub fn alloc(allocator: std.mem.Allocator, generator: std.rand.Random, n: usize, size: u64, shape1: f64, shape2: f64) ![]f64 {
-        const slice = try allocator.alloc(f64, n);
-        return buffer(slice, generator, size, shape1, shape2);
+        const n = @as(f64, @floatFromInt(size));
+        const mass_num = math.lbeta(shape1, shape2 + n);
+        const mass_den = math.lbeta(shape1, shape2);
+        const initial_mass = @exp(mass_num - mass_den);
+        for (buffer) |*x| {
+            const uni = generator.float(f64);
+            x.* = linearSearch(uni, n, shape1, shape2, initial_mass);
+        }
+        return buffer;
     }
 };
+
+inline fn linearSearch(p: f64, n: f64, shape1: f64, shape2: f64, initial_mass: f64) f64 {
+    var bbin: f64 = 0;
+    var mass = initial_mass;
+    var cumu = mass;
+    while (cumu <= p) {
+        const num = (n - bbin) * (shape1 + bbin);
+        bbin += 1;
+        const den = bbin * (shape2 + n - bbin);
+        mass *= num / den;
+        cumu += mass;
+    }
+    return bbin;
+}
 
 const expectEqual = std.testing.expectEqual;
 const expectApproxEqRel = std.testing.expectApproxEqRel;
 const eps = 30 * std.math.floatEps(f64); // 6.66 × 10^-15
 
+// zig fmt: off
 test "betaBinomial.density" {
     try expectEqual(0, density(-inf, 10, 3, 5));
     try expectEqual(0, density( inf, 10, 3, 5));
@@ -175,14 +171,14 @@ test "betaBinomial.quantile" {
     try expectEqual(10, quantile(1                , 10, 3, 5));
 }
 
-test "betaBinomial.random" {
+test "betaBinomial.random.single" {
     var prng = std.rand.DefaultPrng.init(0);
     const gen = prng.random();
-    try expectEqual(0, random.implementation(gen, 0, 3, 5));
-    try expectEqual(0, random.implementation(gen, 0, 3, 5));
-    try expectEqual(0, random.implementation(gen, 0, 3, 5));
+    try expectEqual(0, random.single(gen, 0, 3, 5));
+    try expectEqual(0, random.single(gen, 0, 3, 5));
+    try expectEqual(0, random.single(gen, 0, 3, 5));
 
-    try expectEqual(3, random.implementation(gen, 10, 3, 5));
-    try expectEqual(3, random.implementation(gen, 10, 3, 5));
-    try expectEqual(4, random.implementation(gen, 10, 3, 5));
+    try expectEqual(3, random.single(gen, 10, 3, 5));
+    try expectEqual(3, random.single(gen, 10, 3, 5));
+    try expectEqual(4, random.single(gen, 10, 3, 5));
 }

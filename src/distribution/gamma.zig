@@ -66,25 +66,14 @@ pub fn quantile(p: f64, shape: f64, rate: f64) f64 {
 /// Uses George Marsaglia's rejection sampling.
 /// https://dl.acm.org/doi/pdf/10.1145/358407.358414
 pub const random = struct {
-    pub fn implementation(generator: std.rand.Random, shape: f64, rate: f64) f64 {
+    pub fn single(generator: std.rand.Random, shape: f64, rate: f64) f64 {
+        assert(isFinite(shape) and isFinite(rate));
+        assert(shape > 0 and rate > 0);
         const correct = shape >= 1;
         const increment: f64 = if (correct) 0 else 1;
         const d = shape - 1.0 / 3.0 + increment;
         const c = 1 / (3 * @sqrt(d));
-        const gam = while (true) {
-            const z2, const v3 = while (true) {
-                const z = generator.floatNorm(f64);
-                const v = 1 + c * z;
-                if (v > 0) {
-                    break .{z * z, v * v * v};
-                }
-            };
-            const uni = generator.float(f64);
-            const cond0 = uni < 1 - 0.0331 * z2 * z2;
-            if (cond0 or @log(uni) < 0.5 * z2 + d * (1 - v3 + @log(v3))) {
-                break d * v3;
-            }
-        };
+        const gam = rejection(generator, d, c);
         if (correct) {
             return gam / rate;
         } else {
@@ -94,34 +83,52 @@ pub const random = struct {
         }
     }
 
-    /// shape and rate ∈ (0,∞)
-    pub fn single(generator: std.rand.Random, shape: f64, rate: f64) f64 {
+    pub fn fill(buffer: []f64, generator: std.rand.Random, shape: f64, rate: f64) []f64 {
         assert(isFinite(shape) and isFinite(rate));
         assert(shape > 0 and rate > 0);
-        return implementation(generator, shape, rate);
-    }
-
-    /// shape and rate ∈ (0,∞)
-    pub fn buffer(buf: []f64, generator: std.rand.Random, shape: f64, rate: f64) []f64 {
-        assert(isFinite(shape) and isFinite(rate));
-        assert(shape > 0 and rate > 0);
-        for (buf) |*x| {
-            x.* = implementation(generator, shape, rate);
+        const correct = shape >= 1;
+        const increment: f64 = if (correct) 0 else 1;
+        const d = shape - 1.0 / 3.0 + increment;
+        const c = 1 / (3 * @sqrt(d));
+        for (buffer) |*x| {
+            const gam = rejection(generator, d, c);
+            x.* = gam / rate;
         }
-        return buf;
-    }
-
-    /// shape and rate ∈ (0,∞)
-    pub fn alloc(allocator: std.mem.Allocator, generator: std.rand.Random, n: usize, shape: f64, rate: f64) ![]f64 {
-        const slice = try allocator.alloc(f64, n);
-        return buffer(slice, generator, shape, rate);
+        if (!correct) {
+            const invshape = 1 / shape;
+            for (buffer) |*x| {
+                const uni = generator.float(f64);
+                const correction = std.math.pow(f64, uni, invshape);
+                x.* *= correction;
+            }
+        }
+        return buffer;
     }
 };
+
+inline fn rejection(generator: std.rand.Random, d: f64, c: f64) f64 {
+    return while (true) {
+        const z2, const v3 = while (true) {
+            const z = generator.floatNorm(f64);
+            const v = 1 + c * z;
+            if (v > 0) {
+                break .{ z * z, v * v * v };
+            }
+        };
+        const uni = generator.float(f64);
+        if (uni < 1 - 0.0331 * z2 * z2) {
+            break d * v3;
+        } else if (@log(uni) < 0.5 * z2 + d * (1 - v3 + @log(v3))) {
+            break d * v3;
+        }
+    };
+}
 
 const expectEqual = std.testing.expectEqual;
 const expectApproxEqRel = std.testing.expectApproxEqRel;
 const eps = 10 * std.math.floatEps(f64); // 2.22 × 10^-15
 
+// zig fmt: off
 test "gamma.density" {
     try expectEqual(0, density(-inf, 3, 5));
     try expectEqual(0, density( inf, 3, 5));
@@ -153,10 +160,10 @@ test "gamma.quantile" {
     try expectEqual      (inf               , quantile(1  , 3, 5)     );
 }
 
-test "gamma.random" {
+test "gamma.random.single" {
     var prng = std.rand.DefaultPrng.init(0);
     const gen = prng.random();
-    try expectApproxEqRel(0x1.c5f1fac1e8796p-2, random.implementation(gen, 3, 5), eps);
-    try expectApproxEqRel(0x1.ffa96ffd15766p-2, random.implementation(gen, 3, 5), eps);
-    try expectApproxEqRel(0x1.0ff0a4d0472aap-1, random.implementation(gen, 3, 5), eps);
+    try expectApproxEqRel(0x1.c5f1fac1e8796p-2, random.single(gen, 3, 5), eps);
+    try expectApproxEqRel(0x1.ffa96ffd15766p-2, random.single(gen, 3, 5), eps);
+    try expectApproxEqRel(0x1.0ff0a4d0472aap-1, random.single(gen, 3, 5), eps);
 }

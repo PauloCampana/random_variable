@@ -27,20 +27,12 @@ pub fn quantile(p: f64, df: f64) f64 {
 
 /// Uses the relation to Gamma distribution.
 pub const random = struct {
-    fn implementation(generator: std.rand.Random, df1: f64) f64 {
-        return gamma.random.implementation(generator, 0.5 * df1, 0.5);
-    }
-
     pub fn single(generator: std.rand.Random, df: f64) f64 {
         return gamma.random.single(generator, 0.5 * df, 0.5);
     }
 
-    pub fn buffer(buf: []f64, generator: std.rand.Random, df: f64) []f64 {
-        return gamma.random.buffer(buf, generator, 0.5 * df, 0.5);
-    }
-
-    pub fn alloc(allocator: std.mem.Allocator, generator: std.rand.Random, n: usize, df: f64) ![]f64 {
-        return gamma.random.alloc(allocator, generator, n, 0.5 * df, 0.5);
+    pub fn fill(buffer: []f64, generator: std.rand.Random, df: f64) []f64 {
+        return gamma.random.fill(buffer, generator, 0.5 * df, 0.5);
     }
 };
 
@@ -48,6 +40,7 @@ const expectEqual = std.testing.expectEqual;
 const expectApproxEqRel = std.testing.expectApproxEqRel;
 const eps = 10 * std.math.floatEps(f64); // 2.22 × 10^-15
 
+// zig fmt: off
 test "chiSquared.density" {
     try expectEqual(0, density(-inf, 3));
     try expectEqual(0, density( inf, 3));
@@ -79,10 +72,10 @@ test "chiSquared.quantile" {
     try expectEqual      (inf              , quantile(1  , 3)     );
 }
 
-test "chiSquared.random" {
+test "chiSquared.random.single" {
     var prng = std.rand.DefaultPrng.init(0);
     const gen = prng.random();
-    try expectApproxEqRel(0x1.c198f554d3db5p+0, random.implementation(gen, 3), eps);
-    try expectApproxEqRel(0x1.0e7afeee50b89p+1, random.implementation(gen, 3), eps);
-    try expectApproxEqRel(0x1.28ce118715efcp+1, random.implementation(gen, 3), eps);
+    try expectApproxEqRel(0x1.c198f554d3db5p+0, random.single(gen, 3), eps);
+    try expectApproxEqRel(0x1.0e7afeee50b89p+1, random.single(gen, 3), eps);
+    try expectApproxEqRel(0x1.28ce118715efcp+1, random.single(gen, 3), eps);
 }

@@ -74,11 +74,11 @@ pub const random = struct {
         }
     }
 
-    pub fn buffer(buf: []f64, generator: std.rand.Random, lambda: f64) []f64 {
+    pub fn fill(buffer: []f64, generator: std.rand.Random, lambda: f64) []f64 {
         assert(isFinite(lambda));
         assert(lambda > 0);
-        if (buf.len < 15 and lambda < 15) {
-            for (buf) |*x| {
+        if (buffer.len < 15 and lambda < 15) {
+            for (buffer) |*x| {
                 const uni = generator.float(f64);
                 x.* = linearSearch(uni, lambda);
             }
@@ -86,7 +86,7 @@ pub const random = struct {
             const initial_pois = @ceil(lambda);
             const initial_mass = density(initial_pois, lambda);
             const initial_cumu = probability(initial_pois, lambda);
-            for (buf) |*x| {
+            for (buffer) |*x| {
                 const uni = generator.float(f64);
                 x.* = guidedSearch(uni, lambda, initial_pois, initial_mass, initial_cumu);
             }
@@ -94,11 +94,11 @@ pub const random = struct {
             const beta = std.math.pi / @sqrt(3 * lambda);
             const c = 0.801 - 0.687 / @sqrt(lambda);
             const k = @log(c) - lambda - @log(beta);
-            for (buf) |*x| {
+            for (buffer) |*x| {
                 x.* = rejection(generator, lambda, beta, k);
             }
         }
-        return buf;
+        return buffer;
     }
 };
 
@@ -159,6 +159,7 @@ const expectEqual = std.testing.expectEqual;
 const expectApproxEqRel = std.testing.expectApproxEqRel;
 const eps = 10 * std.math.floatEps(f64); // 2.22 × 10^-15
 
+// zig fmt: off
 test "poisson.density" {
     try expectEqual(0, density(-inf, 3));
     try expectEqual(0, density( inf, 3));
@@ -194,7 +195,7 @@ test "poisson.quantile" {
     try expectEqual(inf, quantile(1                 , 3));
 }
 
-test "poisson.random" {
+test "poisson.random.single" {
     var prng = std.rand.DefaultPrng.init(0);
     const gen = prng.random();
     try expectEqual(2, random.single(gen, 3));

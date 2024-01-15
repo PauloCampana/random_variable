@@ -384,193 +384,192 @@
 <span class="line" id="L249"></span>
 <span class="line" id="L250"><span class="tok-kw">const</span> inverseNormalDist = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;normal_dist.zig&quot;</span>).inverseNormalDist;</span>
 <span class="line" id="L251"></span>
-<span class="line" id="L252"></span>
-<span class="line" id="L253"><span class="tok-comment">/// Inverse of complemented incomplete gamma integral</span></span>
-<span class="line" id="L254"><span class="tok-comment">///</span></span>
-<span class="line" id="L255"><span class="tok-comment">/// Given p, the function finds x such that</span></span>
-<span class="line" id="L256"><span class="tok-comment">///</span></span>
-<span class="line" id="L257"><span class="tok-comment">///  complementedIncompleteGamma(a, x) = p.</span></span>
-<span class="line" id="L258"><span class="tok-comment">///</span></span>
-<span class="line" id="L259"><span class="tok-comment">/// Starting with the approximate value</span></span>
-<span class="line" id="L260"><span class="tok-comment">///</span></span>
-<span class="line" id="L261"><span class="tok-comment">///         3</span></span>
-<span class="line" id="L262"><span class="tok-comment">///  x = a t</span></span>
-<span class="line" id="L263"><span class="tok-comment">///</span></span>
-<span class="line" id="L264"><span class="tok-comment">///  where</span></span>
-<span class="line" id="L265"><span class="tok-comment">///</span></span>
-<span class="line" id="L266"><span class="tok-comment">///  t = 1 - d - normalDist(p) sqrt(d)</span></span>
-<span class="line" id="L267"><span class="tok-comment">///</span></span>
-<span class="line" id="L268"><span class="tok-comment">/// and</span></span>
-<span class="line" id="L269"><span class="tok-comment">///</span></span>
-<span class="line" id="L270"><span class="tok-comment">///  d = 1/9a,</span></span>
-<span class="line" id="L271"><span class="tok-comment">///</span></span>
-<span class="line" id="L272"><span class="tok-comment">/// the routine performs up to 10 Newton iterations to find the</span></span>
-<span class="line" id="L273"><span class="tok-comment">/// root of complementedIncompleteGamma(a,x) - p = 0.</span></span>
-<span class="line" id="L274"><span class="tok-comment">///</span></span>
-<span class="line" id="L275"><span class="tok-comment">/// ACCURACY:</span></span>
-<span class="line" id="L276"><span class="tok-comment">///</span></span>
-<span class="line" id="L277"><span class="tok-comment">/// Tested at random a, p in the intervals indicated.</span></span>
-<span class="line" id="L278"><span class="tok-comment">///</span></span>
-<span class="line" id="L279"><span class="tok-comment">///                a        p                      Relative error:</span></span>
-<span class="line" id="L280"><span class="tok-comment">/// arithmetic   domain   domain     # trials      peak         rms</span></span>
-<span class="line" id="L281"><span class="tok-comment">///    IEEE     0.5,100   0,0.5       100000       1.0e-14     1.7e-15</span></span>
-<span class="line" id="L282"><span class="tok-comment">///    IEEE     0.01,0.5  0,0.5       100000       9.0e-14     3.4e-15</span></span>
-<span class="line" id="L283"><span class="tok-comment">///    IEEE    0.5,10000  0,0.5        20000       2.3e-13     3.8e-14</span></span>
-<span class="line" id="L284"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">inverseComplementedIncompleteGamma</span>(a: <span class="tok-type">f64</span>, y0: <span class="tok-type">f64</span>) <span class="tok-type">f64</span> {</span>
-<span class="line" id="L285">    <span class="tok-kw">var</span> i: <span class="tok-type">usize</span> = <span class="tok-number">0</span>;</span>
-<span class="line" id="L286"></span>
-<span class="line" id="L287">    <span class="tok-comment">// bound the solution</span>
+<span class="line" id="L252"><span class="tok-comment">/// Inverse of complemented incomplete gamma integral</span></span>
+<span class="line" id="L253"><span class="tok-comment">///</span></span>
+<span class="line" id="L254"><span class="tok-comment">/// Given p, the function finds x such that</span></span>
+<span class="line" id="L255"><span class="tok-comment">///</span></span>
+<span class="line" id="L256"><span class="tok-comment">///  complementedIncompleteGamma(a, x) = p.</span></span>
+<span class="line" id="L257"><span class="tok-comment">///</span></span>
+<span class="line" id="L258"><span class="tok-comment">/// Starting with the approximate value</span></span>
+<span class="line" id="L259"><span class="tok-comment">///</span></span>
+<span class="line" id="L260"><span class="tok-comment">///         3</span></span>
+<span class="line" id="L261"><span class="tok-comment">///  x = a t</span></span>
+<span class="line" id="L262"><span class="tok-comment">///</span></span>
+<span class="line" id="L263"><span class="tok-comment">///  where</span></span>
+<span class="line" id="L264"><span class="tok-comment">///</span></span>
+<span class="line" id="L265"><span class="tok-comment">///  t = 1 - d - normalDist(p) sqrt(d)</span></span>
+<span class="line" id="L266"><span class="tok-comment">///</span></span>
+<span class="line" id="L267"><span class="tok-comment">/// and</span></span>
+<span class="line" id="L268"><span class="tok-comment">///</span></span>
+<span class="line" id="L269"><span class="tok-comment">///  d = 1/9a,</span></span>
+<span class="line" id="L270"><span class="tok-comment">///</span></span>
+<span class="line" id="L271"><span class="tok-comment">/// the routine performs up to 10 Newton iterations to find the</span></span>
+<span class="line" id="L272"><span class="tok-comment">/// root of complementedIncompleteGamma(a,x) - p = 0.</span></span>
+<span class="line" id="L273"><span class="tok-comment">///</span></span>
+<span class="line" id="L274"><span class="tok-comment">/// ACCURACY:</span></span>
+<span class="line" id="L275"><span class="tok-comment">///</span></span>
+<span class="line" id="L276"><span class="tok-comment">/// Tested at random a, p in the intervals indicated.</span></span>
+<span class="line" id="L277"><span class="tok-comment">///</span></span>
+<span class="line" id="L278"><span class="tok-comment">///                a        p                      Relative error:</span></span>
+<span class="line" id="L279"><span class="tok-comment">/// arithmetic   domain   domain     # trials      peak         rms</span></span>
+<span class="line" id="L280"><span class="tok-comment">///    IEEE     0.5,100   0,0.5       100000       1.0e-14     1.7e-15</span></span>
+<span class="line" id="L281"><span class="tok-comment">///    IEEE     0.01,0.5  0,0.5       100000       9.0e-14     3.4e-15</span></span>
+<span class="line" id="L282"><span class="tok-comment">///    IEEE    0.5,10000  0,0.5        20000       2.3e-13     3.8e-14</span></span>
+<span class="line" id="L283"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">inverseComplementedIncompleteGamma</span>(a: <span class="tok-type">f64</span>, y0: <span class="tok-type">f64</span>) <span class="tok-type">f64</span> {</span>
+<span class="line" id="L284">    <span class="tok-kw">var</span> i: <span class="tok-type">usize</span> = <span class="tok-number">0</span>;</span>
+<span class="line" id="L285"></span>
+<span class="line" id="L286">    <span class="tok-comment">// bound the solution</span>
 </span>
-<span class="line" id="L288">    <span class="tok-kw">var</span> x0: <span class="tok-type">f64</span> = constants.MAXNUM;</span>
-<span class="line" id="L289">    <span class="tok-kw">var</span> yl: <span class="tok-type">f64</span> = <span class="tok-number">0</span>;</span>
-<span class="line" id="L290">    <span class="tok-kw">var</span> x1: <span class="tok-type">f64</span> = <span class="tok-number">0</span>;</span>
-<span class="line" id="L291">    <span class="tok-kw">var</span> yh: <span class="tok-type">f64</span> = <span class="tok-number">1.0</span>;</span>
-<span class="line" id="L292">    <span class="tok-kw">const</span> dithresh: <span class="tok-type">f64</span> = <span class="tok-number">5.0</span> * constants.MACHEP;</span>
-<span class="line" id="L293"></span>
-<span class="line" id="L294">    <span class="tok-comment">// approximation to inverse function</span>
+<span class="line" id="L287">    <span class="tok-kw">var</span> x0: <span class="tok-type">f64</span> = constants.MAXNUM;</span>
+<span class="line" id="L288">    <span class="tok-kw">var</span> yl: <span class="tok-type">f64</span> = <span class="tok-number">0</span>;</span>
+<span class="line" id="L289">    <span class="tok-kw">var</span> x1: <span class="tok-type">f64</span> = <span class="tok-number">0</span>;</span>
+<span class="line" id="L290">    <span class="tok-kw">var</span> yh: <span class="tok-type">f64</span> = <span class="tok-number">1.0</span>;</span>
+<span class="line" id="L291">    <span class="tok-kw">const</span> dithresh: <span class="tok-type">f64</span> = <span class="tok-number">5.0</span> * constants.MACHEP;</span>
+<span class="line" id="L292"></span>
+<span class="line" id="L293">    <span class="tok-comment">// approximation to inverse function</span>
 </span>
-<span class="line" id="L295">    <span class="tok-kw">var</span> d: <span class="tok-type">f64</span> = <span class="tok-number">1.0</span> / (<span class="tok-number">9.0</span> * a);</span>
-<span class="line" id="L296">    <span class="tok-kw">var</span> y: <span class="tok-type">f64</span> = (<span class="tok-number">1.0</span> - d - inverseNormalDist(y0) * math.sqrt(d));</span>
-<span class="line" id="L297">    <span class="tok-kw">var</span> x: <span class="tok-type">f64</span> = a * y * y * y;</span>
-<span class="line" id="L298"></span>
-<span class="line" id="L299">    <span class="tok-kw">var</span> lgm = lnGamma(a);</span>
-<span class="line" id="L300"></span>
-<span class="line" id="L301">    i = <span class="tok-number">0</span>;</span>
-<span class="line" id="L302">    <span class="tok-kw">while</span> (i &lt; <span class="tok-number">10</span>) : (i += <span class="tok-number">1</span>) {</span>
-<span class="line" id="L303">        <span class="tok-kw">if</span> (x &gt; x0 <span class="tok-kw">or</span> x &lt; x1) {</span>
-<span class="line" id="L304">            <span class="tok-kw">break</span>;</span>
-<span class="line" id="L305">        }</span>
-<span class="line" id="L306"></span>
-<span class="line" id="L307">        y = complementedIncompleteGamma(a, x);</span>
-<span class="line" id="L308">        <span class="tok-kw">if</span> (y &lt; yl <span class="tok-kw">or</span> y &gt; yh) {</span>
-<span class="line" id="L309">            <span class="tok-kw">break</span>;</span>
-<span class="line" id="L310">        }</span>
-<span class="line" id="L311">        <span class="tok-kw">if</span> (y &lt; y0) {</span>
-<span class="line" id="L312">            x0 = x;</span>
-<span class="line" id="L313">            yl = y;</span>
-<span class="line" id="L314">        } <span class="tok-kw">else</span> {</span>
-<span class="line" id="L315">            x1 = x;</span>
-<span class="line" id="L316">            yh = y;</span>
-<span class="line" id="L317">        }</span>
-<span class="line" id="L318">        <span class="tok-comment">// compute the derivative of the function at this point</span>
+<span class="line" id="L294">    <span class="tok-kw">var</span> d: <span class="tok-type">f64</span> = <span class="tok-number">1.0</span> / (<span class="tok-number">9.0</span> * a);</span>
+<span class="line" id="L295">    <span class="tok-kw">var</span> y: <span class="tok-type">f64</span> = (<span class="tok-number">1.0</span> - d - inverseNormalDist(y0) * math.sqrt(d));</span>
+<span class="line" id="L296">    <span class="tok-kw">var</span> x: <span class="tok-type">f64</span> = a * y * y * y;</span>
+<span class="line" id="L297"></span>
+<span class="line" id="L298">    <span class="tok-kw">var</span> lgm = lnGamma(a);</span>
+<span class="line" id="L299"></span>
+<span class="line" id="L300">    i = <span class="tok-number">0</span>;</span>
+<span class="line" id="L301">    <span class="tok-kw">while</span> (i &lt; <span class="tok-number">10</span>) : (i += <span class="tok-number">1</span>) {</span>
+<span class="line" id="L302">        <span class="tok-kw">if</span> (x &gt; x0 <span class="tok-kw">or</span> x &lt; x1) {</span>
+<span class="line" id="L303">            <span class="tok-kw">break</span>;</span>
+<span class="line" id="L304">        }</span>
+<span class="line" id="L305"></span>
+<span class="line" id="L306">        y = complementedIncompleteGamma(a, x);</span>
+<span class="line" id="L307">        <span class="tok-kw">if</span> (y &lt; yl <span class="tok-kw">or</span> y &gt; yh) {</span>
+<span class="line" id="L308">            <span class="tok-kw">break</span>;</span>
+<span class="line" id="L309">        }</span>
+<span class="line" id="L310">        <span class="tok-kw">if</span> (y &lt; y0) {</span>
+<span class="line" id="L311">            x0 = x;</span>
+<span class="line" id="L312">            yl = y;</span>
+<span class="line" id="L313">        } <span class="tok-kw">else</span> {</span>
+<span class="line" id="L314">            x1 = x;</span>
+<span class="line" id="L315">            yh = y;</span>
+<span class="line" id="L316">        }</span>
+<span class="line" id="L317">        <span class="tok-comment">// compute the derivative of the function at this point</span>
 </span>
-<span class="line" id="L319">        d = (a - <span class="tok-number">1.0</span>) * <span class="tok-builtin">@log</span>(x) - x - lgm;</span>
-<span class="line" id="L320">        <span class="tok-kw">if</span> (d &lt; -constants.MAXLOG) {</span>
-<span class="line" id="L321">            <span class="tok-kw">break</span>;</span>
-<span class="line" id="L322">        }</span>
-<span class="line" id="L323">        d = -math.exp(d);</span>
-<span class="line" id="L324">        <span class="tok-comment">// compute the step to the next approximation of x</span>
+<span class="line" id="L318">        d = (a - <span class="tok-number">1.0</span>) * <span class="tok-builtin">@log</span>(x) - x - lgm;</span>
+<span class="line" id="L319">        <span class="tok-kw">if</span> (d &lt; -constants.MAXLOG) {</span>
+<span class="line" id="L320">            <span class="tok-kw">break</span>;</span>
+<span class="line" id="L321">        }</span>
+<span class="line" id="L322">        d = -math.exp(d);</span>
+<span class="line" id="L323">        <span class="tok-comment">// compute the step to the next approximation of x</span>
 </span>
-<span class="line" id="L325">        d = (y - y0) / d;</span>
-<span class="line" id="L326">        <span class="tok-kw">if</span> (<span class="tok-builtin">@abs</span>(d / x) &lt; constants.MACHEP) {</span>
-<span class="line" id="L327">            <span class="tok-kw">return</span> x; <span class="tok-comment">// done</span>
+<span class="line" id="L324">        d = (y - y0) / d;</span>
+<span class="line" id="L325">        <span class="tok-kw">if</span> (<span class="tok-builtin">@abs</span>(d / x) &lt; constants.MACHEP) {</span>
+<span class="line" id="L326">            <span class="tok-kw">return</span> x; <span class="tok-comment">// done</span>
 </span>
-<span class="line" id="L328">        }</span>
-<span class="line" id="L329">        x = x - d;</span>
-<span class="line" id="L330">    }</span>
-<span class="line" id="L331"></span>
-<span class="line" id="L332">    <span class="tok-comment">// Resort to interval halving if Newton iteration did not converge.</span>
+<span class="line" id="L327">        }</span>
+<span class="line" id="L328">        x = x - d;</span>
+<span class="line" id="L329">    }</span>
+<span class="line" id="L330"></span>
+<span class="line" id="L331">    <span class="tok-comment">// Resort to interval halving if Newton iteration did not converge.</span>
 </span>
-<span class="line" id="L333">    d = <span class="tok-number">0.0625</span>;</span>
-<span class="line" id="L334">    <span class="tok-kw">if</span> (x0 == constants.MAXNUM) {</span>
-<span class="line" id="L335">        <span class="tok-kw">if</span> (x &lt;= <span class="tok-number">0.0</span>) {</span>
-<span class="line" id="L336">            x = <span class="tok-number">1.0</span>;</span>
-<span class="line" id="L337">        }</span>
-<span class="line" id="L338">        <span class="tok-kw">while</span> (x0 == constants.MAXNUM) {</span>
-<span class="line" id="L339">            x = (<span class="tok-number">1.0</span> + d) * x;</span>
-<span class="line" id="L340">            y = complementedIncompleteGamma(a, x);</span>
-<span class="line" id="L341">            <span class="tok-kw">if</span> (y &lt; y0) {</span>
-<span class="line" id="L342">                x0 = x;</span>
-<span class="line" id="L343">                yl = y;</span>
-<span class="line" id="L344">                <span class="tok-kw">break</span>;</span>
-<span class="line" id="L345">            }</span>
-<span class="line" id="L346">            d = d + d;</span>
-<span class="line" id="L347">        }</span>
-<span class="line" id="L348">    }</span>
-<span class="line" id="L349"></span>
-<span class="line" id="L350">    d = <span class="tok-number">0.5</span>;</span>
-<span class="line" id="L351">    <span class="tok-kw">var</span> dir: <span class="tok-type">f64</span> = <span class="tok-number">0</span>;</span>
-<span class="line" id="L352"></span>
-<span class="line" id="L353">    i = <span class="tok-number">0</span>;</span>
-<span class="line" id="L354">    <span class="tok-kw">while</span> (i &lt; <span class="tok-number">400</span>) : (i += <span class="tok-number">1</span>) {</span>
-<span class="line" id="L355">        x = x1 + d * (x0 - x1);</span>
-<span class="line" id="L356">        y = complementedIncompleteGamma(a, x);</span>
-<span class="line" id="L357">        lgm = (x0 - x1) / (x1 + x0);</span>
-<span class="line" id="L358">        <span class="tok-kw">if</span> (<span class="tok-builtin">@abs</span>(lgm) &lt; dithresh) {</span>
-<span class="line" id="L359">            <span class="tok-kw">break</span>;</span>
-<span class="line" id="L360">        }</span>
-<span class="line" id="L361">        lgm = (y - y0) / y0;</span>
-<span class="line" id="L362">        <span class="tok-kw">if</span> (<span class="tok-builtin">@abs</span>(lgm) &lt; dithresh) {</span>
-<span class="line" id="L363">            <span class="tok-kw">break</span>;</span>
-<span class="line" id="L364">        }</span>
-<span class="line" id="L365">        <span class="tok-kw">if</span> (x &lt;= <span class="tok-number">0.0</span>) {</span>
-<span class="line" id="L366">            <span class="tok-kw">break</span>;</span>
-<span class="line" id="L367">        }</span>
-<span class="line" id="L368">        <span class="tok-kw">if</span> (y &gt;= y0) {</span>
-<span class="line" id="L369">            x1 = x;</span>
-<span class="line" id="L370">            yh = y;</span>
-<span class="line" id="L371">            <span class="tok-kw">if</span> (dir &lt; <span class="tok-number">0</span>) {</span>
-<span class="line" id="L372">                dir = <span class="tok-number">0</span>;</span>
-<span class="line" id="L373">                d = <span class="tok-number">0.5</span>;</span>
-<span class="line" id="L374">            } <span class="tok-kw">else</span> <span class="tok-kw">if</span> (dir &gt; <span class="tok-number">1</span>) {</span>
-<span class="line" id="L375">                d = <span class="tok-number">0.5</span> * d + <span class="tok-number">0.5</span>;</span>
-<span class="line" id="L376">            } <span class="tok-kw">else</span> {</span>
-<span class="line" id="L377">                d = (y0 - yl) / (yh - yl);</span>
-<span class="line" id="L378">            }</span>
-<span class="line" id="L379">            dir += <span class="tok-number">1</span>;</span>
-<span class="line" id="L380">        } <span class="tok-kw">else</span> {</span>
-<span class="line" id="L381">            x0 = x;</span>
-<span class="line" id="L382">            yl = y;</span>
-<span class="line" id="L383">            <span class="tok-kw">if</span> (dir &gt; <span class="tok-number">0</span>) {</span>
-<span class="line" id="L384">                dir = <span class="tok-number">0</span>;</span>
-<span class="line" id="L385">                d = <span class="tok-number">0.5</span>;</span>
-<span class="line" id="L386">            } <span class="tok-kw">else</span> <span class="tok-kw">if</span> (dir &lt; -<span class="tok-number">1</span>) {</span>
-<span class="line" id="L387">                d = <span class="tok-number">0.5</span> * d;</span>
-<span class="line" id="L388">            } <span class="tok-kw">else</span> {</span>
-<span class="line" id="L389">                d = (y0 - yl) / (yh - yl);</span>
-<span class="line" id="L390">            }</span>
-<span class="line" id="L391">            dir -= <span class="tok-number">1</span>;</span>
-<span class="line" id="L392">        }</span>
-<span class="line" id="L393">    }</span>
-<span class="line" id="L394"></span>
-<span class="line" id="L395">    <span class="tok-kw">if</span> (x == <span class="tok-number">0.0</span>) {</span>
-<span class="line" id="L396">        <span class="tok-comment">// Underflow</span>
+<span class="line" id="L332">    d = <span class="tok-number">0.0625</span>;</span>
+<span class="line" id="L333">    <span class="tok-kw">if</span> (x0 == constants.MAXNUM) {</span>
+<span class="line" id="L334">        <span class="tok-kw">if</span> (x &lt;= <span class="tok-number">0.0</span>) {</span>
+<span class="line" id="L335">            x = <span class="tok-number">1.0</span>;</span>
+<span class="line" id="L336">        }</span>
+<span class="line" id="L337">        <span class="tok-kw">while</span> (x0 == constants.MAXNUM) {</span>
+<span class="line" id="L338">            x = (<span class="tok-number">1.0</span> + d) * x;</span>
+<span class="line" id="L339">            y = complementedIncompleteGamma(a, x);</span>
+<span class="line" id="L340">            <span class="tok-kw">if</span> (y &lt; y0) {</span>
+<span class="line" id="L341">                x0 = x;</span>
+<span class="line" id="L342">                yl = y;</span>
+<span class="line" id="L343">                <span class="tok-kw">break</span>;</span>
+<span class="line" id="L344">            }</span>
+<span class="line" id="L345">            d = d + d;</span>
+<span class="line" id="L346">        }</span>
+<span class="line" id="L347">    }</span>
+<span class="line" id="L348"></span>
+<span class="line" id="L349">    d = <span class="tok-number">0.5</span>;</span>
+<span class="line" id="L350">    <span class="tok-kw">var</span> dir: <span class="tok-type">f64</span> = <span class="tok-number">0</span>;</span>
+<span class="line" id="L351"></span>
+<span class="line" id="L352">    i = <span class="tok-number">0</span>;</span>
+<span class="line" id="L353">    <span class="tok-kw">while</span> (i &lt; <span class="tok-number">400</span>) : (i += <span class="tok-number">1</span>) {</span>
+<span class="line" id="L354">        x = x1 + d * (x0 - x1);</span>
+<span class="line" id="L355">        y = complementedIncompleteGamma(a, x);</span>
+<span class="line" id="L356">        lgm = (x0 - x1) / (x1 + x0);</span>
+<span class="line" id="L357">        <span class="tok-kw">if</span> (<span class="tok-builtin">@abs</span>(lgm) &lt; dithresh) {</span>
+<span class="line" id="L358">            <span class="tok-kw">break</span>;</span>
+<span class="line" id="L359">        }</span>
+<span class="line" id="L360">        lgm = (y - y0) / y0;</span>
+<span class="line" id="L361">        <span class="tok-kw">if</span> (<span class="tok-builtin">@abs</span>(lgm) &lt; dithresh) {</span>
+<span class="line" id="L362">            <span class="tok-kw">break</span>;</span>
+<span class="line" id="L363">        }</span>
+<span class="line" id="L364">        <span class="tok-kw">if</span> (x &lt;= <span class="tok-number">0.0</span>) {</span>
+<span class="line" id="L365">            <span class="tok-kw">break</span>;</span>
+<span class="line" id="L366">        }</span>
+<span class="line" id="L367">        <span class="tok-kw">if</span> (y &gt;= y0) {</span>
+<span class="line" id="L368">            x1 = x;</span>
+<span class="line" id="L369">            yh = y;</span>
+<span class="line" id="L370">            <span class="tok-kw">if</span> (dir &lt; <span class="tok-number">0</span>) {</span>
+<span class="line" id="L371">                dir = <span class="tok-number">0</span>;</span>
+<span class="line" id="L372">                d = <span class="tok-number">0.5</span>;</span>
+<span class="line" id="L373">            } <span class="tok-kw">else</span> <span class="tok-kw">if</span> (dir &gt; <span class="tok-number">1</span>) {</span>
+<span class="line" id="L374">                d = <span class="tok-number">0.5</span> * d + <span class="tok-number">0.5</span>;</span>
+<span class="line" id="L375">            } <span class="tok-kw">else</span> {</span>
+<span class="line" id="L376">                d = (y0 - yl) / (yh - yl);</span>
+<span class="line" id="L377">            }</span>
+<span class="line" id="L378">            dir += <span class="tok-number">1</span>;</span>
+<span class="line" id="L379">        } <span class="tok-kw">else</span> {</span>
+<span class="line" id="L380">            x0 = x;</span>
+<span class="line" id="L381">            yl = y;</span>
+<span class="line" id="L382">            <span class="tok-kw">if</span> (dir &gt; <span class="tok-number">0</span>) {</span>
+<span class="line" id="L383">                dir = <span class="tok-number">0</span>;</span>
+<span class="line" id="L384">                d = <span class="tok-number">0.5</span>;</span>
+<span class="line" id="L385">            } <span class="tok-kw">else</span> <span class="tok-kw">if</span> (dir &lt; -<span class="tok-number">1</span>) {</span>
+<span class="line" id="L386">                d = <span class="tok-number">0.5</span> * d;</span>
+<span class="line" id="L387">            } <span class="tok-kw">else</span> {</span>
+<span class="line" id="L388">                d = (y0 - yl) / (yh - yl);</span>
+<span class="line" id="L389">            }</span>
+<span class="line" id="L390">            dir -= <span class="tok-number">1</span>;</span>
+<span class="line" id="L391">        }</span>
+<span class="line" id="L392">    }</span>
+<span class="line" id="L393"></span>
+<span class="line" id="L394">    <span class="tok-kw">if</span> (x == <span class="tok-number">0.0</span>) {</span>
+<span class="line" id="L395">        <span class="tok-comment">// Underflow</span>
 </span>
-<span class="line" id="L397">    }</span>
-<span class="line" id="L398"></span>
-<span class="line" id="L399">    <span class="tok-kw">return</span> x;</span>
-<span class="line" id="L400">}</span>
-<span class="line" id="L401"></span>
-<span class="line" id="L402"><span class="tok-kw">test</span> <span class="tok-str">&quot;inverseComplementedIncompleteGamma&quot;</span> {</span>
-<span class="line" id="L403">    <span class="tok-kw">const</span> cases = [_][<span class="tok-number">3</span>]<span class="tok-type">f64</span>{</span>
-<span class="line" id="L404">        [_]<span class="tok-type">f64</span>{ <span class="tok-number">0.001</span>, <span class="tok-number">0.01</span>, <span class="tok-number">2.4259428385570885e-05</span> },</span>
-<span class="line" id="L405">        [_]<span class="tok-type">f64</span>{ <span class="tok-number">0.01</span>, <span class="tok-number">0.01</span>, <span class="tok-number">0.26505255025158292</span> },</span>
-<span class="line" id="L406">        [_]<span class="tok-type">f64</span>{ <span class="tok-number">0.03</span>, <span class="tok-number">0.4</span>, <span class="tok-number">2.316980536227699e-08</span> },</span>
-<span class="line" id="L407">        [_]<span class="tok-type">f64</span>{ <span class="tok-number">0.1</span>, <span class="tok-number">0.5</span>, <span class="tok-number">0.00059339110446022798</span> },</span>
-<span class="line" id="L408">        [_]<span class="tok-type">f64</span>{ <span class="tok-number">0.1</span>, <span class="tok-number">0.75</span>, <span class="tok-number">5.7917132949696076e-07</span> },</span>
-<span class="line" id="L409">        [_]<span class="tok-type">f64</span>{ <span class="tok-number">0.25</span>, <span class="tok-number">0.25</span>, <span class="tok-number">0.26062600197823282</span> },</span>
-<span class="line" id="L410">        [_]<span class="tok-type">f64</span>{ <span class="tok-number">0.5</span>, <span class="tok-number">0.1</span>, <span class="tok-number">1.3527717270477047</span> },</span>
-<span class="line" id="L411">        [_]<span class="tok-type">f64</span>{ <span class="tok-number">0.5</span>, <span class="tok-number">0.5</span>, <span class="tok-number">0.22746821155978625</span> },</span>
-<span class="line" id="L412">        [_]<span class="tok-type">f64</span>{ <span class="tok-number">0.75</span>, <span class="tok-number">0.25</span>, <span class="tok-number">1.0340914067758025</span> },</span>
-<span class="line" id="L413">        <span class="tok-comment">//[_]f64{ 1, 0, math.inf(f64) },</span>
+<span class="line" id="L396">    }</span>
+<span class="line" id="L397"></span>
+<span class="line" id="L398">    <span class="tok-kw">return</span> x;</span>
+<span class="line" id="L399">}</span>
+<span class="line" id="L400"></span>
+<span class="line" id="L401"><span class="tok-kw">test</span> <span class="tok-str">&quot;inverseComplementedIncompleteGamma&quot;</span> {</span>
+<span class="line" id="L402">    <span class="tok-kw">const</span> cases = [_][<span class="tok-number">3</span>]<span class="tok-type">f64</span>{</span>
+<span class="line" id="L403">        [_]<span class="tok-type">f64</span>{ <span class="tok-number">0.001</span>, <span class="tok-number">0.01</span>, <span class="tok-number">2.4259428385570885e-05</span> },</span>
+<span class="line" id="L404">        [_]<span class="tok-type">f64</span>{ <span class="tok-number">0.01</span>, <span class="tok-number">0.01</span>, <span class="tok-number">0.26505255025158292</span> },</span>
+<span class="line" id="L405">        [_]<span class="tok-type">f64</span>{ <span class="tok-number">0.03</span>, <span class="tok-number">0.4</span>, <span class="tok-number">2.316980536227699e-08</span> },</span>
+<span class="line" id="L406">        [_]<span class="tok-type">f64</span>{ <span class="tok-number">0.1</span>, <span class="tok-number">0.5</span>, <span class="tok-number">0.00059339110446022798</span> },</span>
+<span class="line" id="L407">        [_]<span class="tok-type">f64</span>{ <span class="tok-number">0.1</span>, <span class="tok-number">0.75</span>, <span class="tok-number">5.7917132949696076e-07</span> },</span>
+<span class="line" id="L408">        [_]<span class="tok-type">f64</span>{ <span class="tok-number">0.25</span>, <span class="tok-number">0.25</span>, <span class="tok-number">0.26062600197823282</span> },</span>
+<span class="line" id="L409">        [_]<span class="tok-type">f64</span>{ <span class="tok-number">0.5</span>, <span class="tok-number">0.1</span>, <span class="tok-number">1.3527717270477047</span> },</span>
+<span class="line" id="L410">        [_]<span class="tok-type">f64</span>{ <span class="tok-number">0.5</span>, <span class="tok-number">0.5</span>, <span class="tok-number">0.22746821155978625</span> },</span>
+<span class="line" id="L411">        [_]<span class="tok-type">f64</span>{ <span class="tok-number">0.75</span>, <span class="tok-number">0.25</span>, <span class="tok-number">1.0340914067758025</span> },</span>
+<span class="line" id="L412">        <span class="tok-comment">//[_]f64{ 1, 0, math.inf(f64) },</span>
 </span>
-<span class="line" id="L414">        [_]<span class="tok-type">f64</span>{ <span class="tok-number">1</span>, <span class="tok-number">0.5</span>, <span class="tok-number">0.69314718055994529</span> },</span>
-<span class="line" id="L415">        <span class="tok-comment">//[_]f64{ 1, 1, 0 },    // Should be valid?</span>
+<span class="line" id="L413">        [_]<span class="tok-type">f64</span>{ <span class="tok-number">1</span>, <span class="tok-number">0.5</span>, <span class="tok-number">0.69314718055994529</span> },</span>
+<span class="line" id="L414">        <span class="tok-comment">//[_]f64{ 1, 1, 0 },    // Should be valid?</span>
 </span>
-<span class="line" id="L416">        [_]<span class="tok-type">f64</span>{ <span class="tok-number">3</span>, <span class="tok-number">0.75</span>, <span class="tok-number">1.727299417860519</span> },</span>
-<span class="line" id="L417">        [_]<span class="tok-type">f64</span>{ <span class="tok-number">25</span>, <span class="tok-number">0.4</span>, <span class="tok-number">25.945791937289371</span> },</span>
-<span class="line" id="L418">        [_]<span class="tok-type">f64</span>{ <span class="tok-number">25</span>, <span class="tok-number">0.7</span>, <span class="tok-number">22.156653488661991</span> },</span>
-<span class="line" id="L419">        [_]<span class="tok-type">f64</span>{ <span class="tok-number">10</span>, <span class="tok-number">0.5</span>, <span class="tok-number">9.6687146147141299</span> },</span>
-<span class="line" id="L420">        [_]<span class="tok-type">f64</span>{ <span class="tok-number">100</span>, <span class="tok-number">0.25</span>, <span class="tok-number">106.5510925269767</span> },</span>
-<span class="line" id="L421">        [_]<span class="tok-type">f64</span>{ <span class="tok-number">1000</span>, <span class="tok-number">0.01</span>, <span class="tok-number">1075.0328320864389</span> },</span>
-<span class="line" id="L422">        [_]<span class="tok-type">f64</span>{ <span class="tok-number">1000</span>, <span class="tok-number">0.99</span>, <span class="tok-number">927.90815979664251</span> },</span>
-<span class="line" id="L423">        [_]<span class="tok-type">f64</span>{ <span class="tok-number">10000</span>, <span class="tok-number">0.5</span>, <span class="tok-number">9999.6666686420485</span> },</span>
-<span class="line" id="L424">    };</span>
-<span class="line" id="L425"></span>
-<span class="line" id="L426">    <span class="tok-kw">for</span> (cases) |c| {</span>
-<span class="line" id="L427">        <span class="tok-kw">try</span> expectApproxEqRel(inverseComplementedIncompleteGamma(c[<span class="tok-number">0</span>], c[<span class="tok-number">1</span>]), c[<span class="tok-number">2</span>], epsilon);</span>
-<span class="line" id="L428">    }</span>
-<span class="line" id="L429">}</span>
-<span class="line" id="L430"></span>
+<span class="line" id="L415">        [_]<span class="tok-type">f64</span>{ <span class="tok-number">3</span>, <span class="tok-number">0.75</span>, <span class="tok-number">1.727299417860519</span> },</span>
+<span class="line" id="L416">        [_]<span class="tok-type">f64</span>{ <span class="tok-number">25</span>, <span class="tok-number">0.4</span>, <span class="tok-number">25.945791937289371</span> },</span>
+<span class="line" id="L417">        [_]<span class="tok-type">f64</span>{ <span class="tok-number">25</span>, <span class="tok-number">0.7</span>, <span class="tok-number">22.156653488661991</span> },</span>
+<span class="line" id="L418">        [_]<span class="tok-type">f64</span>{ <span class="tok-number">10</span>, <span class="tok-number">0.5</span>, <span class="tok-number">9.6687146147141299</span> },</span>
+<span class="line" id="L419">        [_]<span class="tok-type">f64</span>{ <span class="tok-number">100</span>, <span class="tok-number">0.25</span>, <span class="tok-number">106.5510925269767</span> },</span>
+<span class="line" id="L420">        [_]<span class="tok-type">f64</span>{ <span class="tok-number">1000</span>, <span class="tok-number">0.01</span>, <span class="tok-number">1075.0328320864389</span> },</span>
+<span class="line" id="L421">        [_]<span class="tok-type">f64</span>{ <span class="tok-number">1000</span>, <span class="tok-number">0.99</span>, <span class="tok-number">927.90815979664251</span> },</span>
+<span class="line" id="L422">        [_]<span class="tok-type">f64</span>{ <span class="tok-number">10000</span>, <span class="tok-number">0.5</span>, <span class="tok-number">9999.6666686420485</span> },</span>
+<span class="line" id="L423">    };</span>
+<span class="line" id="L424"></span>
+<span class="line" id="L425">    <span class="tok-kw">for</span> (cases) |c| {</span>
+<span class="line" id="L426">        <span class="tok-kw">try</span> expectApproxEqRel(inverseComplementedIncompleteGamma(c[<span class="tok-number">0</span>], c[<span class="tok-number">1</span>]), c[<span class="tok-number">2</span>], epsilon);</span>
+<span class="line" id="L427">    }</span>
+<span class="line" id="L428">}</span>
+<span class="line" id="L429"></span>
 </code></pre></body>
 </html>

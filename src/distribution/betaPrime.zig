@@ -63,30 +63,19 @@ pub fn quantile(p: f64, shape1: f64, shape2: f64) f64 {
 
 /// Uses the relation to Gamma distribution.
 pub const random = struct {
-    fn implementation(generator: std.rand.Random, shape1: f64, shape2: f64) f64 {
-        const gam1 = gamma.random.implementation(generator, shape1, 1);
-        const gam2 = gamma.random.implementation(generator, shape2, 1);
+    pub fn single(generator: std.rand.Random, shape1: f64, shape2: f64) f64 {
+        const gam1 = gamma.random.single(generator, shape1, 1);
+        const gam2 = gamma.random.single(generator, shape2, 1);
         return gam1 / gam2;
     }
 
-    pub fn single(generator: std.rand.Random, shape1: f64, shape2: f64) f64 {
-        assert(isFinite(shape1) and isFinite(shape2));
-        assert(shape1 > 0 and shape2 > 0);
-        return implementation(generator, shape1, shape2);
-    }
-
-    pub fn buffer(buf: []f64, generator: std.rand.Random, shape1: f64, shape2: f64) []f64 {
-        assert(isFinite(shape1) and isFinite(shape2));
-        assert(shape1 > 0 and shape2 > 0);
-        for (buf) |*x| {
-            x.* = implementation(generator, shape1, shape2);
+    pub fn fill(buffer: []f64, generator: std.rand.Random, shape1: f64, shape2: f64) []f64 {
+        for (buffer) |*x| {
+            const gam1 = gamma.random.single(generator, shape1, 1);
+            const gam2 = gamma.random.single(generator, shape2, 1);
+            x.* = gam1 / gam2;
         }
-        return buf;
-    }
-
-    pub fn alloc(allocator: std.mem.Allocator, generator: std.rand.Random, n: usize, shape1: f64, shape2: f64) ![]f64 {
-        const slice = try allocator.alloc(f64, n);
-        return buffer(slice, generator, shape1, shape2);
+        return buffer;
     }
 };
 
@@ -94,6 +83,7 @@ const expectEqual = std.testing.expectEqual;
 const expectApproxEqRel = std.testing.expectApproxEqRel;
 const eps = 10 * std.math.floatEps(f64); // 2.22 × 10^-15
 
+// zig fmt: off
 test "betaPrime.density" {
     try expectEqual(0, density(-inf, 3, 5));
     try expectEqual(0, density( inf, 3, 5));
@@ -125,10 +115,10 @@ test "betaPrime.quantile" {
     try expectEqual      (inf               , quantile(1  , 3, 5)     );
 }
 
-test "betaPrime.random" {
+test "betaPrime.random.single" {
     var prng = std.rand.DefaultPrng.init(0);
     const gen = prng.random();
-    try expectApproxEqRel(0x1.fedfe5d36ee54p-2, random.implementation(gen, 3, 5), eps);
-    try expectApproxEqRel(0x1.5ffd299be7e43p-2, random.implementation(gen, 3, 5), eps);
-    try expectApproxEqRel(0x1.28add14984721p-1, random.implementation(gen, 3, 5), eps);
+    try expectApproxEqRel(0x1.fedfe5d36ee54p-2, random.single(gen, 3, 5), eps);
+    try expectApproxEqRel(0x1.5ffd299be7e43p-2, random.single(gen, 3, 5), eps);
+    try expectApproxEqRel(0x1.28add14984721p-1, random.single(gen, 3, 5), eps);
 }

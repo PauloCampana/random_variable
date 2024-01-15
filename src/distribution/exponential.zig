@@ -46,29 +46,21 @@ pub fn quantile(p: f64, rate: f64) f64 {
 
 /// Uses the Ziggurat method.
 pub const random = struct {
-    fn implementation(generator: std.rand.Random, rate: f64) f64 {
+    pub fn single(generator: std.rand.Random, rate: f64) f64 {
+        assert(isFinite(rate));
+        assert(rate > 0);
         const exp = generator.floatExp(f64);
         return exp / rate;
     }
 
-    pub fn single(generator: std.rand.Random, rate: f64) f64 {
+    pub fn fill(buffer: []f64, generator: std.rand.Random, rate: f64) []f64 {
         assert(isFinite(rate));
         assert(rate > 0);
-        return implementation(generator, rate);
-    }
-
-    pub fn buffer(buf: []f64, generator: std.rand.Random, rate: f64) []f64 {
-        assert(isFinite(rate));
-        assert(rate > 0);
-        for (buf) |*x| {
-            x.* = implementation(generator, rate);
+        for (buffer) |*x| {
+            const exp = generator.floatExp(f64);
+            x.* = exp / rate;
         }
-        return buf;
-    }
-
-    pub fn alloc(allocator: std.mem.Allocator, generator: std.rand.Random, n: usize, rate: f64) ![]f64 {
-        const slice = try allocator.alloc(f64, n);
-        return buffer(slice, generator, rate);
+        return buffer;
     }
 };
 
@@ -76,6 +68,7 @@ const expectEqual = std.testing.expectEqual;
 const expectApproxEqRel = std.testing.expectApproxEqRel;
 const eps = 10 * std.math.floatEps(f64); // 2.22 × 10^-15
 
+// zig fmt: off
 test "exponential.density" {
     try expectEqual(0, density(-inf, 3));
     try expectEqual(0, density( inf, 3));
@@ -103,10 +96,10 @@ test "exponential.quantile" {
     try expectEqual      (inf                , quantile(1  , 3)     );
 }
 
-test "exponential.random" {
+test "exponential.random.single" {
     var prng = std.rand.DefaultPrng.init(0);
     const gen = prng.random();
-    try expectApproxEqRel(0x1.0d10389b44e27p-4, random.implementation(gen, 3), eps);
-    try expectApproxEqRel(0x1.65addca068349p-1, random.implementation(gen, 3), eps);
-    try expectApproxEqRel(0x1.444f149040ffap-6, random.implementation(gen, 3), eps);
+    try expectApproxEqRel(0x1.0d10389b44e27p-4, random.single(gen, 3), eps);
+    try expectApproxEqRel(0x1.65addca068349p-1, random.single(gen, 3), eps);
+    try expectApproxEqRel(0x1.444f149040ffap-6, random.single(gen, 3), eps);
 }

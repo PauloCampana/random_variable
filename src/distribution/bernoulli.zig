@@ -48,33 +48,31 @@ pub fn probability(q: f64, prob: f64) f64 {
 pub fn quantile(p: f64, prob: f64) f64 {
     assert(0 <= prob and prob <= 1);
     assert(0 <= p and p <= 1);
-    return if (p > 1 - prob) 1 else 0;
+    const ber = @intFromBool(p > 1 - prob);
+    return @floatFromInt(ber);
 }
 
 /// Uses the quantile function.
 pub const random = struct {
-    fn implementation(generator: std.rand.Random, prob: f64) f64 {
+    pub fn single(generator: std.rand.Random, prob: f64) f64 {
+        assert(0 <= prob and prob <= 1);
         const uni = generator.float(f64);
         const ber = @intFromBool(uni < prob);
         return @floatFromInt(ber);
     }
 
-    pub fn single(generator: std.rand.Random, prob: f64) f64 {
+    pub fn fill(buffer: []f64, generator: std.rand.Random, prob: f64) []f64 {
         assert(0 <= prob and prob <= 1);
-        return implementation(generator, prob);
-    }
-
-    pub fn buffer(buf: []f64, generator: std.rand.Random, prob: f64) []f64 {
-        assert(0 <= prob and prob <= 1);
-        for (buf) |*x| {
-            x.* = implementation(generator, prob);
+        if (prob == 0 or prob == 1) {
+            @memset(buffer, prob);
+            return buffer;
         }
-        return buf;
-    }
-
-    pub fn alloc(allocator: std.mem.Allocator, generator: std.rand.Random, n: usize, prob: f64) ![]f64 {
-        const slice = try allocator.alloc(f64, n);
-        return buffer(slice, generator, prob);
+        for (buffer) |*x| {
+            const uni = generator.float(f64);
+            const ber = @intFromBool(uni < prob);
+            x.* = @floatFromInt(ber);
+        }
+        return buffer;
     }
 };
 
@@ -82,6 +80,7 @@ const expectEqual = std.testing.expectEqual;
 const expectApproxEqRel = std.testing.expectApproxEqRel;
 const eps = 10 * std.math.floatEps(f64); // 2.22 × 10^-15
 
+// zig fmt: off
 test "bernoulli.density" {
     try expectEqual(0, density(-inf, 0.2));
     try expectEqual(0, density( inf, 0.2));
@@ -117,14 +116,14 @@ test "bernoulli.quantile" {
 test "bernoulli.random" {
     var prng = std.rand.DefaultPrng.init(0);
     const gen = prng.random();
-    try expectEqual(0, random.implementation(gen, 0));
-    try expectEqual(0, random.implementation(gen, 0));
-    try expectEqual(0, random.implementation(gen, 0));
-    try expectEqual(1, random.implementation(gen, 1));
-    try expectEqual(1, random.implementation(gen, 1));
-    try expectEqual(1, random.implementation(gen, 1));
+    try expectEqual(0, random.single(gen, 0));
+    try expectEqual(0, random.single(gen, 0));
+    try expectEqual(0, random.single(gen, 0));
+    try expectEqual(1, random.single(gen, 1));
+    try expectEqual(1, random.single(gen, 1));
+    try expectEqual(1, random.single(gen, 1));
 
-    try expectEqual(0, random.implementation(gen, 0.2));
-    try expectEqual(0, random.implementation(gen, 0.2));
-    try expectEqual(0, random.implementation(gen, 0.2));
+    try expectEqual(0, random.single(gen, 0.2));
+    try expectEqual(0, random.single(gen, 0.2));
+    try expectEqual(0, random.single(gen, 0.2));
 }

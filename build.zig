@@ -5,11 +5,11 @@ pub fn build(b: *std.Build) !void {
     const optimize = b.standardOptimizeOption(.{});
 
     _ = b.addModule("random_variable", .{
-        .root_source_file = .{.path = "src/root.zig"},
+        .root_source_file = .{ .path = "src/root.zig" },
     });
 
     const tests = b.addTest(.{
-        .root_source_file = .{.path = "src/root.zig"},
+        .root_source_file = .{ .path = "src/root.zig" },
         .target = target,
         .optimize = optimize,
     });
@@ -18,7 +18,7 @@ pub fn build(b: *std.Build) !void {
     test_step.dependOn(&test_cmd.step);
 
     const docs_tests = b.addTest(.{
-        .root_source_file = .{.path = "src/root.zig"},
+        .root_source_file = .{ .path = "src/root.zig" },
     });
     const docs_cmd = b.addInstallDirectory(.{
         .source_dir = docs_tests.getEmittedDocs(),

@@ -249,7 +249,6 @@ test "complementedIncompleteGamma" {
 
 const inverseNormalDist = @import("normal_dist.zig").inverseNormalDist;
 
-
 /// Inverse of complemented incomplete gamma integral
 ///
 /// Given p, the function finds x such that

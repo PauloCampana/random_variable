@@ -58,66 +58,67 @@ pub fn probability(q: f64, size: u64, prob: f64) f64 {
 pub fn quantile(p: f64, size: u64, prob: f64) f64 {
     assert(0 <= prob and prob <= 1);
     assert(0 <= p and p <= 1);
-    if (p == 0) {
-        return 0;
-    }
     const n = @as(f64, @floatFromInt(size));
-    if (p == 1 or prob == 1) {
-        return n;
+    if (p == 0 or p == 1) {
+        return n * p;
+    }
+    if (prob == 0 or prob == 1 or size == 0) {
+        return n * prob;
     }
     const pq = prob / (1 - prob);
-    var mass = std.math.pow(f64, 1 - prob, n);
+    const initial_mass = std.math.pow(f64, 1 - prob, n);
+    return linearSearch(p, n, pq, initial_mass);
+}
+
+/// Uses the quantile function.
+pub const random = struct {
+    pub fn single(generator: std.rand.Random, size: u64, prob: f64) f64 {
+        assert(0 <= prob and prob <= 1);
+        const n = @as(f64, @floatFromInt(size));
+        if (prob == 0 or prob == 1 or size == 0) {
+            return n * prob;
+        }
+        const pq = prob / (1 - prob);
+        const initial_mass = std.math.pow(f64, 1 - prob, n);
+        const uni = generator.float(f64);
+        return linearSearch(uni, n, pq, initial_mass);
+    }
+
+    pub fn fill(buffer: []f64, generator: std.rand.Random, size: u64, prob: f64) []f64 {
+        assert(0 <= prob and prob <= 1);
+        const n = @as(f64, @floatFromInt(size));
+        if (prob == 0 or prob == 1 or size == 0) {
+            @memset(buffer, n * prob);
+            return buffer;
+        }
+        const pq = prob / (1 - prob);
+        const initial_mass = std.math.pow(f64, 1 - prob, n);
+        for (buffer) |*x| {
+            const uni = generator.float(f64);
+            x.* = linearSearch(uni, n, pq, initial_mass);
+        }
+        return buffer;
+    }
+};
+
+inline fn linearSearch(p: f64, n: f64, pq: f64, initial_mass: f64) f64 {
+    var mass = initial_mass;
     var cumu = mass;
     var bin: f64 = 0;
-    while (p >= cumu) : (bin += 1) {
-        mass *= pq * (n - bin) / (bin + 1);
+    while (cumu <= p) {
+        const num = n - bin;
+        bin += 1;
+        mass *= pq * num / bin;
         cumu += mass;
     }
     return bin;
 }
 
-/// Uses the quantile function.
-pub const random = struct {
-    fn implementation(generator: std.rand.Random, size: u64, prob: f64) f64 {
-        const n = @as(f64, @floatFromInt(size));
-        if (prob == 1) {
-            return n;
-        }
-        const pq = prob / (1 - prob);
-        var mass = std.math.pow(f64, 1 - prob, n);
-        var cumu = mass;
-        var bin: f64 = 0;
-        const uni = generator.float(f64);
-        while (uni >= cumu) : (bin += 1) {
-            mass *= pq * (n - bin) / (bin + 1);
-            cumu += mass;
-        }
-        return bin;
-    }
-
-    pub fn single(generator: std.rand.Random, size: u64, prob: f64) f64 {
-        assert(0 <= prob and prob <= 1);
-        return implementation(generator, size, prob);
-    }
-
-    pub fn buffer(buf: []f64, generator: std.rand.Random, size: u64, prob: f64) []f64 {
-        assert(0 <= prob and prob <= 1);
-        for (buf) |*x| {
-            x.* = implementation(generator, size, prob);
-        }
-        return buf;
-    }
-
-    pub fn alloc(allocator: std.mem.Allocator, generator: std.rand.Random, n: usize, size: u64, prob: f64) ![]f64 {
-        const slice = try allocator.alloc(f64, n);
-        return buffer(slice, generator, size, prob);
-    }
-};
-
 const expectEqual = std.testing.expectEqual;
 const expectApproxEqRel = std.testing.expectApproxEqRel;
 const eps = 10 * std.math.floatEps(f64); // 2.22 × 10^-15
 
+// zig fmt: off
 test "binomial.density" {
     try expectEqual(0, density(-inf, 10, 0.2));
     try expectEqual(0, density( inf, 10, 0.2));
@@ -179,20 +180,20 @@ test "binomial.quantile" {
     try expectEqual(10, quantile(1           , 10, 0.2));
 }
 
-test "binomial.random" {
+test "binomial.random.single" {
     var prng = std.rand.DefaultPrng.init(0);
     const gen = prng.random();
-    try expectEqual( 0, random.implementation(gen,  0, 0.2));
-    try expectEqual( 0, random.implementation(gen,  0, 0.2));
-    try expectEqual( 0, random.implementation(gen,  0, 0.2));
-    try expectEqual( 0, random.implementation(gen, 10, 0  ));
-    try expectEqual( 0, random.implementation(gen, 10, 0  ));
-    try expectEqual( 0, random.implementation(gen, 10, 0  ));
-    try expectEqual(10, random.implementation(gen, 10, 1  ));
-    try expectEqual(10, random.implementation(gen, 10, 1  ));
-    try expectEqual(10, random.implementation(gen, 10, 1  ));
+    try expectEqual( 0, random.single(gen,  0, 0.2));
+    try expectEqual( 0, random.single(gen,  0, 0.2));
+    try expectEqual( 0, random.single(gen,  0, 0.2));
+    try expectEqual( 0, random.single(gen, 10, 0  ));
+    try expectEqual( 0, random.single(gen, 10, 0  ));
+    try expectEqual( 0, random.single(gen, 10, 0  ));
+    try expectEqual(10, random.single(gen, 10, 1  ));
+    try expectEqual(10, random.single(gen, 10, 1  ));
+    try expectEqual(10, random.single(gen, 10, 1  ));
 
-    try expectEqual(2, random.implementation(gen, 10, 0.2));
-    try expectEqual(2, random.implementation(gen, 10, 0.2));
-    try expectEqual(2, random.implementation(gen, 10, 0.2));
+    try expectEqual(1, random.single(gen, 10, 0.2));
+    try expectEqual(2, random.single(gen, 10, 0.2));
+    try expectEqual(2, random.single(gen, 10, 0.2));
 }

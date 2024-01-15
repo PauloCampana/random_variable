@@ -45,27 +45,20 @@ pub fn quantile(p: f64, min: f64, max: f64) f64 {
 
 /// Uses the quantile function.
 pub const random = struct {
-    fn implementation(generator: std.rand.Random, min: f64, max: f64) f64 {
+    pub fn single(generator: std.rand.Random, min: f64, max: f64) f64 {
+        assert(isFinite(min) and isFinite(max));
         const uni = generator.float(f64);
         return min + (max - min) * uni;
     }
 
-    pub fn single(generator: std.rand.Random, min: f64, max: f64) f64 {
+    pub fn fill(buffer: []f64, generator: std.rand.Random, min: f64, max: f64) []f64 {
         assert(isFinite(min) and isFinite(max));
-        return implementation(generator, min, max);
-    }
-
-    pub fn buffer(buf: []f64, generator: std.rand.Random, min: f64, max: f64) []f64 {
-        assert(isFinite(min) and isFinite(max));
-        for (buf) |*x| {
-            x.* = implementation(generator, min, max);
+        const scale = max - min;
+        for (buffer) |*x| {
+            const uni = generator.float(f64);
+            x.* = min + scale * uni;
         }
-        return buf;
-    }
-
-    pub fn alloc(allocator: std.mem.Allocator, generator: std.rand.Random, n: usize, min: f64, max: f64) ![]f64 {
-        const slice = try allocator.alloc(f64, n);
-        return buffer(slice, generator, min, max);
+        return buffer;
     }
 };
 
@@ -73,6 +66,7 @@ const expectEqual = std.testing.expectEqual;
 const expectApproxEqRel = std.testing.expectApproxEqRel;
 const eps = 10 * std.math.floatEps(f64); // 2.22 × 10^-15
 
+// zig fmt: off
 test "uniform.density" {
     try expectEqual(0, density(-inf, 0, 1));
     try expectEqual(0, density( inf, 0, 1));
@@ -105,11 +99,11 @@ test "uniform.quantile" {
     try expectApproxEqRel(5  , quantile(1  , 3, 5), eps);
 }
 
-test "uniform.random" {
+test "uniform.random.single" {
     var prng = std.rand.DefaultPrng.init(0);
     const gen = prng.random();
-    try expectApproxEqRel(0x1.75d61490b23dfp-2, random.implementation(gen, 0, 1), eps);
-    try expectApproxEqRel(0x1.a6f3dc380d507p-2, random.implementation(gen, 0, 1), eps);
-    try expectApproxEqRel(0x1.fdf91ec9a7bfcp-2, random.implementation(gen, 0, 1), eps);
-    try expectApproxEqRel(0x1.0000000000000p+0, random.implementation(gen, 1, 1), eps);
+    try expectApproxEqRel(0x1.75d61490b23dfp-2, random.single(gen, 0, 1), eps);
+    try expectApproxEqRel(0x1.a6f3dc380d507p-2, random.single(gen, 0, 1), eps);
+    try expectApproxEqRel(0x1.fdf91ec9a7bfcp-2, random.single(gen, 0, 1), eps);
+    try expectApproxEqRel(0x1.0000000000000p+0, random.single(gen, 1, 1), eps);
 }

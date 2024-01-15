@@ -176,33 +176,33 @@
 <span class="line" id="L62"></span>
 <span class="line" id="L63"><span class="tok-comment">/// Uses the quantile function.</span></span>
 <span class="line" id="L64"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> random = <span class="tok-kw">struct</span> {</span>
-<span class="line" id="L65">    <span class="tok-kw">fn</span> <span class="tok-fn">implementation</span>(generator: std.rand.Random, shape: <span class="tok-type">f64</span>) <span class="tok-type">f64</span> {</span>
-<span class="line" id="L66">        <span class="tok-kw">const</span> uni = generator.float(<span class="tok-type">f64</span>);</span>
-<span class="line" id="L67">        <span class="tok-kw">if</span> (shape == <span class="tok-number">0.5</span>) {</span>
-<span class="line" id="L68">            <span class="tok-kw">return</span> uni;</span>
-<span class="line" id="L69">        }</span>
-<span class="line" id="L70">        <span class="tok-kw">const</span> shape2 = <span class="tok-number">1</span> - shape;</span>
-<span class="line" id="L71">        <span class="tok-kw">const</span> num = ((<span class="tok-number">2</span> * shape - <span class="tok-number">1</span>) * uni + shape2) / shape2;</span>
-<span class="line" id="L72">        <span class="tok-kw">const</span> den = shape / shape2;</span>
-<span class="line" id="L73">        <span class="tok-kw">return</span> <span class="tok-builtin">@log</span>(num) / <span class="tok-builtin">@log</span>(den);</span>
-<span class="line" id="L74">    }</span>
-<span class="line" id="L75"></span>
-<span class="line" id="L76">    <span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">single</span>(generator: std.rand.Random, shape: <span class="tok-type">f64</span>) <span class="tok-type">f64</span> {</span>
-<span class="line" id="L77">        assert(<span class="tok-number">0</span> &lt; shape <span class="tok-kw">and</span> shape &lt; <span class="tok-number">1</span>);</span>
-<span class="line" id="L78">        <span class="tok-kw">return</span> implementation(generator, shape);</span>
-<span class="line" id="L79">    }</span>
-<span class="line" id="L80"></span>
-<span class="line" id="L81">    <span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">buffer</span>(buf: []<span class="tok-type">f64</span>, generator: std.rand.Random, shape: <span class="tok-type">f64</span>) []<span class="tok-type">f64</span> {</span>
-<span class="line" id="L82">        assert(<span class="tok-number">0</span> &lt; shape <span class="tok-kw">and</span> shape &lt; <span class="tok-number">1</span>);</span>
-<span class="line" id="L83">        <span class="tok-kw">for</span> (buf) |*x| {</span>
-<span class="line" id="L84">            x.* = implementation(generator, shape);</span>
-<span class="line" id="L85">        }</span>
-<span class="line" id="L86">        <span class="tok-kw">return</span> buf;</span>
-<span class="line" id="L87">    }</span>
-<span class="line" id="L88"></span>
-<span class="line" id="L89">    <span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">alloc</span>(allocator: std.mem.Allocator, generator: std.rand.Random, n: <span class="tok-type">usize</span>, shape: <span class="tok-type">f64</span>) ![]<span class="tok-type">f64</span> {</span>
-<span class="line" id="L90">        <span class="tok-kw">const</span> slice = <span class="tok-kw">try</span> allocator.alloc(<span class="tok-type">f64</span>, n);</span>
-<span class="line" id="L91">        <span class="tok-kw">return</span> buffer(slice, generator, shape);</span>
+<span class="line" id="L65">    <span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">single</span>(generator: std.rand.Random, shape: <span class="tok-type">f64</span>) <span class="tok-type">f64</span> {</span>
+<span class="line" id="L66">        assert(<span class="tok-number">0</span> &lt; shape <span class="tok-kw">and</span> shape &lt; <span class="tok-number">1</span>);</span>
+<span class="line" id="L67">        <span class="tok-kw">const</span> uni = generator.float(<span class="tok-type">f64</span>);</span>
+<span class="line" id="L68">        <span class="tok-kw">if</span> (shape == <span class="tok-number">0.5</span>) {</span>
+<span class="line" id="L69">            <span class="tok-kw">return</span> uni;</span>
+<span class="line" id="L70">        }</span>
+<span class="line" id="L71">        <span class="tok-kw">const</span> shape2 = <span class="tok-number">1</span> - shape;</span>
+<span class="line" id="L72">        <span class="tok-kw">const</span> num = ((<span class="tok-number">2</span> * shape - <span class="tok-number">1</span>) * uni + shape2) / shape2;</span>
+<span class="line" id="L73">        <span class="tok-kw">const</span> den = shape / shape2;</span>
+<span class="line" id="L74">        <span class="tok-kw">return</span> <span class="tok-builtin">@log</span>(num) / <span class="tok-builtin">@log</span>(den);</span>
+<span class="line" id="L75">    }</span>
+<span class="line" id="L76"></span>
+<span class="line" id="L77">    <span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">fill</span>(buffer: []<span class="tok-type">f64</span>, generator: std.rand.Random, shape: <span class="tok-type">f64</span>) []<span class="tok-type">f64</span> {</span>
+<span class="line" id="L78">        assert(<span class="tok-number">0</span> &lt; shape <span class="tok-kw">and</span> shape &lt; <span class="tok-number">1</span>);</span>
+<span class="line" id="L79">        <span class="tok-kw">if</span> (shape == <span class="tok-number">0.5</span>) {</span>
+<span class="line" id="L80">            <span class="tok-kw">for</span> (buffer) |*x| {</span>
+<span class="line" id="L81">                x.* = generator.float(<span class="tok-type">f64</span>);</span>
+<span class="line" id="L82">            }</span>
+<span class="line" id="L83">        }</span>
+<span class="line" id="L84">        <span class="tok-kw">const</span> shape2 = <span class="tok-number">1</span> - shape;</span>
+<span class="line" id="L85">        <span class="tok-kw">const</span> mc = (<span class="tok-number">2</span> * shape - <span class="tok-number">1</span>) / shape2;</span>
+<span class="line" id="L86">        <span class="tok-kw">const</span> log_den = <span class="tok-builtin">@log</span>(shape / shape2);</span>
+<span class="line" id="L87">        <span class="tok-kw">for</span> (buffer) |*x| {</span>
+<span class="line" id="L88">            <span class="tok-kw">const</span> uni = generator.float(<span class="tok-type">f64</span>);</span>
+<span class="line" id="L89">            x.* = <span class="tok-builtin">@log</span>(<span class="tok-number">1</span> + mc * uni) / log_den;</span>
+<span class="line" id="L90">        }</span>
+<span class="line" id="L91">        <span class="tok-kw">return</span> buffer;</span>
 <span class="line" id="L92">    }</span>
 <span class="line" id="L93">};</span>
 <span class="line" id="L94"></span>
@@ -211,58 +211,60 @@
 <span class="line" id="L97"><span class="tok-kw">const</span> eps = <span class="tok-number">10</span> * std.math.floatEps(<span class="tok-type">f64</span>); <span class="tok-comment">// 2.22 × 10^-15</span>
 </span>
 <span class="line" id="L98"></span>
-<span class="line" id="L99"><span class="tok-kw">test</span> <span class="tok-str">&quot;continuousBernoulli.density&quot;</span> {</span>
-<span class="line" id="L100">    <span class="tok-kw">try</span> expectEqual(<span class="tok-number">0</span>, density(-inf, <span class="tok-number">0.2</span>));</span>
-<span class="line" id="L101">    <span class="tok-kw">try</span> expectEqual(<span class="tok-number">0</span>, density( inf, <span class="tok-number">0.2</span>));</span>
-<span class="line" id="L102"></span>
-<span class="line" id="L103">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">1</span>, density(<span class="tok-number">0</span>  , <span class="tok-number">0.5</span>), eps);</span>
-<span class="line" id="L104">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">1</span>, density(<span class="tok-number">0.5</span>, <span class="tok-number">0.5</span>), eps);</span>
-<span class="line" id="L105">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">1</span>, density(<span class="tok-number">1</span>  , <span class="tok-number">0.5</span>), eps);</span>
-<span class="line" id="L106"></span>
-<span class="line" id="L107">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">1.848392481493187</span>, density(<span class="tok-number">0</span>  , <span class="tok-number">0.2</span>), eps);</span>
-<span class="line" id="L108">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">1.400819552806244</span>, density(<span class="tok-number">0.2</span>, <span class="tok-number">0.2</span>), eps);</span>
-<span class="line" id="L109">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0.609742125385850</span>, density(<span class="tok-number">0.8</span>, <span class="tok-number">0.2</span>), eps);</span>
-<span class="line" id="L110">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0.462098120373296</span>, density(<span class="tok-number">1</span>  , <span class="tok-number">0.2</span>), eps);</span>
-<span class="line" id="L111">}</span>
-<span class="line" id="L112"></span>
-<span class="line" id="L113"><span class="tok-kw">test</span> <span class="tok-str">&quot;continuousBernoulli.probability&quot;</span> {</span>
-<span class="line" id="L114">    <span class="tok-kw">try</span> expectEqual(<span class="tok-number">0</span>, probability(-inf, <span class="tok-number">0.2</span>));</span>
-<span class="line" id="L115">    <span class="tok-kw">try</span> expectEqual(<span class="tok-number">1</span>, probability( inf, <span class="tok-number">0.2</span>));</span>
-<span class="line" id="L116"></span>
-<span class="line" id="L117">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0</span>  , probability(<span class="tok-number">0</span>  , <span class="tok-number">0.5</span>), eps);</span>
-<span class="line" id="L118">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0.5</span>, probability(<span class="tok-number">0.5</span>, <span class="tok-number">0.5</span>), eps);</span>
-<span class="line" id="L119">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">1</span>  , probability(<span class="tok-number">1</span>  , <span class="tok-number">0.5</span>), eps);</span>
-<span class="line" id="L120"></span>
-<span class="line" id="L121">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0</span>                 , probability(<span class="tok-number">0</span>  , <span class="tok-number">0.2</span>), eps);</span>
-<span class="line" id="L122">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0.3228556223264012</span>, probability(<span class="tok-number">0.2</span>, <span class="tok-number">0.2</span>), eps);</span>
-<span class="line" id="L123">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0.8934973630757019</span>, probability(<span class="tok-number">0.8</span>, <span class="tok-number">0.2</span>), eps);</span>
-<span class="line" id="L124">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">1</span>                 , probability(<span class="tok-number">1</span>  , <span class="tok-number">0.2</span>), eps);</span>
-<span class="line" id="L125">}</span>
-<span class="line" id="L126"></span>
-<span class="line" id="L127"><span class="tok-kw">test</span> <span class="tok-str">&quot;continuousBernoulli.quantile&quot;</span> {</span>
-<span class="line" id="L128">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0</span>  , quantile(<span class="tok-number">0</span>  , <span class="tok-number">0.5</span>), eps);</span>
-<span class="line" id="L129">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0.5</span>, quantile(<span class="tok-number">0.5</span>, <span class="tok-number">0.5</span>), eps);</span>
-<span class="line" id="L130">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">1</span>  , quantile(<span class="tok-number">1</span>  , <span class="tok-number">0.5</span>), eps);</span>
-<span class="line" id="L131"></span>
-<span class="line" id="L132">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0</span>                 , quantile(<span class="tok-number">0</span>  , <span class="tok-number">0.2</span>), eps);</span>
-<span class="line" id="L133">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0.1172326268185114</span>, quantile(<span class="tok-number">0.2</span>, <span class="tok-number">0.2</span>), eps);</span>
-<span class="line" id="L134">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0.2572865864148791</span>, quantile(<span class="tok-number">0.4</span>, <span class="tok-number">0.2</span>), eps);</span>
-<span class="line" id="L135">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0.4312482381250325</span>, quantile(<span class="tok-number">0.6</span>, <span class="tok-number">0.2</span>), eps);</span>
-<span class="line" id="L136">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0.6609640474436811</span>, quantile(<span class="tok-number">0.8</span>, <span class="tok-number">0.2</span>), eps);</span>
-<span class="line" id="L137">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">1</span>                 , quantile(<span class="tok-number">1</span>  , <span class="tok-number">0.2</span>), eps);</span>
-<span class="line" id="L138">}</span>
-<span class="line" id="L139"></span>
-<span class="line" id="L140"><span class="tok-kw">test</span> <span class="tok-str">&quot;continuousBernoulli.random&quot;</span> {</span>
-<span class="line" id="L141">    <span class="tok-kw">var</span> prng = std.rand.DefaultPrng.init(<span class="tok-number">0</span>);</span>
-<span class="line" id="L142">    <span class="tok-kw">const</span> gen = prng.random();</span>
-<span class="line" id="L143">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0x1.75d61490b23dfp-2</span>, random.implementation(gen, <span class="tok-number">0.5</span>), eps);</span>
-<span class="line" id="L144">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0x1.a6f3dc380d507p-2</span>, random.implementation(gen, <span class="tok-number">0.5</span>), eps);</span>
-<span class="line" id="L145">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0x1.fdf91ec9a7bfcp-2</span>, random.implementation(gen, <span class="tok-number">0.5</span>), eps);</span>
-<span class="line" id="L146"></span>
-<span class="line" id="L147">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0x1.0babfcd0f7817p-7</span>, random.implementation(gen, <span class="tok-number">0.2</span>), eps);</span>
-<span class="line" id="L148">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0x1.0ca9efb43381cp-2</span>, random.implementation(gen, <span class="tok-number">0.2</span>), eps);</span>
-<span class="line" id="L149">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0x1.58a756a59b2f8p-7</span>, random.implementation(gen, <span class="tok-number">0.2</span>), eps);</span>
-<span class="line" id="L150">}</span>
-<span class="line" id="L151"></span>
+<span class="line" id="L99"><span class="tok-comment">// zig fmt: off</span>
+</span>
+<span class="line" id="L100"><span class="tok-kw">test</span> <span class="tok-str">&quot;continuousBernoulli.density&quot;</span> {</span>
+<span class="line" id="L101">    <span class="tok-kw">try</span> expectEqual(<span class="tok-number">0</span>, density(-inf, <span class="tok-number">0.2</span>));</span>
+<span class="line" id="L102">    <span class="tok-kw">try</span> expectEqual(<span class="tok-number">0</span>, density( inf, <span class="tok-number">0.2</span>));</span>
+<span class="line" id="L103"></span>
+<span class="line" id="L104">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">1</span>, density(<span class="tok-number">0</span>  , <span class="tok-number">0.5</span>), eps);</span>
+<span class="line" id="L105">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">1</span>, density(<span class="tok-number">0.5</span>, <span class="tok-number">0.5</span>), eps);</span>
+<span class="line" id="L106">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">1</span>, density(<span class="tok-number">1</span>  , <span class="tok-number">0.5</span>), eps);</span>
+<span class="line" id="L107"></span>
+<span class="line" id="L108">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">1.848392481493187</span>, density(<span class="tok-number">0</span>  , <span class="tok-number">0.2</span>), eps);</span>
+<span class="line" id="L109">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">1.400819552806244</span>, density(<span class="tok-number">0.2</span>, <span class="tok-number">0.2</span>), eps);</span>
+<span class="line" id="L110">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0.609742125385850</span>, density(<span class="tok-number">0.8</span>, <span class="tok-number">0.2</span>), eps);</span>
+<span class="line" id="L111">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0.462098120373296</span>, density(<span class="tok-number">1</span>  , <span class="tok-number">0.2</span>), eps);</span>
+<span class="line" id="L112">}</span>
+<span class="line" id="L113"></span>
+<span class="line" id="L114"><span class="tok-kw">test</span> <span class="tok-str">&quot;continuousBernoulli.probability&quot;</span> {</span>
+<span class="line" id="L115">    <span class="tok-kw">try</span> expectEqual(<span class="tok-number">0</span>, probability(-inf, <span class="tok-number">0.2</span>));</span>
+<span class="line" id="L116">    <span class="tok-kw">try</span> expectEqual(<span class="tok-number">1</span>, probability( inf, <span class="tok-number">0.2</span>));</span>
+<span class="line" id="L117"></span>
+<span class="line" id="L118">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0</span>  , probability(<span class="tok-number">0</span>  , <span class="tok-number">0.5</span>), eps);</span>
+<span class="line" id="L119">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0.5</span>, probability(<span class="tok-number">0.5</span>, <span class="tok-number">0.5</span>), eps);</span>
+<span class="line" id="L120">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">1</span>  , probability(<span class="tok-number">1</span>  , <span class="tok-number">0.5</span>), eps);</span>
+<span class="line" id="L121"></span>
+<span class="line" id="L122">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0</span>                 , probability(<span class="tok-number">0</span>  , <span class="tok-number">0.2</span>), eps);</span>
+<span class="line" id="L123">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0.3228556223264012</span>, probability(<span class="tok-number">0.2</span>, <span class="tok-number">0.2</span>), eps);</span>
+<span class="line" id="L124">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0.8934973630757019</span>, probability(<span class="tok-number">0.8</span>, <span class="tok-number">0.2</span>), eps);</span>
+<span class="line" id="L125">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">1</span>                 , probability(<span class="tok-number">1</span>  , <span class="tok-number">0.2</span>), eps);</span>
+<span class="line" id="L126">}</span>
+<span class="line" id="L127"></span>
+<span class="line" id="L128"><span class="tok-kw">test</span> <span class="tok-str">&quot;continuousBernoulli.quantile&quot;</span> {</span>
+<span class="line" id="L129">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0</span>  , quantile(<span class="tok-number">0</span>  , <span class="tok-number">0.5</span>), eps);</span>
+<span class="line" id="L130">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0.5</span>, quantile(<span class="tok-number">0.5</span>, <span class="tok-number">0.5</span>), eps);</span>
+<span class="line" id="L131">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">1</span>  , quantile(<span class="tok-number">1</span>  , <span class="tok-number">0.5</span>), eps);</span>
+<span class="line" id="L132"></span>
+<span class="line" id="L133">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0</span>                 , quantile(<span class="tok-number">0</span>  , <span class="tok-number">0.2</span>), eps);</span>
+<span class="line" id="L134">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0.1172326268185114</span>, quantile(<span class="tok-number">0.2</span>, <span class="tok-number">0.2</span>), eps);</span>
+<span class="line" id="L135">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0.2572865864148791</span>, quantile(<span class="tok-number">0.4</span>, <span class="tok-number">0.2</span>), eps);</span>
+<span class="line" id="L136">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0.4312482381250325</span>, quantile(<span class="tok-number">0.6</span>, <span class="tok-number">0.2</span>), eps);</span>
+<span class="line" id="L137">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0.6609640474436811</span>, quantile(<span class="tok-number">0.8</span>, <span class="tok-number">0.2</span>), eps);</span>
+<span class="line" id="L138">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">1</span>                 , quantile(<span class="tok-number">1</span>  , <span class="tok-number">0.2</span>), eps);</span>
+<span class="line" id="L139">}</span>
+<span class="line" id="L140"></span>
+<span class="line" id="L141"><span class="tok-kw">test</span> <span class="tok-str">&quot;continuousBernoulli.random.single&quot;</span> {</span>
+<span class="line" id="L142">    <span class="tok-kw">var</span> prng = std.rand.DefaultPrng.init(<span class="tok-number">0</span>);</span>
+<span class="line" id="L143">    <span class="tok-kw">const</span> gen = prng.random();</span>
+<span class="line" id="L144">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0x1.75d61490b23dfp-2</span>, random.single(gen, <span class="tok-number">0.5</span>), eps);</span>
+<span class="line" id="L145">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0x1.a6f3dc380d507p-2</span>, random.single(gen, <span class="tok-number">0.5</span>), eps);</span>
+<span class="line" id="L146">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0x1.fdf91ec9a7bfcp-2</span>, random.single(gen, <span class="tok-number">0.5</span>), eps);</span>
+<span class="line" id="L147"></span>
+<span class="line" id="L148">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0x1.0babfcd0f7817p-7</span>, random.single(gen, <span class="tok-number">0.2</span>), eps);</span>
+<span class="line" id="L149">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0x1.0ca9efb43381cp-2</span>, random.single(gen, <span class="tok-number">0.2</span>), eps);</span>
+<span class="line" id="L150">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0x1.58a756a59b2f8p-7</span>, random.single(gen, <span class="tok-number">0.2</span>), eps);</span>
+<span class="line" id="L151">}</span>
+<span class="line" id="L152"></span>
 </code></pre></body>
 </html>
