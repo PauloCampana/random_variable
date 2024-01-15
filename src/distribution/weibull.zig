@@ -59,30 +59,24 @@ pub fn quantile(p: f64, shape: f64, rate: f64) f64 {
 
 /// Uses the Ziggurat method and the quantile function.
 pub const random = struct {
-    fn implementation(generator: std.rand.Random, shape: f64, rate: f64) f64 {
+    pub fn single(generator: std.rand.Random, shape: f64, rate: f64) f64 {
+        assert(isFinite(shape) and isFinite(rate));
+        assert(shape > 0 and rate > 0);
         const exp = generator.floatExp(f64);
         const wei = std.math.pow(f64, exp, 1 / shape);
         return wei / rate;
     }
 
-    pub fn single(generator: std.rand.Random, shape: f64, rate: f64) f64 {
+    pub fn fill(buffer: []f64, generator: std.rand.Random, shape: f64, rate: f64) []f64 {
         assert(isFinite(shape) and isFinite(rate));
         assert(shape > 0 and rate > 0);
-        return implementation(generator, shape, rate);
-    }
-
-    pub fn buffer(buf: []f64, generator: std.rand.Random, shape: f64, rate: f64) []f64 {
-        assert(isFinite(shape) and isFinite(rate));
-        assert(shape > 0 and rate > 0);
-        for (buf) |*x| {
-            x.* = implementation(generator, shape, rate);
+        const invshape = 1 / shape;
+        for (buffer) |*x| {
+            const exp = generator.floatExp(f64);
+            const wei = std.math.pow(f64, exp, invshape);
+            x.* = wei / rate;
         }
-        return buf;
-    }
-
-    pub fn alloc(allocator: std.mem.Allocator, generator: std.rand.Random, n: usize, shape: f64, rate: f64) ![]f64 {
-        const slice = try allocator.alloc(f64, n);
-        return buffer(slice, generator, shape, rate);
+        return buffer;
     }
 };
 
@@ -90,6 +84,7 @@ const expectEqual = std.testing.expectEqual;
 const expectApproxEqRel = std.testing.expectApproxEqRel;
 const eps = 10 * std.math.floatEps(f64); // 2.22 × 10^-15
 
+// zig fmt: off
 test "weibull.density" {
     try expectEqual(0, density(-inf, 3, 0.5));
     try expectEqual(0, density( inf, 3, 0.5));
@@ -121,10 +116,10 @@ test "weibull.quantile" {
     try expectEqual      (inf              , quantile(1  , 3, 0.5)     );
 }
 
-test "weibull.random" {
+test "weibull.random.single" {
     var prng = std.rand.DefaultPrng.init(0);
     const gen = prng.random();
-    try expectApproxEqRel(0x1.29f2f11294770p+0, random.implementation(gen, 3, 0.5), eps);
-    try expectApproxEqRel(0x1.479bbb94bd291p+1, random.implementation(gen, 3, 0.5), eps);
-    try expectApproxEqRel(0x1.8f80c328506e1p-1, random.implementation(gen, 3, 0.5), eps);
+    try expectApproxEqRel(0x1.29f2f11294770p+0, random.single(gen, 3, 0.5), eps);
+    try expectApproxEqRel(0x1.479bbb94bd291p+1, random.single(gen, 3, 0.5), eps);
+    try expectApproxEqRel(0x1.8f80c328506e1p-1, random.single(gen, 3, 0.5), eps);
 }

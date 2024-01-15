@@ -62,7 +62,8 @@ pub fn quantile(p: f64, shape: f64) f64 {
 
 /// Uses the quantile function.
 pub const random = struct {
-    fn implementation(generator: std.rand.Random, shape: f64) f64 {
+    pub fn single(generator: std.rand.Random, shape: f64) f64 {
+        assert(0 < shape and shape < 1);
         const uni = generator.float(f64);
         if (shape == 0.5) {
             return uni;
@@ -73,22 +74,21 @@ pub const random = struct {
         return @log(num) / @log(den);
     }
 
-    pub fn single(generator: std.rand.Random, shape: f64) f64 {
+    pub fn fill(buffer: []f64, generator: std.rand.Random, shape: f64) []f64 {
         assert(0 < shape and shape < 1);
-        return implementation(generator, shape);
-    }
-
-    pub fn buffer(buf: []f64, generator: std.rand.Random, shape: f64) []f64 {
-        assert(0 < shape and shape < 1);
-        for (buf) |*x| {
-            x.* = implementation(generator, shape);
+        if (shape == 0.5) {
+            for (buffer) |*x| {
+                x.* = generator.float(f64);
+            }
         }
-        return buf;
-    }
-
-    pub fn alloc(allocator: std.mem.Allocator, generator: std.rand.Random, n: usize, shape: f64) ![]f64 {
-        const slice = try allocator.alloc(f64, n);
-        return buffer(slice, generator, shape);
+        const shape2 = 1 - shape;
+        const mc = (2 * shape - 1) / shape2;
+        const log_den = @log(shape / shape2);
+        for (buffer) |*x| {
+            const uni = generator.float(f64);
+            x.* = @log(1 + mc * uni) / log_den;
+        }
+        return buffer;
     }
 };
 
@@ -96,6 +96,7 @@ const expectEqual = std.testing.expectEqual;
 const expectApproxEqRel = std.testing.expectApproxEqRel;
 const eps = 10 * std.math.floatEps(f64); // 2.22 × 10^-15
 
+// zig fmt: off
 test "continuousBernoulli.density" {
     try expectEqual(0, density(-inf, 0.2));
     try expectEqual(0, density( inf, 0.2));
@@ -137,14 +138,14 @@ test "continuousBernoulli.quantile" {
     try expectApproxEqRel(1                 , quantile(1  , 0.2), eps);
 }
 
-test "continuousBernoulli.random" {
+test "continuousBernoulli.random.single" {
     var prng = std.rand.DefaultPrng.init(0);
     const gen = prng.random();
-    try expectApproxEqRel(0x1.75d61490b23dfp-2, random.implementation(gen, 0.5), eps);
-    try expectApproxEqRel(0x1.a6f3dc380d507p-2, random.implementation(gen, 0.5), eps);
-    try expectApproxEqRel(0x1.fdf91ec9a7bfcp-2, random.implementation(gen, 0.5), eps);
+    try expectApproxEqRel(0x1.75d61490b23dfp-2, random.single(gen, 0.5), eps);
+    try expectApproxEqRel(0x1.a6f3dc380d507p-2, random.single(gen, 0.5), eps);
+    try expectApproxEqRel(0x1.fdf91ec9a7bfcp-2, random.single(gen, 0.5), eps);
 
-    try expectApproxEqRel(0x1.0babfcd0f7817p-7, random.implementation(gen, 0.2), eps);
-    try expectApproxEqRel(0x1.0ca9efb43381cp-2, random.implementation(gen, 0.2), eps);
-    try expectApproxEqRel(0x1.58a756a59b2f8p-7, random.implementation(gen, 0.2), eps);
+    try expectApproxEqRel(0x1.0babfcd0f7817p-7, random.single(gen, 0.2), eps);
+    try expectApproxEqRel(0x1.0ca9efb43381cp-2, random.single(gen, 0.2), eps);
+    try expectApproxEqRel(0x1.58a756a59b2f8p-7, random.single(gen, 0.2), eps);
 }

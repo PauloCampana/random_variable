@@ -47,29 +47,22 @@ pub fn quantile(p: f64, shape: f64, minimum: f64) f64 {
 
 /// Uses the quantile function.
 pub const random = struct {
-    fn implementation(generator: std.rand.Random, shape: f64, minimum: f64) f64 {
+    pub fn single(generator: std.rand.Random, shape: f64, minimum: f64) f64 {
+        assert(isFinite(shape) and isFinite(minimum));
+        assert(shape > 0 and minimum > 0);
         const uni = generator.float(f64);
         return minimum * std.math.pow(f64, uni, -1 / shape);
     }
 
-    pub fn single(generator: std.rand.Random, shape: f64, minimum: f64) f64 {
+    pub fn fill(buffer: []f64, generator: std.rand.Random, shape: f64, minimum: f64) []f64 {
         assert(isFinite(shape) and isFinite(minimum));
         assert(shape > 0 and minimum > 0);
-        return implementation(generator, shape, minimum);
-    }
-
-    pub fn buffer(buf: []f64, generator: std.rand.Random, shape: f64, minimum: f64) []f64 {
-        assert(isFinite(shape) and isFinite(minimum));
-        assert(shape > 0 and minimum > 0);
-        for (buf) |*x| {
-            x.* = implementation(generator, shape, minimum);
+        const minvshape = -1 / shape;
+        for (buffer) |*x| {
+            const uni = generator.float(f64);
+            x.* = minimum * std.math.pow(f64, uni, minvshape);
         }
-        return buf;
-    }
-
-    pub fn alloc(allocator: std.mem.Allocator, generator: std.rand.Random, n: usize, shape: f64, minimum: f64) ![]f64 {
-        const slice = try allocator.alloc(f64, n);
-        return buffer(slice, generator, shape, minimum);
+        return buffer;
     }
 };
 
@@ -77,6 +70,7 @@ const expectEqual = std.testing.expectEqual;
 const expectApproxEqRel = std.testing.expectApproxEqRel;
 const eps = 10 * std.math.floatEps(f64); // 2.22 × 10^-15
 
+// zig fmt: off
 test "pareto.density" {
     try expectEqual(0, density(-inf, 3, 5));
     try expectEqual(0, density( inf, 3, 5));
@@ -104,10 +98,10 @@ test "pareto.quantile" {
     try expectEqual      (inf              , quantile(1  , 3, 5)     );
 }
 
-test "pareto.random" {
+test "pareto.random.single" {
     var prng = std.rand.DefaultPrng.init(0);
     const gen = prng.random();
-    try expectApproxEqRel(0x1.bfbca14ce8587p2, random.implementation(gen, 3, 5), eps);
-    try expectApproxEqRel(0x1.adb0012df4ddep2, random.implementation(gen, 3, 5), eps);
-    try expectApproxEqRel(0x1.93b54a550f660p2, random.implementation(gen, 3, 5), eps);
+    try expectApproxEqRel(0x1.bfbca14ce8587p2, random.single(gen, 3, 5), eps);
+    try expectApproxEqRel(0x1.adb0012df4ddep2, random.single(gen, 3, 5), eps);
+    try expectApproxEqRel(0x1.93b54a550f660p2, random.single(gen, 3, 5), eps);
 }

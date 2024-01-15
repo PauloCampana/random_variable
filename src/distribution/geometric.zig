@@ -47,28 +47,21 @@ pub fn quantile(p: f64, prob: f64) f64 {
 
 /// Uses the relation to Exponential distribution.
 pub const random = struct {
-    fn implementation(generator: std.rand.Random, prob: f64) f64 {
+    pub fn single(generator: std.rand.Random, prob: f64) f64 {
+        assert(0 < prob and prob <= 1);
         const rate = -std.math.log1p(-prob);
         const exp = generator.floatExp(f64);
         return @trunc(exp / rate);
     }
 
-    pub fn single(generator: std.rand.Random, prob: f64) f64 {
+    pub fn fill(buffer: []f64, generator: std.rand.Random, prob: f64) []f64 {
         assert(0 < prob and prob <= 1);
-        return implementation(generator, prob);
-    }
-
-    pub fn buffer(buf: []f64, generator: std.rand.Random, prob: f64) []f64 {
-        assert(0 < prob and prob <= 1);
-        for (buf) |*x| {
-            x.* = implementation(generator, prob);
+        const rate = -std.math.log1p(-prob);
+        for (buffer) |*x| {
+            const exp = generator.floatExp(f64);
+            x.* = @trunc(exp / rate);
         }
-        return buf;
-    }
-
-    pub fn alloc(allocator: std.mem.Allocator, generator: std.rand.Random, n: usize, prob: f64) ![]f64 {
-        const slice = try allocator.alloc(f64, n);
-        return buffer(slice, generator, prob);
+        return buffer;
     }
 };
 
@@ -76,6 +69,7 @@ const expectEqual = std.testing.expectEqual;
 const expectApproxEqRel = std.testing.expectApproxEqRel;
 const eps = 10 * std.math.floatEps(f64); // 2.22 × 10^-15
 
+// zig fmt: off
 test "geometric.density" {
     try expectEqual(0, density(-inf, 0.2));
     try expectEqual(0, density( inf, 0.2));
@@ -118,14 +112,14 @@ test "geometric.quantile" {
     try expectEqual(inf, quantile(1   , 0.2));
 }
 
-test "geometric.random" {
+test "geometric.random.single" {
     var prng = std.rand.DefaultPrng.init(0);
     const gen = prng.random();
-    try expectEqual(0, random.implementation(gen, 1));
-    try expectEqual(0, random.implementation(gen, 1));
-    try expectEqual(0, random.implementation(gen, 1));
+    try expectEqual(0, random.single(gen, 1));
+    try expectEqual(0, random.single(gen, 1));
+    try expectEqual(0, random.single(gen, 1));
 
-    try expectEqual(0, random.implementation(gen, 0.2));
-    try expectEqual(1, random.implementation(gen, 0.2));
-    try expectEqual(0, random.implementation(gen, 0.2));
+    try expectEqual(0, random.single(gen, 0.2));
+    try expectEqual(1, random.single(gen, 0.2));
+    try expectEqual(0, random.single(gen, 0.2));
 }

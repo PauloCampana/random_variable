@@ -1,4 +1,4 @@
-//! Support: X ∈ {1,2,⋯,b}
+//! Support: X ∈ {1,2,⋯,b - 1}
 //!
 //! Parameters:
 //! - b: `base` ∈ {2,3,4,⋯}
@@ -50,28 +50,25 @@ pub fn quantile(p: f64, base: u64) f64 {
 
 /// Uses the quantile function.
 pub const random = struct {
-    fn implementation(generator: std.rand.Random, base: u64) f64 {
+    pub fn single(generator: std.rand.Random, base: u64) f64 {
+        assert(base >= 2);
         const uni = generator.float(f64);
         const bp = std.math.pow(f64, @floatFromInt(base), uni);
         return @ceil(bp) - 1;
     }
 
-    pub fn single(generator: std.rand.Random, base: u64) f64 {
+    pub fn fill(buffer: []f64, generator: std.rand.Random, base: u64) []f64 {
         assert(base >= 2);
-        return implementation(generator, base);
-    }
-
-    pub fn buffer(buf: []f64, generator: std.rand.Random, base: u64) []f64 {
-        assert(base >= 2);
-        for (buf) |*x| {
-            x.* = implementation(generator, base);
+        if (base == 2) {
+            @memset(buffer, 1);
+            return buffer;
         }
-        return buf;
-    }
-
-    pub fn alloc(allocator: std.mem.Allocator, generator: std.rand.Random, n: usize, base: u64) ![]f64 {
-        const slice = try allocator.alloc(f64, n);
-        return buffer(slice, generator, base);
+        for (buffer) |*x| {
+            const uni = generator.float(f64);
+            const bp = std.math.pow(f64, @floatFromInt(base), uni);
+            x.* = @ceil(bp) - 1;
+        }
+        return buffer;
     }
 };
 
@@ -79,6 +76,7 @@ const expectEqual = std.testing.expectEqual;
 const expectApproxEqRel = std.testing.expectApproxEqRel;
 const eps = 10 * std.math.floatEps(f64); // 2.22 × 10^-15
 
+// zig fmt: off
 test "benford.density" {
     try expectEqual(0, density(-inf, 10));
     try expectEqual(0, density( inf, 10));
@@ -126,14 +124,14 @@ test "benford.quantile" {
     try expectEqual(9, quantile(1                 , 10));
 }
 
-test "benford.random" {
+test "benford.random.single" {
     var prng = std.rand.DefaultPrng.init(0);
     const gen = prng.random();
-    try expectEqual(1, random.implementation(gen, 2));
-    try expectEqual(1, random.implementation(gen, 2));
-    try expectEqual(1, random.implementation(gen, 2));
+    try expectEqual(1, random.single(gen, 2));
+    try expectEqual(1, random.single(gen, 2));
+    try expectEqual(1, random.single(gen, 2));
 
-    try expectEqual(1, random.implementation(gen, 10));
-    try expectEqual(2, random.implementation(gen, 10));
-    try expectEqual(1, random.implementation(gen, 10));
+    try expectEqual(1, random.single(gen, 10));
+    try expectEqual(2, random.single(gen, 10));
+    try expectEqual(1, random.single(gen, 10));
 }

@@ -32,8 +32,8 @@ pub fn density(x: f64, df1: f64, df2: f64) f64 {
         }
         return if (df1 < 2) inf else 0;
     }
-    const hdf1 = df1 / 2;
-    const hdf2 = df2 / 2;
+    const hdf1 = 0.5 * df1;
+    const hdf2 = 0.5 * df2;
     const num1 = hdf1 * @log(df1) + hdf2 * @log(df2) + (hdf1 - 1) * @log(x);
     const num2 = -(hdf1 + hdf2) * @log(df2 + df1 * x);
     const den = math.lbeta(hdf1, hdf2);
@@ -67,30 +67,22 @@ pub fn quantile(p: f64, df1: f64, df2: f64) f64 {
 
 /// Uses the relation to Gamma distribution.
 pub const random = struct {
-    fn implementation(generator: std.rand.Random, df1: f64, df2: f64) f64 {
-        const chinum = gamma.random.implementation(generator, 0.5 * df1, 1);
-        const chiden = gamma.random.implementation(generator, 0.5 * df2, 1);
-        return chinum / chiden * df2 / df1;
-    }
-
     pub fn single(generator: std.rand.Random, df1: f64, df2: f64) f64 {
-        assert(isFinite(df1) and isFinite(df2));
-        assert(df1 > 0 and df2 > 0);
-        return implementation(generator, df1, df2);
+        const num = gamma.random.single(generator, 0.5 * df1, 1);
+        const den = gamma.random.single(generator, 0.5 * df2, 1);
+        return num / den * df2 / df1;
     }
 
-    pub fn buffer(buf: []f64, generator: std.rand.Random, df1: f64, df2: f64) []f64 {
-        assert(isFinite(df1) and isFinite(df2));
-        assert(df1 > 0 and df2 > 0);
-        for (buf) |*x| {
-            x.* = implementation(generator, df1, df2);
+    pub fn fill(buffer: []f64, generator: std.rand.Random, df1: f64, df2: f64) []f64 {
+        const hdf1 = 0.5 * df1;
+        const hdf2 = 0.5 * df2;
+        const ratio = df2 / df1;
+        for (buffer) |*x| {
+            const num = gamma.random.single(generator, hdf1, 1);
+            const den = gamma.random.single(generator, hdf2, 1);
+            x.* = num / den * ratio;
         }
-        return buf;
-    }
-
-    pub fn alloc(allocator: std.mem.Allocator, generator: std.rand.Random, n: usize, df1: f64, df2: f64) ![]f64 {
-        const slice = try allocator.alloc(f64, n);
-        return buffer(slice, generator, df1, df2);
+        return buffer;
     }
 };
 
@@ -98,6 +90,7 @@ const expectEqual = std.testing.expectEqual;
 const expectApproxEqRel = std.testing.expectApproxEqRel;
 const eps = 10 * std.math.floatEps(f64); // 2.22 × 10^-15
 
+// zig fmt: off
 test "f.density" {
     try expectEqual(0, density(-inf, 3, 5));
     try expectEqual(0, density( inf, 3, 5));
@@ -129,10 +122,10 @@ test "f.quantile" {
     try expectEqual      (inf               , quantile(1  , 3, 5)     );
 }
 
-test "f.random" {
+test "f.random.single" {
     var prng = std.rand.DefaultPrng.init(0);
     const gen = prng.random();
-    try expectApproxEqRel(0x1.73d1aa315be37p-1, random.implementation(gen, 3, 5), eps);
-    try expectApproxEqRel(0x1.bf5ec1a08f87bp-2, random.implementation(gen, 3, 5), eps);
-    try expectApproxEqRel(0x1.cbddabd676b5fp-1, random.implementation(gen, 3, 5), eps);
+    try expectApproxEqRel(0x1.73d1aa315be37p-1, random.single(gen, 3, 5), eps);
+    try expectApproxEqRel(0x1.bf5ec1a08f87bp-2, random.single(gen, 3, 5), eps);
+    try expectApproxEqRel(0x1.cbddabd676b5fp-1, random.single(gen, 3, 5), eps);
 }

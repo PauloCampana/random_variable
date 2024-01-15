@@ -37,7 +37,6 @@ pub fn probability(q: f64, N: u64, K: u64, n: u64) f64 {
     if (q < 0) {
         return 0;
     }
-    const Nf = @as(f64, @floatFromInt(N));
     const Kf = @as(f64, @floatFromInt(K));
     const nf = @as(f64, @floatFromInt(n));
     if (q >= nf or q >= Kf) {
@@ -46,14 +45,13 @@ pub fn probability(q: f64, N: u64, K: u64, n: u64) f64 {
     if (K == N or n == N) {
         return 0;
     }
-    const mass_num = math.lbinomial(Nf - Kf, nf);
-    const mass_den = math.lbinomial(Nf, nf);
-    var mass = @exp(mass_num - mass_den);
-    var cumu: f64 = mass;
-    const qu = @as(usize, @intFromFloat(q));
-    for (0..qu) |x| {
-        const num = @as(f64, @floatFromInt((K - x) * (n - x)));
-        const den = @as(f64, @floatFromInt((x + 1) * (N - K - n + x + 1)));
+    var hypr = if (n + K < N) 0 else n + K - N;
+    var mass = density(@floatFromInt(hypr), N, K, n);
+    var cumu = mass;
+    for (0..@intFromFloat(q)) |_| {
+        const num = @as(f64, @floatFromInt((K - hypr) * (n - hypr)));
+        hypr += 1;
+        const den = @as(f64, @floatFromInt(hypr * (hypr + N - K - n)));
         mass *= num / den;
         cumu += mass;
     }
@@ -64,88 +62,88 @@ pub fn probability(q: f64, N: u64, K: u64, n: u64) f64 {
 pub fn quantile(p: f64, N: u64, K: u64, n: u64) f64 {
     assert(K <= N and n <= N);
     assert(0 <= p and p <= 1);
+    if (p == 0) {
+        return if (n + K < N) 0 else @floatFromInt(n + K - N);
+    }
+    if (p == 1) {
+        return @floatFromInt(@min(n, K));
+    }
     if (n == 0 or K == 0) {
         return 0;
     }
-    const Nf = @as(f64, @floatFromInt(N));
-    const Kf = @as(f64, @floatFromInt(K));
-    const nf = @as(f64, @floatFromInt(n));
     if (K == N) {
-        return nf;
+        return @floatFromInt(n);
     }
     if (n == N) {
-        return Kf;
+        return @floatFromInt(K);
     }
-    if (p == 1) {
-        return @min(nf, Kf);
-    }
-    const mass_num = math.lbinomial(Nf - Kf, nf);
-    const mass_den = math.lbinomial(Nf, nf);
-    var mass = @exp(mass_num - mass_den);
-    var cumu = mass;
-    var hyper: u64 = 0;
-    while (p >= cumu) : (hyper += 1) {
-        const num = @as(f64, @floatFromInt((K - hyper) * (n - hyper)));
-        const den = @as(f64, @floatFromInt((hyper + 1) * (N - K - n + hyper + 1)));
-        mass *= num / den;
-        cumu += mass;
-    }
-    return @floatFromInt(hyper);
+    const initial = if (n + K < N) 0 else n + K - N;
+    const initial_mass = density(@floatFromInt(initial), N, K, n);
+    return linearSearch(p, N, K, n, initial, initial_mass);
 }
 
 /// Uses the quantile function.
 pub const random = struct {
-    fn implementation(generator: std.rand.Random, N: u64, K: u64, n: u64) f64 {
+    pub fn single(generator: std.rand.Random, N: u64, K: u64, n: u64) f64 {
+        assert(K <= N and n <= N);
         if (n == 0 or K == 0) {
             return 0;
         }
-        const Nf = @as(f64, @floatFromInt(N));
-        const Kf = @as(f64, @floatFromInt(K));
-        const nf = @as(f64, @floatFromInt(n));
         if (K == N) {
-            return nf;
+            return @floatFromInt(n);
         }
         if (n == N) {
-            return Kf;
+            return @floatFromInt(K);
         }
-        const mass_num = math.lbinomial(Nf - Kf, nf);
-        const mass_den = math.lbinomial(Nf, nf);
-        var mass = @exp(mass_num - mass_den);
-        var cumu = mass;
-        var hyper: u64 = 0;
+        const initial = if (n + K < N) 0 else n + K - N;
+        const initial_mass = density(@floatFromInt(initial), N, K, n);
         const uni = generator.float(f64);
-        while (uni >= cumu) : (hyper += 1) {
-            const num = @as(f64, @floatFromInt((K - hyper) * (n - hyper)));
-            const den = @as(f64, @floatFromInt((hyper + 1) * (N - K - n + hyper + 1)));
-            mass *= num / den;
-            cumu += mass;
-        }
-        return @floatFromInt(hyper);
+        return linearSearch(uni, N, K, n, initial, initial_mass);
     }
 
-    pub fn single(generator: std.rand.Random, N: u64, K: u64, n: u64) f64 {
+    pub fn fill(buffer: []f64, generator: std.rand.Random, N: u64, K: u64, n: u64) []f64 {
         assert(K <= N and n <= N);
-        return implementation(generator, N, K, n);
-    }
-
-    pub fn buffer(buf: []f64, generator: std.rand.Random, N: u64, K: u64, n: u64) []f64 {
-        assert(K <= N and n <= N);
-        for (buf) |*x| {
-            x.* = implementation(generator, N, K, n);
+        if (n == 0 or K == 0) {
+            @memset(buffer, 0);
+            return buffer;
         }
-        return buf;
-    }
-
-    pub fn alloc(allocator: std.mem.Allocator, generator: std.rand.Random, nn: usize, N: u64, K: u64, n: u64) ![]f64 {
-        const slice = try allocator.alloc(f64, nn);
-        return buffer(slice, generator, N, K, n);
+        if (K == N) {
+            @memset(buffer, @floatFromInt(n));
+            return buffer;
+        }
+        if (n == N) {
+            @memset(buffer, @floatFromInt(K));
+            return buffer;
+        }
+        const initial = if (n + K < N) 0 else n + K - N;
+        const initial_mass = density(@floatFromInt(initial), N, K, n);
+        for (buffer) |*x| {
+            const uni = generator.float(f64);
+            x.* = linearSearch(uni, N, K, n, initial, initial_mass);
+        }
+        return buffer;
     }
 };
+
+inline fn linearSearch(p: f64, N: u64, K: u64, n: u64, initial: u64, initial_mass: f64) f64 {
+    var hypr = initial;
+    var mass = initial_mass;
+    var cumu = mass;
+    while (cumu <= p) {
+        const num = @as(f64, @floatFromInt((K - hypr) * (n - hypr)));
+        hypr += 1;
+        const den = @as(f64, @floatFromInt(hypr * (hypr + N - K - n)));
+        mass *= num / den;
+        cumu += mass;
+    }
+    return @floatFromInt(hypr);
+}
 
 const expectEqual = std.testing.expectEqual;
 const expectApproxEqRel = std.testing.expectApproxEqRel;
 const eps = 10 * std.math.floatEps(f64); // 2.22 × 10^-15
 
+// zig fmt: off
 test "hypergeometric.density" {
     try expectEqual(0, density(-inf, 10, 2, 5));
     try expectEqual(0, density( inf, 10, 2, 5));
@@ -225,26 +223,26 @@ test "hypergeometric.quantile" {
     try expectEqual(2, quantile(1                 , 10, 2, 5));
 }
 
-test "hypergeometric.random" {
+test "hypergeometric.random;single" {
     var prng = std.rand.DefaultPrng.init(0);
     const gen = prng.random();
-    try expectEqual( 0, random.implementation(gen, 10,  2, 0 ));
-    try expectEqual( 0, random.implementation(gen, 10,  2, 0 ));
-    try expectEqual( 0, random.implementation(gen, 10,  2, 0 ));
-    try expectEqual( 0, random.implementation(gen, 10,  0, 5 ));
-    try expectEqual( 0, random.implementation(gen, 10,  0, 5 ));
-    try expectEqual( 0, random.implementation(gen, 10,  0, 5 ));
-    try expectEqual( 5, random.implementation(gen, 10, 10, 5 ));
-    try expectEqual( 5, random.implementation(gen, 10, 10, 5 ));
-    try expectEqual( 5, random.implementation(gen, 10, 10, 5 ));
-    try expectEqual( 2, random.implementation(gen, 10,  2, 10));
-    try expectEqual( 2, random.implementation(gen, 10,  2, 10));
-    try expectEqual( 2, random.implementation(gen, 10,  2, 10));
-    try expectEqual(10, random.implementation(gen, 10, 10, 10));
-    try expectEqual(10, random.implementation(gen, 10, 10, 10));
-    try expectEqual(10, random.implementation(gen, 10, 10, 10));
+    try expectEqual( 0, random.single(gen, 10,  2, 0 ));
+    try expectEqual( 0, random.single(gen, 10,  2, 0 ));
+    try expectEqual( 0, random.single(gen, 10,  2, 0 ));
+    try expectEqual( 0, random.single(gen, 10,  0, 5 ));
+    try expectEqual( 0, random.single(gen, 10,  0, 5 ));
+    try expectEqual( 0, random.single(gen, 10,  0, 5 ));
+    try expectEqual( 5, random.single(gen, 10, 10, 5 ));
+    try expectEqual( 5, random.single(gen, 10, 10, 5 ));
+    try expectEqual( 5, random.single(gen, 10, 10, 5 ));
+    try expectEqual( 2, random.single(gen, 10,  2, 10));
+    try expectEqual( 2, random.single(gen, 10,  2, 10));
+    try expectEqual( 2, random.single(gen, 10,  2, 10));
+    try expectEqual(10, random.single(gen, 10, 10, 10));
+    try expectEqual(10, random.single(gen, 10, 10, 10));
+    try expectEqual(10, random.single(gen, 10, 10, 10));
 
-    try expectEqual(1, random.implementation(gen, 10, 2, 5));
-    try expectEqual(1, random.implementation(gen, 10, 2, 5));
-    try expectEqual(1, random.implementation(gen, 10, 2, 5));
+    try expectEqual(1, random.single(gen, 10, 2, 5));
+    try expectEqual(1, random.single(gen, 10, 2, 5));
+    try expectEqual(1, random.single(gen, 10, 2, 5));
 }

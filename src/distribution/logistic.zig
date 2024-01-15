@@ -44,29 +44,21 @@ pub fn quantile(p: f64, location: f64, scale: f64) f64 {
 
 /// Uses the quantile function.
 pub const random = struct {
-    fn implementation(generator: std.rand.Random, location: f64, scale: f64) f64 {
+    pub fn single(generator: std.rand.Random, location: f64, scale: f64) f64 {
+        assert(isFinite(location) and isFinite(scale));
+        assert(scale > 0);
         const uni = generator.float(f64);
         return location + scale * @log(uni / (1 - uni));
     }
 
-    pub fn single(generator: std.rand.Random, location: f64, scale: f64) f64 {
+    pub fn fill(buffer: []f64, generator: std.rand.Random, location: f64, scale: f64) []f64 {
         assert(isFinite(location) and isFinite(scale));
         assert(scale > 0);
-        return implementation(generator, location, scale);
-    }
-
-    pub fn buffer(buf: []f64, generator: std.rand.Random, location: f64, scale: f64) []f64 {
-        assert(isFinite(location) and isFinite(scale));
-        assert(scale > 0);
-        for (buf) |*x| {
-            x.* = implementation(generator, location, scale);
+        for (buffer) |*x| {
+            const uni = generator.float(f64);
+            x.* = location + scale * @log(uni / (1 - uni));
         }
-        return buf;
-    }
-
-    pub fn alloc(allocator: std.mem.Allocator, generator: std.rand.Random, n: usize, location: f64, scale: f64) ![]f64 {
-        const slice = try allocator.alloc(f64, n);
-        return buffer(slice, generator, location, scale);
+        return buffer;
     }
 };
 
@@ -74,6 +66,7 @@ const expectEqual = std.testing.expectEqual;
 const expectApproxEqRel = std.testing.expectApproxEqRel;
 const eps = 10 * std.math.floatEps(f64); // 2.22 × 10^-15
 
+// zig fmt: off
 test "logistic.density" {
     try expectEqual(0, density(-inf, 0, 1));
     try expectEqual(0, density( inf, 0, 1));
@@ -101,10 +94,10 @@ test "logistic.quantile" {
     try expectEqual      ( inf               , quantile(1  , 0, 1)     );
 }
 
-test "logistic.random" {
+test "logistic.random.single" {
     var prng = std.rand.DefaultPrng.init(0);
     const gen = prng.random();
-    try expectApproxEqRel(-0x1.1b5814cb6fc9ap-1, random.implementation(gen, 0, 1), eps);
-    try expectApproxEqRel(-0x1.67d902cb3c67ep-2, random.implementation(gen, 0, 1), eps);
-    try expectApproxEqRel(-0x1.0370f3fe2a1a1p-7, random.implementation(gen, 0, 1), eps);
+    try expectApproxEqRel(-0x1.1b5814cb6fc9ap-1, random.single(gen, 0, 1), eps);
+    try expectApproxEqRel(-0x1.67d902cb3c67ep-2, random.single(gen, 0, 1), eps);
+    try expectApproxEqRel(-0x1.0370f3fe2a1a1p-7, random.single(gen, 0, 1), eps);
 }
