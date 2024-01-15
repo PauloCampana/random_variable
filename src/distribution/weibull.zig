@@ -1,3 +1,5 @@
+//! Support: X ∈ [0,∞)
+//!
 //! Parameters:
 //! - α: `shape` ∈ (0,∞)
 //! - λ: `rate`  ∈ (0,∞)
@@ -9,8 +11,8 @@ const isNan = std.math.isNan;
 const isInf = std.math.isInf;
 const inf = std.math.inf(f64);
 
+pub const discrete = false;
 pub const parameters = 2;
-pub const support = [2]f64 {0, inf};
 
 /// f(x) = αλ (λx)^(α - 1) exp(-(λx)^α).
 pub fn density(x: f64, shape: f64, rate: f64) f64 {

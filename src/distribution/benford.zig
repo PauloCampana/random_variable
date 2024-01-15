@@ -1,3 +1,5 @@
+//! Support: X ∈ {1,2,⋯,b}
+//!
 //! Parameters:
 //! - b: `base` ∈ {2,3,4,⋯}
 
@@ -6,6 +8,7 @@ const assert = std.debug.assert;
 const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
+pub const discrete = true;
 pub const parameters = 1;
 
 /// p(x) = log_b(1 + 1 / x).
@@ -61,7 +64,7 @@ pub const random = struct {
     pub fn buffer(buf: []f64, generator: std.rand.Random, base: u64) []f64 {
         assert(base >= 2);
         for (buf) |*x| {
-            x.* =  implementation(generator, base);
+            x.* = implementation(generator, base);
         }
         return buf;
     }
@@ -126,9 +129,9 @@ test "benford.quantile" {
 test "benford.random" {
     var prng = std.rand.DefaultPrng.init(0);
     const gen = prng.random();
-    try expectEqual(1, random.implementation(gen,  2));
-    try expectEqual(1, random.implementation(gen,  2));
-    try expectEqual(1, random.implementation(gen,  2));
+    try expectEqual(1, random.implementation(gen, 2));
+    try expectEqual(1, random.implementation(gen, 2));
+    try expectEqual(1, random.implementation(gen, 2));
 
     try expectEqual(1, random.implementation(gen, 10));
     try expectEqual(2, random.implementation(gen, 10));

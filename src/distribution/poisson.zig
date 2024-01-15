@@ -1,3 +1,5 @@
+//! Support: X ∈ {0,1,2,⋯}
+//!
 //! Parameters:
 //! - λ: `scale` ∈ (0,∞)
 
@@ -9,8 +11,8 @@ const isNan = std.math.isNan;
 const isInf = std.math.isInf;
 const inf = std.math.inf(f64);
 
+pub const discrete = true;
 pub const parameters = 1;
-pub const support = [2]f64 {0, inf};
 
 /// p(x) = λ^x exp(-λ) / x!.
 pub fn density(x: f64, lambda: f64) f64 {
@@ -52,7 +54,7 @@ pub fn quantile(p: f64, lambda: f64) f64 {
         const initial_pois = @ceil(lambda);
         const initial_mass = density(initial_pois, lambda);
         const initial_cumu = probability(initial_pois, lambda);
-        return guidedSearch(p, lambda,  initial_pois, initial_mass, initial_cumu);
+        return guidedSearch(p, lambda, initial_pois, initial_mass, initial_cumu);
     }
 }
 
@@ -86,7 +88,7 @@ pub const random = struct {
             const initial_cumu = probability(initial_pois, lambda);
             for (buf) |*x| {
                 const uni = generator.float(f64);
-                x.* = guidedSearch(uni, lambda,  initial_pois, initial_mass, initial_cumu);
+                x.* = guidedSearch(uni, lambda, initial_pois, initial_mass, initial_cumu);
             }
         } else {
             const beta = std.math.pi / @sqrt(3 * lambda);

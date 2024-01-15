@@ -112,117 +112,120 @@
     </style>
 </head>
 <body>
-<pre><code><span class="line" id="L1"><span class="tok-comment">//! Parameters:</span></span>
-<span class="line" id="L2"><span class="tok-comment">//! - α: `shape` ∈ (0,∞)</span></span>
-<span class="line" id="L3"><span class="tok-comment">//! - k: `minimum` ∈ (0,∞)</span></span>
-<span class="line" id="L4"></span>
-<span class="line" id="L5"><span class="tok-kw">const</span> std = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;std&quot;</span>);</span>
-<span class="line" id="L6"><span class="tok-kw">const</span> assert = std.debug.assert;</span>
-<span class="line" id="L7"><span class="tok-kw">const</span> isFinite = std.math.isFinite;</span>
-<span class="line" id="L8"><span class="tok-kw">const</span> isNan = std.math.isNan;</span>
-<span class="line" id="L9"><span class="tok-kw">const</span> inf = std.math.inf(<span class="tok-type">f64</span>);</span>
-<span class="line" id="L10"></span>
-<span class="line" id="L11"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> parameters = <span class="tok-number">2</span>;</span>
+<pre><code><span class="line" id="L1"><span class="tok-comment">//! Support: X ∈ [k,∞)</span></span>
+<span class="line" id="L2"><span class="tok-comment">//!</span></span>
+<span class="line" id="L3"><span class="tok-comment">//! Parameters:</span></span>
+<span class="line" id="L4"><span class="tok-comment">//! - α: `shape` ∈ (0,∞)</span></span>
+<span class="line" id="L5"><span class="tok-comment">//! - k: `minimum` ∈ (0,∞)</span></span>
+<span class="line" id="L6"></span>
+<span class="line" id="L7"><span class="tok-kw">const</span> std = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;std&quot;</span>);</span>
+<span class="line" id="L8"><span class="tok-kw">const</span> assert = std.debug.assert;</span>
+<span class="line" id="L9"><span class="tok-kw">const</span> isFinite = std.math.isFinite;</span>
+<span class="line" id="L10"><span class="tok-kw">const</span> isNan = std.math.isNan;</span>
+<span class="line" id="L11"><span class="tok-kw">const</span> inf = std.math.inf(<span class="tok-type">f64</span>);</span>
 <span class="line" id="L12"></span>
-<span class="line" id="L13"><span class="tok-comment">/// f(x) = αk^α / x^(α + 1).</span></span>
-<span class="line" id="L14"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">density</span>(x: <span class="tok-type">f64</span>, shape: <span class="tok-type">f64</span>, minimum: <span class="tok-type">f64</span>) <span class="tok-type">f64</span> {</span>
-<span class="line" id="L15">    assert(isFinite(shape) <span class="tok-kw">and</span> isFinite(minimum));</span>
-<span class="line" id="L16">    assert(shape &gt; <span class="tok-number">0</span> <span class="tok-kw">and</span> minimum &gt; <span class="tok-number">0</span>);</span>
-<span class="line" id="L17">    assert(!isNan(x));</span>
-<span class="line" id="L18">    <span class="tok-kw">if</span> (x &lt; minimum) {</span>
-<span class="line" id="L19">        <span class="tok-kw">return</span> <span class="tok-number">0</span>;</span>
-<span class="line" id="L20">    }</span>
-<span class="line" id="L21">    <span class="tok-kw">const</span> num = <span class="tok-builtin">@log</span>(shape) + shape * <span class="tok-builtin">@log</span>(minimum);</span>
-<span class="line" id="L22">    <span class="tok-kw">const</span> den = (shape + <span class="tok-number">1</span>) * <span class="tok-builtin">@log</span>(x);</span>
-<span class="line" id="L23">    <span class="tok-kw">return</span> <span class="tok-builtin">@exp</span>(num - den);</span>
-<span class="line" id="L24">}</span>
-<span class="line" id="L25"></span>
-<span class="line" id="L26"><span class="tok-comment">/// F(q) = 1 - (k / q)^α.</span></span>
-<span class="line" id="L27"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">probability</span>(q: <span class="tok-type">f64</span>, shape: <span class="tok-type">f64</span>, minimum: <span class="tok-type">f64</span>) <span class="tok-type">f64</span> {</span>
-<span class="line" id="L28">    assert(isFinite(shape) <span class="tok-kw">and</span> isFinite(minimum));</span>
-<span class="line" id="L29">    assert(shape &gt; <span class="tok-number">0</span> <span class="tok-kw">and</span> minimum &gt; <span class="tok-number">0</span>);</span>
-<span class="line" id="L30">    assert(!isNan(q));</span>
-<span class="line" id="L31">    <span class="tok-kw">if</span> (q &lt; minimum) {</span>
-<span class="line" id="L32">        <span class="tok-kw">return</span> <span class="tok-number">0</span>;</span>
-<span class="line" id="L33">    }</span>
-<span class="line" id="L34">    <span class="tok-kw">return</span> <span class="tok-number">1</span> - std.math.pow(<span class="tok-type">f64</span>, minimum / q, shape);</span>
-<span class="line" id="L35">}</span>
-<span class="line" id="L36"></span>
-<span class="line" id="L37"><span class="tok-comment">/// Q(p) = k / (1 - p)^(1 / α).</span></span>
-<span class="line" id="L38"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">quantile</span>(p: <span class="tok-type">f64</span>, shape: <span class="tok-type">f64</span>, minimum: <span class="tok-type">f64</span>) <span class="tok-type">f64</span> {</span>
-<span class="line" id="L39">    assert(isFinite(shape) <span class="tok-kw">and</span> isFinite(minimum));</span>
-<span class="line" id="L40">    assert(shape &gt; <span class="tok-number">0</span> <span class="tok-kw">and</span> minimum &gt; <span class="tok-number">0</span>);</span>
-<span class="line" id="L41">    assert(<span class="tok-number">0</span> &lt;= p <span class="tok-kw">and</span> p &lt;= <span class="tok-number">1</span>);</span>
-<span class="line" id="L42">    <span class="tok-kw">return</span> minimum * std.math.pow(<span class="tok-type">f64</span>, <span class="tok-number">1</span> - p, -<span class="tok-number">1</span> / shape);</span>
-<span class="line" id="L43">}</span>
-<span class="line" id="L44"></span>
-<span class="line" id="L45"><span class="tok-comment">/// Uses the quantile function.</span></span>
-<span class="line" id="L46"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> random = <span class="tok-kw">struct</span> {</span>
-<span class="line" id="L47">    <span class="tok-kw">fn</span> <span class="tok-fn">implementation</span>(generator: std.rand.Random, shape: <span class="tok-type">f64</span>, minimum: <span class="tok-type">f64</span>) <span class="tok-type">f64</span> {</span>
-<span class="line" id="L48">        <span class="tok-kw">const</span> uni = generator.float(<span class="tok-type">f64</span>);</span>
-<span class="line" id="L49">        <span class="tok-kw">return</span> minimum * std.math.pow(<span class="tok-type">f64</span>, uni, -<span class="tok-number">1</span> / shape);</span>
-<span class="line" id="L50">    }</span>
-<span class="line" id="L51"></span>
-<span class="line" id="L52">    <span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">single</span>(generator: std.rand.Random, shape: <span class="tok-type">f64</span>, minimum: <span class="tok-type">f64</span>) <span class="tok-type">f64</span> {</span>
-<span class="line" id="L53">        assert(isFinite(shape) <span class="tok-kw">and</span> isFinite(minimum));</span>
-<span class="line" id="L54">        assert(shape &gt; <span class="tok-number">0</span> <span class="tok-kw">and</span> minimum &gt; <span class="tok-number">0</span>);</span>
-<span class="line" id="L55">        <span class="tok-kw">return</span> implementation(generator, shape, minimum);</span>
-<span class="line" id="L56">    }</span>
-<span class="line" id="L57"></span>
-<span class="line" id="L58">    <span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">buffer</span>(buf: []<span class="tok-type">f64</span>, generator: std.rand.Random, shape: <span class="tok-type">f64</span>, minimum: <span class="tok-type">f64</span>) []<span class="tok-type">f64</span> {</span>
-<span class="line" id="L59">        assert(isFinite(shape) <span class="tok-kw">and</span> isFinite(minimum));</span>
-<span class="line" id="L60">        assert(shape &gt; <span class="tok-number">0</span> <span class="tok-kw">and</span> minimum &gt; <span class="tok-number">0</span>);</span>
-<span class="line" id="L61">        <span class="tok-kw">for</span> (buf) |*x| {</span>
-<span class="line" id="L62">            x.* = implementation(generator, shape, minimum);</span>
-<span class="line" id="L63">        }</span>
-<span class="line" id="L64">        <span class="tok-kw">return</span> buf;</span>
-<span class="line" id="L65">    }</span>
-<span class="line" id="L66"></span>
-<span class="line" id="L67">    <span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">alloc</span>(allocator: std.mem.Allocator, generator: std.rand.Random, n: <span class="tok-type">usize</span>, shape: <span class="tok-type">f64</span>, minimum: <span class="tok-type">f64</span>) ![]<span class="tok-type">f64</span> {</span>
-<span class="line" id="L68">        <span class="tok-kw">const</span> slice = <span class="tok-kw">try</span> allocator.alloc(<span class="tok-type">f64</span>, n);</span>
-<span class="line" id="L69">        <span class="tok-kw">return</span> buffer(slice, generator, shape, minimum);</span>
-<span class="line" id="L70">    }</span>
-<span class="line" id="L71">};</span>
-<span class="line" id="L72"></span>
-<span class="line" id="L73"><span class="tok-kw">const</span> expectEqual = std.testing.expectEqual;</span>
-<span class="line" id="L74"><span class="tok-kw">const</span> expectApproxEqRel = std.testing.expectApproxEqRel;</span>
-<span class="line" id="L75"><span class="tok-kw">const</span> eps = <span class="tok-number">10</span> * std.math.floatEps(<span class="tok-type">f64</span>); <span class="tok-comment">// 2.22 × 10^-15</span>
+<span class="line" id="L13"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> discrete = <span class="tok-null">false</span>;</span>
+<span class="line" id="L14"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> parameters = <span class="tok-number">2</span>;</span>
+<span class="line" id="L15"></span>
+<span class="line" id="L16"><span class="tok-comment">/// f(x) = αk^α / x^(α + 1).</span></span>
+<span class="line" id="L17"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">density</span>(x: <span class="tok-type">f64</span>, shape: <span class="tok-type">f64</span>, minimum: <span class="tok-type">f64</span>) <span class="tok-type">f64</span> {</span>
+<span class="line" id="L18">    assert(isFinite(shape) <span class="tok-kw">and</span> isFinite(minimum));</span>
+<span class="line" id="L19">    assert(shape &gt; <span class="tok-number">0</span> <span class="tok-kw">and</span> minimum &gt; <span class="tok-number">0</span>);</span>
+<span class="line" id="L20">    assert(!isNan(x));</span>
+<span class="line" id="L21">    <span class="tok-kw">if</span> (x &lt; minimum) {</span>
+<span class="line" id="L22">        <span class="tok-kw">return</span> <span class="tok-number">0</span>;</span>
+<span class="line" id="L23">    }</span>
+<span class="line" id="L24">    <span class="tok-kw">const</span> num = <span class="tok-builtin">@log</span>(shape) + shape * <span class="tok-builtin">@log</span>(minimum);</span>
+<span class="line" id="L25">    <span class="tok-kw">const</span> den = (shape + <span class="tok-number">1</span>) * <span class="tok-builtin">@log</span>(x);</span>
+<span class="line" id="L26">    <span class="tok-kw">return</span> <span class="tok-builtin">@exp</span>(num - den);</span>
+<span class="line" id="L27">}</span>
+<span class="line" id="L28"></span>
+<span class="line" id="L29"><span class="tok-comment">/// F(q) = 1 - (k / q)^α.</span></span>
+<span class="line" id="L30"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">probability</span>(q: <span class="tok-type">f64</span>, shape: <span class="tok-type">f64</span>, minimum: <span class="tok-type">f64</span>) <span class="tok-type">f64</span> {</span>
+<span class="line" id="L31">    assert(isFinite(shape) <span class="tok-kw">and</span> isFinite(minimum));</span>
+<span class="line" id="L32">    assert(shape &gt; <span class="tok-number">0</span> <span class="tok-kw">and</span> minimum &gt; <span class="tok-number">0</span>);</span>
+<span class="line" id="L33">    assert(!isNan(q));</span>
+<span class="line" id="L34">    <span class="tok-kw">if</span> (q &lt; minimum) {</span>
+<span class="line" id="L35">        <span class="tok-kw">return</span> <span class="tok-number">0</span>;</span>
+<span class="line" id="L36">    }</span>
+<span class="line" id="L37">    <span class="tok-kw">return</span> <span class="tok-number">1</span> - std.math.pow(<span class="tok-type">f64</span>, minimum / q, shape);</span>
+<span class="line" id="L38">}</span>
+<span class="line" id="L39"></span>
+<span class="line" id="L40"><span class="tok-comment">/// Q(p) = k / (1 - p)^(1 / α).</span></span>
+<span class="line" id="L41"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">quantile</span>(p: <span class="tok-type">f64</span>, shape: <span class="tok-type">f64</span>, minimum: <span class="tok-type">f64</span>) <span class="tok-type">f64</span> {</span>
+<span class="line" id="L42">    assert(isFinite(shape) <span class="tok-kw">and</span> isFinite(minimum));</span>
+<span class="line" id="L43">    assert(shape &gt; <span class="tok-number">0</span> <span class="tok-kw">and</span> minimum &gt; <span class="tok-number">0</span>);</span>
+<span class="line" id="L44">    assert(<span class="tok-number">0</span> &lt;= p <span class="tok-kw">and</span> p &lt;= <span class="tok-number">1</span>);</span>
+<span class="line" id="L45">    <span class="tok-kw">return</span> minimum * std.math.pow(<span class="tok-type">f64</span>, <span class="tok-number">1</span> - p, -<span class="tok-number">1</span> / shape);</span>
+<span class="line" id="L46">}</span>
+<span class="line" id="L47"></span>
+<span class="line" id="L48"><span class="tok-comment">/// Uses the quantile function.</span></span>
+<span class="line" id="L49"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> random = <span class="tok-kw">struct</span> {</span>
+<span class="line" id="L50">    <span class="tok-kw">fn</span> <span class="tok-fn">implementation</span>(generator: std.rand.Random, shape: <span class="tok-type">f64</span>, minimum: <span class="tok-type">f64</span>) <span class="tok-type">f64</span> {</span>
+<span class="line" id="L51">        <span class="tok-kw">const</span> uni = generator.float(<span class="tok-type">f64</span>);</span>
+<span class="line" id="L52">        <span class="tok-kw">return</span> minimum * std.math.pow(<span class="tok-type">f64</span>, uni, -<span class="tok-number">1</span> / shape);</span>
+<span class="line" id="L53">    }</span>
+<span class="line" id="L54"></span>
+<span class="line" id="L55">    <span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">single</span>(generator: std.rand.Random, shape: <span class="tok-type">f64</span>, minimum: <span class="tok-type">f64</span>) <span class="tok-type">f64</span> {</span>
+<span class="line" id="L56">        assert(isFinite(shape) <span class="tok-kw">and</span> isFinite(minimum));</span>
+<span class="line" id="L57">        assert(shape &gt; <span class="tok-number">0</span> <span class="tok-kw">and</span> minimum &gt; <span class="tok-number">0</span>);</span>
+<span class="line" id="L58">        <span class="tok-kw">return</span> implementation(generator, shape, minimum);</span>
+<span class="line" id="L59">    }</span>
+<span class="line" id="L60"></span>
+<span class="line" id="L61">    <span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">buffer</span>(buf: []<span class="tok-type">f64</span>, generator: std.rand.Random, shape: <span class="tok-type">f64</span>, minimum: <span class="tok-type">f64</span>) []<span class="tok-type">f64</span> {</span>
+<span class="line" id="L62">        assert(isFinite(shape) <span class="tok-kw">and</span> isFinite(minimum));</span>
+<span class="line" id="L63">        assert(shape &gt; <span class="tok-number">0</span> <span class="tok-kw">and</span> minimum &gt; <span class="tok-number">0</span>);</span>
+<span class="line" id="L64">        <span class="tok-kw">for</span> (buf) |*x| {</span>
+<span class="line" id="L65">            x.* = implementation(generator, shape, minimum);</span>
+<span class="line" id="L66">        }</span>
+<span class="line" id="L67">        <span class="tok-kw">return</span> buf;</span>
+<span class="line" id="L68">    }</span>
+<span class="line" id="L69"></span>
+<span class="line" id="L70">    <span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">alloc</span>(allocator: std.mem.Allocator, generator: std.rand.Random, n: <span class="tok-type">usize</span>, shape: <span class="tok-type">f64</span>, minimum: <span class="tok-type">f64</span>) ![]<span class="tok-type">f64</span> {</span>
+<span class="line" id="L71">        <span class="tok-kw">const</span> slice = <span class="tok-kw">try</span> allocator.alloc(<span class="tok-type">f64</span>, n);</span>
+<span class="line" id="L72">        <span class="tok-kw">return</span> buffer(slice, generator, shape, minimum);</span>
+<span class="line" id="L73">    }</span>
+<span class="line" id="L74">};</span>
+<span class="line" id="L75"></span>
+<span class="line" id="L76"><span class="tok-kw">const</span> expectEqual = std.testing.expectEqual;</span>
+<span class="line" id="L77"><span class="tok-kw">const</span> expectApproxEqRel = std.testing.expectApproxEqRel;</span>
+<span class="line" id="L78"><span class="tok-kw">const</span> eps = <span class="tok-number">10</span> * std.math.floatEps(<span class="tok-type">f64</span>); <span class="tok-comment">// 2.22 × 10^-15</span>
 </span>
-<span class="line" id="L76"></span>
-<span class="line" id="L77"><span class="tok-kw">test</span> <span class="tok-str">&quot;pareto.density&quot;</span> {</span>
-<span class="line" id="L78">    <span class="tok-kw">try</span> expectEqual(<span class="tok-number">0</span>, density(-inf, <span class="tok-number">3</span>, <span class="tok-number">5</span>));</span>
-<span class="line" id="L79">    <span class="tok-kw">try</span> expectEqual(<span class="tok-number">0</span>, density( inf, <span class="tok-number">3</span>, <span class="tok-number">5</span>));</span>
-<span class="line" id="L80"></span>
-<span class="line" id="L81">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0.6</span>               , density(<span class="tok-number">5</span>, <span class="tok-number">3</span>, <span class="tok-number">5</span>), eps);</span>
-<span class="line" id="L82">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0.2893518518518518</span>, density(<span class="tok-number">6</span>, <span class="tok-number">3</span>, <span class="tok-number">5</span>), eps);</span>
-<span class="line" id="L83">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0.1561849229487713</span>, density(<span class="tok-number">7</span>, <span class="tok-number">3</span>, <span class="tok-number">5</span>), eps);</span>
-<span class="line" id="L84">}</span>
-<span class="line" id="L85"></span>
-<span class="line" id="L86"><span class="tok-kw">test</span> <span class="tok-str">&quot;pareto.probability&quot;</span> {</span>
-<span class="line" id="L87">    <span class="tok-kw">try</span> expectEqual(<span class="tok-number">0</span>, probability(-inf, <span class="tok-number">3</span>, <span class="tok-number">5</span>));</span>
-<span class="line" id="L88">    <span class="tok-kw">try</span> expectEqual(<span class="tok-number">1</span>, probability( inf, <span class="tok-number">3</span>, <span class="tok-number">5</span>));</span>
-<span class="line" id="L89"></span>
-<span class="line" id="L90">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0</span>                 , probability(<span class="tok-number">5</span>, <span class="tok-number">3</span>, <span class="tok-number">5</span>), eps);</span>
-<span class="line" id="L91">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0.4212962962962962</span>, probability(<span class="tok-number">6</span>, <span class="tok-number">3</span>, <span class="tok-number">5</span>), eps);</span>
-<span class="line" id="L92">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0.6355685131195335</span>, probability(<span class="tok-number">7</span>, <span class="tok-number">3</span>, <span class="tok-number">5</span>), eps);</span>
-<span class="line" id="L93">}</span>
-<span class="line" id="L94"></span>
-<span class="line" id="L95"><span class="tok-kw">test</span> <span class="tok-str">&quot;pareto.quantile&quot;</span> {</span>
-<span class="line" id="L96">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">5</span>                , quantile(<span class="tok-number">0</span>  , <span class="tok-number">3</span>, <span class="tok-number">5</span>), eps);</span>
-<span class="line" id="L97">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">5.386086725079709</span>, quantile(<span class="tok-number">0.2</span>, <span class="tok-number">3</span>, <span class="tok-number">5</span>), eps);</span>
-<span class="line" id="L98">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">5.928155507483438</span>, quantile(<span class="tok-number">0.4</span>, <span class="tok-number">3</span>, <span class="tok-number">5</span>), eps);</span>
-<span class="line" id="L99">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">6.786044041487266</span>, quantile(<span class="tok-number">0.6</span>, <span class="tok-number">3</span>, <span class="tok-number">5</span>), eps);</span>
-<span class="line" id="L100">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">8.549879733383484</span>, quantile(<span class="tok-number">0.8</span>, <span class="tok-number">3</span>, <span class="tok-number">5</span>), eps);</span>
-<span class="line" id="L101">    <span class="tok-kw">try</span> expectEqual      (inf              , quantile(<span class="tok-number">1</span>  , <span class="tok-number">3</span>, <span class="tok-number">5</span>)     );</span>
-<span class="line" id="L102">}</span>
-<span class="line" id="L103"></span>
-<span class="line" id="L104"><span class="tok-kw">test</span> <span class="tok-str">&quot;pareto.random&quot;</span> {</span>
-<span class="line" id="L105">    <span class="tok-kw">var</span> prng = std.rand.DefaultPrng.init(<span class="tok-number">0</span>);</span>
-<span class="line" id="L106">    <span class="tok-kw">const</span> gen = prng.random();</span>
-<span class="line" id="L107">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0x1.bfbca14ce8587p2</span>, random.implementation(gen, <span class="tok-number">3</span>, <span class="tok-number">5</span>), eps);</span>
-<span class="line" id="L108">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0x1.adb0012df4ddep2</span>, random.implementation(gen, <span class="tok-number">3</span>, <span class="tok-number">5</span>), eps);</span>
-<span class="line" id="L109">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0x1.93b54a550f660p2</span>, random.implementation(gen, <span class="tok-number">3</span>, <span class="tok-number">5</span>), eps);</span>
-<span class="line" id="L110">}</span>
-<span class="line" id="L111"></span>
+<span class="line" id="L79"></span>
+<span class="line" id="L80"><span class="tok-kw">test</span> <span class="tok-str">&quot;pareto.density&quot;</span> {</span>
+<span class="line" id="L81">    <span class="tok-kw">try</span> expectEqual(<span class="tok-number">0</span>, density(-inf, <span class="tok-number">3</span>, <span class="tok-number">5</span>));</span>
+<span class="line" id="L82">    <span class="tok-kw">try</span> expectEqual(<span class="tok-number">0</span>, density( inf, <span class="tok-number">3</span>, <span class="tok-number">5</span>));</span>
+<span class="line" id="L83"></span>
+<span class="line" id="L84">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0.6</span>               , density(<span class="tok-number">5</span>, <span class="tok-number">3</span>, <span class="tok-number">5</span>), eps);</span>
+<span class="line" id="L85">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0.2893518518518518</span>, density(<span class="tok-number">6</span>, <span class="tok-number">3</span>, <span class="tok-number">5</span>), eps);</span>
+<span class="line" id="L86">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0.1561849229487713</span>, density(<span class="tok-number">7</span>, <span class="tok-number">3</span>, <span class="tok-number">5</span>), eps);</span>
+<span class="line" id="L87">}</span>
+<span class="line" id="L88"></span>
+<span class="line" id="L89"><span class="tok-kw">test</span> <span class="tok-str">&quot;pareto.probability&quot;</span> {</span>
+<span class="line" id="L90">    <span class="tok-kw">try</span> expectEqual(<span class="tok-number">0</span>, probability(-inf, <span class="tok-number">3</span>, <span class="tok-number">5</span>));</span>
+<span class="line" id="L91">    <span class="tok-kw">try</span> expectEqual(<span class="tok-number">1</span>, probability( inf, <span class="tok-number">3</span>, <span class="tok-number">5</span>));</span>
+<span class="line" id="L92"></span>
+<span class="line" id="L93">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0</span>                 , probability(<span class="tok-number">5</span>, <span class="tok-number">3</span>, <span class="tok-number">5</span>), eps);</span>
+<span class="line" id="L94">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0.4212962962962962</span>, probability(<span class="tok-number">6</span>, <span class="tok-number">3</span>, <span class="tok-number">5</span>), eps);</span>
+<span class="line" id="L95">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0.6355685131195335</span>, probability(<span class="tok-number">7</span>, <span class="tok-number">3</span>, <span class="tok-number">5</span>), eps);</span>
+<span class="line" id="L96">}</span>
+<span class="line" id="L97"></span>
+<span class="line" id="L98"><span class="tok-kw">test</span> <span class="tok-str">&quot;pareto.quantile&quot;</span> {</span>
+<span class="line" id="L99">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">5</span>                , quantile(<span class="tok-number">0</span>  , <span class="tok-number">3</span>, <span class="tok-number">5</span>), eps);</span>
+<span class="line" id="L100">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">5.386086725079709</span>, quantile(<span class="tok-number">0.2</span>, <span class="tok-number">3</span>, <span class="tok-number">5</span>), eps);</span>
+<span class="line" id="L101">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">5.928155507483438</span>, quantile(<span class="tok-number">0.4</span>, <span class="tok-number">3</span>, <span class="tok-number">5</span>), eps);</span>
+<span class="line" id="L102">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">6.786044041487266</span>, quantile(<span class="tok-number">0.6</span>, <span class="tok-number">3</span>, <span class="tok-number">5</span>), eps);</span>
+<span class="line" id="L103">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">8.549879733383484</span>, quantile(<span class="tok-number">0.8</span>, <span class="tok-number">3</span>, <span class="tok-number">5</span>), eps);</span>
+<span class="line" id="L104">    <span class="tok-kw">try</span> expectEqual      (inf              , quantile(<span class="tok-number">1</span>  , <span class="tok-number">3</span>, <span class="tok-number">5</span>)     );</span>
+<span class="line" id="L105">}</span>
+<span class="line" id="L106"></span>
+<span class="line" id="L107"><span class="tok-kw">test</span> <span class="tok-str">&quot;pareto.random&quot;</span> {</span>
+<span class="line" id="L108">    <span class="tok-kw">var</span> prng = std.rand.DefaultPrng.init(<span class="tok-number">0</span>);</span>
+<span class="line" id="L109">    <span class="tok-kw">const</span> gen = prng.random();</span>
+<span class="line" id="L110">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0x1.bfbca14ce8587p2</span>, random.implementation(gen, <span class="tok-number">3</span>, <span class="tok-number">5</span>), eps);</span>
+<span class="line" id="L111">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0x1.adb0012df4ddep2</span>, random.implementation(gen, <span class="tok-number">3</span>, <span class="tok-number">5</span>), eps);</span>
+<span class="line" id="L112">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0x1.93b54a550f660p2</span>, random.implementation(gen, <span class="tok-number">3</span>, <span class="tok-number">5</span>), eps);</span>
+<span class="line" id="L113">}</span>
+<span class="line" id="L114"></span>
 </code></pre></body>
 </html>

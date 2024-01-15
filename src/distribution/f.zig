@@ -1,3 +1,5 @@
+//! Support: X ∈ [0,∞)
+//!
 //! Parameters:
 //! - n: `df1` ∈ (0,∞)
 //! - m: `df2` ∈ (0,∞)
@@ -13,8 +15,8 @@ const isNan = std.math.isNan;
 const isInf = std.math.isInf;
 const inf = std.math.inf(f64);
 
+pub const discrete = false;
 pub const parameters = 2;
-pub const support = [2]f64 {0, inf};
 
 /// f(x) = n^(n / 2) m^(m / 2) x^(n / 2 - 1) (m + nx)^(-(n + m) / 2) / beta(n / 2, m / 2).
 pub fn density(x: f64, df1: f64, df2: f64) f64 {

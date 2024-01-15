@@ -1,3 +1,5 @@
+//! Support: X ∈ {0,1}
+//!
 //! Parameters:
 //! - p: `prob` ∈ [0,1]
 
@@ -6,8 +8,8 @@ const assert = std.debug.assert;
 const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
+pub const discrete = true;
 pub const parameters = 1;
-pub const support = [2]f64 {0, 1};
 
 /// p(x) = 1 - p, x = 0,
 ///

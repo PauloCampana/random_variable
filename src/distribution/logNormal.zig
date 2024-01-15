@@ -1,3 +1,5 @@
+//! Support: X ∈ [0,∞)
+//!
 //! Parameters:
 //! - μ: `log_location` ∈ (-∞,∞)
 //! - σ: `log_scale`    ∈ ( 0,∞)
@@ -10,8 +12,8 @@ const isFinite = std.math.isFinite;
 const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
+pub const discrete = false;
 pub const parameters = 2;
-pub const support = [2]f64 {0, inf};
 
 /// f(x) = exp(-((ln(x) - μ) / σ)^2 / 2) / (xσ sqrt(2π)).
 pub fn density(x: f64, log_location: f64, log_scale: f64) f64 {

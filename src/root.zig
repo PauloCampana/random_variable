@@ -18,7 +18,7 @@ pub const negativeBinomial = @import("distribution/negativeBinomial.zig");
 pub const poisson = @import("distribution/poisson.zig");
 pub const hypergeometric = @import("distribution/hypergeometric.zig");
 pub const benford = @import("distribution/benford.zig");
-pub const betabinomial = @import("distribution/betabinomial.zig");
+pub const betaBinomial = @import("distribution/betaBinomial.zig");
 
 // continuous
 pub const uniform = @import("distribution/uniform.zig");
@@ -33,7 +33,7 @@ pub const beta = @import("distribution/beta.zig");
 pub const normal = @import("distribution/normal.zig");
 pub const logNormal = @import("distribution/logNormal.zig");
 pub const t = @import("distribution/t.zig");
-pub const betaprime = @import("distribution/betaprime.zig");
+pub const betaPrime = @import("distribution/betaPrime.zig");
 pub const continuousBernoulli = @import("distribution/continuousBernoulli.zig");
 pub const pareto = @import("distribution/pareto.zig");
 

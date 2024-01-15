@@ -1,3 +1,5 @@
+//! Support: X ∈ [0,∞)
+//!
 //! Parameters:
 //! - ν: `df` ∈ (0,∞)
 
@@ -5,8 +7,8 @@ const std = @import("std");
 const gamma = @import("gamma.zig");
 const inf = std.math.inf(f64);
 
+pub const discrete = false;
 pub const parameters = 1;
-pub const support = [2]f64 {0, inf};
 
 /// f(x) = 0.5 / gamma(ν / 2) (x / 2)^(ν / 2 - 1) exp(-x / 2).
 pub fn density(x: f64, df: f64) f64 {

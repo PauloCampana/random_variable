@@ -1,3 +1,5 @@
+//! Support: X ∈ {0,1,⋯,n}
+//!
 //! Parameters:
 //! - n: `size`   ∈ {0,1,2,⋯}
 //! - α: `shape1` ∈ (0,∞)
@@ -10,6 +12,7 @@ const isFinite = std.math.isFinite;
 const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
+pub const discrete = true;
 pub const parameters = 3;
 
 /// p(x) = (n x) beta(x + α, n - x + β) / beta(α, β).
@@ -112,7 +115,7 @@ pub const random = struct {
         assert(isFinite(shape1) and isFinite(shape2));
         assert(shape1 > 0 and shape2 > 0);
         for (buf) |*x| {
-            x.* =  implementation(generator, size, shape1, shape2);
+            x.* = implementation(generator, size, shape1, shape2);
         }
         return buf;
     }
@@ -127,7 +130,7 @@ const expectEqual = std.testing.expectEqual;
 const expectApproxEqRel = std.testing.expectApproxEqRel;
 const eps = 30 * std.math.floatEps(f64); // 6.66 × 10^-15
 
-test "betabinomial.density" {
+test "betaBinomial.density" {
     try expectEqual(0, density(-inf, 10, 3, 5));
     try expectEqual(0, density( inf, 10, 3, 5));
 
@@ -142,7 +145,7 @@ test "betabinomial.density" {
     try expectApproxEqRel(0                  , density( 1.1, 10, 3, 5), eps);
 }
 
-test "betabinomial.probability" {
+test "betaBinomial.probability" {
     try expectEqual(0, probability(-inf, 10, 3, 5));
     try expectEqual(1, probability( inf, 10, 3, 5));
 
@@ -157,7 +160,7 @@ test "betabinomial.probability" {
     try expectApproxEqRel(0.16176470588235294, probability( 1.1, 10, 3, 5), eps);
 }
 
-test "betabinomial.quantile" {
+test "betaBinomial.quantile" {
     try expectEqual(0, quantile(0  , 0, 3, 5));
     try expectEqual(0, quantile(0.5, 0, 3, 5));
     try expectEqual(0, quantile(1  , 0, 3, 5));
@@ -172,7 +175,7 @@ test "betabinomial.quantile" {
     try expectEqual(10, quantile(1                , 10, 3, 5));
 }
 
-test "betabinomial.random" {
+test "betaBinomial.random" {
     var prng = std.rand.DefaultPrng.init(0);
     const gen = prng.random();
     try expectEqual(0, random.implementation(gen, 0, 3, 5));

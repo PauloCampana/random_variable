@@ -1,3 +1,5 @@
+//! Support: X ∈ [0,∞)
+//!
 //! Parameters:
 //! - λ: `rate` ∈ (0,∞)
 
@@ -7,8 +9,8 @@ const isFinite = std.math.isFinite;
 const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
+pub const discrete = false;
 pub const parameters = 1;
-pub const support = [2]f64 {0, inf};
 
 /// f(x) = λ exp(-λx).
 pub fn density(x: f64, rate: f64) f64 {
@@ -49,13 +51,13 @@ pub const random = struct {
         return exp / rate;
     }
 
-    pub fn single(generator:  std.rand.Random, rate: f64) f64 {
+    pub fn single(generator: std.rand.Random, rate: f64) f64 {
         assert(isFinite(rate));
         assert(rate > 0);
         return implementation(generator, rate);
     }
 
-    pub fn buffer(buf: []f64, generator:  std.rand.Random, rate: f64) []f64 {
+    pub fn buffer(buf: []f64, generator: std.rand.Random, rate: f64) []f64 {
         assert(isFinite(rate));
         assert(rate > 0);
         for (buf) |*x| {
@@ -64,7 +66,7 @@ pub const random = struct {
         return buf;
     }
 
-    pub fn alloc(allocator: std.mem.Allocator, generator:  std.rand.Random, n: usize, rate: f64) ![]f64 {
+    pub fn alloc(allocator: std.mem.Allocator, generator: std.rand.Random, n: usize, rate: f64) ![]f64 {
         const slice = try allocator.alloc(f64, n);
         return buffer(slice, generator, rate);
     }
