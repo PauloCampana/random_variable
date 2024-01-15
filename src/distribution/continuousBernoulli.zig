@@ -1,3 +1,5 @@
+//! Support: X ∈ [0,1]
+//!
 //! Parameters:
 //! - λ: `shape` ∈ (0,1)
 
@@ -7,8 +9,8 @@ const isFinite = std.math.isFinite;
 const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
+pub const discrete = false;
 pub const parameters = 1;
-pub const support = [2]f64 {0, 1};
 
 /// p(x) = 2 / (1 - 2λ) arctanh(1 - 2λ) λ^x (1 - λ)^(1 - x).
 pub fn density(x: f64, shape: f64) f64 {

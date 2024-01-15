@@ -1,3 +1,5 @@
+//! Support: X ∈ {max(0, n + K - N),1,⋯,min(n, K)}
+//!
 //! Parameters:
 //! - N: `N` ∈ {0,1,2,⋯}
 //! - K: `K` ∈ {0,1,⋯,N}
@@ -9,6 +11,7 @@ const assert = std.debug.assert;
 const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
+pub const discrete = true;
 pub const parameters = 3;
 
 /// p(x) = (K x) (N - K n - x) / (N n).

@@ -1,3 +1,5 @@
+//! Support: X ∈ {0,1,⋯,n}
+//!
 //! Parameters:
 //! - n: `size` ∈ {0,1,2,⋯}
 //! - p: `prob` ∈ [0,1]
@@ -9,6 +11,7 @@ const assert = std.debug.assert;
 const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
+pub const discrete = true;
 pub const parameters = 2;
 
 /// p(x) = (n x) p^x (1 - p)^(n - x).
@@ -100,7 +103,7 @@ pub const random = struct {
     pub fn buffer(buf: []f64, generator: std.rand.Random, size: u64, prob: f64) []f64 {
         assert(0 <= prob and prob <= 1);
         for (buf) |*x| {
-            x.* =  implementation(generator, size, prob);
+            x.* = implementation(generator, size, prob);
         }
         return buf;
     }

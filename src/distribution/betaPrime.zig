@@ -1,3 +1,5 @@
+//! Support: X ∈ [0,∞)
+//!
 //! Parameters:
 //! - α: `shape1` ∈ (0,∞)
 //! - β: `shape2` ∈ (0,∞)
@@ -13,8 +15,8 @@ const isNan = std.math.isNan;
 const isInf = std.math.isInf;
 const inf = std.math.inf(f64);
 
+pub const discrete = false;
 pub const parameters = 2;
-pub const support = [2]f64 {0, inf};
 
 /// f(x) = x^(α - 1) (1 + x)^(-α - β) / beta(α, β).
 pub fn density(x: f64, shape1: f64, shape2: f64) f64 {
@@ -92,7 +94,7 @@ const expectEqual = std.testing.expectEqual;
 const expectApproxEqRel = std.testing.expectApproxEqRel;
 const eps = 10 * std.math.floatEps(f64); // 2.22 × 10^-15
 
-test "betaprime.density" {
+test "betaPrime.density" {
     try expectEqual(0, density(-inf, 3, 5));
     try expectEqual(0, density( inf, 3, 5));
 
@@ -105,7 +107,7 @@ test "betaprime.density" {
     try expectApproxEqRel(0.06401463191586648, density(2, 3, 5), eps);
 }
 
-test "betaprime.probability" {
+test "betaPrime.probability" {
     try expectEqual(0, probability(-inf, 3, 5));
     try expectEqual(1, probability( inf, 3, 5));
 
@@ -114,7 +116,7 @@ test "betaprime.probability" {
     try expectApproxEqRel(0.9547325102880658, probability(2, 3, 5), eps);
 }
 
-test "betaprime.quantile" {
+test "betaPrime.quantile" {
     try expectApproxEqRel(0                 , quantile(0  , 3, 5), eps);
     try expectApproxEqRel(0.2958847929875766, quantile(0.2, 3, 5), eps);
     try expectApproxEqRel(0.4718562623302689, quantile(0.4, 3, 5), eps);
@@ -123,7 +125,7 @@ test "betaprime.quantile" {
     try expectEqual      (inf               , quantile(1  , 3, 5)     );
 }
 
-test "betaprime.random" {
+test "betaPrime.random" {
     var prng = std.rand.DefaultPrng.init(0);
     const gen = prng.random();
     try expectApproxEqRel(0x1.fedfe5d36ee54p-2, random.implementation(gen, 3, 5), eps);

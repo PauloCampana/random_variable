@@ -1,3 +1,5 @@
+//! Support: X ∈ [0,1]
+//!
 //! Parameters:
 //! - α: `shape1` ∈ (0,∞)
 //! - β: `shape2` ∈ (0,∞)
@@ -13,8 +15,8 @@ const isNan = std.math.isNan;
 const isInf = std.math.isInf;
 const inf = std.math.inf(f64);
 
+pub const discrete = false;
 pub const parameters = 2;
-pub const support = [2]f64 {0, 1};
 
 /// f(x) = x^(α - 1) (1 - x)^(β - 1) / beta(α, β).
 pub fn density(x: f64, shape1: f64, shape2: f64) f64 {

@@ -1,3 +1,5 @@
+//! Support: X ∈ [a,b]
+//!
 //! Parameters:
 //! - a: `min` ∈ (-∞,∞)
 //! - b: `max` ∈ (-∞,∞)
@@ -8,6 +10,7 @@ const isFinite = std.math.isFinite;
 const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
+pub const discrete = false;
 pub const parameters = 2;
 
 /// f(x) = 1 / (b - a).

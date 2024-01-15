@@ -1,3 +1,5 @@
+//! Support: X ∈ {0,1,2,⋯}
+//!
 //! Parameters:
 //! - n: `size` ∈ {0,1,2,⋯}
 //! - p: `prob` ∈ (0,1]
@@ -10,8 +12,8 @@ const isNan = std.math.isNan;
 const isInf = std.math.isInf;
 const inf = std.math.inf(f64);
 
+pub const discrete = true;
 pub const parameters = 2;
-pub const support = [2]f64 {0, inf};
 
 /// p(x) = (x + n - 1 x) p^n (1 - p)^x.
 pub fn density(x: f64, size: u64, prob: f64) f64 {

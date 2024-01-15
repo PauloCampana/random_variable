@@ -1,3 +1,5 @@
+//! Support: X ∈ (-∞,∞)
+//!
 //! Parameters:
 //! - ν: `df` ∈ (0,∞)
 
@@ -11,8 +13,8 @@ const isFinite = std.math.isFinite;
 const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
+pub const discrete = false;
 pub const parameters = 1;
-pub const support = [2]f64 {-inf, inf};
 
 /// f(x) (ν / (ν + x^2))^((ν + 1) / 2) / (sqrt(ν) beta(ν / 2, 1 / 2)).
 pub fn density(x: f64, df: f64) f64 {
