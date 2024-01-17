@@ -45,22 +45,21 @@ pub fn quantile(p: f64, shape: f64, minimum: f64) f64 {
     return minimum * std.math.pow(f64, 1 - p, -1 / shape);
 }
 
-/// Uses the quantile function.
+/// Uses the relation to Exponential distribution.
 pub const random = struct {
     pub fn single(generator: std.rand.Random, shape: f64, minimum: f64) f64 {
         assert(isFinite(shape) and isFinite(minimum));
         assert(shape > 0 and minimum > 0);
-        const uni = generator.float(f64);
-        return minimum * std.math.pow(f64, uni, -1 / shape);
+        const exp = generator.floatExp(f64);
+        return minimum * @exp(exp / shape);
     }
 
     pub fn fill(buffer: []f64, generator: std.rand.Random, shape: f64, minimum: f64) []f64 {
         assert(isFinite(shape) and isFinite(minimum));
         assert(shape > 0 and minimum > 0);
-        const minvshape = -1 / shape;
         for (buffer) |*x| {
-            const uni = generator.float(f64);
-            x.* = minimum * std.math.pow(f64, uni, minvshape);
+            const exp = generator.floatExp(f64);
+            x.* = minimum * @exp(exp / shape);
         }
         return buffer;
     }
@@ -101,7 +100,7 @@ test "pareto.quantile" {
 test "pareto.random.single" {
     var prng = std.rand.DefaultPrng.init(0);
     const gen = prng.random();
-    try expectApproxEqRel(0x1.bfbca14ce8587p2, random.single(gen, 3, 5), eps);
-    try expectApproxEqRel(0x1.adb0012df4ddep2, random.single(gen, 3, 5), eps);
-    try expectApproxEqRel(0x1.93b54a550f660p2, random.single(gen, 3, 5), eps);
+    try expectApproxEqRel(0x1.55b9f296bfcd6p2, random.single(gen, 3, 5), eps);
+    try expectApproxEqRel(0x1.41bf435e25df0p3, random.single(gen, 3, 5), eps);
+    try expectApproxEqRel(0x1.4665b31796000p2, random.single(gen, 3, 5), eps);
 }

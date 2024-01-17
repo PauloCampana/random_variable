@@ -4,7 +4,7 @@ pub fn build(b: *std.Build) !void {
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
 
-    _ = b.addModule("random_variable", .{
+    const module = b.addModule("random_variable", .{
         .root_source_file = .{ .path = "src/root.zig" },
     });
 
@@ -16,6 +16,16 @@ pub fn build(b: *std.Build) !void {
     const test_cmd = b.addRunArtifact(tests);
     const test_step = b.step("test", "Run library tests");
     test_step.dependOn(&test_cmd.step);
+
+    const gof_tests = b.addTest(.{
+        .root_source_file = .{ .path = "src/gof_tests.zig" },
+        .target = target,
+        .optimize = optimize,
+    });
+    gof_tests.root_module.addImport("random_variable", module);
+    const gof_cmd = b.addRunArtifact(gof_tests);
+    const gof_step = b.step("gof", "Run \"Goodness of fit\" tests for random variable generation");
+    gof_step.dependOn(&gof_cmd.step);
 
     const docs_tests = b.addTest(.{
         .root_source_file = .{ .path = "src/root.zig" },
