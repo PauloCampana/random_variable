@@ -57,7 +57,7 @@ pub fn quantile(p: f64, shape: f64, rate: f64) f64 {
     return q2 / rate;
 }
 
-/// Uses the Ziggurat method and the quantile function.
+/// Uses the relation to Exponential distribution.
 pub const random = struct {
     pub fn single(generator: std.rand.Random, shape: f64, rate: f64) f64 {
         assert(isFinite(shape) and isFinite(rate));

@@ -80,6 +80,7 @@ pub const random = struct {
             for (buffer) |*x| {
                 x.* = generator.float(f64);
             }
+            return buffer;
         }
         const shape2 = 1 - shape;
         const mc = (2 * shape - 1) / shape2;

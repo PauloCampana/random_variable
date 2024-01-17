@@ -43,6 +43,7 @@ pub fn quantile(p: f64, location: f64, scale: f64) f64 {
     return location + scale * q;
 }
 
+/// Uses the Ziggurat method.
 pub const random = struct {
     pub fn single(generator: std.rand.Random, location: f64, scale: f64) f64 {
         assert(isFinite(location) and isFinite(scale));

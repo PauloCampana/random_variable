@@ -1,7 +1,7 @@
 //! Support: X ∈ {0,1,2,⋯}
 //!
 //! Parameters:
-//! - λ: `scale` ∈ (0,∞)
+//! - λ: `lambda` ∈ (0,∞)
 
 const std = @import("std");
 const incompleteGamma = @import("../thirdyparty/prob.zig").incompleteGamma;

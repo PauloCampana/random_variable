@@ -55,8 +55,7 @@ pub const random = struct {
         assert(isFinite(log_location) and isFinite(log_scale));
         assert(log_scale > 0);
         const nor = generator.floatNorm(f64);
-        const log = log_location + log_scale * nor;
-        return @exp(log);
+        return @exp(log_location + log_scale * nor);
     }
 
     pub fn fill(buffer: []f64, generator: std.rand.Random, log_location: f64, log_scale: f64) []f64 {
@@ -64,8 +63,7 @@ pub const random = struct {
         assert(log_scale > 0);
         for (buffer) |*x| {
             const nor = generator.floatNorm(f64);
-            const log = log_location + log_scale * nor;
-            x.* = @exp(log);
+            x.* = @exp(log_location + log_scale * nor);
         }
         return buffer;
     }
