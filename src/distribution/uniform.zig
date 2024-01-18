@@ -2,7 +2,7 @@
 //!
 //! Parameters:
 //! - a: `min` ∈ (-∞,∞)
-//! - b: `max` ∈ (-∞,∞)
+//! - b: `max` ∈ [a,∞)
 
 const std = @import("std");
 const assert = std.debug.assert;
@@ -16,6 +16,7 @@ pub const parameters = 2;
 /// f(x) = 1 / (b - a).
 pub fn density(x: f64, min: f64, max: f64) f64 {
     assert(isFinite(min) and isFinite(max));
+    assert(min <= max);
     assert(!isNan(x));
     if (x < min or x > max) {
         return 0;
@@ -26,6 +27,7 @@ pub fn density(x: f64, min: f64, max: f64) f64 {
 /// F(q) = (q - a) / (b - a).
 pub fn probability(q: f64, min: f64, max: f64) f64 {
     assert(isFinite(min) and isFinite(max));
+    assert(min <= max);
     assert(!isNan(q));
     if (q <= min) {
         return 0;
@@ -39,6 +41,7 @@ pub fn probability(q: f64, min: f64, max: f64) f64 {
 /// Q(p) = a + (b - a)p.
 pub fn quantile(p: f64, min: f64, max: f64) f64 {
     assert(isFinite(min) and isFinite(max));
+    assert(min <= max);
     assert(0 <= p and p <= 1);
     return min + (max - min) * p;
 }
@@ -47,12 +50,14 @@ pub fn quantile(p: f64, min: f64, max: f64) f64 {
 pub const random = struct {
     pub fn single(generator: std.rand.Random, min: f64, max: f64) f64 {
         assert(isFinite(min) and isFinite(max));
+        assert(min <= max);
         const uni = generator.float(f64);
         return min + (max - min) * uni;
     }
 
     pub fn fill(buffer: []f64, generator: std.rand.Random, min: f64, max: f64) []f64 {
         assert(isFinite(min) and isFinite(max));
+        assert(min <= max);
         const scale = max - min;
         for (buffer) |*x| {
             const uni = generator.float(f64);

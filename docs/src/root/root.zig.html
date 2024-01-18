@@ -136,83 +136,81 @@
 <span class="line" id="L21"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> cauchy              = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;distribution/cauchy.zig&quot;</span>);</span>
 <span class="line" id="L22"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> chiSquared          = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;distribution/chiSquared.zig&quot;</span>);</span>
 <span class="line" id="L23"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> continuousBernoulli = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;distribution/continuousBernoulli.zig&quot;</span>);</span>
-<span class="line" id="L24"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> exponential         = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;distribution/exponential.zig&quot;</span>);</span>
-<span class="line" id="L25"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> f                   = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;distribution/f.zig&quot;</span>);</span>
-<span class="line" id="L26"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> gamma               = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;distribution/gamma.zig&quot;</span>);</span>
-<span class="line" id="L27"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> geometric           = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;distribution/geometric.zig&quot;</span>);</span>
-<span class="line" id="L28"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> hypergeometric      = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;distribution/hypergeometric.zig&quot;</span>);</span>
-<span class="line" id="L29"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> logistic            = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;distribution/logistic.zig&quot;</span>);</span>
-<span class="line" id="L30"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> logNormal           = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;distribution/logNormal.zig&quot;</span>);</span>
-<span class="line" id="L31"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> negativeBinomial    = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;distribution/negativeBinomial.zig&quot;</span>);</span>
-<span class="line" id="L32"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> normal              = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;distribution/normal.zig&quot;</span>);</span>
-<span class="line" id="L33"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> pareto              = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;distribution/pareto.zig&quot;</span>);</span>
-<span class="line" id="L34"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> poisson             = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;distribution/poisson.zig&quot;</span>);</span>
-<span class="line" id="L35"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> t                   = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;distribution/t.zig&quot;</span>);</span>
-<span class="line" id="L36"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> uniform             = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;distribution/uniform.zig&quot;</span>);</span>
-<span class="line" id="L37"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> weibull             = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;distribution/weibull.zig&quot;</span>);</span>
-<span class="line" id="L38"><span class="tok-comment">// zig fmt: on</span>
+<span class="line" id="L24"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> discreteUniform     = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;distribution/discreteUniform.zig&quot;</span>);</span>
+<span class="line" id="L25"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> exponential         = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;distribution/exponential.zig&quot;</span>);</span>
+<span class="line" id="L26"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> f                   = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;distribution/f.zig&quot;</span>);</span>
+<span class="line" id="L27"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> gamma               = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;distribution/gamma.zig&quot;</span>);</span>
+<span class="line" id="L28"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> geometric           = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;distribution/geometric.zig&quot;</span>);</span>
+<span class="line" id="L29"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> hypergeometric      = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;distribution/hypergeometric.zig&quot;</span>);</span>
+<span class="line" id="L30"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> logarithmic         = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;distribution/logarithmic.zig&quot;</span>);</span>
+<span class="line" id="L31"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> logistic            = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;distribution/logistic.zig&quot;</span>);</span>
+<span class="line" id="L32"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> logNormal           = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;distribution/logNormal.zig&quot;</span>);</span>
+<span class="line" id="L33"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> negativeBinomial    = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;distribution/negativeBinomial.zig&quot;</span>);</span>
+<span class="line" id="L34"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> normal              = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;distribution/normal.zig&quot;</span>);</span>
+<span class="line" id="L35"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> pareto              = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;distribution/pareto.zig&quot;</span>);</span>
+<span class="line" id="L36"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> poisson             = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;distribution/poisson.zig&quot;</span>);</span>
+<span class="line" id="L37"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> t                   = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;distribution/t.zig&quot;</span>);</span>
+<span class="line" id="L38"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> uniform             = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;distribution/uniform.zig&quot;</span>);</span>
+<span class="line" id="L39"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> weibull             = <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;distribution/weibull.zig&quot;</span>);</span>
+<span class="line" id="L40"><span class="tok-comment">// zig fmt: on</span>
 </span>
-<span class="line" id="L39"></span>
-<span class="line" id="L40"><span class="tok-kw">test</span> {</span>
-<span class="line" id="L41">    <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;std&quot;</span>).testing.refAllDeclsRecursive(<span class="tok-builtin">@This</span>());</span>
-<span class="line" id="L42">}</span>
-<span class="line" id="L43"></span>
-<span class="line" id="L44"><span class="tok-comment">// Categorical</span>
+<span class="line" id="L41"></span>
+<span class="line" id="L42"><span class="tok-kw">test</span> {</span>
+<span class="line" id="L43">    <span class="tok-builtin">@import</span>(<span class="tok-str">&quot;std&quot;</span>).testing.refAllDeclsRecursive(<span class="tok-builtin">@This</span>());</span>
+<span class="line" id="L44">}</span>
+<span class="line" id="L45"></span>
+<span class="line" id="L46"><span class="tok-comment">// Categorical</span>
 </span>
-<span class="line" id="L45"><span class="tok-comment">// Negative hypergeometric</span>
+<span class="line" id="L47"><span class="tok-comment">// Negative hypergeometric</span>
 </span>
-<span class="line" id="L46"><span class="tok-comment">// Fisher's noncentral hypergeometric</span>
+<span class="line" id="L48"><span class="tok-comment">// Fisher's noncentral hypergeometric</span>
 </span>
-<span class="line" id="L47"><span class="tok-comment">// Wallenius' noncentral hypergeometric</span>
+<span class="line" id="L49"><span class="tok-comment">// Wallenius' noncentral hypergeometric</span>
 </span>
-<span class="line" id="L48"><span class="tok-comment">// Poisson binomial</span>
+<span class="line" id="L50"><span class="tok-comment">// Poisson binomial</span>
 </span>
-<span class="line" id="L49"><span class="tok-comment">// Rademacher</span>
+<span class="line" id="L51"><span class="tok-comment">// Rademacher</span>
 </span>
-<span class="line" id="L50"><span class="tok-comment">// Soliton (ideal and robust)</span>
+<span class="line" id="L52"><span class="tok-comment">// Soliton (ideal and robust)</span>
 </span>
-<span class="line" id="L51"><span class="tok-comment">// Discrete uniform</span>
+<span class="line" id="L53"><span class="tok-comment">// Zipf's</span>
 </span>
-<span class="line" id="L52"><span class="tok-comment">// Zipf's</span>
+<span class="line" id="L54"><span class="tok-comment">// Zipf-Mandelbrot</span>
 </span>
-<span class="line" id="L53"><span class="tok-comment">// Zipf-Mandelbrot</span>
+<span class="line" id="L55"></span>
+<span class="line" id="L56"><span class="tok-comment">// Beta negative binomial</span>
 </span>
-<span class="line" id="L54"></span>
-<span class="line" id="L55"><span class="tok-comment">// Beta negative binomial</span>
+<span class="line" id="L57"><span class="tok-comment">// Boltzmann</span>
 </span>
-<span class="line" id="L56"><span class="tok-comment">// Boltzmann</span>
+<span class="line" id="L58"><span class="tok-comment">// Gibbs</span>
 </span>
-<span class="line" id="L57"><span class="tok-comment">// Gibbs</span>
+<span class="line" id="L59"><span class="tok-comment">// Borel</span>
 </span>
-<span class="line" id="L58"><span class="tok-comment">// Borel</span>
+<span class="line" id="L60"><span class="tok-comment">// Conway-Maxwell-Poisson</span>
 </span>
-<span class="line" id="L59"><span class="tok-comment">// Conway-Maxwell-Poisson</span>
+<span class="line" id="L61"><span class="tok-comment">// Delaporte</span>
 </span>
-<span class="line" id="L60"><span class="tok-comment">// Delaporte</span>
+<span class="line" id="L62"><span class="tok-comment">// Discrete compound Poisson</span>
 </span>
-<span class="line" id="L61"><span class="tok-comment">// Discrete compound Poisson</span>
+<span class="line" id="L63"><span class="tok-comment">// Discrete phase-type</span>
 </span>
-<span class="line" id="L62"><span class="tok-comment">// Discrete phase-type</span>
+<span class="line" id="L64"><span class="tok-comment">// Displaced Poisson</span>
 </span>
-<span class="line" id="L63"><span class="tok-comment">// Displaced Poisson</span>
+<span class="line" id="L65"><span class="tok-comment">// Extended negative binomial</span>
 </span>
-<span class="line" id="L64"><span class="tok-comment">// Extended negative binomial</span>
+<span class="line" id="L66"><span class="tok-comment">// Flory-Schulz</span>
 </span>
-<span class="line" id="L65"><span class="tok-comment">// Flory-Schulz</span>
+<span class="line" id="L67"><span class="tok-comment">// Gauss-Kuzmin</span>
 </span>
-<span class="line" id="L66"><span class="tok-comment">// Gauss-Kuzmin</span>
+<span class="line" id="L68"><span class="tok-comment">// General Poisson binomial</span>
 </span>
-<span class="line" id="L67"><span class="tok-comment">// General Poisson binomial</span>
+<span class="line" id="L69"><span class="tok-comment">// Generalized log-series</span>
 </span>
-<span class="line" id="L68"><span class="tok-comment">// Generalized log-series</span>
+<span class="line" id="L70"><span class="tok-comment">// Hardy</span>
 </span>
-<span class="line" id="L69"><span class="tok-comment">// Hardy</span>
+<span class="line" id="L71"><span class="tok-comment">// Hermite</span>
 </span>
-<span class="line" id="L70"><span class="tok-comment">// Hermite</span>
-</span>
-<span class="line" id="L71"><span class="tok-comment">// Hyper-Poisson</span>
-</span>
-<span class="line" id="L72"><span class="tok-comment">// Logarithmic (series)</span>
+<span class="line" id="L72"><span class="tok-comment">// Hyper-Poisson</span>
 </span>
 <span class="line" id="L73"><span class="tok-comment">// Mixed Poisson</span>
 </span>
