@@ -70,13 +70,17 @@ pub fn quantile(p: f64, size: u64, prob: f64) f64 {
     return linearSearch(p, n, pq, initial_mass);
 }
 
-/// Uses the quantile function.
+/// Uses the quantile function or bit-counting when prob == 0.5.
 pub const random = struct {
     pub fn single(generator: std.rand.Random, size: u64, prob: f64) f64 {
         assert(0 <= prob and prob <= 1);
         const n = @as(f64, @floatFromInt(size));
         if (prob == 0 or prob == 1 or size == 0) {
             return n * prob;
+        }
+        if (prob == 0.5) {
+            const mask = (@as(u64, 1) << @truncate(@mod(size, 64))) - 1;
+            return bitCount(generator, mask, size);
         }
         const pq = prob / (1 - prob);
         const initial_mass = std.math.pow(f64, 1 - prob, n);
@@ -89,6 +93,13 @@ pub const random = struct {
         const n = @as(f64, @floatFromInt(size));
         if (prob == 0 or prob == 1 or size == 0) {
             @memset(buffer, n * prob);
+            return buffer;
+        }
+        if (prob == 0.5) {
+            const mask = (@as(u64, 1) << @truncate(@mod(size, 64))) - 1;
+            for (buffer) |*x| {
+                x.* = bitCount(generator, mask, size);
+            }
             return buffer;
         }
         const pq = prob / (1 - prob);
@@ -112,6 +123,21 @@ inline fn linearSearch(p: f64, n: f64, pq: f64, initial_mass: f64) f64 {
         cumu += mass;
     }
     return bin;
+}
+
+inline fn bitCount(generator: std.rand.Random, mask: u64, size: u64) f64 {
+    var bino: usize = 0;
+    var i: usize = 64;
+    while (i < size) : (i += 64) {
+        const uni64 = generator.int(u64);
+        bino += @popCount(uni64);
+    }
+    if (i - 64 < size) {
+        const uni64 = generator.int(u64);
+        const unisize = uni64 & mask;
+        bino += @popCount(unisize);
+    }
+    return @floatFromInt(bino);
 }
 
 const expectEqual = std.testing.expectEqual;

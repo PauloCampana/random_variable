@@ -21,11 +21,13 @@ pub const binomial            = @import("distribution/binomial.zig");
 pub const cauchy              = @import("distribution/cauchy.zig");
 pub const chiSquared          = @import("distribution/chiSquared.zig");
 pub const continuousBernoulli = @import("distribution/continuousBernoulli.zig");
+pub const discreteUniform     = @import("distribution/discreteUniform.zig");
 pub const exponential         = @import("distribution/exponential.zig");
 pub const f                   = @import("distribution/f.zig");
 pub const gamma               = @import("distribution/gamma.zig");
 pub const geometric           = @import("distribution/geometric.zig");
 pub const hypergeometric      = @import("distribution/hypergeometric.zig");
+pub const logarithmic         = @import("distribution/logarithmic.zig");
 pub const logistic            = @import("distribution/logistic.zig");
 pub const logNormal           = @import("distribution/logNormal.zig");
 pub const negativeBinomial    = @import("distribution/negativeBinomial.zig");
@@ -48,7 +50,6 @@ test {
 // Poisson binomial
 // Rademacher
 // Soliton (ideal and robust)
-// Discrete uniform
 // Zipf's
 // Zipf-Mandelbrot
 
@@ -69,7 +70,6 @@ test {
 // Hardy
 // Hermite
 // Hyper-Poisson
-// Logarithmic (series)
 // Mixed Poisson
 // Panjer
 // Polya-Eggenberger
