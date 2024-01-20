@@ -12,7 +12,6 @@ const inverseIncompleteBeta = @import("../thirdyparty/prob.zig").inverseIncomple
 const assert = std.debug.assert;
 const isFinite = std.math.isFinite;
 const isNan = std.math.isNan;
-const isInf = std.math.isInf;
 const inf = std.math.inf(f64);
 
 pub const discrete = false;
@@ -23,7 +22,7 @@ pub fn density(x: f64, shape1: f64, shape2: f64) f64 {
     assert(isFinite(shape1) and isFinite(shape2));
     assert(shape1 > 0 and shape2 > 0);
     assert(!isNan(x));
-    if (x < 0 or isInf(x)) {
+    if (x < 0 or x == inf) {
         return 0;
     }
     if (x == 0) {
@@ -45,7 +44,7 @@ pub fn probability(q: f64, shape1: f64, shape2: f64) f64 {
     if (q <= 0) {
         return 0;
     }
-    if (isInf(q)) {
+    if (q == inf) {
         return 1;
     }
     const z = q / (1 + q);

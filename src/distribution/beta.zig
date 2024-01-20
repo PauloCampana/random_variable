@@ -12,7 +12,6 @@ const inverseIncompleteBeta = @import("../thirdyparty/prob.zig").inverseIncomple
 const assert = std.debug.assert;
 const isFinite = std.math.isFinite;
 const isNan = std.math.isNan;
-const isInf = std.math.isInf;
 const inf = std.math.inf(f64);
 
 pub const discrete = false;

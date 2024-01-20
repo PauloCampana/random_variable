@@ -9,7 +9,6 @@ const math = @import("../math.zig");
 const incompleteBeta = @import("../thirdyparty/prob.zig").incompleteBeta;
 const assert = std.debug.assert;
 const isNan = std.math.isNan;
-const isInf = std.math.isInf;
 const inf = std.math.inf(f64);
 
 pub const discrete = true;
@@ -20,7 +19,7 @@ pub fn density(x: f64, size: u64, prob: f64) f64 {
     assert(0 < prob and prob <= 1);
     assert(size != 0);
     assert(!isNan(x));
-    if (x < 0 or isInf(x) or x != @round(x)) {
+    if (x < 0 or x == inf or x != @round(x)) {
         return 0;
     }
     if (prob == 1) {
@@ -40,7 +39,7 @@ pub fn probability(q: f64, size: u64, prob: f64) f64 {
     if (q < 0) {
         return 0;
     }
-    if (isInf(q) or prob == 1) {
+    if (q == inf or prob == 1) {
         return 1;
     }
     const n = @as(f64, @floatFromInt(size));
