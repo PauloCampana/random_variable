@@ -29,6 +29,7 @@ pub const f                   = @import("distribution/f.zig");
 pub const gamma               = @import("distribution/gamma.zig");
 pub const geometric           = @import("distribution/geometric.zig");
 pub const hypergeometric      = @import("distribution/hypergeometric.zig");
+pub const laplace             = @import("distribution/laplace.zig");
 pub const logarithmic         = @import("distribution/logarithmic.zig");
 pub const logistic            = @import("distribution/logistic.zig");
 pub const logNormal           = @import("distribution/logNormal.zig");
@@ -36,6 +37,7 @@ pub const negativeBinomial    = @import("distribution/negativeBinomial.zig");
 pub const normal              = @import("distribution/normal.zig");
 pub const pareto              = @import("distribution/pareto.zig");
 pub const poisson             = @import("distribution/poisson.zig");
+pub const rayleigh            = @import("distribution/rayleigh.zig");
 pub const t                   = @import("distribution/t.zig");
 pub const uniform             = @import("distribution/uniform.zig");
 pub const weibull             = @import("distribution/weibull.zig");
@@ -139,7 +141,6 @@ test {
 // Phased bi-exponential
 // Phased bi-Weibull
 // Semi-bounded quantile-parameterized distributions
-// Rayleigh
 // Rayleigh mixture
 // Rice
 // Shifted Gompertz
@@ -166,7 +167,6 @@ test {
 // Hyperbolic secant
 // Johnson SU
 // Landau
-// Laplace
 // Lévy skew alpha-stable
 // Linnik
 // Map-Airy

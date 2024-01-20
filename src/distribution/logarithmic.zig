@@ -47,7 +47,7 @@ pub fn probability(q: f64, prob: f64) f64 {
 }
 
 /// No closed form
-pub fn quantile(p: f64,  prob: f64) f64 {
+pub fn quantile(p: f64, prob: f64) f64 {
     assert(0 < prob and prob < 1);
     assert(0 <= p and p <= 1);
     if (p == 0) {

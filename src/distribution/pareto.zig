@@ -1,7 +1,7 @@
 //! Support: X ∈ [k,∞)
 //!
 //! Parameters:
-//! - α: `shape` ∈ (0,∞)
+//! - α: `shape`   ∈ (0,∞)
 //! - k: `minimum` ∈ (0,∞)
 
 const std = @import("std");
