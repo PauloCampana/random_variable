@@ -15,7 +15,7 @@ const inf = std.math.inf(f64);
 pub const discrete = false;
 pub const parameters = 1;
 
-/// f(x) = x^(ν - 1) e^(-x^2 / 2) / (2^(ν / 2 - 1) gamma(ν / 2)).
+/// f(x) = x^(ν - 1) exp(-x^2 / 2) / (2^(ν / 2 - 1) gamma(ν / 2)).
 pub fn density(x: f64, df: f64) f64 {
     assert(isFinite(df));
     assert(df > 0);

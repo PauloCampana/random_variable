@@ -2,7 +2,7 @@
 //!
 //! Parameters:
 //! - a: `min` ∈ (-∞,∞)
-//! - b: `max` ∈ [a,∞)
+//! - b: `max` ∈ [ a,∞)
 
 const std = @import("std");
 const assert = std.debug.assert;

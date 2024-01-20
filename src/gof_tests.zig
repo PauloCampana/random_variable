@@ -133,6 +133,13 @@ test "gamma" {
     }
 }
 
+test "laplace" {
+    const slice = try all.alloc(f64, n);
+    defer all.free(slice);
+    const sample = rv.laplace.random.fill(slice, gen, 0, 1);
+    try kolmogorov(sample, rv.laplace.probability, .{ 0, 1 });
+}
+
 test "logistic" {
     const slice = try all.alloc(f64, n);
     defer all.free(slice);
@@ -165,6 +172,13 @@ test "pareto" {
         const sample = rv.pareto.random.fill(slice, gen, shape, 1);
         try kolmogorov(sample, rv.pareto.probability, .{ shape, 1 });
     }
+}
+
+test "rayleigh" {
+    const slice = try all.alloc(f64, n);
+    defer all.free(slice);
+    const sample = rv.rayleigh.random.fill(slice, gen, 1);
+    try kolmogorov(sample, rv.rayleigh.probability, .{1});
 }
 
 test "t" {

@@ -129,7 +129,7 @@
 <span class="line" id="L15"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> discrete = <span class="tok-null">false</span>;</span>
 <span class="line" id="L16"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> parameters = <span class="tok-number">1</span>;</span>
 <span class="line" id="L17"></span>
-<span class="line" id="L18"><span class="tok-comment">/// f(x) = x^(ν - 1) e^(-x^2 / 2) / (2^(ν / 2 - 1) gamma(ν / 2)).</span></span>
+<span class="line" id="L18"><span class="tok-comment">/// f(x) = x^(ν - 1) exp(-x^2 / 2) / (2^(ν / 2 - 1) gamma(ν / 2)).</span></span>
 <span class="line" id="L19"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">density</span>(x: <span class="tok-type">f64</span>, df: <span class="tok-type">f64</span>) <span class="tok-type">f64</span> {</span>
 <span class="line" id="L20">    assert(isFinite(df));</span>
 <span class="line" id="L21">    assert(df &gt; <span class="tok-number">0</span>);</span>
