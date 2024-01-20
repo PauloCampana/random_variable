@@ -32,8 +32,8 @@ pub fn probability(q: f64, df: f64) f64 {
     assert(isFinite(df));
     assert(df > 0);
     assert(!isNan(q));
-    if (std.math.isInf(q)) {
-        return if (q < 0) 0 else 1;
+    if (q == inf) {
+        return 1;
     }
     const z = q * q;
     if (q < 0) {

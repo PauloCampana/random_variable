@@ -10,7 +10,6 @@ const inverseComplementedIncompleteGamma = @import("../thirdyparty/prob.zig").in
 const assert = std.debug.assert;
 const isFinite = std.math.isFinite;
 const isNan = std.math.isNan;
-const isInf = std.math.isInf;
 const inf = std.math.inf(f64);
 
 pub const discrete = false;
@@ -21,7 +20,7 @@ pub fn density(x: f64, shape: f64, rate: f64) f64 {
     assert(isFinite(shape) and isFinite(rate));
     assert(shape > 0 and rate > 0);
     assert(!isNan(x));
-    if (x < 0 or isInf(x)) {
+    if (x < 0 or x == inf) {
         return 0;
     }
     if (x == 0) {

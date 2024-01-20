@@ -152,7 +152,7 @@
 <span class="line" id="L38"><span class="tok-comment">/// Q(p) = -ln(1 - p) / λ.</span></span>
 <span class="line" id="L39"><span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">quantile</span>(p: <span class="tok-type">f64</span>, rate: <span class="tok-type">f64</span>) <span class="tok-type">f64</span> {</span>
 <span class="line" id="L40">    assert(isFinite(rate));</span>
-<span class="line" id="L41">    assert(rate &gt;= <span class="tok-number">0</span>);</span>
+<span class="line" id="L41">    assert(rate &gt; <span class="tok-number">0</span>);</span>
 <span class="line" id="L42">    assert(<span class="tok-number">0</span> &lt;= p <span class="tok-kw">and</span> p &lt;= <span class="tok-number">1</span>);</span>
 <span class="line" id="L43">    <span class="tok-kw">const</span> q = -std.math.log1p(-p);</span>
 <span class="line" id="L44">    <span class="tok-kw">return</span> q / rate;</span>

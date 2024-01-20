@@ -19,8 +19,10 @@ pub const betaBinomial        = @import("distribution/betaBinomial.zig");
 pub const betaPrime           = @import("distribution/betaPrime.zig");
 pub const binomial            = @import("distribution/binomial.zig");
 pub const cauchy              = @import("distribution/cauchy.zig");
+pub const chi                 = @import("distribution/chi.zig");
 pub const chiSquared          = @import("distribution/chiSquared.zig");
 pub const continuousBernoulli = @import("distribution/continuousBernoulli.zig");
+pub const dagum               = @import("distribution/dagum.zig");
 pub const discreteUniform     = @import("distribution/discreteUniform.zig");
 pub const exponential         = @import("distribution/exponential.zig");
 pub const f                   = @import("distribution/f.zig");
@@ -107,27 +109,11 @@ test {
 // Bingham
 // Wigner semicircle
 
-// Henyey-Greenstein phase function
-// Mie phase function
-// Von Mises
-// Wrapped normal
-// Wrapped exponential
-// Wrapped Lévy
-// Wrapped Cauchy
-// Wrapped Laplace
-// Wrapped asymmetric Laplace
-// Dirac comb
-
 // Birnbaum-Saunders
 // Burr
-// Chi
-// Noncentral chi
 // Inverse-chi-squared
-// Noncentral chi-squared
 // Scaled inverse chi-squared
-// Dagum
 // Exponential-logarithmic
-// Noncentral F
 // Folded normal
 // Fréchet
 // Erlang

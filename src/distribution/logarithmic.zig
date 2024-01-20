@@ -31,7 +31,7 @@ pub fn probability(q: f64, prob: f64) f64 {
     if (q < 1) {
         return 0;
     }
-    if (std.math.isPositiveInf(q)) {
+    if (q == inf) {
         return 1;
     }
     var mass = prob / -std.math.log1p(-prob);

@@ -38,7 +38,7 @@ pub fn probability(q: f64, rate: f64) f64 {
 /// Q(p) = -ln(1 - p) / λ.
 pub fn quantile(p: f64, rate: f64) f64 {
     assert(isFinite(rate));
-    assert(rate >= 0);
+    assert(rate > 0);
     assert(0 <= p and p <= 1);
     const q = -std.math.log1p(-p);
     return q / rate;

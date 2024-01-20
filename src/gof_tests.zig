@@ -60,6 +60,16 @@ test "cauchy" {
     try kolmogorov(sample, rv.cauchy.probability, .{ 0, 1 });
 }
 
+test "chi" {
+    const slice = try all.alloc(f64, n);
+    defer all.free(slice);
+    const dfs = [_]f64{ 0.1, 1, 10, 100 };
+    for (dfs) |df| {
+        const sample = rv.chi.random.fill(slice, gen, df);
+        try kolmogorov(sample, rv.chi.probability, .{df});
+    }
+}
+
 test "chiSquared" {
     const slice = try all.alloc(f64, n);
     defer all.free(slice);
@@ -77,6 +87,19 @@ test "continuousBernoulli" {
     for (shapes) |shape| {
         const sample = rv.continuousBernoulli.random.fill(slice, gen, shape);
         try kolmogorov(sample, rv.continuousBernoulli.probability, .{shape});
+    }
+}
+
+test "dagum" {
+    const slice = try all.alloc(f64, n);
+    defer all.free(slice);
+    const shape1s = [_]f64{ 0.1, 1, 10, 100 };
+    const shape2s = [_]f64{ 0.1, 1, 10, 100 };
+    for (shape1s) |shape1| {
+        for (shape2s) |shape2| {
+            const sample = rv.dagum.random.fill(slice, gen, shape1, shape2, 1);
+            try kolmogorov(sample, rv.dagum.probability, .{ shape1, shape2, 1 });
+        }
     }
 }
 

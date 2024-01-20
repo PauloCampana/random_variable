@@ -146,8 +146,8 @@
 <span class="line" id="L32">    assert(isFinite(df));</span>
 <span class="line" id="L33">    assert(df &gt; <span class="tok-number">0</span>);</span>
 <span class="line" id="L34">    assert(!isNan(q));</span>
-<span class="line" id="L35">    <span class="tok-kw">if</span> (std.math.isInf(q)) {</span>
-<span class="line" id="L36">        <span class="tok-kw">return</span> <span class="tok-kw">if</span> (q &lt; <span class="tok-number">0</span>) <span class="tok-number">0</span> <span class="tok-kw">else</span> <span class="tok-number">1</span>;</span>
+<span class="line" id="L35">    <span class="tok-kw">if</span> (q == inf) {</span>
+<span class="line" id="L36">        <span class="tok-kw">return</span> <span class="tok-number">1</span>;</span>
 <span class="line" id="L37">    }</span>
 <span class="line" id="L38">    <span class="tok-kw">const</span> z = q * q;</span>
 <span class="line" id="L39">    <span class="tok-kw">if</span> (q &lt; <span class="tok-number">0</span>) {</span>

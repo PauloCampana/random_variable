@@ -8,7 +8,6 @@ const incompleteGamma = @import("../thirdyparty/prob.zig").incompleteGamma;
 const assert = std.debug.assert;
 const isFinite = std.math.isFinite;
 const isNan = std.math.isNan;
-const isInf = std.math.isInf;
 const inf = std.math.inf(f64);
 
 pub const discrete = true;
@@ -19,7 +18,7 @@ pub fn density(x: f64, lambda: f64) f64 {
     assert(isFinite(lambda));
     assert(lambda > 0);
     assert(!isNan(x));
-    if (x < 0 or isInf(x) or x != @round(x)) {
+    if (x < 0 or x == inf or x != @round(x)) {
         return 0;
     }
     const log = -lambda + x * @log(lambda) - std.math.lgamma(f64, x + 1);
@@ -34,7 +33,7 @@ pub fn probability(q: f64, lambda: f64) f64 {
     if (q < 0) {
         return 0;
     }
-    if (isInf(q)) {
+    if (q == inf) {
         return 1;
     }
     return 1 - incompleteGamma(@floor(q) + 1, lambda);
