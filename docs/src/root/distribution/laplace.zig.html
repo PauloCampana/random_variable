@@ -200,7 +200,7 @@
 <span class="line" id="L84">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0.0676676416183063</span>, density(<span class="tok-number">2</span>, <span class="tok-number">0</span>, <span class="tok-number">1</span>), eps);</span>
 <span class="line" id="L85">}</span>
 <span class="line" id="L86"></span>
-<span class="line" id="L87"><span class="tok-kw">test</span> <span class="tok-str">&quot;logistic.probability&quot;</span> {</span>
+<span class="line" id="L87"><span class="tok-kw">test</span> <span class="tok-str">&quot;laplace.probability&quot;</span> {</span>
 <span class="line" id="L88">    <span class="tok-kw">try</span> expectEqual(<span class="tok-number">0</span>, probability(-inf, <span class="tok-number">0</span>, <span class="tok-number">1</span>));</span>
 <span class="line" id="L89">    <span class="tok-kw">try</span> expectEqual(<span class="tok-number">1</span>, probability( inf, <span class="tok-number">0</span>, <span class="tok-number">1</span>));</span>
 <span class="line" id="L90"></span>
@@ -209,7 +209,7 @@
 <span class="line" id="L93">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0.9323323583816936</span>, probability(<span class="tok-number">2</span>, <span class="tok-number">0</span>, <span class="tok-number">1</span>), eps);</span>
 <span class="line" id="L94">}</span>
 <span class="line" id="L95"></span>
-<span class="line" id="L96"><span class="tok-kw">test</span> <span class="tok-str">&quot;logistic.quantile&quot;</span> {</span>
+<span class="line" id="L96"><span class="tok-kw">test</span> <span class="tok-str">&quot;laplace.quantile&quot;</span> {</span>
 <span class="line" id="L97">    <span class="tok-kw">try</span> expectEqual      (-inf               , quantile(<span class="tok-number">0</span>  , <span class="tok-number">0</span>, <span class="tok-number">1</span>)     );</span>
 <span class="line" id="L98">    <span class="tok-kw">try</span> expectApproxEqRel(-<span class="tok-number">0.9162907318741550</span>, quantile(<span class="tok-number">0.2</span>, <span class="tok-number">0</span>, <span class="tok-number">1</span>), eps);</span>
 <span class="line" id="L99">    <span class="tok-kw">try</span> expectApproxEqRel(-<span class="tok-number">0.2231435513142097</span>, quantile(<span class="tok-number">0.4</span>, <span class="tok-number">0</span>, <span class="tok-number">1</span>), eps);</span>
@@ -218,7 +218,7 @@
 <span class="line" id="L102">    <span class="tok-kw">try</span> expectEqual      ( inf               , quantile(<span class="tok-number">1</span>  , <span class="tok-number">0</span>, <span class="tok-number">1</span>)     );</span>
 <span class="line" id="L103">}</span>
 <span class="line" id="L104"></span>
-<span class="line" id="L105"><span class="tok-kw">test</span> <span class="tok-str">&quot;logistic.random.single&quot;</span> {</span>
+<span class="line" id="L105"><span class="tok-kw">test</span> <span class="tok-str">&quot;laplace.random.single&quot;</span> {</span>
 <span class="line" id="L106">    <span class="tok-kw">var</span> prng = std.rand.DefaultPrng.init(<span class="tok-number">0</span>);</span>
 <span class="line" id="L107">    <span class="tok-kw">const</span> gen = prng.random();</span>
 <span class="line" id="L108">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0x1.939854e8e753ap-3</span>, random.single(gen, <span class="tok-number">0</span>, <span class="tok-number">1</span>), eps);</span>

@@ -1,6 +1,6 @@
 .{
     .name = "random_variable",
-    .version = "0.2.1",
+    .version = "0.31.0",
     .minimum_zig_version = "0.12.0-dev.2133",
     .dependencies = .{},
     .paths = .{
