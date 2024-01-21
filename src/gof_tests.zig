@@ -133,6 +133,23 @@ test "gamma" {
     }
 }
 
+test "gompertz" {
+    const slice = try all.alloc(f64, n);
+    defer all.free(slice);
+    const shapes = [_]f64{ 0.01, 0.1, 1, 10, 100 };
+    for (shapes) |shape| {
+        const sample = rv.gompertz.random.fill(slice, gen, shape, 1);
+        try kolmogorov(sample, rv.gompertz.probability, .{ shape, 1 });
+    }
+}
+
+test "gumbel" {
+    const slice = try all.alloc(f64, n);
+    defer all.free(slice);
+    const sample = rv.gumbel.random.fill(slice, gen, 0, 1);
+    try kolmogorov(sample, rv.gumbel.probability, .{ 0, 1 });
+}
+
 test "laplace" {
     const slice = try all.alloc(f64, n);
     defer all.free(slice);

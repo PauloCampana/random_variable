@@ -1,9 +1,9 @@
 ![](image.png)
 
-For over 20 probability distributions, this library provides:
+For over 30 probability distributions, this library provides:
 
 * Random variable generation
-* Density, Distribution and Quantile functions
+* Density, Probability and Quantile functions
 
 # Documentation
 Avaliable on <https://paulocampana.github.io/random_variable>

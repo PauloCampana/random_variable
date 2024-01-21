@@ -28,6 +28,8 @@ pub const exponential         = @import("distribution/exponential.zig");
 pub const f                   = @import("distribution/f.zig");
 pub const gamma               = @import("distribution/gamma.zig");
 pub const geometric           = @import("distribution/geometric.zig");
+pub const gompertz            = @import("distribution/gompertz.zig");
+pub const gumbel              = @import("distribution/gumbel.zig");
 pub const hypergeometric      = @import("distribution/hypergeometric.zig");
 pub const laplace             = @import("distribution/laplace.zig");
 pub const logarithmic         = @import("distribution/logarithmic.zig");
@@ -123,7 +125,6 @@ test {
 // Generalized gamma
 // Generalized Pareto
 // Gamma/Gompertz
-// Gompertz
 // Half-normal
 // Hotelling's T-squared
 // Inverse Gaussian (Wald)
@@ -161,7 +162,6 @@ test {
 // Generalized logistic
 // Generalized normal
 // Geometric stable
-// Gumbel
 // Holtsmark
 // Hyperbolic
 // Hyperbolic secant
@@ -181,7 +181,6 @@ test {
 // Skew t distribution
 // Skew laplace
 // Champernowne
-// Type-1 Gumbel
 // Tracy-Widom
 // Voigt
 // Chen

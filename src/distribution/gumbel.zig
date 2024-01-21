@@ -13,39 +13,39 @@ const inf = std.math.inf(f64);
 pub const discrete = false;
 pub const parameters = 2;
 
-/// f(x) = exp(-|x - μ| / σ) / 2σ.
+/// f(x) = exp(-(x - μ) / σ - exp(-(x - μ) / σ)) / scale.
 pub fn density(x: f64, location: f64, scale: f64) f64 {
     assert(isFinite(location) and isFinite(scale));
     assert(scale > 0);
     assert(!isNan(x));
-    const z = @abs(x - location) / scale;
-    return @exp(-z) / (2 * scale);
+    if (x == -inf) {
+        return 0;
+    }
+    const z = (x - location) / scale;
+    const inner = @exp(-z);
+    const outer = @exp(-z - inner);
+    return outer / scale;
 }
 
-/// F(q) =     exp(+(q - μ) / σ)) / 2, x < μ.
-///
-/// F(q) = 1 - exp(-(q - μ) / σ)) / 2, x > μ.
+/// F(q) = exp(-exp(-(q - μ) / σ)).
 pub fn probability(q: f64, location: f64, scale: f64) f64 {
     assert(isFinite(location) and isFinite(scale));
     assert(scale > 0);
     assert(!isNan(q));
     const z = (q - location) / scale;
-    if (q < location) {
-        return 0.5 * @exp(z);
-    } else {
-        return 1 - 0.5 * @exp(-z);
-    }
+    const inner = @exp(-z);
+    const outer = @exp(-inner);
+    return outer;
 }
 
-/// Q(p) = μ + σ ln(2p),       0.0 < p < 0.5.
-///
-/// Q(p) = μ - σ ln(2(1 - p)), 0.5 < p < 1.0.
+/// Q(p) = μ - σ ln(-ln(p)).
 pub fn quantile(p: f64, location: f64, scale: f64) f64 {
     assert(isFinite(location) and isFinite(scale));
     assert(scale > 0);
     assert(0 <= p and p <= 1);
-    const q = if (p <= 0.5) @log(2 * p) else -@log(2 * (1 - p));
-    return location + scale * q;
+    const inner = -@log(p);
+    const outer = -@log(inner);
+    return location + scale * outer;
 }
 
 /// Uses the relation to Exponential distribution.
@@ -54,8 +54,7 @@ pub const random = struct {
         assert(isFinite(location) and isFinite(scale));
         assert(scale > 0);
         const exp = generator.floatExp(f64);
-        const uni = generator.float(f64);
-        return location + scale * if (uni < 0.5) exp else -exp;
+        return location - scale * @log(exp);
     }
 
     pub fn fill(buffer: []f64, generator: std.rand.Random, location: f64, scale: f64) []f64 {
@@ -63,8 +62,7 @@ pub const random = struct {
         assert(scale > 0);
         for (buffer) |*x| {
             const exp = generator.floatExp(f64);
-            const uni = generator.float(f64);
-            x.* = location + scale * if (uni < 0.5) exp else -exp;
+            x.* = location - scale * @log(exp);
         }
         return buffer;
     }
@@ -75,37 +73,37 @@ const expectApproxEqRel = std.testing.expectApproxEqRel;
 const eps = 10 * std.math.floatEps(f64); // 2.22 × 10^-15
 
 // zig fmt: off
-test "laplace.density" {
-    try expectEqual(0, density(-inf, 0, 1));
-    try expectEqual(0, density( inf, 0, 1));
+test "gumbel.density" {
+    try expectEqual(0, density(-inf, 0,  1));
+    try expectEqual(0, density( inf, 0,  1));
 
-    try expectApproxEqRel(0.5               , density(0, 0, 1), eps);
-    try expectApproxEqRel(0.1839397205857211, density(1, 0, 1), eps);
-    try expectApproxEqRel(0.0676676416183063, density(2, 0, 1), eps);
+    try expectApproxEqRel(0.3678794411714423, density( 0, 0,  1), eps);
+    try expectApproxEqRel(0.2546463800435824, density( 1, 0,  1), eps);
+    try expectApproxEqRel(0.1182049515931431, density( 2, 0,  1), eps);
 }
 
-test "laplace.probability" {
+test "gumbel.probability" {
     try expectEqual(0, probability(-inf, 0, 1));
     try expectEqual(1, probability( inf, 0, 1));
 
-    try expectApproxEqRel(0.5               , probability(0, 0, 1), eps);
-    try expectApproxEqRel(0.8160602794142788, probability(1, 0, 1), eps);
-    try expectApproxEqRel(0.9323323583816936, probability(2, 0, 1), eps);
+    try expectApproxEqRel(0.3678794411714423, probability( 0, 0,  1), eps);
+    try expectApproxEqRel(0.6922006275553463, probability( 1, 0,  1), eps);
+    try expectApproxEqRel(0.8734230184931166, probability( 2, 0,  1), eps);
 }
 
-test "laplace.quantile" {
+test "gumbel.quantile" {
     try expectEqual      (-inf               , quantile(0  , 0, 1)     );
-    try expectApproxEqRel(-0.9162907318741550, quantile(0.2, 0, 1), eps);
-    try expectApproxEqRel(-0.2231435513142097, quantile(0.4, 0, 1), eps);
-    try expectApproxEqRel( 0.2231435513142097, quantile(0.6, 0, 1), eps);
-    try expectApproxEqRel( 0.9162907318741550, quantile(0.8, 0, 1), eps);
+    try expectApproxEqRel(-0.4758849953271106, quantile(0.2, 0, 1), eps);
+    try expectApproxEqRel( 0.0874215717907550, quantile(0.4, 0, 1), eps);
+    try expectApproxEqRel( 0.6717269920921220, quantile(0.6, 0, 1), eps);
+    try expectApproxEqRel( 1.4999399867595155, quantile(0.8, 0, 1), eps);
     try expectEqual      ( inf               , quantile(1  , 0, 1)     );
 }
 
-test "laplace.random.single" {
+test "gumbel.random.single" {
     var prng = std.rand.DefaultPrng.init(0);
     const gen = prng.random();
-    try expectApproxEqRel(0x1.939854e8e753ap-3, random.single(gen, 0, 1), eps);
-    try expectApproxEqRel(0x1.e6769ed8617f7p-5, random.single(gen, 0, 1), eps);
-    try expectApproxEqRel(0x1.dcf8488f1c14fp-3, random.single(gen, 0, 1), eps);
+    try expectApproxEqRel( 0x1.9fcc0737efc3fp+0, random.single(gen, 0, 1), eps);
+    try expectApproxEqRel(-0x1.7ad751f92c85fp-1, random.single(gen, 0, 1), eps);
+    try expectApproxEqRel( 0x1.6970b29920d34p+1, random.single(gen, 0, 1), eps);
 }
