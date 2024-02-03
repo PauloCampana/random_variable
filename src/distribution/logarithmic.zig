@@ -34,9 +34,9 @@ pub fn probability(q: f64, prob: f64) f64 {
     if (q == inf) {
         return 1;
     }
+    var loga: f64 = 1;
     var mass = prob / -std.math.log1p(-prob);
     var cumu = mass;
-    var loga: f64 = 1;
     for (1..@intFromFloat(q)) |_| {
         const num = prob * loga;
         loga += 1;
@@ -60,29 +60,30 @@ pub fn quantile(p: f64, prob: f64) f64 {
     return linearSearch(p, prob, initial_mass);
 }
 
-/// Uses Kemp's algorithm.
-/// http://luc.devroye.org/chapter_ten.pdf page 547.
+/// Uses the quantile function.
 pub const random = struct {
     pub fn single(generator: std.rand.Random, prob: f64) f64 {
         assert(0 < prob and prob < 1);
-        const r = std.math.log1p(-prob);
-        return kemp(generator, prob, r);
+        const initial_mass = prob / -std.math.log1p(-prob);
+        const uni = generator.float(f64);
+        return linearSearch(uni, prob, initial_mass);
     }
 
     pub fn fill(buffer: []f64, generator: std.rand.Random, prob: f64) []f64 {
         assert(0 < prob and prob < 1);
-        const r = std.math.log1p(-prob);
+        const initial_mass = prob / -std.math.log1p(-prob);
         for (buffer) |*x| {
-            x.* = kemp(generator, prob, r);
+            const uni = generator.float(f64);
+            x.* = linearSearch(uni, prob, initial_mass);
         }
         return buffer;
     }
 };
 
 inline fn linearSearch(p: f64, prob: f64, initial_mass: f64) f64 {
+    var loga: f64 = 1;
     var mass = initial_mass;
     var cumu = mass;
-    var loga: f64 = 1;
     while (cumu <= p) {
         const num = prob * loga;
         loga += 1;
@@ -90,22 +91,6 @@ inline fn linearSearch(p: f64, prob: f64, initial_mass: f64) f64 {
         cumu += mass;
     }
     return loga;
-}
-
-inline fn kemp(generator: std.rand.Random, prob: f64, r: f64) f64 {
-    const uni1 = generator.float(f64);
-    if (uni1 >= prob) {
-        return 1;
-    }
-    const uni2 = generator.float(f64);
-    const q = -std.math.expm1(r * uni2);
-    if (uni1 > q) {
-        return 2;
-    }
-    if (q * q < uni1 and uni1 <= q) {
-        return 1;
-    }
-    return @floor(1 + @log(uni1) / @log(q));
 }
 
 const expectEqual = std.testing.expectEqual;

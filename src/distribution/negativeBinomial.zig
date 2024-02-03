@@ -77,17 +77,19 @@ pub const random = struct {
     pub fn single(generator: std.rand.Random, size: u64, prob: f64) f64 {
         assert(0 < prob and prob <= 1);
         assert(size != 0);
-        const n = @as(f64, @floatFromInt(size));
-        const z = (1 - prob) / prob;
-        const mean = n * z;
         if (prob == 1) {
             return 0;
-        } else if (mean < 150) {
+        }
+        const n = @as(f64, @floatFromInt(size));
+        const qrob = 1 - prob;
+        const qp = qrob / prob;
+        const mean = n * qp;
+        if (mean < 150) {
             const initial_mass = std.math.pow(f64, prob, n);
             const uni = generator.float(f64);
-            return linearSearch(uni, n, 1 - prob, initial_mass);
+            return linearSearch(uni, n, qrob, initial_mass);
         } else {
-            const lambda = gamma.random.single(generator, n, z);
+            const lambda = gamma.random.single(generator, n, qp);
             return poisson.random.single(generator, lambda);
         }
     }
@@ -95,16 +97,18 @@ pub const random = struct {
     pub fn fill(buffer: []f64, generator: std.rand.Random, size: u64, prob: f64) []f64 {
         assert(0 < prob and prob <= 1);
         assert(size != 0);
-        const n = @as(f64, @floatFromInt(size));
-        const z = (1 - prob) / prob;
-        const mean = n * z;
         if (prob == 1) {
             @memset(buffer, 0);
-        } else if (buffer.len < 15 and mean < 15) {
+        }
+        const n = @as(f64, @floatFromInt(size));
+        const qrob = 1 - prob;
+        const qp = qrob / prob;
+        const mean = n * qp;
+        if (buffer.len < 15 and mean < 15) {
             const initial_mass = std.math.pow(f64, prob, n);
             for (buffer) |*x| {
                 const uni = generator.float(f64);
-                x.* = linearSearch(uni, n, 1 - prob, initial_mass);
+                x.* = linearSearch(uni, n, qrob, initial_mass);
             }
         } else if (mean < 15000) {
             const initial_nbin = @ceil(mean);
@@ -112,11 +116,11 @@ pub const random = struct {
             const initial_cumu = probability(initial_nbin, size, prob);
             for (buffer) |*x| {
                 const uni = generator.float(f64);
-                x.* = guidedSearch(uni, n, 1 - prob, initial_nbin, initial_mass, initial_cumu);
+                x.* = guidedSearch(uni, n, qrob, initial_nbin, initial_mass, initial_cumu);
             }
         } else {
             for (buffer) |*x| {
-                const lambda = gamma.random.single(generator, n, z);
+                const lambda = gamma.random.single(generator, n, qp);
                 x.* = poisson.random.single(generator, lambda);
             }
         }

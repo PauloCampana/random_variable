@@ -59,22 +59,30 @@ pub fn quantile(p: f64, size: u64, prob: f64) f64 {
     assert(0 <= prob and prob <= 1);
     assert(0 <= p and p <= 1);
     const n = @as(f64, @floatFromInt(size));
-    if (p == 0 or p == 1) {
-        return n * p;
+    if (p == 0) {
+        return 0;
+    } else if (p == 1) {
+        return n;
     }
-    if (prob == 0 or prob == 1 or size == 0) {
-        return n * prob;
-    }
-    const pq = prob / (1 - prob);
+    const qrob = 1 - prob;
     const mean = n * prob;
-    if (mean < 500) {
-        const initial_mass = std.math.pow(f64, 1 - prob, n);
-        return linearSearch(p, n, pq, initial_mass);
+    if (prob == 0 or size == 0) {
+        return 0;
+    } else if (prob == 1) {
+        return n;
+    } else if (mean < 500) {
+        if (prob < 0.5) {
+            const initial_mass = std.math.pow(f64, qrob, n);
+            return linearSearch(p, n, prob / qrob, initial_mass);
+        } else {
+            const initial_mass = std.math.pow(f64, prob, n);
+            return n - linearSearch(p, n, qrob / prob, initial_mass);
+        }
     } else {
         const initial_bino = @ceil(mean);
         const initial_mass = density(initial_bino, size, prob);
         const initial_cumu = probability(initial_bino, size, prob);
-        return guidedSearch(p, n, pq, initial_bino, initial_mass, initial_cumu);
+        return guidedSearch(p, n, prob / qrob, initial_bino, initial_mass, initial_cumu);
     }
 }
 
@@ -83,45 +91,66 @@ pub const random = struct {
     pub fn single(generator: std.rand.Random, size: u64, prob: f64) f64 {
         assert(0 <= prob and prob <= 1);
         const n = @as(f64, @floatFromInt(size));
-        const pq = prob / (1 - prob);
+        const qrob = 1 - prob;
         const mean = n * prob;
-        if (prob == 0 or prob == 1 or size == 0) {
-            return mean;
+        if (prob == 0 or size == 0) {
+            return 0;
+        } else if (prob == 1) {
+            return n;
         } else if (prob == 0.5) {
             const mask = (@as(u64, 1) << @truncate(@mod(size, 64))) - 1;
             return bitCount(generator, mask, size);
-        } else if (mean < 500) {
-            const initial_mass = std.math.pow(f64, 1 - prob, n);
-            const uni = generator.float(f64);
-            return linearSearch(uni, n, pq, initial_mass);
+        } else if (mean < 1000) {
+            if (prob < 0.5) {
+                const initial_mass = std.math.pow(f64, qrob, n);
+                const uni = generator.float(f64);
+                return linearSearch(uni, n, prob / qrob, initial_mass);
+            } else {
+                const initial_mass = std.math.pow(f64, prob, n);
+                const uni = generator.float(f64);
+                return n - linearSearch(uni, n, qrob / prob, initial_mass);
+            }
         } else {
             const initial_bino = @ceil(mean);
             const initial_mass = density(initial_bino, size, prob);
             const initial_cumu = probability(initial_bino, size, prob);
             const uni = generator.float(f64);
-            return guidedSearch(uni, n, pq, initial_bino, initial_mass, initial_cumu);
+            return guidedSearch(uni, n, prob / qrob, initial_bino, initial_mass, initial_cumu);
         }
     }
 
     pub fn fill(buffer: []f64, generator: std.rand.Random, size: u64, prob: f64) []f64 {
         assert(0 <= prob and prob <= 1);
         const n = @as(f64, @floatFromInt(size));
-        const pq = prob / (1 - prob);
+        const qrob = 1 - prob;
         const mean = n * prob;
-        if (prob == 0 or prob == 1 or size == 0) {
-            @memset(buffer, mean);
+        if (prob == 0 or size == 0) {
+            @memset(buffer, 0);
+        } else if (prob == 1) {
+            @memset(buffer, n);
         } else if (prob == 0.5) {
             const mask = (@as(u64, 1) << @truncate(@mod(size, 64))) - 1;
             for (buffer) |*x| {
                 x.* = bitCount(generator, mask, size);
             }
-        } else if (buffer.len < 10) {
-            const initial_mass = std.math.pow(f64, 1 - prob, n);
-            for (buffer) |*x| {
-                const uni = generator.float(f64);
-                x.* = linearSearch(uni, n, pq, initial_mass);
+        } else if (buffer.len < 20) {
+            if (prob < 0.5) {
+                const pq = prob / qrob;
+                const initial_mass = std.math.pow(f64, qrob, n);
+                for (buffer) |*x| {
+                    const uni = generator.float(f64);
+                    x.* = linearSearch(uni, n, pq, initial_mass);
+                }
+            } else {
+                const qp = qrob / prob;
+                const initial_mass = std.math.pow(f64, prob, n);
+                for (buffer) |*x| {
+                    const uni = generator.float(f64);
+                    x.* = n - linearSearch(uni, n, qp, initial_mass);
+                }
             }
         } else {
+            const pq = prob / qrob;
             const initial_bino = @ceil(mean);
             const initial_mass = density(initial_bino, size, prob);
             const initial_cumu = probability(initial_bino, size, prob);
