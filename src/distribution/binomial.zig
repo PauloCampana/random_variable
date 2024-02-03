@@ -66,44 +66,68 @@ pub fn quantile(p: f64, size: u64, prob: f64) f64 {
         return n * prob;
     }
     const pq = prob / (1 - prob);
-    const initial_mass = std.math.pow(f64, 1 - prob, n);
-    return linearSearch(p, n, pq, initial_mass);
+    const mean = n * prob;
+    if (mean < 500) {
+        const initial_mass = std.math.pow(f64, 1 - prob, n);
+        return linearSearch(p, n, pq, initial_mass);
+    } else {
+        const initial_bino = @ceil(mean);
+        const initial_mass = density(initial_bino, size, prob);
+        const initial_cumu = probability(initial_bino, size, prob);
+        return guidedSearch(p, n, pq, initial_bino, initial_mass, initial_cumu);
+    }
 }
 
-/// Uses the quantile function or bit-counting when prob == 0.5.
+/// Uses the quantile function or bit-counting.
 pub const random = struct {
     pub fn single(generator: std.rand.Random, size: u64, prob: f64) f64 {
         assert(0 <= prob and prob <= 1);
         const n = @as(f64, @floatFromInt(size));
+        const pq = prob / (1 - prob);
+        const mean = n * prob;
         if (prob == 0 or prob == 1 or size == 0) {
-            return n * prob;
+            return mean;
         } else if (prob == 0.5) {
             const mask = (@as(u64, 1) << @truncate(@mod(size, 64))) - 1;
             return bitCount(generator, mask, size);
-        } else {
-            const pq = prob / (1 - prob);
+        } else if (mean < 500) {
             const initial_mass = std.math.pow(f64, 1 - prob, n);
             const uni = generator.float(f64);
             return linearSearch(uni, n, pq, initial_mass);
+        } else {
+            const initial_bino = @ceil(mean);
+            const initial_mass = density(initial_bino, size, prob);
+            const initial_cumu = probability(initial_bino, size, prob);
+            const uni = generator.float(f64);
+            return guidedSearch(uni, n, pq, initial_bino, initial_mass, initial_cumu);
         }
     }
 
     pub fn fill(buffer: []f64, generator: std.rand.Random, size: u64, prob: f64) []f64 {
         assert(0 <= prob and prob <= 1);
         const n = @as(f64, @floatFromInt(size));
+        const pq = prob / (1 - prob);
+        const mean = n * prob;
         if (prob == 0 or prob == 1 or size == 0) {
-            @memset(buffer, n * prob);
+            @memset(buffer, mean);
         } else if (prob == 0.5) {
             const mask = (@as(u64, 1) << @truncate(@mod(size, 64))) - 1;
             for (buffer) |*x| {
                 x.* = bitCount(generator, mask, size);
             }
-        } else {
-            const pq = prob / (1 - prob);
+        } else if (buffer.len < 10) {
             const initial_mass = std.math.pow(f64, 1 - prob, n);
             for (buffer) |*x| {
                 const uni = generator.float(f64);
                 x.* = linearSearch(uni, n, pq, initial_mass);
+            }
+        } else {
+            const initial_bino = @ceil(mean);
+            const initial_mass = density(initial_bino, size, prob);
+            const initial_cumu = probability(initial_bino, size, prob);
+            for (buffer) |*x| {
+                const uni = generator.float(f64);
+                x.* = guidedSearch(uni, n, pq, initial_bino, initial_mass, initial_cumu);
             }
         }
         return buffer;
@@ -121,6 +145,31 @@ inline fn linearSearch(p: f64, n: f64, pq: f64, initial_mass: f64) f64 {
         cumu += mass;
     }
     return bin;
+}
+
+inline fn guidedSearch(p: f64, n: f64, pq: f64, initial_bino: f64, initial_mass: f64, initial_cumu: f64) f64 {
+    var bino = initial_bino;
+    var mass = initial_mass;
+    var cumu = initial_cumu;
+    if (initial_cumu <= p) {
+        while (cumu <= p) {
+            const num = n - bino;
+            bino += 1;
+            mass *= pq * num / bino;
+            cumu += mass;
+        }
+    } else {
+        while (true) {
+            cumu -= mass;
+            if (cumu <= p) {
+                break;
+            }
+            const num = bino;
+            bino -= 1;
+            mass *= num / (pq * (n - bino));
+        }
+    }
+    return bino;
 }
 
 inline fn bitCount(generator: std.rand.Random, mask: u64, size: u64) f64 {

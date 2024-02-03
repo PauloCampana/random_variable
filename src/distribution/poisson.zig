@@ -57,7 +57,7 @@ pub fn quantile(p: f64, lambda: f64) f64 {
     }
 }
 
-/// Uses the quantile function or rejection sampling for higher λ.
+/// Uses the quantile function or rejection sampling.
 /// https://www.jstor.org/stable/2346807
 pub const random = struct {
     pub fn single(generator: std.rand.Random, lambda: f64) f64 {
@@ -106,8 +106,9 @@ inline fn linearSearch(p: f64, lambda: f64) f64 {
     var pois: f64 = 0;
     var mass = @exp(-lambda);
     var cumu = mass;
-    while (cumu <= p) : (pois += 1) {
-        mass *= lambda / (pois + 1);
+    while (cumu <= p) {
+        pois += 1;
+        mass *= lambda / pois;
         cumu += mass;
     }
     return pois;
@@ -126,10 +127,10 @@ inline fn guidedSearch(p: f64, lambda: f64, initial_pois: f64, initial_mass: f64
     } else {
         while (true) {
             cumu -= mass;
-            mass *= pois / lambda;
             if (cumu <= p) {
                 break;
             }
+            mass *= pois / lambda;
             pois -= 1;
         }
     }

@@ -64,7 +64,7 @@ pub fn quantile(p: f64, shape1: f64, shape2: f64) f64 {
     return inverseIncompleteBeta(shape1, shape2, p);
 }
 
-/// Uses the relation to Gamma distribution or rejection sampling for lower α, β.
+/// Uses the relation to Gamma distribution or rejection sampling.
 /// http://luc.devroye.org/chapter_nine.pdf page 416.
 pub const random = struct {
     pub fn single(generator: std.rand.Random, shape1: f64, shape2: f64) f64 {
