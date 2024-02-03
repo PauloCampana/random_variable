@@ -1,10 +1,12 @@
 //! Support: X ∈ {0,1,2,⋯}
 //!
 //! Parameters:
-//! - n: `size` ∈ {0,1,2,⋯}
+//! - n: `size` ∈ {1,2,⋯}
 //! - p: `prob` ∈ (0,1]
 
 const std = @import("std");
+const gamma = @import("gamma.zig");
+const poisson = @import("poisson.zig");
 const math = @import("../math.zig");
 const incompleteBeta = @import("../thirdyparty/prob.zig").incompleteBeta;
 const assert = std.debug.assert;
@@ -58,45 +60,65 @@ pub fn quantile(p: f64, size: u64, prob: f64) f64 {
         return inf;
     }
     const n = @as(f64, @floatFromInt(size));
-    const q = 1 - prob;
-    var mass = std.math.pow(f64, prob, n);
-    var cumu = mass;
-    var nbi: f64 = 0;
-    while (p >= cumu) : (nbi += 1) {
-        mass *= q * (n + nbi) / (nbi + 1);
-        cumu += mass;
+    const mean = n * (1 - prob) / prob;
+    if (mean < 250) {
+        const initial_mass = std.math.pow(f64, prob, n);
+        return linearSearch(p, n, 1 - prob, initial_mass);
+    } else {
+        const initial_nbin = @ceil(mean);
+        const initial_mass = density(initial_nbin, size, prob);
+        const initial_cumu = probability(initial_nbin, size, prob);
+        return guidedSearch(p, n, 1 - prob, initial_nbin, initial_mass, initial_cumu);
     }
-    return nbi;
 }
 
-/// Uses the quantile function.
+/// Uses the quantile function or the relation to Poisson distribution.
 pub const random = struct {
     pub fn single(generator: std.rand.Random, size: u64, prob: f64) f64 {
         assert(0 < prob and prob <= 1);
         assert(size != 0);
+        const n = @as(f64, @floatFromInt(size));
+        const z = (1 - prob) / prob;
+        const mean = n * z;
         if (prob == 1) {
             return 0;
+        } else if (mean < 150) {
+            const initial_mass = std.math.pow(f64, prob, n);
+            const uni = generator.float(f64);
+            return linearSearch(uni, n, 1 - prob, initial_mass);
+        } else {
+            const lambda = gamma.random.single(generator, n, z);
+            return poisson.random.single(generator, lambda);
         }
-        const n = @as(f64, @floatFromInt(size));
-        const q = 1 - prob;
-        const initial_mass = std.math.pow(f64, prob, n);
-        const uni = generator.float(f64);
-        return linearSearch(uni, n, q, initial_mass);
     }
 
     pub fn fill(buffer: []f64, generator: std.rand.Random, size: u64, prob: f64) []f64 {
         assert(0 < prob and prob <= 1);
         assert(size != 0);
+        const n = @as(f64, @floatFromInt(size));
+        const z = (1 - prob) / prob;
+        const mean = n * z;
         if (prob == 1) {
             @memset(buffer, 0);
-            return buffer;
-        }
-        const n = @as(f64, @floatFromInt(size));
-        const q = 1 - prob;
-        const initial_mass = std.math.pow(f64, prob, n);
-        for (buffer) |*x| {
-            const uni = generator.float(f64);
-            x.* = linearSearch(uni, n, q, initial_mass);
+        } else if (buffer.len < 15 and mean < 15) {
+            const initial_mass = std.math.pow(f64, prob, n);
+            for (buffer) |*x| {
+                const uni = generator.float(f64);
+                x.* = linearSearch(uni, n, 1 - prob, initial_mass);
+            }
+        } else if (mean < 15000) {
+            const initial_nbin = @ceil(mean);
+            const initial_mass = density(initial_nbin, size, prob);
+            const initial_cumu = probability(initial_nbin, size, prob);
+            for (buffer) |*x| {
+                const uni = generator.float(f64);
+                x.* = guidedSearch(uni, n, 1 - prob, initial_nbin, initial_mass, initial_cumu);
+            }
+        } else {
+            for (buffer) |*x| {
+                const lambda = gamma.random.single(generator, n, z);
+                x.* = poisson.random.single(generator, lambda);
+            }
         }
         return buffer;
     }
@@ -111,6 +133,31 @@ inline fn linearSearch(p: f64, n: f64, q: f64, initial_mass: f64) f64 {
         nbin += 1;
         mass *= num / nbin;
         cumu += mass;
+    }
+    return nbin;
+}
+
+inline fn guidedSearch(p: f64, n: f64, q: f64, initial_nbin: f64, initial_mass: f64, initial_cumu: f64) f64 {
+    var nbin = initial_nbin;
+    var mass = initial_mass;
+    var cumu = initial_cumu;
+    if (initial_cumu <= p) {
+        while (cumu <= p) {
+            const num = q * (n + nbin);
+            nbin += 1;
+            mass *= num / nbin;
+            cumu += mass;
+        }
+    } else {
+        while (true) {
+            cumu -= mass;
+            if (cumu <= p) {
+                break;
+            }
+            const num = nbin;
+            nbin -= 1;
+            mass *= num / (q * (n + nbin));
+        }
     }
     return nbin;
 }

@@ -178,7 +178,7 @@
 <span class="line" id="L64">    <span class="tok-kw">return</span> inverseIncompleteBeta(shape1, shape2, p);</span>
 <span class="line" id="L65">}</span>
 <span class="line" id="L66"></span>
-<span class="line" id="L67"><span class="tok-comment">/// Uses the relation to Gamma distribution or rejection sampling for lower α, β.</span></span>
+<span class="line" id="L67"><span class="tok-comment">/// Uses the relation to Gamma distribution or rejection sampling.</span></span>
 <span class="line" id="L68"><span class="tok-comment">/// http://luc.devroye.org/chapter_nine.pdf page 416.</span></span>
 <span class="line" id="L69"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> random = <span class="tok-kw">struct</span> {</span>
 <span class="line" id="L70">    <span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">single</span>(generator: std.rand.Random, shape1: <span class="tok-type">f64</span>, shape2: <span class="tok-type">f64</span>) <span class="tok-type">f64</span> {</span>

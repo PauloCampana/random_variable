@@ -171,7 +171,7 @@
 <span class="line" id="L57">    }</span>
 <span class="line" id="L58">}</span>
 <span class="line" id="L59"></span>
-<span class="line" id="L60"><span class="tok-comment">/// Uses the quantile function or rejection sampling for higher λ.</span></span>
+<span class="line" id="L60"><span class="tok-comment">/// Uses the quantile function or rejection sampling.</span></span>
 <span class="line" id="L61"><span class="tok-comment">/// https://www.jstor.org/stable/2346807</span></span>
 <span class="line" id="L62"><span class="tok-kw">pub</span> <span class="tok-kw">const</span> random = <span class="tok-kw">struct</span> {</span>
 <span class="line" id="L63">    <span class="tok-kw">pub</span> <span class="tok-kw">fn</span> <span class="tok-fn">single</span>(generator: std.rand.Random, lambda: <span class="tok-type">f64</span>) <span class="tok-type">f64</span> {</span>
@@ -220,104 +220,105 @@
 <span class="line" id="L106">    <span class="tok-kw">var</span> pois: <span class="tok-type">f64</span> = <span class="tok-number">0</span>;</span>
 <span class="line" id="L107">    <span class="tok-kw">var</span> mass = <span class="tok-builtin">@exp</span>(-lambda);</span>
 <span class="line" id="L108">    <span class="tok-kw">var</span> cumu = mass;</span>
-<span class="line" id="L109">    <span class="tok-kw">while</span> (cumu &lt;= p) : (pois += <span class="tok-number">1</span>) {</span>
-<span class="line" id="L110">        mass *= lambda / (pois + <span class="tok-number">1</span>);</span>
-<span class="line" id="L111">        cumu += mass;</span>
-<span class="line" id="L112">    }</span>
-<span class="line" id="L113">    <span class="tok-kw">return</span> pois;</span>
-<span class="line" id="L114">}</span>
-<span class="line" id="L115"></span>
-<span class="line" id="L116"><span class="tok-kw">inline</span> <span class="tok-kw">fn</span> <span class="tok-fn">guidedSearch</span>(p: <span class="tok-type">f64</span>, lambda: <span class="tok-type">f64</span>, initial_pois: <span class="tok-type">f64</span>, initial_mass: <span class="tok-type">f64</span>, initial_cumu: <span class="tok-type">f64</span>) <span class="tok-type">f64</span> {</span>
-<span class="line" id="L117">    <span class="tok-kw">var</span> pois = initial_pois;</span>
-<span class="line" id="L118">    <span class="tok-kw">var</span> mass = initial_mass;</span>
-<span class="line" id="L119">    <span class="tok-kw">var</span> cumu = initial_cumu;</span>
-<span class="line" id="L120">    <span class="tok-kw">if</span> (initial_cumu &lt;= p) {</span>
-<span class="line" id="L121">        <span class="tok-kw">while</span> (cumu &lt;= p) {</span>
-<span class="line" id="L122">            pois += <span class="tok-number">1</span>;</span>
-<span class="line" id="L123">            mass *= lambda / pois;</span>
-<span class="line" id="L124">            cumu += mass;</span>
-<span class="line" id="L125">        }</span>
-<span class="line" id="L126">    } <span class="tok-kw">else</span> {</span>
-<span class="line" id="L127">        <span class="tok-kw">while</span> (<span class="tok-null">true</span>) {</span>
-<span class="line" id="L128">            cumu -= mass;</span>
-<span class="line" id="L129">            mass *= pois / lambda;</span>
+<span class="line" id="L109">    <span class="tok-kw">while</span> (cumu &lt;= p) {</span>
+<span class="line" id="L110">        pois += <span class="tok-number">1</span>;</span>
+<span class="line" id="L111">        mass *= lambda / pois;</span>
+<span class="line" id="L112">        cumu += mass;</span>
+<span class="line" id="L113">    }</span>
+<span class="line" id="L114">    <span class="tok-kw">return</span> pois;</span>
+<span class="line" id="L115">}</span>
+<span class="line" id="L116"></span>
+<span class="line" id="L117"><span class="tok-kw">inline</span> <span class="tok-kw">fn</span> <span class="tok-fn">guidedSearch</span>(p: <span class="tok-type">f64</span>, lambda: <span class="tok-type">f64</span>, initial_pois: <span class="tok-type">f64</span>, initial_mass: <span class="tok-type">f64</span>, initial_cumu: <span class="tok-type">f64</span>) <span class="tok-type">f64</span> {</span>
+<span class="line" id="L118">    <span class="tok-kw">var</span> pois = initial_pois;</span>
+<span class="line" id="L119">    <span class="tok-kw">var</span> mass = initial_mass;</span>
+<span class="line" id="L120">    <span class="tok-kw">var</span> cumu = initial_cumu;</span>
+<span class="line" id="L121">    <span class="tok-kw">if</span> (initial_cumu &lt;= p) {</span>
+<span class="line" id="L122">        <span class="tok-kw">while</span> (cumu &lt;= p) {</span>
+<span class="line" id="L123">            pois += <span class="tok-number">1</span>;</span>
+<span class="line" id="L124">            mass *= lambda / pois;</span>
+<span class="line" id="L125">            cumu += mass;</span>
+<span class="line" id="L126">        }</span>
+<span class="line" id="L127">    } <span class="tok-kw">else</span> {</span>
+<span class="line" id="L128">        <span class="tok-kw">while</span> (<span class="tok-null">true</span>) {</span>
+<span class="line" id="L129">            cumu -= mass;</span>
 <span class="line" id="L130">            <span class="tok-kw">if</span> (cumu &lt;= p) {</span>
 <span class="line" id="L131">                <span class="tok-kw">break</span>;</span>
 <span class="line" id="L132">            }</span>
-<span class="line" id="L133">            pois -= <span class="tok-number">1</span>;</span>
-<span class="line" id="L134">        }</span>
-<span class="line" id="L135">    }</span>
-<span class="line" id="L136">    <span class="tok-kw">return</span> pois;</span>
-<span class="line" id="L137">}</span>
-<span class="line" id="L138"></span>
-<span class="line" id="L139"><span class="tok-kw">inline</span> <span class="tok-kw">fn</span> <span class="tok-fn">rejection</span>(generator: std.rand.Random, lambda: <span class="tok-type">f64</span>, beta: <span class="tok-type">f64</span>, k: <span class="tok-type">f64</span>) <span class="tok-type">f64</span> {</span>
-<span class="line" id="L140">    <span class="tok-kw">while</span> (<span class="tok-null">true</span>) {</span>
-<span class="line" id="L141">        <span class="tok-kw">const</span> uni1 = generator.float(<span class="tok-type">f64</span>);</span>
-<span class="line" id="L142">        <span class="tok-kw">const</span> z = <span class="tok-builtin">@log</span>((<span class="tok-number">1</span> - uni1) / uni1);</span>
-<span class="line" id="L143">        <span class="tok-kw">const</span> x = lambda - z / beta;</span>
-<span class="line" id="L144">        <span class="tok-kw">if</span> (x &lt; -<span class="tok-number">0.5</span>) {</span>
-<span class="line" id="L145">            <span class="tok-kw">continue</span>;</span>
-<span class="line" id="L146">        }</span>
-<span class="line" id="L147">        <span class="tok-kw">const</span> n = <span class="tok-builtin">@round</span>(x + <span class="tok-number">0.5</span>);</span>
-<span class="line" id="L148">        <span class="tok-kw">const</span> uni2 = generator.float(<span class="tok-type">f64</span>);</span>
-<span class="line" id="L149">        <span class="tok-kw">const</span> ezp1 = <span class="tok-builtin">@exp</span>(z) + <span class="tok-number">1</span>;</span>
-<span class="line" id="L150">        <span class="tok-kw">const</span> left = z + <span class="tok-builtin">@log</span>(uni2 / (ezp1 * ezp1));</span>
-<span class="line" id="L151">        <span class="tok-kw">const</span> right = k + n * <span class="tok-builtin">@log</span>(lambda) - std.math.lgamma(<span class="tok-type">f64</span>, n + <span class="tok-number">1</span>);</span>
-<span class="line" id="L152">        <span class="tok-kw">if</span> (left &lt;= right) {</span>
-<span class="line" id="L153">            <span class="tok-kw">return</span> n;</span>
-<span class="line" id="L154">        }</span>
-<span class="line" id="L155">    }</span>
-<span class="line" id="L156">}</span>
-<span class="line" id="L157"></span>
-<span class="line" id="L158"><span class="tok-kw">const</span> expectEqual = std.testing.expectEqual;</span>
-<span class="line" id="L159"><span class="tok-kw">const</span> expectApproxEqRel = std.testing.expectApproxEqRel;</span>
-<span class="line" id="L160"><span class="tok-kw">const</span> eps = <span class="tok-number">10</span> * std.math.floatEps(<span class="tok-type">f64</span>); <span class="tok-comment">// 2.22 × 10^-15</span>
+<span class="line" id="L133">            mass *= pois / lambda;</span>
+<span class="line" id="L134">            pois -= <span class="tok-number">1</span>;</span>
+<span class="line" id="L135">        }</span>
+<span class="line" id="L136">    }</span>
+<span class="line" id="L137">    <span class="tok-kw">return</span> pois;</span>
+<span class="line" id="L138">}</span>
+<span class="line" id="L139"></span>
+<span class="line" id="L140"><span class="tok-kw">inline</span> <span class="tok-kw">fn</span> <span class="tok-fn">rejection</span>(generator: std.rand.Random, lambda: <span class="tok-type">f64</span>, beta: <span class="tok-type">f64</span>, k: <span class="tok-type">f64</span>) <span class="tok-type">f64</span> {</span>
+<span class="line" id="L141">    <span class="tok-kw">while</span> (<span class="tok-null">true</span>) {</span>
+<span class="line" id="L142">        <span class="tok-kw">const</span> uni1 = generator.float(<span class="tok-type">f64</span>);</span>
+<span class="line" id="L143">        <span class="tok-kw">const</span> z = <span class="tok-builtin">@log</span>((<span class="tok-number">1</span> - uni1) / uni1);</span>
+<span class="line" id="L144">        <span class="tok-kw">const</span> x = lambda - z / beta;</span>
+<span class="line" id="L145">        <span class="tok-kw">if</span> (x &lt; -<span class="tok-number">0.5</span>) {</span>
+<span class="line" id="L146">            <span class="tok-kw">continue</span>;</span>
+<span class="line" id="L147">        }</span>
+<span class="line" id="L148">        <span class="tok-kw">const</span> n = <span class="tok-builtin">@round</span>(x + <span class="tok-number">0.5</span>);</span>
+<span class="line" id="L149">        <span class="tok-kw">const</span> uni2 = generator.float(<span class="tok-type">f64</span>);</span>
+<span class="line" id="L150">        <span class="tok-kw">const</span> ezp1 = <span class="tok-builtin">@exp</span>(z) + <span class="tok-number">1</span>;</span>
+<span class="line" id="L151">        <span class="tok-kw">const</span> left = z + <span class="tok-builtin">@log</span>(uni2 / (ezp1 * ezp1));</span>
+<span class="line" id="L152">        <span class="tok-kw">const</span> right = k + n * <span class="tok-builtin">@log</span>(lambda) - std.math.lgamma(<span class="tok-type">f64</span>, n + <span class="tok-number">1</span>);</span>
+<span class="line" id="L153">        <span class="tok-kw">if</span> (left &lt;= right) {</span>
+<span class="line" id="L154">            <span class="tok-kw">return</span> n;</span>
+<span class="line" id="L155">        }</span>
+<span class="line" id="L156">    }</span>
+<span class="line" id="L157">}</span>
+<span class="line" id="L158"></span>
+<span class="line" id="L159"><span class="tok-kw">const</span> expectEqual = std.testing.expectEqual;</span>
+<span class="line" id="L160"><span class="tok-kw">const</span> expectApproxEqRel = std.testing.expectApproxEqRel;</span>
+<span class="line" id="L161"><span class="tok-kw">const</span> eps = <span class="tok-number">10</span> * std.math.floatEps(<span class="tok-type">f64</span>); <span class="tok-comment">// 2.22 × 10^-15</span>
 </span>
-<span class="line" id="L161"></span>
-<span class="line" id="L162"><span class="tok-comment">// zig fmt: off</span>
+<span class="line" id="L162"></span>
+<span class="line" id="L163"><span class="tok-comment">// zig fmt: off</span>
 </span>
-<span class="line" id="L163"><span class="tok-kw">test</span> <span class="tok-str">&quot;poisson.density&quot;</span> {</span>
-<span class="line" id="L164">    <span class="tok-kw">try</span> expectEqual(<span class="tok-number">0</span>, density(-inf, <span class="tok-number">3</span>));</span>
-<span class="line" id="L165">    <span class="tok-kw">try</span> expectEqual(<span class="tok-number">0</span>, density( inf, <span class="tok-number">3</span>));</span>
-<span class="line" id="L166"></span>
-<span class="line" id="L167">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0</span>                 , density(-<span class="tok-number">0.1</span>, <span class="tok-number">3</span>), eps);</span>
-<span class="line" id="L168">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0.0497870683678639</span>, density( <span class="tok-number">0</span>  , <span class="tok-number">3</span>), eps);</span>
-<span class="line" id="L169">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0</span>                 , density( <span class="tok-number">0.1</span>, <span class="tok-number">3</span>), eps);</span>
-<span class="line" id="L170">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0</span>                 , density( <span class="tok-number">0.9</span>, <span class="tok-number">3</span>), eps);</span>
-<span class="line" id="L171">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0.1493612051035919</span>, density( <span class="tok-number">1</span>  , <span class="tok-number">3</span>), eps);</span>
-<span class="line" id="L172">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0</span>                 , density( <span class="tok-number">1.1</span>, <span class="tok-number">3</span>), eps);</span>
-<span class="line" id="L173">}</span>
-<span class="line" id="L174"></span>
-<span class="line" id="L175"><span class="tok-kw">test</span> <span class="tok-str">&quot;poisson.probability&quot;</span> {</span>
-<span class="line" id="L176">    <span class="tok-kw">try</span> expectEqual(<span class="tok-number">0</span>, probability(-inf, <span class="tok-number">3</span>));</span>
-<span class="line" id="L177">    <span class="tok-kw">try</span> expectEqual(<span class="tok-number">1</span>, probability( inf, <span class="tok-number">3</span>));</span>
-<span class="line" id="L178"></span>
-<span class="line" id="L179">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0</span>                 , probability(-<span class="tok-number">0.1</span>, <span class="tok-number">3</span>), eps);</span>
-<span class="line" id="L180">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0.0497870683678639</span>, probability( <span class="tok-number">0</span>  , <span class="tok-number">3</span>), eps);</span>
-<span class="line" id="L181">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0.0497870683678639</span>, probability( <span class="tok-number">0.1</span>, <span class="tok-number">3</span>), eps);</span>
-<span class="line" id="L182">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0.0497870683678639</span>, probability( <span class="tok-number">0.9</span>, <span class="tok-number">3</span>), eps);</span>
-<span class="line" id="L183">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0.1991482734714558</span>, probability( <span class="tok-number">1</span>  , <span class="tok-number">3</span>), eps);</span>
-<span class="line" id="L184">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0.1991482734714558</span>, probability( <span class="tok-number">1.1</span>, <span class="tok-number">3</span>), eps);</span>
-<span class="line" id="L185">}</span>
-<span class="line" id="L186"></span>
-<span class="line" id="L187"><span class="tok-kw">test</span> <span class="tok-str">&quot;poisson.quantile&quot;</span> {</span>
-<span class="line" id="L188">    <span class="tok-kw">try</span> expectEqual(  <span class="tok-number">0</span>, quantile(<span class="tok-number">0</span>                 , <span class="tok-number">3</span>));</span>
-<span class="line" id="L189">    <span class="tok-kw">try</span> expectEqual(  <span class="tok-number">0</span>, quantile(<span class="tok-number">0.0497870683678638</span>, <span class="tok-number">3</span>));</span>
-<span class="line" id="L190">    <span class="tok-kw">try</span> expectEqual(  <span class="tok-number">0</span>, quantile(<span class="tok-number">0.0497870683678639</span>, <span class="tok-number">3</span>));</span>
-<span class="line" id="L191">    <span class="tok-kw">try</span> expectEqual(  <span class="tok-number">1</span>, quantile(<span class="tok-number">0.0497870683678640</span>, <span class="tok-number">3</span>));</span>
-<span class="line" id="L192">    <span class="tok-kw">try</span> expectEqual(  <span class="tok-number">1</span>, quantile(<span class="tok-number">0.1991482734714556</span>, <span class="tok-number">3</span>));</span>
-<span class="line" id="L193">    <span class="tok-kw">try</span> expectEqual(  <span class="tok-number">1</span>, quantile(<span class="tok-number">0.1991482734714557</span>, <span class="tok-number">3</span>));</span>
-<span class="line" id="L194">    <span class="tok-kw">try</span> expectEqual(  <span class="tok-number">2</span>, quantile(<span class="tok-number">0.1991482734714558</span>, <span class="tok-number">3</span>));</span>
-<span class="line" id="L195">    <span class="tok-kw">try</span> expectEqual(inf, quantile(<span class="tok-number">1</span>                 , <span class="tok-number">3</span>));</span>
-<span class="line" id="L196">}</span>
-<span class="line" id="L197"></span>
-<span class="line" id="L198"><span class="tok-kw">test</span> <span class="tok-str">&quot;poisson.random.single&quot;</span> {</span>
-<span class="line" id="L199">    <span class="tok-kw">var</span> prng = std.rand.DefaultPrng.init(<span class="tok-number">0</span>);</span>
-<span class="line" id="L200">    <span class="tok-kw">const</span> gen = prng.random();</span>
-<span class="line" id="L201">    <span class="tok-kw">try</span> expectEqual(<span class="tok-number">2</span>, random.single(gen, <span class="tok-number">3</span>));</span>
+<span class="line" id="L164"><span class="tok-kw">test</span> <span class="tok-str">&quot;poisson.density&quot;</span> {</span>
+<span class="line" id="L165">    <span class="tok-kw">try</span> expectEqual(<span class="tok-number">0</span>, density(-inf, <span class="tok-number">3</span>));</span>
+<span class="line" id="L166">    <span class="tok-kw">try</span> expectEqual(<span class="tok-number">0</span>, density( inf, <span class="tok-number">3</span>));</span>
+<span class="line" id="L167"></span>
+<span class="line" id="L168">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0</span>                 , density(-<span class="tok-number">0.1</span>, <span class="tok-number">3</span>), eps);</span>
+<span class="line" id="L169">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0.0497870683678639</span>, density( <span class="tok-number">0</span>  , <span class="tok-number">3</span>), eps);</span>
+<span class="line" id="L170">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0</span>                 , density( <span class="tok-number">0.1</span>, <span class="tok-number">3</span>), eps);</span>
+<span class="line" id="L171">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0</span>                 , density( <span class="tok-number">0.9</span>, <span class="tok-number">3</span>), eps);</span>
+<span class="line" id="L172">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0.1493612051035919</span>, density( <span class="tok-number">1</span>  , <span class="tok-number">3</span>), eps);</span>
+<span class="line" id="L173">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0</span>                 , density( <span class="tok-number">1.1</span>, <span class="tok-number">3</span>), eps);</span>
+<span class="line" id="L174">}</span>
+<span class="line" id="L175"></span>
+<span class="line" id="L176"><span class="tok-kw">test</span> <span class="tok-str">&quot;poisson.probability&quot;</span> {</span>
+<span class="line" id="L177">    <span class="tok-kw">try</span> expectEqual(<span class="tok-number">0</span>, probability(-inf, <span class="tok-number">3</span>));</span>
+<span class="line" id="L178">    <span class="tok-kw">try</span> expectEqual(<span class="tok-number">1</span>, probability( inf, <span class="tok-number">3</span>));</span>
+<span class="line" id="L179"></span>
+<span class="line" id="L180">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0</span>                 , probability(-<span class="tok-number">0.1</span>, <span class="tok-number">3</span>), eps);</span>
+<span class="line" id="L181">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0.0497870683678639</span>, probability( <span class="tok-number">0</span>  , <span class="tok-number">3</span>), eps);</span>
+<span class="line" id="L182">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0.0497870683678639</span>, probability( <span class="tok-number">0.1</span>, <span class="tok-number">3</span>), eps);</span>
+<span class="line" id="L183">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0.0497870683678639</span>, probability( <span class="tok-number">0.9</span>, <span class="tok-number">3</span>), eps);</span>
+<span class="line" id="L184">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0.1991482734714558</span>, probability( <span class="tok-number">1</span>  , <span class="tok-number">3</span>), eps);</span>
+<span class="line" id="L185">    <span class="tok-kw">try</span> expectApproxEqRel(<span class="tok-number">0.1991482734714558</span>, probability( <span class="tok-number">1.1</span>, <span class="tok-number">3</span>), eps);</span>
+<span class="line" id="L186">}</span>
+<span class="line" id="L187"></span>
+<span class="line" id="L188"><span class="tok-kw">test</span> <span class="tok-str">&quot;poisson.quantile&quot;</span> {</span>
+<span class="line" id="L189">    <span class="tok-kw">try</span> expectEqual(  <span class="tok-number">0</span>, quantile(<span class="tok-number">0</span>                 , <span class="tok-number">3</span>));</span>
+<span class="line" id="L190">    <span class="tok-kw">try</span> expectEqual(  <span class="tok-number">0</span>, quantile(<span class="tok-number">0.0497870683678638</span>, <span class="tok-number">3</span>));</span>
+<span class="line" id="L191">    <span class="tok-kw">try</span> expectEqual(  <span class="tok-number">0</span>, quantile(<span class="tok-number">0.0497870683678639</span>, <span class="tok-number">3</span>));</span>
+<span class="line" id="L192">    <span class="tok-kw">try</span> expectEqual(  <span class="tok-number">1</span>, quantile(<span class="tok-number">0.0497870683678640</span>, <span class="tok-number">3</span>));</span>
+<span class="line" id="L193">    <span class="tok-kw">try</span> expectEqual(  <span class="tok-number">1</span>, quantile(<span class="tok-number">0.1991482734714556</span>, <span class="tok-number">3</span>));</span>
+<span class="line" id="L194">    <span class="tok-kw">try</span> expectEqual(  <span class="tok-number">1</span>, quantile(<span class="tok-number">0.1991482734714557</span>, <span class="tok-number">3</span>));</span>
+<span class="line" id="L195">    <span class="tok-kw">try</span> expectEqual(  <span class="tok-number">2</span>, quantile(<span class="tok-number">0.1991482734714558</span>, <span class="tok-number">3</span>));</span>
+<span class="line" id="L196">    <span class="tok-kw">try</span> expectEqual(inf, quantile(<span class="tok-number">1</span>                 , <span class="tok-number">3</span>));</span>
+<span class="line" id="L197">}</span>
+<span class="line" id="L198"></span>
+<span class="line" id="L199"><span class="tok-kw">test</span> <span class="tok-str">&quot;poisson.random.single&quot;</span> {</span>
+<span class="line" id="L200">    <span class="tok-kw">var</span> prng = std.rand.DefaultPrng.init(<span class="tok-number">0</span>);</span>
+<span class="line" id="L201">    <span class="tok-kw">const</span> gen = prng.random();</span>
 <span class="line" id="L202">    <span class="tok-kw">try</span> expectEqual(<span class="tok-number">2</span>, random.single(gen, <span class="tok-number">3</span>));</span>
-<span class="line" id="L203">    <span class="tok-kw">try</span> expectEqual(<span class="tok-number">3</span>, random.single(gen, <span class="tok-number">3</span>));</span>
-<span class="line" id="L204">}</span>
-<span class="line" id="L205"></span>
+<span class="line" id="L203">    <span class="tok-kw">try</span> expectEqual(<span class="tok-number">2</span>, random.single(gen, <span class="tok-number">3</span>));</span>
+<span class="line" id="L204">    <span class="tok-kw">try</span> expectEqual(<span class="tok-number">3</span>, random.single(gen, <span class="tok-number">3</span>));</span>
+<span class="line" id="L205">}</span>
+<span class="line" id="L206"></span>
 </code></pre></body>
 </html>
