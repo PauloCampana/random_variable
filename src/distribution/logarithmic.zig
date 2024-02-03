@@ -60,7 +60,8 @@ pub fn quantile(p: f64, prob: f64) f64 {
     return linearSearch(p, prob, initial_mass);
 }
 
-/// Uses the quantile function.
+/// Uses Kemp's algorithm.
+/// http://luc.devroye.org/chapter_ten.pdf page 547.
 pub const random = struct {
     pub fn single(generator: std.rand.Random, prob: f64) f64 {
         assert(0 < prob and prob < 1);
@@ -93,7 +94,7 @@ inline fn linearSearch(p: f64, prob: f64, initial_mass: f64) f64 {
 
 inline fn kemp(generator: std.rand.Random, prob: f64, r: f64) f64 {
     const uni1 = generator.float(f64);
-    if (uni1 > prob) {
+    if (uni1 >= prob) {
         return 1;
     }
     const uni2 = generator.float(f64);

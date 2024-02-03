@@ -68,37 +68,49 @@ pub const random = struct {
     pub fn single(generator: std.rand.Random, shape: f64, rate: f64) f64 {
         assert(isFinite(shape) and isFinite(rate));
         assert(shape > 0 and rate > 0);
-        const correct = shape >= 1;
-        const increment: f64 = if (correct) 0 else 1;
-        const d = shape - 1.0 / 3.0 + increment;
-        const c = 1 / (3 * @sqrt(d));
-        const gam = rejection(generator, d, c);
-        if (correct) {
-            return gam / rate;
+        if (shape == 1) {
+            const exp = generator.floatExp(f64);
+            return exp / rate;
         } else {
-            const uni = generator.float(f64);
-            const correction = std.math.pow(f64, uni, 1 / shape);
-            return gam / rate * correction;
+            const correct = shape >= 1;
+            const increment: f64 = if (correct) 0 else 1;
+            const d = shape - 1.0 / 3.0 + increment;
+            const c = 1 / (3 * @sqrt(d));
+            const gam = rejection(generator, d, c);
+            if (correct) {
+                return gam / rate;
+            } else {
+                const uni = generator.float(f64);
+                const correction = std.math.pow(f64, uni, 1 / shape);
+                return gam / rate * correction;
+            }
         }
     }
 
     pub fn fill(buffer: []f64, generator: std.rand.Random, shape: f64, rate: f64) []f64 {
         assert(isFinite(shape) and isFinite(rate));
         assert(shape > 0 and rate > 0);
-        const correct = shape >= 1;
-        const increment: f64 = if (correct) 0 else 1;
-        const d = shape - 1.0 / 3.0 + increment;
-        const c = 1 / (3 * @sqrt(d));
-        for (buffer) |*x| {
-            const gam = rejection(generator, d, c);
-            x.* = gam / rate;
-        }
-        if (!correct) {
-            const invshape = 1 / shape;
+        if (shape == 1) {
             for (buffer) |*x| {
-                const uni = generator.float(f64);
-                const correction = std.math.pow(f64, uni, invshape);
-                x.* *= correction;
+                const exp = generator.floatExp(f64);
+                x.* = exp / rate;
+            }
+        } else {
+            const correct = shape >= 1;
+            const increment: f64 = if (correct) 0 else 1;
+            const d = shape - 1.0 / 3.0 + increment;
+            const c = 1 / (3 * @sqrt(d));
+            for (buffer) |*x| {
+                const gam = rejection(generator, d, c);
+                x.* = gam / rate;
+            }
+            if (!correct) {
+                const invshape = 1 / shape;
+                for (buffer) |*x| {
+                    const uni = generator.float(f64);
+                    const correction = std.math.pow(f64, uni, invshape);
+                    x.* *= correction;
+                }
             }
         }
         return buffer;
@@ -117,7 +129,8 @@ inline fn rejection(generator: std.rand.Random, d: f64, c: f64) f64 {
         const uni = generator.float(f64);
         if (uni < 1 - 0.0331 * z2 * z2) {
             break d * v3;
-        } else if (@log(uni) < 0.5 * z2 + d * (1 - v3 + @log(v3))) {
+        }
+        if (@log(uni) < 0.5 * z2 + d * (1 - v3 + @log(v3))) {
             break d * v3;
         }
     };

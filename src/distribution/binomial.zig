@@ -77,15 +77,15 @@ pub const random = struct {
         const n = @as(f64, @floatFromInt(size));
         if (prob == 0 or prob == 1 or size == 0) {
             return n * prob;
-        }
-        if (prob == 0.5) {
+        } else if (prob == 0.5) {
             const mask = (@as(u64, 1) << @truncate(@mod(size, 64))) - 1;
             return bitCount(generator, mask, size);
+        } else {
+            const pq = prob / (1 - prob);
+            const initial_mass = std.math.pow(f64, 1 - prob, n);
+            const uni = generator.float(f64);
+            return linearSearch(uni, n, pq, initial_mass);
         }
-        const pq = prob / (1 - prob);
-        const initial_mass = std.math.pow(f64, 1 - prob, n);
-        const uni = generator.float(f64);
-        return linearSearch(uni, n, pq, initial_mass);
     }
 
     pub fn fill(buffer: []f64, generator: std.rand.Random, size: u64, prob: f64) []f64 {
@@ -93,20 +93,18 @@ pub const random = struct {
         const n = @as(f64, @floatFromInt(size));
         if (prob == 0 or prob == 1 or size == 0) {
             @memset(buffer, n * prob);
-            return buffer;
-        }
-        if (prob == 0.5) {
+        } else if (prob == 0.5) {
             const mask = (@as(u64, 1) << @truncate(@mod(size, 64))) - 1;
             for (buffer) |*x| {
                 x.* = bitCount(generator, mask, size);
             }
-            return buffer;
-        }
-        const pq = prob / (1 - prob);
-        const initial_mass = std.math.pow(f64, 1 - prob, n);
-        for (buffer) |*x| {
-            const uni = generator.float(f64);
-            x.* = linearSearch(uni, n, pq, initial_mass);
+        } else {
+            const pq = prob / (1 - prob);
+            const initial_mass = std.math.pow(f64, 1 - prob, n);
+            for (buffer) |*x| {
+                const uni = generator.float(f64);
+                x.* = linearSearch(uni, n, pq, initial_mass);
+            }
         }
         return buffer;
     }
