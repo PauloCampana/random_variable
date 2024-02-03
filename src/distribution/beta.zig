@@ -64,23 +64,71 @@ pub fn quantile(p: f64, shape1: f64, shape2: f64) f64 {
     return inverseIncompleteBeta(shape1, shape2, p);
 }
 
-/// Uses the relation to Gamma distribution.
+/// Uses the relation to Gamma distribution or rejection sampling for lower α, β.
+/// http://luc.devroye.org/chapter_nine.pdf page 416.
 pub const random = struct {
     pub fn single(generator: std.rand.Random, shape1: f64, shape2: f64) f64 {
-        const gam1 = gamma.random.single(generator, shape1, 1);
-        const gam2 = gamma.random.single(generator, shape2, 1);
-        return gam1 / (gam1 + gam2);
+        assert(isFinite(shape1) and isFinite(shape2));
+        assert(shape1 > 0 and shape2 > 0);
+        if (shape1 == 1) {
+            const uni = generator.float(f64);
+            return 1 - std.math.pow(f64, uni, 1 / shape2);
+        }
+        if (shape2 == 1) {
+            const uni = generator.float(f64);
+            return std.math.pow(f64, uni, 1 / shape1);
+        }
+        if (shape1 < 1 and shape2 < 1) {
+            return rejection(generator, 1 / shape1, 1 / shape2);
+        } else {
+            const gam1 = gamma.random.single(generator, shape1, 1);
+            const gam2 = gamma.random.single(generator, shape2, 1);
+            return gam1 / (gam1 + gam2);
+        }
     }
 
     pub fn fill(buffer: []f64, generator: std.rand.Random, shape1: f64, shape2: f64) []f64 {
-        for (buffer) |*x| {
-            const gam1 = gamma.random.single(generator, shape1, 1);
-            const gam2 = gamma.random.single(generator, shape2, 1);
-            x.* = gam1 / (gam1 + gam2);
+        assert(isFinite(shape1) and isFinite(shape2));
+        assert(shape1 > 0 and shape2 > 0);
+        const inva = 1 / shape1;
+        const invb = 1 / shape2;
+        if (shape1 == 1) {
+            for (buffer) |*x| {
+                const uni = generator.float(f64);
+                x.* = 1 - std.math.pow(f64, uni, invb);
+            }
+        } else if (shape2 == 1) {
+            for (buffer) |*x| {
+                const uni = generator.float(f64);
+                x.* = std.math.pow(f64, uni, inva);
+            }
+        } else if (shape1 < 1 and shape2 < 1) {
+            for (buffer) |*x| {
+                x.* = rejection(generator, inva, invb);
+            }
+        } else {
+            for (buffer) |*x| {
+                const gam1 = gamma.random.single(generator, shape1, 1);
+                const gam2 = gamma.random.single(generator, shape2, 1);
+                x.* = gam1 / (gam1 + gam2);
+            }
         }
         return buffer;
     }
 };
+
+inline fn rejection(generator: std.rand.Random, inva: f64, invb: f64) f64 {
+    while (true) {
+        const uni1 = generator.float(f64);
+        const uni2 = generator.float(f64);
+        const x = std.math.pow(f64, uni1, inva);
+        const y = std.math.pow(f64, uni2, invb);
+        const z = x + y;
+        if (z <= 1) {
+            return x / z;
+        }
+    }
+}
 
 const expectEqual = std.testing.expectEqual;
 const expectApproxEqRel = std.testing.expectApproxEqRel;

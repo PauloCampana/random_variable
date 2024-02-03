@@ -25,7 +25,7 @@ fn kolmogorov(sample: []f64, probability_fn: anytype, parameters: anytype) !void
 var rng = std.rand.DefaultPrng.init(0);
 const gen = rng.random();
 const all = std.testing.allocator;
-const n = 1_000_000;
+const n = 2_000_000;
 
 test "beta" {
     const slice = try all.alloc(f64, n);
