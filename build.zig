@@ -17,21 +17,25 @@ pub fn build(b: *std.Build) !void {
     const test_step = b.step("test", "Run library tests");
     test_step.dependOn(&test_cmd.step);
 
-    const gof_tests = b.addTest(.{
+    const gof = b.addTest(.{
+        .name = "gof",
         .root_source_file = .{ .path = "src/gof_tests.zig" },
         .target = target,
         .optimize = optimize,
     });
-    gof_tests.root_module.addImport("random_variable", module);
-    const gof_cmd = b.addRunArtifact(gof_tests);
+    gof.root_module.addImport("random_variable", module);
+    const gof_cmd = b.addRunArtifact(gof);
     const gof_step = b.step("gof", "Run \"Goodness of fit\" tests for random variable generation");
     gof_step.dependOn(&gof_cmd.step);
 
-    const docs_tests = b.addTest(.{
+    const docs = b.addObject(.{
+        .name = "docs",
+        .target = target,
+        .optimize = optimize,
         .root_source_file = .{ .path = "src/root.zig" },
     });
     const docs_cmd = b.addInstallDirectory(.{
-        .source_dir = docs_tests.getEmittedDocs(),
+        .source_dir = docs.getEmittedDocs(),
         .install_dir = .prefix,
         .install_subdir = "../docs",
     });
