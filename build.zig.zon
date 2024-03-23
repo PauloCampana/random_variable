@@ -1,7 +1,7 @@
 .{
     .name = "random_variable",
     .version = "0.31.0",
-    .minimum_zig_version = "0.12.0-dev.2133",
+    .minimum_zig_version = "0.12.0-dev.3200",
     .dependencies = .{},
     .paths = .{
         "build.zig",
