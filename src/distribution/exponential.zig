@@ -10,7 +10,6 @@ const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
 pub const discrete = false;
-pub const parameters = 1;
 
 /// f(x) = λ exp(-λx).
 pub fn density(x: f64, rate: f64) f64 {
@@ -44,25 +43,22 @@ pub fn quantile(p: f64, rate: f64) f64 {
     return q / rate;
 }
 
-/// Uses the Ziggurat method.
-pub const random = struct {
-    pub fn single(generator: std.rand.Random, rate: f64) f64 {
-        assert(isFinite(rate));
-        assert(rate > 0);
-        const exp = generator.floatExp(f64);
-        return exp / rate;
-    }
+pub fn random(generator: std.Random, rate: f64) f64 {
+    assert(isFinite(rate));
+    assert(rate > 0);
+    const exp = generator.floatExp(f64);
+    return exp / rate;
+}
 
-    pub fn fill(buffer: []f64, generator: std.rand.Random, rate: f64) []f64 {
-        assert(isFinite(rate));
-        assert(rate > 0);
-        for (buffer) |*x| {
-            const exp = generator.floatExp(f64);
-            x.* = exp / rate;
-        }
-        return buffer;
+pub fn fill(buffer: []f64, generator: std.Random, rate: f64) []f64 {
+    assert(isFinite(rate));
+    assert(rate > 0);
+    for (buffer) |*x| {
+        const exp = generator.floatExp(f64);
+        x.* = exp / rate;
     }
-};
+    return buffer;
+}
 
 const expectEqual = std.testing.expectEqual;
 const expectApproxEqRel = std.testing.expectApproxEqRel;
@@ -94,12 +90,4 @@ test "exponential.quantile" {
     try expectApproxEqRel(0.30543024395805174, quantile(0.6, 3), eps);
     try expectApproxEqRel(0.53647930414470013, quantile(0.8, 3), eps);
     try expectEqual      (inf                , quantile(1  , 3)     );
-}
-
-test "exponential.random.single" {
-    var prng = std.rand.DefaultPrng.init(0);
-    const gen = prng.random();
-    try expectApproxEqRel(0x1.0d10389b44e27p-4, random.single(gen, 3), eps);
-    try expectApproxEqRel(0x1.65addca068349p-1, random.single(gen, 3), eps);
-    try expectApproxEqRel(0x1.444f149040ffap-6, random.single(gen, 3), eps);
 }

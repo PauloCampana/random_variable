@@ -11,7 +11,6 @@ const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
 pub const discrete = false;
-pub const parameters = 2;
 
 /// f(x) = αλ (λx)^(α - 1) exp(-(λx)^α).
 pub fn density(x: f64, shape: f64, rate: f64) f64 {
@@ -56,28 +55,25 @@ pub fn quantile(p: f64, shape: f64, rate: f64) f64 {
     return q2 / rate;
 }
 
-/// Uses the relation to Exponential distribution.
-pub const random = struct {
-    pub fn single(generator: std.rand.Random, shape: f64, rate: f64) f64 {
-        assert(isFinite(shape) and isFinite(rate));
-        assert(shape > 0 and rate > 0);
-        const exp = generator.floatExp(f64);
-        const wei = std.math.pow(f64, exp, 1 / shape);
-        return wei / rate;
-    }
+pub fn random(generator: std.Random, shape: f64, rate: f64) f64 {
+    assert(isFinite(shape) and isFinite(rate));
+    assert(shape > 0 and rate > 0);
+    const exp = generator.floatExp(f64);
+    const wei = std.math.pow(f64, exp, 1 / shape);
+    return wei / rate;
+}
 
-    pub fn fill(buffer: []f64, generator: std.rand.Random, shape: f64, rate: f64) []f64 {
-        assert(isFinite(shape) and isFinite(rate));
-        assert(shape > 0 and rate > 0);
-        const invshape = 1 / shape;
-        for (buffer) |*x| {
-            const exp = generator.floatExp(f64);
-            const wei = std.math.pow(f64, exp, invshape);
-            x.* = wei / rate;
-        }
-        return buffer;
+pub fn fill(buffer: []f64, generator: std.Random, shape: f64, rate: f64) []f64 {
+    assert(isFinite(shape) and isFinite(rate));
+    assert(shape > 0 and rate > 0);
+    const invshape = 1 / shape;
+    for (buffer) |*x| {
+        const exp = generator.floatExp(f64);
+        const wei = std.math.pow(f64, exp, invshape);
+        x.* = wei / rate;
     }
-};
+    return buffer;
+}
 
 const expectEqual = std.testing.expectEqual;
 const expectApproxEqRel = std.testing.expectApproxEqRel;
@@ -113,12 +109,4 @@ test "weibull.quantile" {
     try expectApproxEqRel(1.942559933595852, quantile(0.6, 3, 0.5), eps);
     try expectApproxEqRel(2.343804613759100, quantile(0.8, 3, 0.5), eps);
     try expectEqual      (inf              , quantile(1  , 3, 0.5)     );
-}
-
-test "weibull.random.single" {
-    var prng = std.rand.DefaultPrng.init(0);
-    const gen = prng.random();
-    try expectApproxEqRel(0x1.29f2f11294770p+0, random.single(gen, 3, 0.5), eps);
-    try expectApproxEqRel(0x1.479bbb94bd291p+1, random.single(gen, 3, 0.5), eps);
-    try expectApproxEqRel(0x1.8f80c328506e1p-1, random.single(gen, 3, 0.5), eps);
 }

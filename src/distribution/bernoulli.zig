@@ -9,7 +9,6 @@ const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
 pub const discrete = true;
-pub const parameters = 1;
 
 /// p(x) = 1 - p, x = 0,
 ///
@@ -52,29 +51,26 @@ pub fn quantile(p: f64, prob: f64) f64 {
     return @floatFromInt(ber);
 }
 
-/// Uses the quantile function.
-pub const random = struct {
-    pub fn single(generator: std.rand.Random, prob: f64) f64 {
-        assert(0 <= prob and prob <= 1);
-        const uni = generator.float(f64);
-        const ber = @intFromBool(uni < prob);
-        return @floatFromInt(ber);
-    }
+pub fn random(generator: std.Random, prob: f64) f64 {
+    assert(0 <= prob and prob <= 1);
+    const uni = generator.float(f64);
+    const ber = @intFromBool(uni < prob);
+    return @floatFromInt(ber);
+}
 
-    pub fn fill(buffer: []f64, generator: std.rand.Random, prob: f64) []f64 {
-        assert(0 <= prob and prob <= 1);
-        if (prob == 0 or prob == 1) {
-            @memset(buffer, prob);
-            return buffer;
-        }
-        for (buffer) |*x| {
-            const uni = generator.float(f64);
-            const ber = @intFromBool(uni < prob);
-            x.* = @floatFromInt(ber);
-        }
+pub fn fill(buffer: []f64, generator: std.Random, prob: f64) []f64 {
+    assert(0 <= prob and prob <= 1);
+    if (prob == 0 or prob == 1) {
+        @memset(buffer, prob);
         return buffer;
     }
-};
+    for (buffer) |*x| {
+        const uni = generator.float(f64);
+        const ber = @intFromBool(uni < prob);
+        x.* = @floatFromInt(ber);
+    }
+    return buffer;
+}
 
 const expectEqual = std.testing.expectEqual;
 const expectApproxEqRel = std.testing.expectApproxEqRel;
@@ -111,19 +107,4 @@ test "bernoulli.quantile" {
     try expectEqual(0, quantile(0.8 , 0.2));
     try expectEqual(1, quantile(0.81, 0.2));
     try expectEqual(1, quantile(1   , 0.2));
-}
-
-test "bernoulli.random" {
-    var prng = std.rand.DefaultPrng.init(0);
-    const gen = prng.random();
-    try expectEqual(0, random.single(gen, 0));
-    try expectEqual(0, random.single(gen, 0));
-    try expectEqual(0, random.single(gen, 0));
-    try expectEqual(1, random.single(gen, 1));
-    try expectEqual(1, random.single(gen, 1));
-    try expectEqual(1, random.single(gen, 1));
-
-    try expectEqual(0, random.single(gen, 0.2));
-    try expectEqual(0, random.single(gen, 0.2));
-    try expectEqual(0, random.single(gen, 0.2));
 }

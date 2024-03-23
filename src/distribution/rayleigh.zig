@@ -10,7 +10,6 @@ const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
 pub const discrete = false;
-pub const parameters = 1;
 
 /// f(x) = x / σ^2 exp(-x^2 / 2σ^2)).
 pub fn density(x: f64, scale: f64) f64 {
@@ -44,25 +43,22 @@ pub fn quantile(p: f64, scale: f64) f64 {
     return scale * @sqrt(2 * -std.math.log1p(-p));
 }
 
-/// Uses the relation to Gamma distribution.
-pub const random = struct {
-    pub fn single(generator: std.rand.Random, scale: f64) f64 {
-        assert(isFinite(scale));
-        assert(scale > 0);
-        const exp = generator.floatExp(f64);
-        return scale * @sqrt(2 * exp);
-    }
+pub fn random(generator: std.Random, scale: f64) f64 {
+    assert(isFinite(scale));
+    assert(scale > 0);
+    const exp = generator.floatExp(f64);
+    return scale * @sqrt(2 * exp);
+}
 
-    pub fn fill(buffer: []f64, generator: std.rand.Random, scale: f64) []f64 {
-        assert(isFinite(scale));
-        assert(scale > 0);
-        for (buffer) |*x| {
-            const exp = generator.floatExp(f64);
-            x.* = scale * @sqrt(2 * exp);
-        }
-        return buffer;
+pub fn fill(buffer: []f64, generator: std.Random, scale: f64) []f64 {
+    assert(isFinite(scale));
+    assert(scale > 0);
+    for (buffer) |*x| {
+        const exp = generator.floatExp(f64);
+        x.* = scale * @sqrt(2 * exp);
     }
-};
+    return buffer;
+}
 
 const expectEqual = std.testing.expectEqual;
 const expectApproxEqRel = std.testing.expectApproxEqRel;
@@ -94,13 +90,4 @@ test "rayleigh.quantile" {
     try expectApproxEqRel(1.3537287260556710, quantile(0.6, 1), eps);
     try expectApproxEqRel(1.7941225779941014, quantile(0.8, 1), eps);
     try expectEqual      (inf               , quantile(1  , 1)     );
-}
-
-test "rayleigh.random.single" {
-    var prng = std.rand.DefaultPrng.init(0);
-    const gen = prng.random();
-    try expectApproxEqRel(0x1.416f4f2856e04p-1, random.single(gen, 1), eps);
-    try expectApproxEqRel(0x1.060ed936a2233p+1, random.single(gen, 1), eps);
-    try expectApproxEqRel(0x1.60e506872a015p-2, random.single(gen, 1), eps);
-
 }

@@ -13,7 +13,6 @@ const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
 pub const discrete = true;
-pub const parameters = 3;
 
 /// p(x) = (n x) beta(x + α, n - x + β) / beta(α, β).
 pub fn density(x: f64, size: u64, shape1: f64, shape2: f64) f64 {
@@ -72,42 +71,39 @@ pub fn quantile(p: f64, size: u64, shape1: f64, shape2: f64) f64 {
     return linearSearch(p, n, shape1, shape2, initial_mass);
 }
 
-/// Uses the quantile function.
-pub const random = struct {
-    pub fn single(generator: std.rand.Random, size: u64, shape1: f64, shape2: f64) f64 {
-        assert(isFinite(shape1) and isFinite(shape2));
-        assert(shape1 > 0 and shape2 > 0);
-        if (size == 0) {
-            return 0;
-        }
-        const n = @as(f64, @floatFromInt(size));
-        const mass_num = math.lbeta(shape1, shape2 + n);
-        const mass_den = math.lbeta(shape1, shape2);
-        const initial_mass = @exp(mass_num - mass_den);
-        const uni = generator.float(f64);
-        return linearSearch(uni, n, shape1, shape2, initial_mass);
+pub fn random(generator: std.Random, size: u64, shape1: f64, shape2: f64) f64 {
+    assert(isFinite(shape1) and isFinite(shape2));
+    assert(shape1 > 0 and shape2 > 0);
+    if (size == 0) {
+        return 0;
     }
+    const n = @as(f64, @floatFromInt(size));
+    const mass_num = math.lbeta(shape1, shape2 + n);
+    const mass_den = math.lbeta(shape1, shape2);
+    const initial_mass = @exp(mass_num - mass_den);
+    const uni = generator.float(f64);
+    return linearSearch(uni, n, shape1, shape2, initial_mass);
+}
 
-    pub fn fill(buffer: []f64, generator: std.rand.Random, size: u64, shape1: f64, shape2: f64) []f64 {
-        assert(isFinite(shape1) and isFinite(shape2));
-        assert(shape1 > 0 and shape2 > 0);
-        if (size == 0) {
-            @memset(buffer, 0);
-            return buffer;
-        }
-        const n = @as(f64, @floatFromInt(size));
-        const mass_num = math.lbeta(shape1, shape2 + n);
-        const mass_den = math.lbeta(shape1, shape2);
-        const initial_mass = @exp(mass_num - mass_den);
-        for (buffer) |*x| {
-            const uni = generator.float(f64);
-            x.* = linearSearch(uni, n, shape1, shape2, initial_mass);
-        }
+pub fn fill(buffer: []f64, generator: std.Random, size: u64, shape1: f64, shape2: f64) []f64 {
+    assert(isFinite(shape1) and isFinite(shape2));
+    assert(shape1 > 0 and shape2 > 0);
+    if (size == 0) {
+        @memset(buffer, 0);
         return buffer;
     }
-};
+    const n = @as(f64, @floatFromInt(size));
+    const mass_num = math.lbeta(shape1, shape2 + n);
+    const mass_den = math.lbeta(shape1, shape2);
+    const initial_mass = @exp(mass_num - mass_den);
+    for (buffer) |*x| {
+        const uni = generator.float(f64);
+        x.* = linearSearch(uni, n, shape1, shape2, initial_mass);
+    }
+    return buffer;
+}
 
-inline fn linearSearch(p: f64, n: f64, shape1: f64, shape2: f64, initial_mass: f64) f64 {
+fn linearSearch(p: f64, n: f64, shape1: f64, shape2: f64, initial_mass: f64) f64 {
     var bbin: f64 = 0;
     var mass = initial_mass;
     var cumu = mass;
@@ -169,16 +165,4 @@ test "betaBinomial.quantile" {
     try expectEqual( 1, quantile(0.161764705882352, 10, 3, 5));
     try expectEqual( 2, quantile(0.161764705882353, 10, 3, 5));
     try expectEqual(10, quantile(1                , 10, 3, 5));
-}
-
-test "betaBinomial.random.single" {
-    var prng = std.rand.DefaultPrng.init(0);
-    const gen = prng.random();
-    try expectEqual(0, random.single(gen, 0, 3, 5));
-    try expectEqual(0, random.single(gen, 0, 3, 5));
-    try expectEqual(0, random.single(gen, 0, 3, 5));
-
-    try expectEqual(3, random.single(gen, 10, 3, 5));
-    try expectEqual(3, random.single(gen, 10, 3, 5));
-    try expectEqual(4, random.single(gen, 10, 3, 5));
 }

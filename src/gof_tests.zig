@@ -34,7 +34,7 @@ test "beta" {
     const shape2s = [_]f64{ 1, 10, 100 };
     for (shape1s) |shape1| {
         for (shape2s) |shape2| {
-            const sample = rv.beta.random.fill(slice, gen, shape1, shape2);
+            const sample = rv.beta.fill(slice, gen, shape1, shape2);
             try kolmogorov(sample, rv.beta.probability, .{ shape1, shape2 });
         }
     }
@@ -47,7 +47,7 @@ test "betaPrime" {
     const shape2s = [_]f64{ 1, 10, 100 };
     for (shape1s) |shape1| {
         for (shape2s) |shape2| {
-            const sample = rv.betaPrime.random.fill(slice, gen, shape1, shape2);
+            const sample = rv.betaPrime.fill(slice, gen, shape1, shape2);
             try kolmogorov(sample, rv.betaPrime.probability, .{ shape1, shape2 });
         }
     }
@@ -56,7 +56,7 @@ test "betaPrime" {
 test "cauchy" {
     const slice = try all.alloc(f64, n);
     defer all.free(slice);
-    const sample = rv.cauchy.random.fill(slice, gen, 0, 1);
+    const sample = rv.cauchy.fill(slice, gen, 0, 1);
     try kolmogorov(sample, rv.cauchy.probability, .{ 0, 1 });
 }
 
@@ -65,7 +65,7 @@ test "chi" {
     defer all.free(slice);
     const dfs = [_]f64{ 0.1, 1, 10, 100 };
     for (dfs) |df| {
-        const sample = rv.chi.random.fill(slice, gen, df);
+        const sample = rv.chi.fill(slice, gen, df);
         try kolmogorov(sample, rv.chi.probability, .{df});
     }
 }
@@ -75,7 +75,7 @@ test "chiSquared" {
     defer all.free(slice);
     const dfs = [_]f64{ 0.1, 1, 10, 100 };
     for (dfs) |df| {
-        const sample = rv.chiSquared.random.fill(slice, gen, df);
+        const sample = rv.chiSquared.fill(slice, gen, df);
         try kolmogorov(sample, rv.chiSquared.probability, .{df});
     }
 }
@@ -85,7 +85,7 @@ test "continuousBernoulli" {
     defer all.free(slice);
     const shapes = [_]f64{ 0.001, 0.01, 0.1, 0.5, 0.9, 0.99, 0.999 };
     for (shapes) |shape| {
-        const sample = rv.continuousBernoulli.random.fill(slice, gen, shape);
+        const sample = rv.continuousBernoulli.fill(slice, gen, shape);
         try kolmogorov(sample, rv.continuousBernoulli.probability, .{shape});
     }
 }
@@ -97,7 +97,7 @@ test "dagum" {
     const shape2s = [_]f64{ 0.1, 1, 10, 100 };
     for (shape1s) |shape1| {
         for (shape2s) |shape2| {
-            const sample = rv.dagum.random.fill(slice, gen, shape1, shape2, 1);
+            const sample = rv.dagum.fill(slice, gen, shape1, shape2, 1);
             try kolmogorov(sample, rv.dagum.probability, .{ shape1, shape2, 1 });
         }
     }
@@ -106,7 +106,7 @@ test "dagum" {
 test "exponential" {
     const slice = try all.alloc(f64, n);
     defer all.free(slice);
-    const sample = rv.exponential.random.fill(slice, gen, 1);
+    const sample = rv.exponential.fill(slice, gen, 1);
     try kolmogorov(sample, rv.exponential.probability, .{1});
 }
 
@@ -117,7 +117,7 @@ test "f" {
     const df2s = [_]f64{ 1, 10, 100 };
     for (df1s) |df1| {
         for (df2s) |df2| {
-            const sample = rv.f.random.fill(slice, gen, df1, df2);
+            const sample = rv.f.fill(slice, gen, df1, df2);
             try kolmogorov(sample, rv.f.probability, .{ df1, df2 });
         }
     }
@@ -128,7 +128,7 @@ test "gamma" {
     defer all.free(slice);
     const shapes = [_]f64{ 0.01, 0.1, 1, 10, 100 };
     for (shapes) |shape| {
-        const sample = rv.gamma.random.fill(slice, gen, shape, 1);
+        const sample = rv.gamma.fill(slice, gen, shape, 1);
         try kolmogorov(sample, rv.gamma.probability, .{ shape, 1 });
     }
 }
@@ -138,7 +138,7 @@ test "gompertz" {
     defer all.free(slice);
     const shapes = [_]f64{ 0.01, 0.1, 1, 10, 100 };
     for (shapes) |shape| {
-        const sample = rv.gompertz.random.fill(slice, gen, shape, 1);
+        const sample = rv.gompertz.fill(slice, gen, shape, 1);
         try kolmogorov(sample, rv.gompertz.probability, .{ shape, 1 });
     }
 }
@@ -146,21 +146,21 @@ test "gompertz" {
 test "gumbel" {
     const slice = try all.alloc(f64, n);
     defer all.free(slice);
-    const sample = rv.gumbel.random.fill(slice, gen, 0, 1);
+    const sample = rv.gumbel.fill(slice, gen, 0, 1);
     try kolmogorov(sample, rv.gumbel.probability, .{ 0, 1 });
 }
 
 test "laplace" {
     const slice = try all.alloc(f64, n);
     defer all.free(slice);
-    const sample = rv.laplace.random.fill(slice, gen, 0, 1);
+    const sample = rv.laplace.fill(slice, gen, 0, 1);
     try kolmogorov(sample, rv.laplace.probability, .{ 0, 1 });
 }
 
 test "logistic" {
     const slice = try all.alloc(f64, n);
     defer all.free(slice);
-    const sample = rv.logistic.random.fill(slice, gen, 0, 1);
+    const sample = rv.logistic.fill(slice, gen, 0, 1);
     try kolmogorov(sample, rv.logistic.probability, .{ 0, 1 });
 }
 
@@ -169,7 +169,7 @@ test "logNormal" {
     defer all.free(slice);
     const log_scales = [_]f64{ 0.01, 0.1, 1, 10, 100 };
     for (log_scales) |log_scale| {
-        const sample = rv.logNormal.random.fill(slice, gen, 0, log_scale);
+        const sample = rv.logNormal.fill(slice, gen, 0, log_scale);
         try kolmogorov(sample, rv.logNormal.probability, .{ 0, log_scale });
     }
 }
@@ -177,7 +177,7 @@ test "logNormal" {
 test "normal" {
     const slice = try all.alloc(f64, n);
     defer all.free(slice);
-    const sample = rv.normal.random.fill(slice, gen, 0, 1);
+    const sample = rv.normal.fill(slice, gen, 0, 1);
     try kolmogorov(sample, rv.normal.probability, .{ 0, 1 });
 }
 
@@ -186,7 +186,7 @@ test "pareto" {
     defer all.free(slice);
     const shapes = [_]f64{ 0.01, 0.1, 1, 10, 100 };
     for (shapes) |shape| {
-        const sample = rv.pareto.random.fill(slice, gen, shape, 1);
+        const sample = rv.pareto.fill(slice, gen, shape, 1);
         try kolmogorov(sample, rv.pareto.probability, .{ shape, 1 });
     }
 }
@@ -194,7 +194,7 @@ test "pareto" {
 test "rayleigh" {
     const slice = try all.alloc(f64, n);
     defer all.free(slice);
-    const sample = rv.rayleigh.random.fill(slice, gen, 1);
+    const sample = rv.rayleigh.fill(slice, gen, 1);
     try kolmogorov(sample, rv.rayleigh.probability, .{1});
 }
 
@@ -203,7 +203,7 @@ test "t" {
     defer all.free(slice);
     const dfs = [_]f64{ 1, 10, 100 };
     for (dfs) |df| {
-        const sample = rv.t.random.fill(slice, gen, df);
+        const sample = rv.t.fill(slice, gen, df);
         try kolmogorov(sample, rv.t.probability, .{df});
     }
 }
@@ -211,7 +211,7 @@ test "t" {
 test "uniform" {
     const slice = try all.alloc(f64, n);
     defer all.free(slice);
-    const sample = rv.uniform.random.fill(slice, gen, 0, 1);
+    const sample = rv.uniform.fill(slice, gen, 0, 1);
     try kolmogorov(sample, rv.uniform.probability, .{ 0, 1 });
 }
 
@@ -220,7 +220,7 @@ test "weibull" {
     defer all.free(slice);
     const shapes = [_]f64{ 0.01, 0.1, 1, 10, 100 };
     for (shapes) |shape| {
-        const sample = rv.weibull.random.fill(slice, gen, shape, 1);
+        const sample = rv.weibull.fill(slice, gen, shape, 1);
         try kolmogorov(sample, rv.weibull.probability, .{ shape, 1 });
     }
 }

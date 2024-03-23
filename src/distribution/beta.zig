@@ -15,7 +15,6 @@ const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
 pub const discrete = false;
-pub const parameters = 2;
 
 /// f(x) = x^(α - 1) (1 - x)^(β - 1) / beta(α, β).
 pub fn density(x: f64, shape1: f64, shape2: f64) f64 {
@@ -64,60 +63,60 @@ pub fn quantile(p: f64, shape1: f64, shape2: f64) f64 {
     return inverseIncompleteBeta(shape1, shape2, p);
 }
 
-/// Uses the relation to Gamma distribution or rejection sampling.
-/// http://luc.devroye.org/chapter_nine.pdf page 416.
-pub const random = struct {
-    pub fn single(generator: std.rand.Random, shape1: f64, shape2: f64) f64 {
-        assert(isFinite(shape1) and isFinite(shape2));
-        assert(shape1 > 0 and shape2 > 0);
-        if (shape1 == 1) {
-            const uni = generator.float(f64);
-            return 1 - std.math.pow(f64, uni, 1 / shape2);
-        }
-        if (shape2 == 1) {
-            const uni = generator.float(f64);
-            return std.math.pow(f64, uni, 1 / shape1);
-        }
-        if (shape1 < 1 and shape2 < 1) {
-            return rejection(generator, 1 / shape1, 1 / shape2);
-        } else {
-            const gam1 = gamma.random.single(generator, shape1, 1);
-            const gam2 = gamma.random.single(generator, shape2, 1);
-            return gam1 / (gam1 + gam2);
-        }
+pub fn random(generator: std.Random, shape1: f64, shape2: f64) f64 {
+    assert(isFinite(shape1) and isFinite(shape2));
+    assert(shape1 > 0 and shape2 > 0);
+    if (shape1 == 1) {
+        const uni = generator.float(f64);
+        return 1 - std.math.pow(f64, uni, 1 / shape2);
     }
+    if (shape2 == 1) {
+        const uni = generator.float(f64);
+        return std.math.pow(f64, uni, 1 / shape1);
+    }
+    if (shape1 < 1 and shape2 < 1) {
+        return rejection(generator, 1 / shape1, 1 / shape2);
+    }
+    const gam1 = gamma.random(generator, shape1, 1);
+    const gam2 = gamma.random(generator, shape2, 1);
+    return gam1 / (gam1 + gam2);
+}
 
-    pub fn fill(buffer: []f64, generator: std.rand.Random, shape1: f64, shape2: f64) []f64 {
-        assert(isFinite(shape1) and isFinite(shape2));
-        assert(shape1 > 0 and shape2 > 0);
-        const inva = 1 / shape1;
-        const invb = 1 / shape2;
-        if (shape1 == 1) {
-            for (buffer) |*x| {
-                const uni = generator.float(f64);
-                x.* = 1 - std.math.pow(f64, uni, invb);
-            }
-        } else if (shape2 == 1) {
-            for (buffer) |*x| {
-                const uni = generator.float(f64);
-                x.* = std.math.pow(f64, uni, inva);
-            }
-        } else if (shape1 < 1 and shape2 < 1) {
-            for (buffer) |*x| {
-                x.* = rejection(generator, inva, invb);
-            }
-        } else {
-            for (buffer) |*x| {
-                const gam1 = gamma.random.single(generator, shape1, 1);
-                const gam2 = gamma.random.single(generator, shape2, 1);
-                x.* = gam1 / (gam1 + gam2);
-            }
+pub fn fill(buffer: []f64, generator: std.Random, shape1: f64, shape2: f64) []f64 {
+    assert(isFinite(shape1) and isFinite(shape2));
+    assert(shape1 > 0 and shape2 > 0);
+    const inva = 1 / shape1;
+    const invb = 1 / shape2;
+    if (shape1 == 1) {
+        for (buffer) |*x| {
+            const uni = generator.float(f64);
+            x.* = 1 - std.math.pow(f64, uni, invb);
         }
         return buffer;
     }
-};
+    if (shape2 == 1) {
+        for (buffer) |*x| {
+            const uni = generator.float(f64);
+            x.* = std.math.pow(f64, uni, inva);
+        }
+        return buffer;
+    }
+    if (shape1 < 1 and shape2 < 1) {
+        for (buffer) |*x| {
+            x.* = rejection(generator, inva, invb);
+        }
+        return buffer;
+    }
+    for (buffer) |*x| {
+        const gam1 = gamma.random(generator, shape1, 1);
+        const gam2 = gamma.random(generator, shape2, 1);
+        x.* = gam1 / (gam1 + gam2);
+    }
+    return buffer;
+}
 
-inline fn rejection(generator: std.rand.Random, inva: f64, invb: f64) f64 {
+// http://luc.devroye.org/chapter_nine.pdf page 416.
+fn rejection(generator: std.Random, inva: f64, invb: f64) f64 {
     while (true) {
         const uni1 = generator.float(f64);
         const uni2 = generator.float(f64);
@@ -169,12 +168,4 @@ test "beta.quantile" {
     try expectApproxEqRel(0.4092151219095550, quantile(0.6, 3, 5), eps);
     try expectApproxEqRel(0.5167577700975785, quantile(0.8, 3, 5), eps);
     try expectApproxEqRel(1                 , quantile(1  , 3, 5), eps);
-}
-
-test "beta.random.single" {
-    var prng = std.rand.DefaultPrng.init(0);
-    const gen = prng.random();
-    try expectApproxEqRel(0x1.54d531aa6eb30p-2, random.single(gen, 3, 5), eps);
-    try expectApproxEqRel(0x1.05f28586a9fadp-2, random.single(gen, 3, 5), eps);
-    try expectApproxEqRel(0x1.77ac6b3ffb648p-2, random.single(gen, 3, 5), eps);
 }

@@ -12,7 +12,6 @@ const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
 pub const discrete = false;
-pub const parameters = 3;
 
 /// f(x) = pα/σ (x / σ)^(pα - 1) / (1 + (x / σ)^α)^(p + 1).
 pub fn density(x: f64, shape1: f64, shape2: f64, scale: f64) f64 {
@@ -65,31 +64,28 @@ pub fn quantile(p: f64, shape1: f64, shape2: f64, scale: f64) f64 {
     return scale * pow;
 }
 
-/// Uses the quantile function.
-pub const random = struct {
-    pub fn single(generator: std.rand.Random, shape1: f64, shape2: f64, scale: f64) f64 {
-        assert(isFinite(shape1) and isFinite(shape2) and isFinite(scale));
-        assert(shape1 > 0 and shape2 > 0 and scale > 0);
-        const uni = generator.float(f64);
-        const base = std.math.pow(f64, uni, -1 / shape1) - 1;
-        const pow = std.math.pow(f64, base, -1 / shape2);
-        return scale * pow;
-    }
+pub fn random(generator: std.Random, shape1: f64, shape2: f64, scale: f64) f64 {
+    assert(isFinite(shape1) and isFinite(shape2) and isFinite(scale));
+    assert(shape1 > 0 and shape2 > 0 and scale > 0);
+    const uni = generator.float(f64);
+    const base = std.math.pow(f64, uni, -1 / shape1) - 1;
+    const pow = std.math.pow(f64, base, -1 / shape2);
+    return scale * pow;
+}
 
-    pub fn fill(buffer: []f64, generator: std.rand.Random, shape1: f64, shape2: f64, scale: f64) []f64 {
-        assert(isFinite(shape1) and isFinite(shape2) and isFinite(scale));
-        assert(shape1 > 0 and shape2 > 0 and scale > 0);
-        const minvshape1 = -1 / shape1;
-        const minvshape2 = -1 / shape2;
-        for (buffer) |*x| {
-            const uni = generator.float(f64);
-            const base = std.math.pow(f64, uni, minvshape1) - 1;
-            const pow = std.math.pow(f64, base, minvshape2);
-            x.* = scale * pow;
-        }
-        return buffer;
+pub fn fill(buffer: []f64, generator: std.Random, shape1: f64, shape2: f64, scale: f64) []f64 {
+    assert(isFinite(shape1) and isFinite(shape2) and isFinite(scale));
+    assert(shape1 > 0 and shape2 > 0 and scale > 0);
+    const minvshape1 = -1 / shape1;
+    const minvshape2 = -1 / shape2;
+    for (buffer) |*x| {
+        const uni = generator.float(f64);
+        const base = std.math.pow(f64, uni, minvshape1) - 1;
+        const pow = std.math.pow(f64, base, minvshape2);
+        x.* = scale * pow;
     }
-};
+    return buffer;
+}
 
 const expectEqual = std.testing.expectEqual;
 const expectApproxEqRel = std.testing.expectApproxEqRel;
@@ -131,12 +127,4 @@ test "dagum.quantile" {
     try expectApproxEqRel(1.400457235365702, quantile(0.6, 3, 5, 1), eps);
     try expectApproxEqRel(1.669002652849758, quantile(0.8, 3, 5, 1), eps);
     try expectEqual      (inf              , quantile(1  , 3, 5, 1)     );
-}
-
-test "dagum.random.single" {
-    var prng = std.rand.DefaultPrng.init(0);
-    const gen = prng.random();
-    try expectApproxEqRel(0x1.339d4c7b56651p0, random.single(gen, 3, 5, 1), eps);
-    try expectApproxEqRel(0x1.3d2180b3cd0d6p0, random.single(gen, 3, 5, 1), eps);
-    try expectApproxEqRel(0x1.4ebf2c5e63c3ap0, random.single(gen, 3, 5, 1), eps);
 }

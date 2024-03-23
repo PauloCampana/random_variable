@@ -13,7 +13,6 @@ const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
 pub const discrete = false;
-pub const parameters = 2;
 
 /// f(x) = exp(-((ln(x) - μ) / σ)^2 / 2) / (xσ sqrt(2π)).
 pub fn density(x: f64, log_location: f64, log_scale: f64) f64 {
@@ -49,25 +48,22 @@ pub fn quantile(p: f64, log_location: f64, log_scale: f64) f64 {
     return @exp(log_location + log_scale * q);
 }
 
-/// Uses the relation to Normal distribution.
-pub const random = struct {
-    pub fn single(generator: std.rand.Random, log_location: f64, log_scale: f64) f64 {
-        assert(isFinite(log_location) and isFinite(log_scale));
-        assert(log_scale > 0);
-        const nor = generator.floatNorm(f64);
-        return @exp(log_location + log_scale * nor);
-    }
+pub fn random(generator: std.Random, log_location: f64, log_scale: f64) f64 {
+    assert(isFinite(log_location) and isFinite(log_scale));
+    assert(log_scale > 0);
+    const nor = generator.floatNorm(f64);
+    return @exp(log_location + log_scale * nor);
+}
 
-    pub fn fill(buffer: []f64, generator: std.rand.Random, log_location: f64, log_scale: f64) []f64 {
-        assert(isFinite(log_location) and isFinite(log_scale));
-        assert(log_scale > 0);
-        for (buffer) |*x| {
-            const nor = generator.floatNorm(f64);
-            x.* = @exp(log_location + log_scale * nor);
-        }
-        return buffer;
+pub fn fill(buffer: []f64, generator: std.Random, log_location: f64, log_scale: f64) []f64 {
+    assert(isFinite(log_location) and isFinite(log_scale));
+    assert(log_scale > 0);
+    for (buffer) |*x| {
+        const nor = generator.floatNorm(f64);
+        x.* = @exp(log_location + log_scale * nor);
     }
-};
+    return buffer;
+}
 
 const expectEqual = std.testing.expectEqual;
 const expectApproxEqRel = std.testing.expectApproxEqRel;
@@ -99,12 +95,4 @@ test "quantile.logNormal" {
     try expectApproxEqRel(1.2883303827500079, quantile(0.6, 0, 1), eps);
     try expectApproxEqRel(2.3201253945043181, quantile(0.8, 0, 1), eps);
     try expectEqual      (inf               , quantile(1  , 0, 1)     );
-}
-
-test "logNormal.random.single" {
-    var prng = std.rand.DefaultPrng.init(0);
-    const gen = prng.random();
-    try expectApproxEqRel(0x1.7e09d992a530ep-1, random.single(gen, 0, 1), eps);
-    try expectApproxEqRel(0x1.f5e0036c64e29p-2, random.single(gen, 0, 1), eps);
-    try expectApproxEqRel(0x1.ccd17150549b1p-1, random.single(gen, 0, 1), eps);
 }
