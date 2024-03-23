@@ -13,7 +13,6 @@ const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
 pub const discrete = false;
-pub const parameters = 2;
 
 /// f(x) = λ / gamma(α) (λx)^(α - 1) exp(-λx).
 pub fn density(x: f64, shape: f64, rate: f64) f64 {
@@ -62,62 +61,60 @@ pub fn quantile(p: f64, shape: f64, rate: f64) f64 {
     return q / rate;
 }
 
-/// Uses George Marsaglia's rejection sampling.
-/// https://dl.acm.org/doi/pdf/10.1145/358407.358414
-pub const random = struct {
-    pub fn single(generator: std.rand.Random, shape: f64, rate: f64) f64 {
-        assert(isFinite(shape) and isFinite(rate));
-        assert(shape > 0 and rate > 0);
-        if (shape == 1) {
-            const exp = generator.floatExp(f64);
-            return exp / rate;
-        } else {
-            const correct = shape >= 1;
-            const increment: f64 = if (correct) 0 else 1;
-            const d = shape - 1.0 / 3.0 + increment;
-            const c = 1 / (3 * @sqrt(d));
-            const gam = rejection(generator, d, c);
-            if (correct) {
-                return gam / rate;
-            } else {
-                const uni = generator.float(f64);
-                const correction = std.math.pow(f64, uni, 1 / shape);
-                return gam / rate * correction;
-            }
-        }
+pub fn random(generator: std.Random, shape: f64, rate: f64) f64 {
+    assert(isFinite(shape) and isFinite(rate));
+    assert(shape > 0 and rate > 0);
+    if (shape == 1) {
+        const exp = generator.floatExp(f64);
+        return exp / rate;
     }
+    const correct = shape >= 1;
+    const increment: f64 = if (correct) 0 else 1;
+    const d = shape - 1.0 / 3.0 + increment;
+    const c = 1 / (3 * @sqrt(d));
+    const gam = rejection(generator, d, c);
+    if (correct) {
+        return gam / rate;
+    } else {
+        const uni = generator.float(f64);
+        const correction = std.math.pow(f64, uni, 1 / shape);
+        return gam / rate * correction;
+    }
+}
 
-    pub fn fill(buffer: []f64, generator: std.rand.Random, shape: f64, rate: f64) []f64 {
-        assert(isFinite(shape) and isFinite(rate));
-        assert(shape > 0 and rate > 0);
-        if (shape == 1) {
-            for (buffer) |*x| {
-                const exp = generator.floatExp(f64);
-                x.* = exp / rate;
-            }
-        } else {
-            const correct = shape >= 1;
-            const increment: f64 = if (correct) 0 else 1;
-            const d = shape - 1.0 / 3.0 + increment;
-            const c = 1 / (3 * @sqrt(d));
-            for (buffer) |*x| {
-                const gam = rejection(generator, d, c);
-                x.* = gam / rate;
-            }
-            if (!correct) {
-                const invshape = 1 / shape;
-                for (buffer) |*x| {
-                    const uni = generator.float(f64);
-                    const correction = std.math.pow(f64, uni, invshape);
-                    x.* *= correction;
-                }
-            }
+pub fn fill(buffer: []f64, generator: std.Random, shape: f64, rate: f64) []f64 {
+    assert(isFinite(shape) and isFinite(rate));
+    assert(shape > 0 and rate > 0);
+    if (shape == 1) {
+        for (buffer) |*x| {
+            const exp = generator.floatExp(f64);
+            x.* = exp / rate;
         }
         return buffer;
     }
-};
+    const correct = shape >= 1;
+    const increment: f64 = if (correct) 0 else 1;
+    const d = shape - 1.0 / 3.0 + increment;
+    const c = 1 / (3 * @sqrt(d));
+    if (correct) {
+        for (buffer) |*x| {
+            const gam = rejection(generator, d, c);
+            x.* = gam / rate;
+        }
+        return buffer;
+    }
+    const invshape = 1 / shape;
+    for (buffer) |*x| {
+        const gam = rejection(generator, d, c);
+        const uni = generator.float(f64);
+        const correction = std.math.pow(f64, uni, invshape);
+        x.* = gam / rate * correction;
+    }
+    return buffer;
+}
 
-inline fn rejection(generator: std.rand.Random, d: f64, c: f64) f64 {
+/// https://dl.acm.org/doi/pdf/10.1145/358407.358414
+fn rejection(generator: std.Random, d: f64, c: f64) f64 {
     return while (true) {
         const z2, const v3 = while (true) {
             const z = generator.floatNorm(f64);
@@ -170,12 +167,4 @@ test "gamma.quantile" {
     try expectApproxEqRel(0.6210757194526701, quantile(0.6, 3, 5), eps);
     try expectApproxEqRel(0.8558059720250668, quantile(0.8, 3, 5), eps);
     try expectEqual      (inf               , quantile(1  , 3, 5)     );
-}
-
-test "gamma.random.single" {
-    var prng = std.rand.DefaultPrng.init(0);
-    const gen = prng.random();
-    try expectApproxEqRel(0x1.c5f1fac1e8796p-2, random.single(gen, 3, 5), eps);
-    try expectApproxEqRel(0x1.ffa96ffd15766p-2, random.single(gen, 3, 5), eps);
-    try expectApproxEqRel(0x1.0ff0a4d0472aap-1, random.single(gen, 3, 5), eps);
 }

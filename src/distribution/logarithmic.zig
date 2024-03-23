@@ -10,7 +10,6 @@ const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
 pub const discrete = true;
-pub const parameters = 1;
 
 /// p(x) = p^x / (-ln(1 - p) x).
 pub fn density(x: f64, prob: f64) f64 {
@@ -60,27 +59,24 @@ pub fn quantile(p: f64, prob: f64) f64 {
     return linearSearch(p, prob, initial_mass);
 }
 
-/// Uses the quantile function.
-pub const random = struct {
-    pub fn single(generator: std.rand.Random, prob: f64) f64 {
-        assert(0 < prob and prob < 1);
-        const initial_mass = prob / -std.math.log1p(-prob);
+pub fn random(generator: std.Random, prob: f64) f64 {
+    assert(0 < prob and prob < 1);
+    const initial_mass = prob / -std.math.log1p(-prob);
+    const uni = generator.float(f64);
+    return linearSearch(uni, prob, initial_mass);
+}
+
+pub fn fill(buffer: []f64, generator: std.Random, prob: f64) []f64 {
+    assert(0 < prob and prob < 1);
+    const initial_mass = prob / -std.math.log1p(-prob);
+    for (buffer) |*x| {
         const uni = generator.float(f64);
-        return linearSearch(uni, prob, initial_mass);
+        x.* = linearSearch(uni, prob, initial_mass);
     }
+    return buffer;
+}
 
-    pub fn fill(buffer: []f64, generator: std.rand.Random, prob: f64) []f64 {
-        assert(0 < prob and prob < 1);
-        const initial_mass = prob / -std.math.log1p(-prob);
-        for (buffer) |*x| {
-            const uni = generator.float(f64);
-            x.* = linearSearch(uni, prob, initial_mass);
-        }
-        return buffer;
-    }
-};
-
-inline fn linearSearch(p: f64, prob: f64, initial_mass: f64) f64 {
+fn linearSearch(p: f64, prob: f64, initial_mass: f64) f64 {
     var loga: f64 = 1;
     var mass = initial_mass;
     var cumu = mass;
@@ -131,12 +127,4 @@ test "logarithmic.quantile" {
     try expectEqual(  2, quantile(0.9859124258994009, 0.2));
     try expectEqual(  3, quantile(0.9859124258994010, 0.2));
     try expectEqual(inf, quantile(1                 , 0.2));
-}
-
-test "logarithmic.random.single" {
-    var prng = std.rand.DefaultPrng.init(0);
-    const gen = prng.random();
-    try expectEqual(1, random.single(gen, 0.2));
-    try expectEqual(1, random.single(gen, 0.2));
-    try expectEqual(1, random.single(gen, 0.2));
 }

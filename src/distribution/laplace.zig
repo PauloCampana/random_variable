@@ -11,7 +11,6 @@ const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
 pub const discrete = false;
-pub const parameters = 2;
 
 /// f(x) = exp(-|x - μ| / σ) / 2σ.
 pub fn density(x: f64, location: f64, scale: f64) f64 {
@@ -48,27 +47,24 @@ pub fn quantile(p: f64, location: f64, scale: f64) f64 {
     return location + scale * q;
 }
 
-/// Uses the relation to Exponential distribution.
-pub const random = struct {
-    pub fn single(generator: std.rand.Random, location: f64, scale: f64) f64 {
-        assert(isFinite(location) and isFinite(scale));
-        assert(scale > 0);
+pub fn random(generator: std.Random, location: f64, scale: f64) f64 {
+    assert(isFinite(location) and isFinite(scale));
+    assert(scale > 0);
+    const exp = generator.floatExp(f64);
+    const uni = generator.float(f64);
+    return location + scale * if (uni < 0.5) exp else -exp;
+}
+
+pub fn fill(buffer: []f64, generator: std.Random, location: f64, scale: f64) []f64 {
+    assert(isFinite(location) and isFinite(scale));
+    assert(scale > 0);
+    for (buffer) |*x| {
         const exp = generator.floatExp(f64);
         const uni = generator.float(f64);
-        return location + scale * if (uni < 0.5) exp else -exp;
+        x.* = location + scale * if (uni < 0.5) exp else -exp;
     }
-
-    pub fn fill(buffer: []f64, generator: std.rand.Random, location: f64, scale: f64) []f64 {
-        assert(isFinite(location) and isFinite(scale));
-        assert(scale > 0);
-        for (buffer) |*x| {
-            const exp = generator.floatExp(f64);
-            const uni = generator.float(f64);
-            x.* = location + scale * if (uni < 0.5) exp else -exp;
-        }
-        return buffer;
-    }
-};
+    return buffer;
+}
 
 const expectEqual = std.testing.expectEqual;
 const expectApproxEqRel = std.testing.expectApproxEqRel;
@@ -100,12 +96,4 @@ test "laplace.quantile" {
     try expectApproxEqRel( 0.2231435513142097, quantile(0.6, 0, 1), eps);
     try expectApproxEqRel( 0.9162907318741550, quantile(0.8, 0, 1), eps);
     try expectEqual      ( inf               , quantile(1  , 0, 1)     );
-}
-
-test "laplace.random.single" {
-    var prng = std.rand.DefaultPrng.init(0);
-    const gen = prng.random();
-    try expectApproxEqRel(0x1.939854e8e753ap-3, random.single(gen, 0, 1), eps);
-    try expectApproxEqRel(0x1.e6769ed8617f7p-5, random.single(gen, 0, 1), eps);
-    try expectApproxEqRel(0x1.dcf8488f1c14fp-3, random.single(gen, 0, 1), eps);
 }

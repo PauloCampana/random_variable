@@ -11,7 +11,6 @@ const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
 pub const discrete = false;
-pub const parameters = 2;
 
 /// f(x) = ξ / σ exp(ξ(1 - exp(x / σ)) + x / σ).
 pub fn density(x: f64, shape: f64, scale: f64) f64 {
@@ -57,25 +56,22 @@ pub fn quantile(p: f64, shape: f64, scale: f64) f64 {
     return scale * outer;
 }
 
-/// Uses the relation to Exponential distribution.
-pub const random = struct {
-    pub fn single(generator: std.rand.Random, shape: f64, scale: f64) f64 {
-        assert(isFinite(shape) and isFinite(scale));
-        assert(shape > 0 and scale > 0);
-        const exp = generator.floatExp(f64);
-        return scale * @log(1 + exp / shape);
-    }
+pub fn random(generator: std.Random, shape: f64, scale: f64) f64 {
+    assert(isFinite(shape) and isFinite(scale));
+    assert(shape > 0 and scale > 0);
+    const exp = generator.floatExp(f64);
+    return scale * @log(1 + exp / shape);
+}
 
-    pub fn fill(buffer: []f64, generator: std.rand.Random, shape: f64, scale: f64) []f64 {
-        assert(isFinite(shape) and isFinite(scale));
-        assert(shape > 0 and scale > 0);
-        for (buffer) |*x| {
-            const exp = generator.floatExp(f64);
-            x.* = scale * @log(1 + exp / shape);
-        }
-        return buffer;
+pub fn fill(buffer: []f64, generator: std.Random, shape: f64, scale: f64) []f64 {
+    assert(isFinite(shape) and isFinite(scale));
+    assert(shape > 0 and scale > 0);
+    for (buffer) |*x| {
+        const exp = generator.floatExp(f64);
+        x.* = scale * @log(1 + exp / shape);
     }
-};
+    return buffer;
+}
 
 const expectEqual = std.testing.expectEqual;
 const expectApproxEqRel = std.testing.expectApproxEqRel;
@@ -107,12 +103,4 @@ test "gompertz.quantile" {
     try expectApproxEqRel(1.3326633764798619, quantile(0.6, 3, 5), eps);
     try expectApproxEqRel(2.1474681650907835, quantile(0.8, 3, 5), eps);
     try expectEqual      (inf               , quantile(1  , 3, 5)     );
-}
-
-test "gompertz.random.single" {
-    var prng = std.rand.DefaultPrng.init(0);
-    const gen = prng.random();
-    try expectApproxEqRel(0x1.45be6394cc4b3p-2, random.single(gen, 3, 5), eps);
-    try expectApproxEqRel(0x1.531262f81efeep+1, random.single(gen, 3, 5), eps);
-    try expectApproxEqRel(0x1.916d1822686ddp-4, random.single(gen, 3, 5), eps);
 }

@@ -10,7 +10,6 @@ const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
 pub const discrete = false;
-pub const parameters = 1;
 
 /// p(x) = 2 / (1 - 2λ) arctanh(1 - 2λ) λ^x (1 - λ)^(1 - x).
 pub fn density(x: f64, shape: f64) f64 {
@@ -60,38 +59,35 @@ pub fn quantile(p: f64, shape: f64) f64 {
     return @log(num) / @log(den);
 }
 
-/// Uses the quantile function.
-pub const random = struct {
-    pub fn single(generator: std.rand.Random, shape: f64) f64 {
-        assert(0 < shape and shape < 1);
-        const uni = generator.float(f64);
-        if (shape == 0.5) {
-            return uni;
-        }
-        const shape2 = 1 - shape;
-        const num = ((2 * shape - 1) * uni + shape2) / shape2;
-        const den = shape / shape2;
-        return @log(num) / @log(den);
+pub fn random(generator: std.Random, shape: f64) f64 {
+    assert(0 < shape and shape < 1);
+    const uni = generator.float(f64);
+    if (shape == 0.5) {
+        return uni;
     }
+    const shape2 = 1 - shape;
+    const num = ((2 * shape - 1) * uni + shape2) / shape2;
+    const den = shape / shape2;
+    return @log(num) / @log(den);
+}
 
-    pub fn fill(buffer: []f64, generator: std.rand.Random, shape: f64) []f64 {
-        assert(0 < shape and shape < 1);
-        if (shape == 0.5) {
-            for (buffer) |*x| {
-                x.* = generator.float(f64);
-            }
-            return buffer;
-        }
-        const shape2 = 1 - shape;
-        const mc = (2 * shape - 1) / shape2;
-        const log_den = @log(shape / shape2);
+pub fn fill(buffer: []f64, generator: std.Random, shape: f64) []f64 {
+    assert(0 < shape and shape < 1);
+    if (shape == 0.5) {
         for (buffer) |*x| {
-            const uni = generator.float(f64);
-            x.* = @log(1 + mc * uni) / log_den;
+            x.* = generator.float(f64);
         }
         return buffer;
     }
-};
+    const shape2 = 1 - shape;
+    const mc = (2 * shape - 1) / shape2;
+    const log_den = @log(shape / shape2);
+    for (buffer) |*x| {
+        const uni = generator.float(f64);
+        x.* = @log(1 + mc * uni) / log_den;
+    }
+    return buffer;
+}
 
 const expectEqual = std.testing.expectEqual;
 const expectApproxEqRel = std.testing.expectApproxEqRel;
@@ -137,16 +133,4 @@ test "continuousBernoulli.quantile" {
     try expectApproxEqRel(0.4312482381250325, quantile(0.6, 0.2), eps);
     try expectApproxEqRel(0.6609640474436811, quantile(0.8, 0.2), eps);
     try expectApproxEqRel(1                 , quantile(1  , 0.2), eps);
-}
-
-test "continuousBernoulli.random.single" {
-    var prng = std.rand.DefaultPrng.init(0);
-    const gen = prng.random();
-    try expectApproxEqRel(0x1.75d61490b23dfp-2, random.single(gen, 0.5), eps);
-    try expectApproxEqRel(0x1.a6f3dc380d507p-2, random.single(gen, 0.5), eps);
-    try expectApproxEqRel(0x1.fdf91ec9a7bfcp-2, random.single(gen, 0.5), eps);
-
-    try expectApproxEqRel(0x1.0babfcd0f7817p-7, random.single(gen, 0.2), eps);
-    try expectApproxEqRel(0x1.0ca9efb43381cp-2, random.single(gen, 0.2), eps);
-    try expectApproxEqRel(0x1.58a756a59b2f8p-7, random.single(gen, 0.2), eps);
 }

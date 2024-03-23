@@ -15,7 +15,6 @@ const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
 pub const discrete = false;
-pub const parameters = 2;
 
 /// f(x) = x^(α - 1) (1 + x)^(-α - β) / beta(α, β).
 pub fn density(x: f64, shape1: f64, shape2: f64) f64 {
@@ -60,23 +59,20 @@ pub fn quantile(p: f64, shape1: f64, shape2: f64) f64 {
     return q / (1 - q);
 }
 
-/// Uses the relation to Gamma distribution.
-pub const random = struct {
-    pub fn single(generator: std.rand.Random, shape1: f64, shape2: f64) f64 {
-        const gam1 = gamma.random.single(generator, shape1, 1);
-        const gam2 = gamma.random.single(generator, shape2, 1);
-        return gam1 / gam2;
-    }
+pub fn random(generator: std.Random, shape1: f64, shape2: f64) f64 {
+    const gam1 = gamma.random(generator, shape1, 1);
+    const gam2 = gamma.random(generator, shape2, 1);
+    return gam1 / gam2;
+}
 
-    pub fn fill(buffer: []f64, generator: std.rand.Random, shape1: f64, shape2: f64) []f64 {
-        for (buffer) |*x| {
-            const gam1 = gamma.random.single(generator, shape1, 1);
-            const gam2 = gamma.random.single(generator, shape2, 1);
-            x.* = gam1 / gam2;
-        }
-        return buffer;
+pub fn fill(buffer: []f64, generator: std.Random, shape1: f64, shape2: f64) []f64 {
+    for (buffer) |*x| {
+        const gam1 = gamma.random(generator, shape1, 1);
+        const gam2 = gamma.random(generator, shape2, 1);
+        x.* = gam1 / gam2;
     }
-};
+    return buffer;
+}
 
 const expectEqual = std.testing.expectEqual;
 const expectApproxEqRel = std.testing.expectApproxEqRel;
@@ -112,12 +108,4 @@ test "betaPrime.quantile" {
     try expectApproxEqRel(0.6926635008537015, quantile(0.6, 3, 5), eps);
     try expectApproxEqRel(1.0693555697769304, quantile(0.8, 3, 5), eps);
     try expectEqual      (inf               , quantile(1  , 3, 5)     );
-}
-
-test "betaPrime.random.single" {
-    var prng = std.rand.DefaultPrng.init(0);
-    const gen = prng.random();
-    try expectApproxEqRel(0x1.fedfe5d36ee54p-2, random.single(gen, 3, 5), eps);
-    try expectApproxEqRel(0x1.5ffd299be7e43p-2, random.single(gen, 3, 5), eps);
-    try expectApproxEqRel(0x1.28add14984721p-1, random.single(gen, 3, 5), eps);
 }

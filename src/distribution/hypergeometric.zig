@@ -12,7 +12,6 @@ const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
 pub const discrete = true;
-pub const parameters = 3;
 
 /// p(x) = (K x) (N - K n - x) / (N n).
 pub fn density(x: f64, N: u64, K: u64, n: u64) f64 {
@@ -82,50 +81,47 @@ pub fn quantile(p: f64, N: u64, K: u64, n: u64) f64 {
     return linearSearch(p, N, K, n, initial, initial_mass);
 }
 
-/// Uses the quantile function.
-pub const random = struct {
-    pub fn single(generator: std.rand.Random, N: u64, K: u64, n: u64) f64 {
-        assert(K <= N and n <= N);
-        if (n == 0 or K == 0) {
-            return 0;
-        }
-        if (K == N) {
-            return @floatFromInt(n);
-        }
-        if (n == N) {
-            return @floatFromInt(K);
-        }
-        const initial = if (n + K < N) 0 else n + K - N;
-        const initial_mass = density(@floatFromInt(initial), N, K, n);
-        const uni = generator.float(f64);
-        return linearSearch(uni, N, K, n, initial, initial_mass);
+pub fn random(generator: std.Random, N: u64, K: u64, n: u64) f64 {
+    assert(K <= N and n <= N);
+    if (n == 0 or K == 0) {
+        return 0;
     }
+    if (K == N) {
+        return @floatFromInt(n);
+    }
+    if (n == N) {
+        return @floatFromInt(K);
+    }
+    const initial = if (n + K < N) 0 else n + K - N;
+    const initial_mass = density(@floatFromInt(initial), N, K, n);
+    const uni = generator.float(f64);
+    return linearSearch(uni, N, K, n, initial, initial_mass);
+}
 
-    pub fn fill(buffer: []f64, generator: std.rand.Random, N: u64, K: u64, n: u64) []f64 {
-        assert(K <= N and n <= N);
-        if (n == 0 or K == 0) {
-            @memset(buffer, 0);
-            return buffer;
-        }
-        if (K == N) {
-            @memset(buffer, @floatFromInt(n));
-            return buffer;
-        }
-        if (n == N) {
-            @memset(buffer, @floatFromInt(K));
-            return buffer;
-        }
-        const initial = if (n + K < N) 0 else n + K - N;
-        const initial_mass = density(@floatFromInt(initial), N, K, n);
-        for (buffer) |*x| {
-            const uni = generator.float(f64);
-            x.* = linearSearch(uni, N, K, n, initial, initial_mass);
-        }
+pub fn fill(buffer: []f64, generator: std.Random, N: u64, K: u64, n: u64) []f64 {
+    assert(K <= N and n <= N);
+    if (n == 0 or K == 0) {
+        @memset(buffer, 0);
         return buffer;
     }
-};
+    if (K == N) {
+        @memset(buffer, @floatFromInt(n));
+        return buffer;
+    }
+    if (n == N) {
+        @memset(buffer, @floatFromInt(K));
+        return buffer;
+    }
+    const initial = if (n + K < N) 0 else n + K - N;
+    const initial_mass = density(@floatFromInt(initial), N, K, n);
+    for (buffer) |*x| {
+        const uni = generator.float(f64);
+        x.* = linearSearch(uni, N, K, n, initial, initial_mass);
+    }
+    return buffer;
+}
 
-inline fn linearSearch(p: f64, N: u64, K: u64, n: u64, initial: u64, initial_mass: f64) f64 {
+fn linearSearch(p: f64, N: u64, K: u64, n: u64, initial: u64, initial_mass: f64) f64 {
     var hypr = initial;
     var mass = initial_mass;
     var cumu = mass;
@@ -221,28 +217,4 @@ test "hypergeometric.quantile" {
     try expectEqual(1, quantile(0.7777777777777778, 10, 2, 5));
     try expectEqual(2, quantile(0.7777777777777780, 10, 2, 5));
     try expectEqual(2, quantile(1                 , 10, 2, 5));
-}
-
-test "hypergeometric.random;single" {
-    var prng = std.rand.DefaultPrng.init(0);
-    const gen = prng.random();
-    try expectEqual( 0, random.single(gen, 10,  2, 0 ));
-    try expectEqual( 0, random.single(gen, 10,  2, 0 ));
-    try expectEqual( 0, random.single(gen, 10,  2, 0 ));
-    try expectEqual( 0, random.single(gen, 10,  0, 5 ));
-    try expectEqual( 0, random.single(gen, 10,  0, 5 ));
-    try expectEqual( 0, random.single(gen, 10,  0, 5 ));
-    try expectEqual( 5, random.single(gen, 10, 10, 5 ));
-    try expectEqual( 5, random.single(gen, 10, 10, 5 ));
-    try expectEqual( 5, random.single(gen, 10, 10, 5 ));
-    try expectEqual( 2, random.single(gen, 10,  2, 10));
-    try expectEqual( 2, random.single(gen, 10,  2, 10));
-    try expectEqual( 2, random.single(gen, 10,  2, 10));
-    try expectEqual(10, random.single(gen, 10, 10, 10));
-    try expectEqual(10, random.single(gen, 10, 10, 10));
-    try expectEqual(10, random.single(gen, 10, 10, 10));
-
-    try expectEqual(1, random.single(gen, 10, 2, 5));
-    try expectEqual(1, random.single(gen, 10, 2, 5));
-    try expectEqual(1, random.single(gen, 10, 2, 5));
 }

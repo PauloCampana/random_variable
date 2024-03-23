@@ -11,7 +11,6 @@ const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
 pub const discrete = false;
-pub const parameters = 2;
 
 /// f(x) = αk^α / x^(α + 1).
 pub fn density(x: f64, shape: f64, minimum: f64) f64 {
@@ -45,25 +44,22 @@ pub fn quantile(p: f64, shape: f64, minimum: f64) f64 {
     return minimum * std.math.pow(f64, 1 - p, -1 / shape);
 }
 
-/// Uses the relation to Exponential distribution.
-pub const random = struct {
-    pub fn single(generator: std.rand.Random, shape: f64, minimum: f64) f64 {
-        assert(isFinite(shape) and isFinite(minimum));
-        assert(shape > 0 and minimum > 0);
-        const exp = generator.floatExp(f64);
-        return minimum * @exp(exp / shape);
-    }
+pub fn random(generator: std.Random, shape: f64, minimum: f64) f64 {
+    assert(isFinite(shape) and isFinite(minimum));
+    assert(shape > 0 and minimum > 0);
+    const exp = generator.floatExp(f64);
+    return minimum * @exp(exp / shape);
+}
 
-    pub fn fill(buffer: []f64, generator: std.rand.Random, shape: f64, minimum: f64) []f64 {
-        assert(isFinite(shape) and isFinite(minimum));
-        assert(shape > 0 and minimum > 0);
-        for (buffer) |*x| {
-            const exp = generator.floatExp(f64);
-            x.* = minimum * @exp(exp / shape);
-        }
-        return buffer;
+pub fn fill(buffer: []f64, generator: std.Random, shape: f64, minimum: f64) []f64 {
+    assert(isFinite(shape) and isFinite(minimum));
+    assert(shape > 0 and minimum > 0);
+    for (buffer) |*x| {
+        const exp = generator.floatExp(f64);
+        x.* = minimum * @exp(exp / shape);
     }
-};
+    return buffer;
+}
 
 const expectEqual = std.testing.expectEqual;
 const expectApproxEqRel = std.testing.expectApproxEqRel;
@@ -95,12 +91,4 @@ test "pareto.quantile" {
     try expectApproxEqRel(6.786044041487266, quantile(0.6, 3, 5), eps);
     try expectApproxEqRel(8.549879733383484, quantile(0.8, 3, 5), eps);
     try expectEqual      (inf              , quantile(1  , 3, 5)     );
-}
-
-test "pareto.random.single" {
-    var prng = std.rand.DefaultPrng.init(0);
-    const gen = prng.random();
-    try expectApproxEqRel(0x1.55b9f296bfcd6p2, random.single(gen, 3, 5), eps);
-    try expectApproxEqRel(0x1.41bf435e25df0p3, random.single(gen, 3, 5), eps);
-    try expectApproxEqRel(0x1.4665b31796000p2, random.single(gen, 3, 5), eps);
 }

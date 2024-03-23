@@ -9,7 +9,6 @@ const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
 pub const discrete = true;
-pub const parameters = 1;
 
 /// p(x) = log_b(1 + 1 / x).
 pub fn density(x: f64, base: u64) f64 {
@@ -19,7 +18,7 @@ pub fn density(x: f64, base: u64) f64 {
     if (x < 1 or x > b - 1 or x != @round(x)) {
         return 0;
     }
-    return std.math.log(f64, b, 1 + 1 / x);
+    return std.math.log1p(1 / x) / @log(b);
 }
 
 /// F(q) = log_b(1 + ⌊q⌋).
@@ -33,44 +32,43 @@ pub fn probability(q: f64, base: u64) f64 {
     if (q >= b - 1) {
         return 1;
     }
-    return std.math.log(f64, b, 1 + @floor(q));
+    return @log(1 + @floor(q)) / @log(b);
 }
 
 /// Q(p) = ⌈b^p⌉ - 1.
 pub fn quantile(p: f64, base: u64) f64 {
     assert(base >= 2);
     assert(0 <= p and p <= 1);
-    const b = @as(f64, @floatFromInt(base));
     if (p == 0) {
         return 1;
     }
-    const bp = std.math.pow(f64, b, p);
+    const bp = std.math.pow(f64, @floatFromInt(base), p);
     return @ceil(bp) - 1;
 }
 
-/// Uses the quantile function.
-pub const random = struct {
-    pub fn single(generator: std.rand.Random, base: u64) f64 {
-        assert(base >= 2);
-        const uni = generator.float(f64);
-        const bp = std.math.pow(f64, @floatFromInt(base), uni);
-        return @ceil(bp) - 1;
+pub fn random(generator: std.Random, base: u64) f64 {
+    assert(base >= 2);
+    const uni = generator.float(f64);
+    if (base == 2) {
+        return 1;
     }
+    const bp = std.math.pow(f64, @floatFromInt(base), uni);
+    return @ceil(bp) - 1;
+}
 
-    pub fn fill(buffer: []f64, generator: std.rand.Random, base: u64) []f64 {
-        assert(base >= 2);
-        if (base == 2) {
-            @memset(buffer, 1);
-            return buffer;
-        }
-        for (buffer) |*x| {
-            const uni = generator.float(f64);
-            const bp = std.math.pow(f64, @floatFromInt(base), uni);
-            x.* = @ceil(bp) - 1;
-        }
+pub fn fill(buffer: []f64, generator: std.Random, base: u64) []f64 {
+    assert(base >= 2);
+    if (base == 2) {
+        @memset(buffer, 1);
         return buffer;
     }
-};
+    for (buffer) |*x| {
+        const uni = generator.float(f64);
+        const bp = std.math.pow(f64, @floatFromInt(base), uni);
+        x.* = @ceil(bp) - 1;
+    }
+    return buffer;
+}
 
 const expectEqual = std.testing.expectEqual;
 const expectApproxEqRel = std.testing.expectApproxEqRel;
@@ -122,16 +120,4 @@ test "benford.quantile" {
     try expectEqual(2, quantile(0.4771212547196624, 10));
     try expectEqual(3, quantile(0.4771212547196625, 10));
     try expectEqual(9, quantile(1                 , 10));
-}
-
-test "benford.random.single" {
-    var prng = std.rand.DefaultPrng.init(0);
-    const gen = prng.random();
-    try expectEqual(1, random.single(gen, 2));
-    try expectEqual(1, random.single(gen, 2));
-    try expectEqual(1, random.single(gen, 2));
-
-    try expectEqual(1, random.single(gen, 10));
-    try expectEqual(2, random.single(gen, 10));
-    try expectEqual(1, random.single(gen, 10));
 }

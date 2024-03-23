@@ -5,7 +5,6 @@
 
 const std = @import("std");
 const gamma = @import("gamma.zig");
-const cauchy = @import("cauchy.zig");
 const math = @import("../math.zig");
 const incompleteBeta = @import("../thirdyparty/prob.zig").incompleteBeta;
 const inverseIncompleteBeta = @import("../thirdyparty/prob.zig").inverseIncompleteBeta;
@@ -15,7 +14,6 @@ const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
 pub const discrete = false;
-pub const parameters = 1;
 
 /// f(x) (ν / (ν + x^2))^((ν + 1) / 2) / (sqrt(ν) beta(ν / 2, 1 / 2)).
 pub fn density(x: f64, df: f64) f64 {
@@ -59,38 +57,36 @@ pub fn quantile(p: f64, df: f64) f64 {
     }
 }
 
-/// Uses the relation to Normal and Gamma distributions.
-pub const random = struct {
-    pub fn single(generator: std.rand.Random, df: f64) f64 {
-        assert(isFinite(df));
-        assert(df > 0);
-        if (df == 1) {
-            const uni = generator.float(f64);
-            return @tan(std.math.pi * uni);
-        }
-        const nor = generator.floatNorm(f64);
-        const chi = gamma.random.single(generator, 0.5 * df, 0.5);
-        return nor * @sqrt(df / chi);
+pub fn random(generator: std.Random, df: f64) f64 {
+    assert(isFinite(df));
+    assert(df > 0);
+    if (df == 1) {
+        const uni = generator.float(f64);
+        return @tan(std.math.pi * uni);
     }
+    const nor = generator.floatNorm(f64);
+    const chi = gamma.random(generator, 0.5 * df, 0.5);
+    return nor * @sqrt(df / chi);
+}
 
-    pub fn fill(buffer: []f64, generator: std.rand.Random, df: f64) []f64 {
-        assert(isFinite(df));
-        assert(df > 0);
-        if (df == 1) {
-            for (buffer) |*x| {
-                const uni = generator.float(f64);
-                x.* = @tan(std.math.pi * uni);
-            }
-        }
-        const hdf = 0.5 * df;
+pub fn fill(buffer: []f64, generator: std.Random, df: f64) []f64 {
+    assert(isFinite(df));
+    assert(df > 0);
+    if (df == 1) {
         for (buffer) |*x| {
-            const nor = generator.floatNorm(f64);
-            const chi = gamma.random.single(generator, hdf, 0.5);
-            x.* = nor * @sqrt(df / chi);
+            const uni = generator.float(f64);
+            x.* = @tan(std.math.pi * uni);
         }
         return buffer;
     }
-};
+    const hdf = 0.5 * df;
+    for (buffer) |*x| {
+        const nor = generator.floatNorm(f64);
+        const chi = gamma.random(generator, hdf, 0.5);
+        x.* = nor * @sqrt(df / chi);
+    }
+    return buffer;
+}
 
 const expectEqual = std.testing.expectEqual;
 const expectApproxEqRel = std.testing.expectApproxEqRel;
@@ -122,12 +118,4 @@ test "t.quantile" {
     try expectApproxEqRel( 0.2766706623326902, quantile(0.6, 3), eps);
     try expectApproxEqRel( 0.9784723123633039, quantile(0.8, 3), eps);
     try expectEqual      ( inf               , quantile(1  , 3)     );
-}
-
-test "t.random.single" {
-    var prng = std.rand.DefaultPrng.init(0);
-    const gen = prng.random();
-    try expectApproxEqRel(-0x1.ed977ce651337p-2, random.single(gen, 3), eps);
-    try expectApproxEqRel(-0x1.62bae37cf8d83p+1, random.single(gen, 3), eps);
-    try expectApproxEqRel( 0x1.a5797fad46fcap-1, random.single(gen, 3), eps);
 }
