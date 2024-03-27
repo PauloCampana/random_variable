@@ -71,7 +71,7 @@ const expectApproxEqRel = std.testing.expectApproxEqRel;
 const eps = 10 * std.math.floatEps(f64); // 2.22 × 10^-15
 
 // zig fmt: off
-test "laplace.density" {
+test density {
     try expectEqual(0, density(-inf, 0, 1));
     try expectEqual(0, density( inf, 0, 1));
 
@@ -80,7 +80,7 @@ test "laplace.density" {
     try expectApproxEqRel(0.0676676416183063, density(2, 0, 1), eps);
 }
 
-test "laplace.probability" {
+test probability {
     try expectEqual(0, probability(-inf, 0, 1));
     try expectEqual(1, probability( inf, 0, 1));
 
@@ -89,7 +89,7 @@ test "laplace.probability" {
     try expectApproxEqRel(0.9323323583816936, probability(2, 0, 1), eps);
 }
 
-test "laplace.quantile" {
+test quantile {
     try expectEqual      (-inf               , quantile(0  , 0, 1)     );
     try expectApproxEqRel(-0.9162907318741550, quantile(0.2, 0, 1), eps);
     try expectApproxEqRel(-0.2231435513142097, quantile(0.4, 0, 1), eps);

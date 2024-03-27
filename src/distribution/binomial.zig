@@ -226,7 +226,7 @@ const expectApproxEqRel = std.testing.expectApproxEqRel;
 const eps = 10 * std.math.floatEps(f64); // 2.22 × 10^-15
 
 // zig fmt: off
-test "binomial.density" {
+test density {
     try expectEqual(0, density(-inf, 10, 0.2));
     try expectEqual(0, density( inf, 10, 0.2));
 
@@ -246,7 +246,7 @@ test "binomial.density" {
     try expectApproxEqRel(0           , density( 1.1, 10, 0.2), eps);
 }
 
-test "binomial.probability" {
+test probability {
     try expectEqual(0, probability(-inf, 10, 0.2));
     try expectEqual(1, probability( inf, 10, 0.2));
 
@@ -266,7 +266,7 @@ test "binomial.probability" {
     try expectApproxEqRel(0.3758096384, probability( 1.1, 10, 0.2), eps);
 }
 
-test "binomial.quantile" {
+test quantile {
     try expectEqual( 0, quantile(0  ,  0, 0.2));
     try expectEqual( 0, quantile(0.5,  0, 0.2));
     try expectEqual( 0, quantile(1  ,  0, 0.2));

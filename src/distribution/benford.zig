@@ -75,7 +75,7 @@ const expectApproxEqRel = std.testing.expectApproxEqRel;
 const eps = 10 * std.math.floatEps(f64); // 2.22 × 10^-15
 
 // zig fmt: off
-test "benford.density" {
+test density {
     try expectEqual(0, density(-inf, 10));
     try expectEqual(0, density( inf, 10));
 
@@ -91,7 +91,7 @@ test "benford.density" {
     try expectApproxEqRel(0                 , density(2.1, 10), eps);
 }
 
-test "benford.probability" {
+test probability {
     try expectEqual(0, probability(-inf, 10));
     try expectEqual(1, probability( inf, 10));
 
@@ -107,7 +107,7 @@ test "benford.probability" {
     try expectApproxEqRel(0.4771212547196624, probability(2.1, 10), eps);
 }
 
-test "benford.quantile" {
+test quantile {
     try expectEqual(1, quantile(0  , 2));
     try expectEqual(1, quantile(0.5, 2));
     try expectEqual(1, quantile(1  , 2));

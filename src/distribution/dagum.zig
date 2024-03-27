@@ -92,7 +92,7 @@ const expectApproxEqRel = std.testing.expectApproxEqRel;
 const eps = 10 * std.math.floatEps(f64); // 2.22 × 10^-15
 
 // zig fmt: off
-test "dagum.density" {
+test density {
     try expectEqual(0, density(-inf, 3, 5, 1));
     try expectEqual(0, density( inf, 3, 5, 1));
 
@@ -111,7 +111,7 @@ test "dagum.density" {
     try expectApproxEqRel(0.2072313417166910, density(2, 3, 5, 1), eps);
 }
 
-test "dagum.probability" {
+test probability {
     try expectEqual(0, probability(-inf, 3, 5, 1));
     try expectEqual(1, probability( inf, 3, 5, 1));
 
@@ -120,7 +120,7 @@ test "dagum.probability" {
     try expectApproxEqRel(0.9118179035534407, probability(2, 3, 5, 1), eps);
 }
 
-test "dagum.quantile" {
+test quantile {
     try expectApproxEqRel(0                , quantile(0  , 3, 5, 1), eps);
     try expectApproxEqRel(1.070905805432601, quantile(0.2, 3, 5, 1), eps);
     try expectApproxEqRel(1.228614306456529, quantile(0.4, 3, 5, 1), eps);
