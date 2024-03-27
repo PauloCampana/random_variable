@@ -82,7 +82,7 @@ const expectApproxEqRel = std.testing.expectApproxEqRel;
 const eps = 10 * std.math.floatEps(f64); // 2.22 × 10^-15
 
 // zig fmt: off
-test "chi.density" {
+test density {
     try expectEqual(0, density(-inf, 3));
     try expectEqual(0, density( inf, 3));
 
@@ -95,7 +95,7 @@ test "chi.density" {
     try expectApproxEqRel(0.4319277321055044, density(2, 3), eps);
 }
 
-test "chi.probability" {
+test probability {
     try expectEqual(0, probability(-inf, 3));
     try expectEqual(1, probability( inf, 3));
 
@@ -104,7 +104,7 @@ test "chi.probability" {
     try expectApproxEqRel(0.7385358700508893, probability(2, 3), eps);
 }
 
-test "chi.quantile" {
+test quantile {
     try expectApproxEqRel(0                , quantile(0  , 3), eps);
     try expectApproxEqRel(1.002583668853801, quantile(0.2, 3), eps);
     try expectApproxEqRel(1.367175337470916, quantile(0.4, 3), eps);

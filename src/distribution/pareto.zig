@@ -66,7 +66,7 @@ const expectApproxEqRel = std.testing.expectApproxEqRel;
 const eps = 10 * std.math.floatEps(f64); // 2.22 × 10^-15
 
 // zig fmt: off
-test "pareto.density" {
+test density {
     try expectEqual(0, density(-inf, 3, 5));
     try expectEqual(0, density( inf, 3, 5));
 
@@ -75,7 +75,7 @@ test "pareto.density" {
     try expectApproxEqRel(0.1561849229487713, density(7, 3, 5), eps);
 }
 
-test "pareto.probability" {
+test probability {
     try expectEqual(0, probability(-inf, 3, 5));
     try expectEqual(1, probability( inf, 3, 5));
 
@@ -84,7 +84,7 @@ test "pareto.probability" {
     try expectApproxEqRel(0.6355685131195335, probability(7, 3, 5), eps);
 }
 
-test "pareto.quantile" {
+test quantile {
     try expectApproxEqRel(5                , quantile(0  , 3, 5), eps);
     try expectApproxEqRel(5.386086725079709, quantile(0.2, 3, 5), eps);
     try expectApproxEqRel(5.928155507483438, quantile(0.4, 3, 5), eps);

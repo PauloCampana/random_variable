@@ -65,7 +65,7 @@ const expectApproxEqRel = std.testing.expectApproxEqRel;
 const eps = 10 * std.math.floatEps(f64); // 2.22 × 10^-15
 
 // zig fmt: off
-test "rayleigh.density" {
+test density {
     try expectEqual(0, density(-inf, 3));
     try expectEqual(0, density( inf, 3));
 
@@ -74,7 +74,7 @@ test "rayleigh.density" {
     try expectApproxEqRel(0.2706705664732253, density(2, 1), eps);
 }
 
-test "rayleigh.probability" {
+test probability {
     try expectEqual(0, probability(-inf, 3));
     try expectEqual(1, probability( inf, 3));
 
@@ -83,7 +83,7 @@ test "rayleigh.probability" {
     try expectApproxEqRel(0.8646647167633873, probability(2, 1), eps);
 }
 
-test "rayleigh.quantile" {
+test quantile {
     try expectApproxEqRel(0                 , quantile(0  , 1), eps);
     try expectApproxEqRel(0.6680472308365775, quantile(0.2, 1), eps);
     try expectApproxEqRel(1.0107676525947896, quantile(0.4, 1), eps);

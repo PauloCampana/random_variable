@@ -68,7 +68,7 @@ const expectApproxEqRel = std.testing.expectApproxEqRel;
 const eps = 10 * std.math.floatEps(f64); // 2.22 × 10^-15
 
 // zig fmt: off
-test "uniform.density" {
+test density {
     try expectEqual(0, density(-inf, 0, 1));
     try expectEqual(0, density( inf, 0, 1));
 
@@ -79,7 +79,7 @@ test "uniform.density" {
     try expectApproxEqRel(0  , density(6, 3, 5), eps);
 }
 
-test "uniform.probability" {
+test probability {
     try expectEqual(0, probability(-inf, 0, 1));
     try expectEqual(1, probability( inf, 0, 1));
 
@@ -91,7 +91,7 @@ test "uniform.probability" {
     try expectApproxEqRel(1  , probability(5  , 3, 5), eps);
 }
 
-test "uniform.quantile" {
+test quantile {
     try expectApproxEqRel(3  , quantile(0  , 3, 5), eps);
     try expectApproxEqRel(3.4, quantile(0.2, 3, 5), eps);
     try expectApproxEqRel(3.8, quantile(0.4, 3, 5), eps);

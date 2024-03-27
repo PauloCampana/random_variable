@@ -167,7 +167,7 @@ const expectApproxEqRel = std.testing.expectApproxEqRel;
 const eps = 10 * std.math.floatEps(f64); // 2.22 × 10^-15
 
 // zig fmt: off
-test "negativeBinomial.density" {
+test density {
     try expectEqual(0, density(-inf, 10, 0.2));
     try expectEqual(0, density( inf, 10, 0.2));
 
@@ -182,7 +182,7 @@ test "negativeBinomial.density" {
     try expectApproxEqRel(0           , density( 1.1, 10, 0.2), eps);
 }
 
-test "negativeBinomial.probability" {
+test probability {
     try expectEqual(0, probability(-inf, 10, 0.2));
     try expectEqual(1, probability( inf, 10, 0.2));
 
@@ -197,7 +197,7 @@ test "negativeBinomial.probability" {
     try expectApproxEqRel(0.0000009216, probability( 1.1, 10, 0.2), eps);
 }
 
-test "negativeBinomial.quantile" {
+test quantile {
     try expectEqual(0, quantile(0  , 10, 1));
     try expectEqual(0, quantile(0.5, 10, 1));
     try expectEqual(0, quantile(1  , 10, 1));

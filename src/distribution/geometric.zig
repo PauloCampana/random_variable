@@ -66,7 +66,7 @@ const expectApproxEqRel = std.testing.expectApproxEqRel;
 const eps = 10 * std.math.floatEps(f64); // 2.22 × 10^-15
 
 // zig fmt: off
-test "geometric.density" {
+test density {
     try expectEqual(0, density(-inf, 0.2));
     try expectEqual(0, density( inf, 0.2));
     try expectEqual(0, density(-inf, 1  ));
@@ -83,7 +83,7 @@ test "geometric.density" {
     try expectApproxEqRel(0   , density( 1.1, 0.2), eps);
 }
 
-test "geometric.probability" {
+test probability {
     try expectEqual(0, probability(-inf, 0.2));
     try expectEqual(1, probability( inf, 0.2));
     try expectEqual(0, probability(-inf, 1  ));
@@ -97,7 +97,7 @@ test "geometric.probability" {
     try expectApproxEqRel(0.36, probability( 1.1, 0.2), eps);
 }
 
-test "geometric.quantile" {
+test quantile {
     try expectEqual(  0, quantile(0   , 0.2));
     try expectEqual(  0, quantile(0.19, 0.2));
     try expectEqual(  0, quantile(0.2 , 0.2));

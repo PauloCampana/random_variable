@@ -69,7 +69,7 @@ const expectApproxEqRel = std.testing.expectApproxEqRel;
 const eps = 10 * std.math.floatEps(f64); // 2.22 × 10^-15
 
 // zig fmt: off
-test "logNormal.density" {
+test density {
     try expectEqual(0, density(-inf, 0, 1));
     try expectEqual(0, density( inf, 0, 1));
 
@@ -78,7 +78,7 @@ test "logNormal.density" {
     try expectApproxEqRel(0.1568740192789811, density(2, 0, 1), eps);
 }
 
-test "logNormal.probability" {
+test probability {
     try expectEqual(0, probability(-inf, 0, 1));
     try expectEqual(1, probability( inf, 0, 1));
 
@@ -87,7 +87,7 @@ test "logNormal.probability" {
     try expectApproxEqRel(0.7558914042144173, probability(2, 0, 1), eps);
 }
 
-test "quantile.logNormal" {
+test quantile {
     try expectApproxEqRel(0                 , quantile(0  , 0, 1), eps);
     try expectApproxEqRel(0.4310111868818386, quantile(0.2, 0, 1), eps);
     try expectApproxEqRel(0.7761984141563506, quantile(0.4, 0, 1), eps);

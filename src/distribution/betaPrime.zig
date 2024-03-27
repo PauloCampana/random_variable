@@ -77,7 +77,7 @@ const expectApproxEqRel = std.testing.expectApproxEqRel;
 const eps = 10 * std.math.floatEps(f64); // 2.22 × 10^-15
 
 // zig fmt: off
-test "betaPrime.density" {
+test density {
     try expectEqual(0, density(-inf, 3, 5));
     try expectEqual(0, density( inf, 3, 5));
 
@@ -90,7 +90,7 @@ test "betaPrime.density" {
     try expectApproxEqRel(0.06401463191586648, density(2, 3, 5), eps);
 }
 
-test "betaPrime.probability" {
+test probability {
     try expectEqual(0, probability(-inf, 3, 5));
     try expectEqual(1, probability( inf, 3, 5));
 
@@ -99,7 +99,7 @@ test "betaPrime.probability" {
     try expectApproxEqRel(0.9547325102880658, probability(2, 3, 5), eps);
 }
 
-test "betaPrime.quantile" {
+test quantile {
     try expectApproxEqRel(0                 , quantile(0  , 3, 5), eps);
     try expectApproxEqRel(0.2958847929875766, quantile(0.2, 3, 5), eps);
     try expectApproxEqRel(0.4718562623302689, quantile(0.4, 3, 5), eps);

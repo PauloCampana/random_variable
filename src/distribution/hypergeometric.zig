@@ -140,7 +140,7 @@ const expectApproxEqRel = std.testing.expectApproxEqRel;
 const eps = 10 * std.math.floatEps(f64); // 2.22 × 10^-15
 
 // zig fmt: off
-test "hypergeometric.density" {
+test density {
     try expectEqual(0, density(-inf, 10, 2, 5));
     try expectEqual(0, density( inf, 10, 2, 5));
 
@@ -166,7 +166,7 @@ test "hypergeometric.density" {
     try expectApproxEqRel(0                 , density( 1.1, 10, 2, 5), eps);
 }
 
-test "hypergeometric.probability" {
+test probability {
     try expectEqual(0, probability(-inf, 10, 2, 5));
     try expectEqual(1, probability( inf, 10, 2, 5));
 
@@ -192,7 +192,7 @@ test "hypergeometric.probability" {
     try expectApproxEqRel(0.7777777777777778, probability( 1.1, 10, 2, 5), eps);
 }
 
-test "hypergeometric.quantile" {
+test quantile {
     try expectEqual( 0, quantile(0  , 10,  2, 0 ));
     try expectEqual( 0, quantile(0.5, 10,  2, 0 ));
     try expectEqual( 0, quantile(1  , 10,  2, 0 ));
