@@ -6,9 +6,7 @@
 
 const std = @import("std");
 const gamma = @import("gamma.zig");
-const math = @import("../math.zig");
-const incompleteBeta = @import("../thirdyparty/prob.zig").incompleteBeta;
-const inverseIncompleteBeta = @import("../thirdyparty/prob.zig").inverseIncompleteBeta;
+const special = @import("../special.zig");
 const assert = std.debug.assert;
 const isFinite = std.math.isFinite;
 const isNan = std.math.isNan;
@@ -37,7 +35,7 @@ pub fn density(x: f64, shape1: f64, shape2: f64) f64 {
         return if (shape2 < 1) inf else 0;
     }
     const num = (shape1 - 1) * @log(x) + (shape2 - 1) * std.math.log1p(-x);
-    const den = math.lbeta(shape1, shape2);
+    const den = special.lbeta(shape1, shape2);
     return @exp(num - den);
 }
 
@@ -52,7 +50,7 @@ pub fn probability(q: f64, shape1: f64, shape2: f64) f64 {
     if (q >= 1) {
         return 1;
     }
-    return incompleteBeta(shape1, shape2, q);
+    return special.beta_probability(shape1, shape2, q);
 }
 
 /// No closed form.
@@ -60,7 +58,7 @@ pub fn quantile(p: f64, shape1: f64, shape2: f64) f64 {
     assert(isFinite(shape1) and isFinite(shape2));
     assert(shape1 > 0 and shape2 > 0);
     assert(0 <= p and p <= 1);
-    return inverseIncompleteBeta(shape1, shape2, p);
+    return special.beta_quantile(shape1, shape2, p);
 }
 
 pub fn random(generator: std.Random, shape1: f64, shape2: f64) f64 {

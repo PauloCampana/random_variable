@@ -5,8 +5,7 @@
 
 const std = @import("std");
 const gamma = @import("gamma.zig");
-const incompleteGamma = @import("../thirdyparty/prob.zig").incompleteGamma;
-const inverseComplementedIncompleteGamma = @import("../thirdyparty/prob.zig").inverseComplementedIncompleteGamma;
+const special = @import("../special.zig");
 const assert = std.debug.assert;
 const isFinite = std.math.isFinite;
 const isNan = std.math.isNan;
@@ -42,7 +41,7 @@ pub fn probability(q: f64, df: f64) f64 {
     if (q <= 0) {
         return 0;
     }
-    return incompleteGamma(0.5 * df, 0.5 * q * q);
+    return special.gamma_probability(0.5 * df, 0.5 * q * q);
 }
 
 /// No closed form.
@@ -56,7 +55,7 @@ pub fn quantile(p: f64, df: f64) f64 {
     if (p == 1) {
         return inf;
     }
-    const q = inverseComplementedIncompleteGamma(0.5 * df, 1 - p);
+    const q = special.gamma_quantile_mirrored(0.5 * df, 1 - p);
     return @sqrt(2 * q);
 }
 

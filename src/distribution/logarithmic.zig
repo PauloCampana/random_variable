@@ -4,7 +4,6 @@
 //! - p: `prob` ∈ (0,1)
 
 const std = @import("std");
-const incompleteBeta = @import("../thirdyparty/prob.zig").incompleteBeta;
 const assert = std.debug.assert;
 const isNan = std.math.isNan;
 const inf = std.math.inf(f64);

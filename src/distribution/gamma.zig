@@ -5,8 +5,7 @@
 //! - λ: `rate`  ∈ (0,∞)
 
 const std = @import("std");
-const incompleteGamma = @import("../thirdyparty/prob.zig").incompleteGamma;
-const inverseComplementedIncompleteGamma = @import("../thirdyparty/prob.zig").inverseComplementedIncompleteGamma;
+const special = @import("../special.zig");
 const assert = std.debug.assert;
 const isFinite = std.math.isFinite;
 const isNan = std.math.isNan;
@@ -43,7 +42,7 @@ pub fn probability(q: f64, shape: f64, rate: f64) f64 {
         return 0;
     }
     const z = rate * q;
-    return incompleteGamma(shape, z);
+    return special.gamma_probability(shape, z);
 }
 
 /// No closed form.
@@ -57,7 +56,7 @@ pub fn quantile(p: f64, shape: f64, rate: f64) f64 {
     if (p == 1) {
         return inf;
     }
-    const q = inverseComplementedIncompleteGamma(shape, 1 - p);
+    const q = special.gamma_quantile_mirrored(shape, 1 - p);
     return q / rate;
 }
 

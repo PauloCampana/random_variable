@@ -6,7 +6,7 @@
 //! - β: `shape2` ∈ (0,∞)
 
 const std = @import("std");
-const math = @import("../math.zig");
+const special = @import("../special.zig");
 const assert = std.debug.assert;
 const isFinite = std.math.isFinite;
 const isNan = std.math.isNan;
@@ -23,9 +23,9 @@ pub fn density(x: f64, size: u64, shape1: f64, shape2: f64) f64 {
     if (x < 0 or x > n or x != @round(x)) {
         return 0;
     }
-    const binom = math.lbinomial(n, x);
-    const beta1 = math.lbeta(x + shape1, n - x + shape2);
-    const beta2 = math.lbeta(shape1, shape2);
+    const binom = special.lbinomial(n, x);
+    const beta1 = special.lbeta(x + shape1, n - x + shape2);
+    const beta2 = special.lbeta(shape1, shape2);
     return @exp(binom + beta1 - beta2);
 }
 
@@ -41,8 +41,8 @@ pub fn probability(q: f64, size: u64, shape1: f64, shape2: f64) f64 {
     if (q >= n) {
         return 1;
     }
-    const mass_num = math.lbeta(shape1, shape2 + n);
-    const mass_den = math.lbeta(shape1, shape2);
+    const mass_num = special.lbeta(shape1, shape2 + n);
+    const mass_den = special.lbeta(shape1, shape2);
     var mass = @exp(mass_num - mass_den);
     var cumu = mass;
     var bbin: f64 = 0;
@@ -65,8 +65,8 @@ pub fn quantile(p: f64, size: u64, shape1: f64, shape2: f64) f64 {
     if (p == 0 or p == 1 or size == 0) {
         return n * p;
     }
-    const mass_num = math.lbeta(shape1, shape2 + n);
-    const mass_den = math.lbeta(shape1, shape2);
+    const mass_num = special.lbeta(shape1, shape2 + n);
+    const mass_den = special.lbeta(shape1, shape2);
     const initial_mass = @exp(mass_num - mass_den);
     return linearSearch(p, n, shape1, shape2, initial_mass);
 }
@@ -78,8 +78,8 @@ pub fn random(generator: std.Random, size: u64, shape1: f64, shape2: f64) f64 {
         return 0;
     }
     const n = @as(f64, @floatFromInt(size));
-    const mass_num = math.lbeta(shape1, shape2 + n);
-    const mass_den = math.lbeta(shape1, shape2);
+    const mass_num = special.lbeta(shape1, shape2 + n);
+    const mass_den = special.lbeta(shape1, shape2);
     const initial_mass = @exp(mass_num - mass_den);
     const uni = generator.float(f64);
     return linearSearch(uni, n, shape1, shape2, initial_mass);
@@ -93,8 +93,8 @@ pub fn fill(buffer: []f64, generator: std.Random, size: u64, shape1: f64, shape2
         return buffer;
     }
     const n = @as(f64, @floatFromInt(size));
-    const mass_num = math.lbeta(shape1, shape2 + n);
-    const mass_den = math.lbeta(shape1, shape2);
+    const mass_num = special.lbeta(shape1, shape2 + n);
+    const mass_den = special.lbeta(shape1, shape2);
     const initial_mass = @exp(mass_num - mass_den);
     for (buffer) |*x| {
         const uni = generator.float(f64);

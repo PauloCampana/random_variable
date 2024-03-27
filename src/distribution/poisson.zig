@@ -4,7 +4,7 @@
 //! - λ: `lambda` ∈ (0,∞)
 
 const std = @import("std");
-const incompleteGamma = @import("../thirdyparty/prob.zig").incompleteGamma;
+const special = @import("../special.zig");
 const assert = std.debug.assert;
 const isFinite = std.math.isFinite;
 const isNan = std.math.isNan;
@@ -35,7 +35,7 @@ pub fn probability(q: f64, lambda: f64) f64 {
     if (q == inf) {
         return 1;
     }
-    return 1 - incompleteGamma(@floor(q) + 1, lambda);
+    return 1 - special.gamma_probability(@floor(q) + 1, lambda);
 }
 
 /// No closed form.

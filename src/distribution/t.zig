@@ -5,9 +5,7 @@
 
 const std = @import("std");
 const gamma = @import("gamma.zig");
-const math = @import("../math.zig");
-const incompleteBeta = @import("../thirdyparty/prob.zig").incompleteBeta;
-const inverseIncompleteBeta = @import("../thirdyparty/prob.zig").inverseIncompleteBeta;
+const special = @import("../special.zig");
 const assert = std.debug.assert;
 const isFinite = std.math.isFinite;
 const isNan = std.math.isNan;
@@ -21,7 +19,7 @@ pub fn density(x: f64, df: f64) f64 {
     assert(df > 0);
     assert(!isNan(x));
     const num = (0.5 * df + 0.5) * @log(df / (df + x * x));
-    const den = 0.5 * @log(df) + math.lbeta(0.5 * df, 0.5);
+    const den = 0.5 * @log(df) + special.lbeta(0.5 * df, 0.5);
     return @exp(num - den);
 }
 
@@ -36,10 +34,10 @@ pub fn probability(q: f64, df: f64) f64 {
     const z = q * q;
     if (q < 0) {
         const p = df / (df + z);
-        return 0.5 * incompleteBeta(0.5 * df, 0.5, p);
+        return 0.5 * special.beta_probability(0.5 * df, 0.5, p);
     } else {
         const p = z / (df + z);
-        return 0.5 * incompleteBeta(0.5, 0.5 * df, p) + 0.5;
+        return 0.5 * special.beta_probability(0.5, 0.5 * df, p) + 0.5;
     }
 }
 
@@ -49,10 +47,10 @@ pub fn quantile(p: f64, df: f64) f64 {
     assert(df > 0);
     assert(0 <= p and p <= 1);
     if (p < 0.5) {
-        const q = inverseIncompleteBeta(0.5 * df, 0.5, 2 * p);
+        const q = special.beta_quantile(0.5 * df, 0.5, 2 * p);
         return -@sqrt(df / q - df);
     } else {
-        const q = inverseIncompleteBeta(0.5 * df, 0.5, 2 - 2 * p);
+        const q = special.beta_quantile(0.5 * df, 0.5, 2 - 2 * p);
         return @sqrt(df / q - df);
     }
 }

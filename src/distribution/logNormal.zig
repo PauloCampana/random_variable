@@ -5,8 +5,7 @@
 //! - σ: `log_scale`    ∈ ( 0,∞)
 
 const std = @import("std");
-const normalDist = @import("../thirdyparty/prob.zig").normalDist;
-const inverseNormalDist = @import("../thirdyparty/prob.zig").inverseNormalDist;
+const special = @import("../special.zig");
 const assert = std.debug.assert;
 const isFinite = std.math.isFinite;
 const isNan = std.math.isNan;
@@ -36,7 +35,7 @@ pub fn probability(q: f64, log_location: f64, log_scale: f64) f64 {
         return 0;
     }
     const z = (@log(q) - log_location) / log_scale;
-    return normalDist(z);
+    return special.normal_probability(z);
 }
 
 /// No closed form
@@ -44,7 +43,7 @@ pub fn quantile(p: f64, log_location: f64, log_scale: f64) f64 {
     assert(isFinite(log_location) and isFinite(log_scale));
     assert(log_scale > 0);
     assert(0 <= p and p <= 1);
-    const q = inverseNormalDist(p);
+    const q = special.normal_quantile(p);
     return @exp(log_location + log_scale * q);
 }
 

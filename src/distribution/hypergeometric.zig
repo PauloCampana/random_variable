@@ -6,7 +6,7 @@
 //! - n: `n` ∈ {0,1,⋯,N}
 
 const std = @import("std");
-const math = @import("../math.zig");
+const special = @import("../special.zig");
 const assert = std.debug.assert;
 const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
@@ -23,9 +23,9 @@ pub fn density(x: f64, N: u64, K: u64, n: u64) f64 {
     if (x < 0 or x > nf or x > Kf or x != @round(x)) {
         return 0;
     }
-    const num1 = math.lbinomial(Kf, x);
-    const num2 = math.lbinomial(Nf - Kf, nf - x);
-    const den = math.lbinomial(Nf, nf);
+    const num1 = special.lbinomial(Kf, x);
+    const num2 = special.lbinomial(Nf - Kf, nf - x);
+    const den = special.lbinomial(Nf, nf);
     return @exp(num1 + num2 - den);
 }
 
