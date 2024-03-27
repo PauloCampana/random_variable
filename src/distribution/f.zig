@@ -6,9 +6,7 @@
 
 const std = @import("std");
 const gamma = @import("gamma.zig");
-const math = @import("../math.zig");
-const incompleteBeta = @import("../thirdyparty/prob.zig").incompleteBeta;
-const inverseIncompleteBeta = @import("../thirdyparty/prob.zig").inverseIncompleteBeta;
+const special = @import("../special.zig");
 const assert = std.debug.assert;
 const isFinite = std.math.isFinite;
 const isNan = std.math.isNan;
@@ -34,7 +32,7 @@ pub fn density(x: f64, df1: f64, df2: f64) f64 {
     const hdf2 = 0.5 * df2;
     const num1 = hdf1 * @log(df1) + hdf2 * @log(df2) + (hdf1 - 1) * @log(x);
     const num2 = -(hdf1 + hdf2) * @log(df2 + df1 * x);
-    const den = math.lbeta(hdf1, hdf2);
+    const den = special.lbeta(hdf1, hdf2);
     return @exp(num1 + num2 - den);
 }
 
@@ -51,7 +49,7 @@ pub fn probability(q: f64, df1: f64, df2: f64) f64 {
     }
     const z = df1 * q;
     const p = z / (df2 + z);
-    return incompleteBeta(0.5 * df1, 0.5 * df2, p);
+    return special.beta_probability(0.5 * df1, 0.5 * df2, p);
 }
 
 /// No closed form.
@@ -59,7 +57,7 @@ pub fn quantile(p: f64, df1: f64, df2: f64) f64 {
     assert(isFinite(df1) and isFinite(df2));
     assert(df1 > 0 and df2 > 0);
     assert(0 <= p and p <= 1);
-    const q = inverseIncompleteBeta(0.5 * df2, 0.5 * df1, 1 - p);
+    const q = special.beta_quantile(0.5 * df2, 0.5 * df1, 1 - p);
     return (df2 / q - df2) / df1;
 }
 

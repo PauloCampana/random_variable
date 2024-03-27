@@ -5,8 +5,7 @@
 //! - σ: `scale`    ∈ ( 0,∞)
 
 const std = @import("std");
-const normalDist = @import("../thirdyparty/prob.zig").normalDist;
-const inverseNormalDist = @import("../thirdyparty/prob.zig").inverseNormalDist;
+const special = @import("../special.zig");
 const assert = std.debug.assert;
 const isFinite = std.math.isFinite;
 const isNan = std.math.isNan;
@@ -30,7 +29,7 @@ pub fn probability(q: f64, location: f64, scale: f64) f64 {
     assert(scale > 0);
     assert(!isNan(q));
     const z = (q - location) / scale;
-    return normalDist(z);
+    return special.normal_probability(z);
 }
 
 /// No closed form.
@@ -38,7 +37,7 @@ pub fn quantile(p: f64, location: f64, scale: f64) f64 {
     assert(isFinite(location) and isFinite(scale));
     assert(scale > 0);
     assert(0 <= p and p <= 1);
-    const q = inverseNormalDist(p);
+    const q = special.normal_quantile(p);
     return location + scale * q;
 }
 

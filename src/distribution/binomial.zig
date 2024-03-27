@@ -5,8 +5,7 @@
 //! - p: `prob` ∈ [0,1]
 
 const std = @import("std");
-const math = @import("../math.zig");
-const incompleteBeta = @import("../thirdyparty/prob.zig").incompleteBeta;
+const special = @import("../special.zig");
 const assert = std.debug.assert;
 const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
@@ -27,7 +26,7 @@ pub fn density(x: f64, size: u64, prob: f64) f64 {
     if (prob == 1) {
         return if (x == n) 1 else 0;
     }
-    const binom = math.lbinomial(n, x);
+    const binom = special.lbinomial(n, x);
     const log = binom + x * @log(prob) + (n - x) * std.math.log1p(-prob);
     return @exp(log);
 }
@@ -50,7 +49,7 @@ pub fn probability(q: f64, size: u64, prob: f64) f64 {
         return 0;
     }
     const fq = @floor(q);
-    return incompleteBeta(n - fq, fq + 1, 1 - prob);
+    return special.beta_probability(n - fq, fq + 1, 1 - prob);
 }
 
 /// No closed form

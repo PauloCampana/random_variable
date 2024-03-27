@@ -7,8 +7,7 @@
 const std = @import("std");
 const gamma = @import("gamma.zig");
 const poisson = @import("poisson.zig");
-const math = @import("../math.zig");
-const incompleteBeta = @import("../thirdyparty/prob.zig").incompleteBeta;
+const special = @import("../special.zig");
 const assert = std.debug.assert;
 const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
@@ -27,7 +26,7 @@ pub fn density(x: f64, size: u64, prob: f64) f64 {
         return if (x == 0) 1 else 0;
     }
     const n = @as(f64, @floatFromInt(size));
-    const binom = math.lbinomial(n + x - 1, x);
+    const binom = special.lbinomial(n + x - 1, x);
     const log = binom + n * @log(prob) + x * std.math.log1p(-prob);
     return @exp(log);
 }
@@ -44,7 +43,7 @@ pub fn probability(q: f64, size: u64, prob: f64) f64 {
         return 1;
     }
     const n = @as(f64, @floatFromInt(size));
-    return incompleteBeta(n, @floor(q) + 1, prob);
+    return special.beta_probability(n, @floor(q) + 1, prob);
 }
 
 /// No closed form.
