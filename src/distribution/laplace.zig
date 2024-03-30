@@ -61,7 +61,10 @@ pub fn fill(buffer: []f64, generator: std.Random, location: f64, scale: f64) []f
     for (buffer) |*x| {
         const exp = generator.floatExp(f64);
         const uni = generator.float(f64);
-        x.* = location + scale * if (uni < 0.5) exp else -exp;
+        // getting a random sign with floats is faster than int or bool
+        // maybe check this again if random implementation changes.
+        const signed = if (uni < 0.5) exp else -exp;
+        x.* = location + scale * signed;
     }
     return buffer;
 }

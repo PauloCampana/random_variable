@@ -83,25 +83,25 @@ pub fn random(generator: std.Random, shape1: f64, shape2: f64) f64 {
 pub fn fill(buffer: []f64, generator: std.Random, shape1: f64, shape2: f64) []f64 {
     assert(isFinite(shape1) and isFinite(shape2));
     assert(shape1 > 0 and shape2 > 0);
-    const inva = 1 / shape1;
-    const invb = 1 / shape2;
+    const invshape2 = 1 / shape2;
+    const invshape1 = 1 / shape1;
     if (shape1 == 1) {
         for (buffer) |*x| {
             const uni = generator.float(f64);
-            x.* = 1 - std.math.pow(f64, uni, invb);
+            x.* = 1 - std.math.pow(f64, uni, invshape2);
         }
         return buffer;
     }
     if (shape2 == 1) {
         for (buffer) |*x| {
             const uni = generator.float(f64);
-            x.* = std.math.pow(f64, uni, inva);
+            x.* = std.math.pow(f64, uni, invshape1);
         }
         return buffer;
     }
     if (shape1 < 1 and shape2 < 1) {
         for (buffer) |*x| {
-            x.* = rejection(generator, inva, invb);
+            x.* = rejection(generator, invshape1, invshape2);
         }
         return buffer;
     }
@@ -114,12 +114,12 @@ pub fn fill(buffer: []f64, generator: std.Random, shape1: f64, shape2: f64) []f6
 }
 
 // http://luc.devroye.org/chapter_nine.pdf page 416.
-fn rejection(generator: std.Random, inva: f64, invb: f64) f64 {
+fn rejection(generator: std.Random, invshape1: f64, invshape2: f64) f64 {
     while (true) {
         const uni1 = generator.float(f64);
         const uni2 = generator.float(f64);
-        const x = std.math.pow(f64, uni1, inva);
-        const y = std.math.pow(f64, uni2, invb);
+        const x = std.math.pow(f64, uni1, invshape1);
+        const y = std.math.pow(f64, uni2, invshape2);
         const z = x + y;
         if (z <= 1) {
             return x / z;

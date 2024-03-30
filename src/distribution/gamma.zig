@@ -74,11 +74,10 @@ pub fn random(generator: std.Random, shape: f64, rate: f64) f64 {
     const gam = rejection(generator, d, c);
     if (correct) {
         return gam / rate;
-    } else {
-        const uni = generator.float(f64);
-        const correction = std.math.pow(f64, uni, 1 / shape);
-        return gam / rate * correction;
     }
+    const uni = generator.float(f64);
+    const fix = std.math.pow(f64, uni, 1 / shape);
+    return gam / rate * fix;
 }
 
 pub fn fill(buffer: []f64, generator: std.Random, shape: f64, rate: f64) []f64 {
@@ -91,29 +90,26 @@ pub fn fill(buffer: []f64, generator: std.Random, shape: f64, rate: f64) []f64 {
         }
         return buffer;
     }
+    const invshape = 1 / shape;
     const correct = shape >= 1;
     const increment: f64 = if (correct) 0 else 1;
     const d = shape - 1.0 / 3.0 + increment;
     const c = 1 / (3 * @sqrt(d));
-    if (correct) {
-        for (buffer) |*x| {
-            const gam = rejection(generator, d, c);
-            x.* = gam / rate;
-        }
-        return buffer;
-    }
-    const invshape = 1 / shape;
     for (buffer) |*x| {
         const gam = rejection(generator, d, c);
+        if (correct) {
+            x.* = gam / rate;
+            continue;
+        }
         const uni = generator.float(f64);
-        const correction = std.math.pow(f64, uni, invshape);
-        x.* = gam / rate * correction;
+        const fix = std.math.pow(f64, uni, invshape);
+        x.* = gam / rate * fix;
     }
     return buffer;
 }
 
 /// https://dl.acm.org/doi/pdf/10.1145/358407.358414
-fn rejection(generator: std.Random, d: f64, c: f64) f64 {
+pub fn rejection(generator: std.Random, d: f64, c: f64) f64 {
     return while (true) {
         const z2, const v3 = while (true) {
             const z = generator.floatNorm(f64);

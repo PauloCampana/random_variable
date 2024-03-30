@@ -60,15 +60,11 @@ pub fn quantile(p: f64, df: f64) f64 {
 }
 
 pub fn random(generator: std.Random, df: f64) f64 {
-    assert(isFinite(df));
-    assert(df > 0);
     const chisq = gamma.random(generator, 0.5 * df, 0.5);
     return @sqrt(chisq);
 }
 
 pub fn fill(buffer: []f64, generator: std.Random, df: f64) []f64 {
-    assert(isFinite(df));
-    assert(df > 0);
     const hdf = 0.5 * df;
     for (buffer) |*x| {
         const chisq = gamma.random(generator, hdf, 0.5);
