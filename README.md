@@ -9,13 +9,13 @@ For over 30 probability distributions, this library provides:
 Avaliable on <https://paulocampana.github.io/random_variable>
 
 # Importing library
-Requires Zig version 0.12.0-dev.3200 or above.
+Requires Zig version 0.12.0 or above.
 
 Grab the commit hash of the version you want to use and in your `build.zig.zon`, add inside the dependencies:
 
 ```zig
 .random_variable = .{
-    .url = "https://github.com/paulocampana/random_variable/archive/{commit_hash_here}.tar.gz",
+    .url = "https://github.com/paulocampana/random_variable/archive/v1.0.0.tar.gz",
     // .hash = "leave this commented, compiler will tell you what to put here",
 },
 ```
