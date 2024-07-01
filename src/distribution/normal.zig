@@ -11,8 +11,6 @@ const isFinite = std.math.isFinite;
 const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
-pub const discrete = false;
-
 /// f(x) = exp(-((x - μ) / σ)^2 / 2) / (σ sqrt(2π)).
 pub fn density(x: f64, location: f64, scale: f64) f64 {
     assert(isFinite(location) and isFinite(scale));

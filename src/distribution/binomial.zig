@@ -10,8 +10,6 @@ const assert = std.debug.assert;
 const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
-pub const discrete = true;
-
 /// p(x) = (n x) p^x (1 - p)^(n - x).
 pub fn density(x: f64, size: u64, prob: f64) f64 {
     assert(0 <= prob and prob <= 1);

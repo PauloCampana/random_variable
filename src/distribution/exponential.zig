@@ -9,8 +9,6 @@ const isFinite = std.math.isFinite;
 const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
-pub const discrete = false;
-
 /// f(x) = λ exp(-λx).
 pub fn density(x: f64, rate: f64) f64 {
     assert(isFinite(rate));

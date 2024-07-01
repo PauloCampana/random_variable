@@ -12,8 +12,6 @@ const isFinite = std.math.isFinite;
 const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
-pub const discrete = false;
-
 /// f(x) = n^(n / 2) m^(m / 2) x^(n / 2 - 1) (m + nx)^(-(n + m) / 2) / beta(n / 2, m / 2).
 pub fn density(x: f64, df1: f64, df2: f64) f64 {
     assert(isFinite(df1) and isFinite(df2));

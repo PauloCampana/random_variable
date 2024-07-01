@@ -11,8 +11,6 @@ const isFinite = std.math.isFinite;
 const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
-pub const discrete = false;
-
 /// f(x) (ν / (ν + x^2))^((ν + 1) / 2) / (sqrt(ν) beta(ν / 2, 1 / 2)).
 pub fn density(x: f64, df: f64) f64 {
     assert(isFinite(df));

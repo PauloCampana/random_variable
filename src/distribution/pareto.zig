@@ -10,8 +10,6 @@ const isFinite = std.math.isFinite;
 const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
-pub const discrete = false;
-
 /// f(x) = αk^α / x^(α + 1).
 pub fn density(x: f64, shape: f64, minimum: f64) f64 {
     assert(isFinite(shape) and isFinite(minimum));

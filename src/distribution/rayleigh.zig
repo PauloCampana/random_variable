@@ -9,8 +9,6 @@ const isFinite = std.math.isFinite;
 const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
-pub const discrete = false;
-
 /// f(x) = x / σ^2 exp(-x^2 / 2σ^2)).
 pub fn density(x: f64, scale: f64) f64 {
     assert(isFinite(scale));

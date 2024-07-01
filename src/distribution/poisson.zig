@@ -10,8 +10,6 @@ const isFinite = std.math.isFinite;
 const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
-pub const discrete = true;
-
 /// p(x) = λ^x exp(-λ) / x!.
 pub fn density(x: f64, lambda: f64) f64 {
     assert(isFinite(lambda));

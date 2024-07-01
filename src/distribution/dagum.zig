@@ -11,8 +11,6 @@ const isFinite = std.math.isFinite;
 const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
-pub const discrete = false;
-
 /// f(x) = pα/σ (x / σ)^(pα - 1) / (1 + (x / σ)^α)^(p + 1).
 pub fn density(x: f64, shape1: f64, shape2: f64, scale: f64) f64 {
     assert(isFinite(shape1) and isFinite(shape2) and isFinite(scale));

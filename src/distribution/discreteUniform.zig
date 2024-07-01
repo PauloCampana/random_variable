@@ -10,8 +10,6 @@ const isFinite = std.math.isFinite;
 const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
-pub const discrete = true;
-
 /// p(x) = 1 / (b - a + 1).
 pub fn density(x: f64, min: i64, max: i64) f64 {
     assert(min <= max);

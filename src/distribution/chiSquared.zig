@@ -7,8 +7,6 @@ const std = @import("std");
 const gamma = @import("gamma.zig");
 const inf = std.math.inf(f64);
 
-pub const discrete = false;
-
 /// f(x) = 0.5 / gamma(ν / 2) (x / 2)^(ν / 2 - 1) exp(-x / 2).
 pub fn density(x: f64, df: f64) f64 {
     return gamma.density(x, 0.5 * df, 0.5);

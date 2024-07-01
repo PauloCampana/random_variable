@@ -8,8 +8,6 @@ const assert = std.debug.assert;
 const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
-pub const discrete = true;
-
 /// p(x) = 1 - p, x = 0,
 ///
 /// p(x) = p    , x = 1.

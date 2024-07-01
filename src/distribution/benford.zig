@@ -8,8 +8,6 @@ const assert = std.debug.assert;
 const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
-pub const discrete = true;
-
 /// p(x) = log_b(1 + 1 / x).
 pub fn density(x: f64, base: u64) f64 {
     assert(base >= 2);

@@ -11,8 +11,6 @@ const isFinite = std.math.isFinite;
 const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
-pub const discrete = false;
-
 /// f(x) = λ / gamma(α) (λx)^(α - 1) exp(-λx).
 pub fn density(x: f64, shape: f64, rate: f64) f64 {
     assert(isFinite(shape) and isFinite(rate));

@@ -10,8 +10,6 @@ const isFinite = std.math.isFinite;
 const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
-pub const discrete = false;
-
 /// f(x) = ξ / σ exp(ξ(1 - exp(x / σ)) + x / σ).
 pub fn density(x: f64, shape: f64, scale: f64) f64 {
     assert(isFinite(shape) and isFinite(scale));

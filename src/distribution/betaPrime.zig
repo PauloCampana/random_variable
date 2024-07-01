@@ -12,8 +12,6 @@ const isFinite = std.math.isFinite;
 const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
-pub const discrete = false;
-
 /// f(x) = x^(α - 1) (1 + x)^(-α - β) / beta(α, β).
 pub fn density(x: f64, shape1: f64, shape2: f64) f64 {
     assert(isFinite(shape1) and isFinite(shape2));

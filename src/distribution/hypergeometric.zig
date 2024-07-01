@@ -11,8 +11,6 @@ const assert = std.debug.assert;
 const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
-pub const discrete = true;
-
 /// p(x) = (K x) (N - K n - x) / (N n).
 pub fn density(x: f64, N: u64, K: u64, n: u64) f64 {
     assert(K <= N and n <= N);
