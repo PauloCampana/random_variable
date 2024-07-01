@@ -30,7 +30,7 @@ pub fn probability(q: f64, base: u64) f64 {
     if (q >= b - 1) {
         return 1;
     }
-    return @log(1 + @floor(q)) / @log(b);
+    return std.math.log1p(@floor(q)) / @log(b);
 }
 
 /// Q(p) = ⌈b^p⌉ - 1.

@@ -107,7 +107,7 @@ pub fn fill(buffer: []f64, generator: std.Random, shape: f64, rate: f64) []f64 {
 }
 
 /// https://dl.acm.org/doi/pdf/10.1145/358407.358414
-pub fn rejection(generator: std.Random, d: f64, c: f64) f64 {
+fn rejection(generator: std.Random, d: f64, c: f64) f64 {
     return while (true) {
         const z2, const v3 = while (true) {
             const z = generator.floatNorm(f64);
