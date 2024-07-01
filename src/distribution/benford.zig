@@ -68,6 +68,16 @@ pub fn fill(buffer: []f64, generator: std.Random, base: u64) []f64 {
     return buffer;
 }
 
+export fn rv_benford_density(x: f64, base: u64) f64 {
+    return density(x, base);
+}
+export fn rv_benford_probability(q: f64, base: u64) f64 {
+    return probability(q, base);
+}
+export fn rv_benford_quantile(p: f64, base: u64) f64 {
+    return quantile(p, base);
+}
+
 const expectEqual = std.testing.expectEqual;
 const expectApproxEqRel = std.testing.expectApproxEqRel;
 const eps = 10 * std.math.floatEps(f64); // 2.22 × 10^-15

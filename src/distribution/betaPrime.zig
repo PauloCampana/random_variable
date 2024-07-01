@@ -123,6 +123,16 @@ fn rejection(generator: std.Random, invshape1: f64, invshape2: f64) f64 {
     }
 }
 
+export fn rv_beta_prime_density(x: f64, shape1: f64, shape2: f64) f64 {
+    return density(x, shape1, shape2);
+}
+export fn rv_beta_prime_probability(q: f64, shape1: f64, shape2: f64) f64 {
+    return probability(q, shape1, shape2);
+}
+export fn rv_beta_prime_quantile(p: f64, shape1: f64, shape2: f64) f64 {
+    return quantile(p, shape1, shape2);
+}
+
 const expectEqual = std.testing.expectEqual;
 const expectApproxEqRel = std.testing.expectApproxEqRel;
 const eps = 10 * std.math.floatEps(f64); // 2.22 × 10^-15

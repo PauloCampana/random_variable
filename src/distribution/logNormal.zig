@@ -62,6 +62,16 @@ pub fn fill(buffer: []f64, generator: std.Random, log_location: f64, log_scale: 
     return buffer;
 }
 
+export fn rv_log_normal_density(x: f64, log_location: f64, log_scale: f64) f64 {
+    return density(x, log_location, log_scale);
+}
+export fn rv_log_normal_probability(q: f64, log_location: f64, log_scale: f64) f64 {
+    return probability(q, log_location, log_scale);
+}
+export fn rv_log_normal_quantile(p: f64, log_location: f64, log_scale: f64) f64 {
+    return quantile(p, log_location, log_scale);
+}
+
 const expectEqual = std.testing.expectEqual;
 const expectApproxEqRel = std.testing.expectApproxEqRel;
 const eps = 10 * std.math.floatEps(f64); // 2.22 × 10^-15

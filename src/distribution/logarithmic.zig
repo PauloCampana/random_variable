@@ -86,6 +86,16 @@ fn linearSearch(p: f64, prob: f64, initial_mass: f64) f64 {
     return loga;
 }
 
+export fn rv_logarithmic_density(x: f64, prob: f64) f64 {
+    return density(x, prob);
+}
+export fn rv_logarithmic_probability(q: f64, prob: f64) f64 {
+    return probability(q, prob);
+}
+export fn rv_logarithmic_quantile(p: f64, prob: f64) f64 {
+    return quantile(p, prob);
+}
+
 const expectEqual = std.testing.expectEqual;
 const expectApproxEqRel = std.testing.expectApproxEqRel;
 const eps = 10 * std.math.floatEps(f64); // 2.22 × 10^-15

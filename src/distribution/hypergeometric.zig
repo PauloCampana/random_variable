@@ -133,6 +133,16 @@ fn linearSearch(p: f64, N: u64, K: u64, n: u64, initial: u64, initial_mass: f64)
     return @floatFromInt(hypr);
 }
 
+export fn rv_hypergeometric_density(x: f64, N: u64, K: u64, n: u64) f64 {
+    return density(x, N, K, n);
+}
+export fn rv_hypergeometric_probability(q: f64, N: u64, K: u64, n: u64) f64 {
+    return probability(q, N, K, n);
+}
+export fn rv_hypergeometric_quantile(p: f64, N: u64, K: u64, n: u64) f64 {
+    return quantile(p, N, K, n);
+}
+
 const expectEqual = std.testing.expectEqual;
 const expectApproxEqRel = std.testing.expectApproxEqRel;
 const eps = 10 * std.math.floatEps(f64); // 2.22 × 10^-15

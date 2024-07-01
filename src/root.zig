@@ -11,6 +11,15 @@
 //! than calling `random` in a loop due to using a different algorithm
 //! that is faster but has a setup time.
 
+// std.testing.refAllDecls but works outside tests,
+// needed to analyze all the namespaces and export functions
+comptime {
+    const Self = @This();
+    for (@typeInfo(Self).Struct.decls) |decl| {
+        _ = @field(Self, decl.name);
+    }
+}
+
 // zig fmt: off
 pub const benford             = @import("distribution/benford.zig");
 pub const bernoulli           = @import("distribution/bernoulli.zig");
@@ -43,8 +52,3 @@ pub const rayleigh            = @import("distribution/rayleigh.zig");
 pub const t                   = @import("distribution/t.zig");
 pub const uniform             = @import("distribution/uniform.zig");
 pub const weibull             = @import("distribution/weibull.zig");
-// zig fmt: on
-
-test {
-    @import("std").testing.refAllDeclsRecursive(@This());
-}

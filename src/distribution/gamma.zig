@@ -126,6 +126,16 @@ fn rejection(generator: std.Random, d: f64, c: f64) f64 {
     };
 }
 
+export fn rv_gamma_density(x: f64, shape: f64, rate: f64) f64 {
+    return density(x, shape, rate);
+}
+export fn rv_gamma_probability(q: f64, shape: f64, rate: f64) f64 {
+    return probability(q, shape, rate);
+}
+export fn rv_gamma_quantile(p: f64, shape: f64, rate: f64) f64 {
+    return quantile(p, shape, rate);
+}
+
 const expectEqual = std.testing.expectEqual;
 const expectApproxEqRel = std.testing.expectApproxEqRel;
 const eps = 10 * std.math.floatEps(f64); // 2.22 × 10^-15

@@ -59,6 +59,16 @@ pub fn fill(buffer: []f64, generator: std.Random, prob: f64) []f64 {
     return buffer;
 }
 
+export fn rv_geometric_density(x: f64, prob: f64) f64 {
+    return density(x, prob);
+}
+export fn rv_geometric_probability(q: f64, prob: f64) f64 {
+    return probability(q, prob);
+}
+export fn rv_geometric_quantile(p: f64, prob: f64) f64 {
+    return quantile(p, prob);
+}
+
 const expectEqual = std.testing.expectEqual;
 const expectApproxEqRel = std.testing.expectApproxEqRel;
 const eps = 10 * std.math.floatEps(f64); // 2.22 × 10^-15

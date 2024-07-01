@@ -64,6 +64,16 @@ pub fn fill(buffer: []f64, generator: std.Random, min: i64, max: i64) []f64 {
     return buffer;
 }
 
+export fn rv_discrete_uniform_density(x: f64, min: i64, max: i64) f64 {
+    return density(x, min, max);
+}
+export fn rv_discrete_uniform_probability(q: f64, min: i64, max: i64) f64 {
+    return probability(q, min, max);
+}
+export fn rv_discrete_uniform_quantile(p: f64, min: i64, max: i64) f64 {
+    return quantile(p, min, max);
+}
+
 const expectEqual = std.testing.expectEqual;
 const expectApproxEqRel = std.testing.expectApproxEqRel;
 const eps = 10 * std.math.floatEps(f64); // 2.22 × 10^-15

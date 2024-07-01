@@ -59,6 +59,16 @@ pub fn fill(buffer: []f64, generator: std.Random, shape: f64, minimum: f64) []f6
     return buffer;
 }
 
+export fn rv_pareto_density(x: f64, shape: f64, minimum: f64) f64 {
+    return density(x, shape, minimum);
+}
+export fn rv_pareto_probability(q: f64, shape: f64, minimum: f64) f64 {
+    return probability(q, shape, minimum);
+}
+export fn rv_pareto_quantile(p: f64, shape: f64, minimum: f64) f64 {
+    return quantile(p, shape, minimum);
+}
+
 const expectEqual = std.testing.expectEqual;
 const expectApproxEqRel = std.testing.expectApproxEqRel;
 const eps = 10 * std.math.floatEps(f64); // 2.22 × 10^-15

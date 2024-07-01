@@ -85,6 +85,16 @@ pub fn fill(buffer: []f64, generator: std.Random, shape1: f64, shape2: f64, scal
     return buffer;
 }
 
+export fn rv_dagum_density(x: f64, shape1: f64, shape2: f64, scale: f64) f64 {
+    return density(x, shape1, shape2, scale);
+}
+export fn rv_dagum_probability(q: f64, shape1: f64, shape2: f64, scale: f64) f64 {
+    return probability(q, shape1, shape2, scale);
+}
+export fn rv_dagum_quantile(p: f64, shape1: f64, shape2: f64, scale: f64) f64 {
+    return quantile(p, shape1, shape2, scale);
+}
+
 const expectEqual = std.testing.expectEqual;
 const expectApproxEqRel = std.testing.expectApproxEqRel;
 const eps = 10 * std.math.floatEps(f64); // 2.22 × 10^-15

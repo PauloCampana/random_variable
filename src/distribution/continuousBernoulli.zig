@@ -87,6 +87,16 @@ pub fn fill(buffer: []f64, generator: std.Random, shape: f64) []f64 {
     return buffer;
 }
 
+export fn rv_continuous_bernoulli_density(x: f64, shape: f64) f64 {
+    return density(x, shape);
+}
+export fn rv_continuous_bernoulli_probability(q: f64, shape: f64) f64 {
+    return probability(q, shape);
+}
+export fn rv_continuous_bernoulli_quantile(p: f64, shape: f64) f64 {
+    return quantile(p, shape);
+}
+
 const expectEqual = std.testing.expectEqual;
 const expectApproxEqRel = std.testing.expectApproxEqRel;
 const eps = 10 * std.math.floatEps(f64); // 2.22 × 10^-15

@@ -149,6 +149,16 @@ fn rejection(generator: std.Random, lambda: f64, beta: f64, k: f64) f64 {
     }
 }
 
+export fn rv_poisson_density(x: f64, lambda: f64) f64 {
+    return density(x, lambda);
+}
+export fn rv_poisson_probability(q: f64, lambda: f64) f64 {
+    return probability(q, lambda);
+}
+export fn rv_poisson_quantile(p: f64, lambda: f64) f64 {
+    return quantile(p, lambda);
+}
+
 const expectEqual = std.testing.expectEqual;
 const expectApproxEqRel = std.testing.expectApproxEqRel;
 const eps = 10 * std.math.floatEps(f64); // 2.22 × 10^-15

@@ -75,6 +75,16 @@ pub fn fill(buffer: []f64, generator: std.Random, df1: f64, df2: f64) []f64 {
     return buffer;
 }
 
+export fn rv_f_density(x: f64, df1: f64, df2: f64) f64 {
+    return density(x, df1, df2);
+}
+export fn rv_f_probability(q: f64, df1: f64, df2: f64) f64 {
+    return probability(q, df1, df2);
+}
+export fn rv_f_quantile(p: f64, df1: f64, df2: f64) f64 {
+    return quantile(p, df1, df2);
+}
+
 const expectEqual = std.testing.expectEqual;
 const expectApproxEqRel = std.testing.expectApproxEqRel;
 const eps = 10 * std.math.floatEps(f64); // 2.22 × 10^-15

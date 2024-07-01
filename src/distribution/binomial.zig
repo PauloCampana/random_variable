@@ -219,6 +219,16 @@ fn bitCount(generator: std.Random, mask: u64, size: u64) f64 {
     return @floatFromInt(bino);
 }
 
+export fn rv_binomial_density(x: f64, size: u64, prob: f64) f64 {
+    return density(x, size, prob);
+}
+export fn rv_binomial_probability(q: f64, size: u64, prob: f64) f64 {
+    return probability(q, size, prob);
+}
+export fn rv_binomial_quantile(p: f64, size: u64, prob: f64) f64 {
+    return quantile(p, size, prob);
+}
+
 const expectEqual = std.testing.expectEqual;
 const expectApproxEqRel = std.testing.expectApproxEqRel;
 const eps = 10 * std.math.floatEps(f64); // 2.22 × 10^-15

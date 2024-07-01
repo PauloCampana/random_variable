@@ -58,6 +58,16 @@ pub fn fill(buffer: []f64, generator: std.Random, scale: f64) []f64 {
     return buffer;
 }
 
+export fn rv_rayleigh_density(x: f64, scale: f64) f64 {
+    return density(x, scale);
+}
+export fn rv_rayleigh_probability(q: f64, scale: f64) f64 {
+    return probability(q, scale);
+}
+export fn rv_rayleigh_quantile(p: f64, scale: f64) f64 {
+    return quantile(p, scale);
+}
+
 const expectEqual = std.testing.expectEqual;
 const expectApproxEqRel = std.testing.expectApproxEqRel;
 const eps = 10 * std.math.floatEps(f64); // 2.22 × 10^-15

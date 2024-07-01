@@ -67,6 +67,16 @@ pub fn fill(buffer: []f64, generator: std.Random, location: f64, scale: f64) []f
     return buffer;
 }
 
+export fn rv_laplace_density(x: f64, location: f64, scale: f64) f64 {
+    return density(x, location, scale);
+}
+export fn rv_laplace_probability(q: f64, location: f64, scale: f64) f64 {
+    return probability(q, location, scale);
+}
+export fn rv_laplace_quantile(p: f64, location: f64, scale: f64) f64 {
+    return quantile(p, location, scale);
+}
+
 const expectEqual = std.testing.expectEqual;
 const expectApproxEqRel = std.testing.expectApproxEqRel;
 const eps = 10 * std.math.floatEps(f64); // 2.22 × 10^-15

@@ -58,6 +58,16 @@ pub fn fill(buffer: []f64, generator: std.Random, rate: f64) []f64 {
     return buffer;
 }
 
+export fn rv_exponential_density(x: f64, rate: f64) f64 {
+    return density(x, rate);
+}
+export fn rv_exponential_probability(q: f64, rate: f64) f64 {
+    return probability(q, rate);
+}
+export fn rv_exponential_quantile(p: f64, rate: f64) f64 {
+    return quantile(p, rate);
+}
+
 const expectEqual = std.testing.expectEqual;
 const expectApproxEqRel = std.testing.expectApproxEqRel;
 const eps = 10 * std.math.floatEps(f64); // 2.22 × 10^-15

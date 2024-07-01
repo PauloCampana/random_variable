@@ -115,6 +115,16 @@ fn linearSearch(p: f64, n: f64, shape1: f64, shape2: f64, initial_mass: f64) f64
     return bbin;
 }
 
+export fn rv_beta_binomial_density(x: f64, size: u64, shape1: f64, shape2: f64) f64 {
+    return density(x, size, shape1, shape2);
+}
+export fn rv_beta_binomial_probability(q: f64, size: u64, shape1: f64, shape2: f64) f64 {
+    return probability(q, size, shape1, shape2);
+}
+export fn rv_beta_binomial_quantile(p: f64, size: u64, shape1: f64, shape2: f64) f64 {
+    return quantile(p, size, shape1, shape2);
+}
+
 const expectEqual = std.testing.expectEqual;
 const expectApproxEqRel = std.testing.expectApproxEqRel;
 const eps = 30 * std.math.floatEps(f64); // 6.66 × 10^-15
