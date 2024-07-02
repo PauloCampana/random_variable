@@ -1,4 +1,4 @@
-//! Support: X ∈ [0,∞)
+//! Support: [0,∞)
 //!
 //! Parameters:
 //! - ν: `df` ∈ (0,∞)
@@ -11,7 +11,7 @@ const isFinite = std.math.isFinite;
 const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
-/// f(x) = x^(ν - 1) exp(-x^2 / 2) / (2^(ν / 2 - 1) gamma(ν / 2)).
+/// f(x) = x^(ν - 1) exp(-x^2 / 2) / (2^(ν / 2 - 1) gamma(ν / 2))
 pub fn density(x: f64, df: f64) f64 {
     assert(isFinite(df));
     assert(df > 0);
@@ -31,7 +31,7 @@ pub fn density(x: f64, df: f64) f64 {
     return @exp(num - den);
 }
 
-/// No closed form.
+/// No closed form
 pub fn probability(q: f64, df: f64) f64 {
     assert(isFinite(df));
     assert(df > 0);
@@ -42,7 +42,7 @@ pub fn probability(q: f64, df: f64) f64 {
     return special.gamma_probability(0.5 * df, 0.5 * q * q);
 }
 
-/// No closed form.
+/// No closed form
 pub fn quantile(p: f64, df: f64) f64 {
     assert(isFinite(df));
     assert(df > 0);

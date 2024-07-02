@@ -1,4 +1,4 @@
-//! Support: X ∈ [0,1]
+//! Support: [0,1]
 //!
 //! Parameters:
 //! - λ: `shape` ∈ (0,1)
@@ -9,7 +9,7 @@ const isFinite = std.math.isFinite;
 const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
-/// p(x) = 2 / (1 - 2λ) arctanh(1 - 2λ) λ^x (1 - λ)^(1 - x).
+/// f(x) = 2 / (1 - 2λ) arctanh(1 - 2λ) λ^x (1 - λ)^(1 - x)
 pub fn density(x: f64, shape: f64) f64 {
     assert(0 < shape and shape < 1);
     assert(!isNan(x));
@@ -26,7 +26,7 @@ pub fn density(x: f64, shape: f64) f64 {
     return constant * inc * dec;
 }
 
-/// F(q) = (λ^q (1 - λ)^(1 - q) + λ - 1) / (2λ - 1).
+/// F(q) = (λ^q (1 - λ)^(1 - q) + λ - 1) / (2λ - 1)
 pub fn probability(q: f64, shape: f64) f64 {
     assert(0 < shape and shape < 1);
     assert(!isNan(q));
@@ -44,7 +44,7 @@ pub fn probability(q: f64, shape: f64) f64 {
     return (inc * dec + shape - 1) / (2 * shape - 1);
 }
 
-/// Q(p) = ln(((2λ - 1)p - λ + 1) / (1 - λ)) / ln(λ / (1 - λ)).
+/// Q(p) = ln(((2λ - 1)p - λ + 1) / (1 - λ)) / ln(λ / (1 - λ))
 pub fn quantile(p: f64, shape: f64) f64 {
     assert(0 < shape and shape < 1);
     assert(0 <= p and p <= 1);

@@ -1,4 +1,4 @@
-//! Support: X ∈ {a,⋯,b}
+//! Support: {a,⋯,b}
 //!
 //! Parameters:
 //! - a: `min` ∈ {⋯,-1,0,1,⋯}
@@ -10,7 +10,7 @@ const isFinite = std.math.isFinite;
 const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
-/// p(x) = 1 / (b - a + 1).
+/// p(x) = 1 / (b - a + 1)
 pub fn density(x: f64, min: i64, max: i64) f64 {
     assert(min <= max);
     assert(!isNan(x));
@@ -22,7 +22,7 @@ pub fn density(x: f64, min: i64, max: i64) f64 {
     return 1 / (fmax - fmin + 1);
 }
 
-/// F(q) = (⌊q⌋ - a + 1) / (b - a  + 1).
+/// F(q) = (⌊q⌋ - a + 1) / (b - a  + 1)
 pub fn probability(q: f64, min: i64, max: i64) f64 {
     assert(min <= max);
     assert(!isNan(q));
@@ -37,7 +37,7 @@ pub fn probability(q: f64, min: i64, max: i64) f64 {
     return (@floor(q) - fmin + 1) / (fmax - fmin + 1);
 }
 
-/// Q(p) = ⌈p (b - a + 1)⌉ + a - 1.
+/// Q(p) = ⌈p (b - a + 1)⌉ + a - 1
 pub fn quantile(p: f64, min: i64, max: i64) f64 {
     assert(min <= max);
     assert(0 <= p and p <= 1);

@@ -1,4 +1,4 @@
-//! Support: X ∈ [0,∞)
+//! Support: [0,∞)
 //!
 //! Parameters:
 //! - α: `shape` ∈ (0,∞)
@@ -10,7 +10,7 @@ const isFinite = std.math.isFinite;
 const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
-/// f(x) = αλ (λx)^(α - 1) exp(-(λx)^α).
+/// f(x) = αλ (λx)^(α - 1) exp(-(λx)^α)
 pub fn density(x: f64, shape: f64, rate: f64) f64 {
     assert(isFinite(shape) and isFinite(rate));
     assert(shape > 0 and rate > 0);
@@ -30,7 +30,7 @@ pub fn density(x: f64, shape: f64, rate: f64) f64 {
     return shape * rate * zam1 * @exp(-za);
 }
 
-/// F(q) = 1 - exp(-(λq)^α).
+/// F(q) = 1 - exp(-(λq)^α)
 pub fn probability(q: f64, shape: f64, rate: f64) f64 {
     assert(isFinite(shape) and isFinite(rate));
     assert(shape > 0 and rate > 0);
@@ -43,7 +43,7 @@ pub fn probability(q: f64, shape: f64, rate: f64) f64 {
     return -std.math.expm1(-za);
 }
 
-/// Q(p) = (-ln(1 - p))^(1 / α) / λ.
+/// Q(p) = (-ln(1 - p))^(1 / α) / λ
 pub fn quantile(p: f64, shape: f64, rate: f64) f64 {
     assert(isFinite(shape) and isFinite(rate));
     assert(shape > 0 and rate > 0);

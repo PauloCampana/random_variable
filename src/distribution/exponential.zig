@@ -1,4 +1,4 @@
-//! Support: X ∈ [0,∞)
+//! Support: [0,∞)
 //!
 //! Parameters:
 //! - λ: `rate` ∈ (0,∞)
@@ -9,7 +9,7 @@ const isFinite = std.math.isFinite;
 const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
-/// f(x) = λ exp(-λx).
+/// f(x) = λ exp(-λx)
 pub fn density(x: f64, rate: f64) f64 {
     assert(isFinite(rate));
     assert(rate > 0);
@@ -20,7 +20,7 @@ pub fn density(x: f64, rate: f64) f64 {
     return rate * @exp(-rate * x);
 }
 
-/// F(q) = 1 - exp(-λq).
+/// F(q) = 1 - exp(-λq)
 pub fn probability(q: f64, rate: f64) f64 {
     assert(isFinite(rate));
     assert(rate > 0);
@@ -32,7 +32,7 @@ pub fn probability(q: f64, rate: f64) f64 {
     return -std.math.expm1(-z);
 }
 
-/// Q(p) = -ln(1 - p) / λ.
+/// Q(p) = -ln(1 - p) / λ
 pub fn quantile(p: f64, rate: f64) f64 {
     assert(isFinite(rate));
     assert(rate > 0);

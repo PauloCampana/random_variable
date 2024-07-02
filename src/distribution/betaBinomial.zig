@@ -1,4 +1,4 @@
-//! Support: X ∈ {0,1,⋯,n}
+//! Support: {0,1,⋯,n}
 //!
 //! Parameters:
 //! - n: `size`   ∈ {0,1,2,⋯}
@@ -12,7 +12,7 @@ const isFinite = std.math.isFinite;
 const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
-/// p(x) = (n x) beta(x + α, n - x + β) / beta(α, β).
+/// p(x) = (n x) beta(x + α, n - x + β) / beta(α, β)
 pub fn density(x: f64, size: u64, shape1: f64, shape2: f64) f64 {
     assert(isFinite(shape1) and isFinite(shape2));
     assert(shape1 > 0 and shape2 > 0);
@@ -27,7 +27,7 @@ pub fn density(x: f64, size: u64, shape1: f64, shape2: f64) f64 {
     return @exp(binom + beta1 - beta2);
 }
 
-/// No closed form.
+/// No closed form
 pub fn probability(q: f64, size: u64, shape1: f64, shape2: f64) f64 {
     assert(isFinite(shape1) and isFinite(shape2));
     assert(shape1 > 0 and shape2 > 0);
@@ -54,7 +54,7 @@ pub fn probability(q: f64, size: u64, shape1: f64, shape2: f64) f64 {
     return cumu;
 }
 
-/// No closed form.
+/// No closed form
 pub fn quantile(p: f64, size: u64, shape1: f64, shape2: f64) f64 {
     assert(isFinite(shape1) and isFinite(shape2));
     assert(shape1 > 0 and shape2 > 0);

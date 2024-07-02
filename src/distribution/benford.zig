@@ -1,4 +1,4 @@
-//! Support: X ∈ {1,2,⋯,b - 1}
+//! Support: {1,2,⋯,b - 1}
 //!
 //! Parameters:
 //! - b: `base` ∈ {2,3,4,⋯}
@@ -8,7 +8,7 @@ const assert = std.debug.assert;
 const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
-/// p(x) = log_b(1 + 1 / x).
+/// p(x) = log_b(1 + 1 / x)
 pub fn density(x: f64, base: u64) f64 {
     assert(base >= 2);
     assert(!isNan(x));
@@ -19,7 +19,7 @@ pub fn density(x: f64, base: u64) f64 {
     return std.math.log1p(1 / x) / @log(b);
 }
 
-/// F(q) = log_b(1 + ⌊q⌋).
+/// F(q) = log_b(1 + ⌊q⌋)
 pub fn probability(q: f64, base: u64) f64 {
     assert(base >= 2);
     assert(!isNan(q));
@@ -33,7 +33,7 @@ pub fn probability(q: f64, base: u64) f64 {
     return std.math.log1p(@floor(q)) / @log(b);
 }
 
-/// Q(p) = ⌈b^p⌉ - 1.
+/// Q(p) = ⌈b^p⌉ - 1
 pub fn quantile(p: f64, base: u64) f64 {
     assert(base >= 2);
     assert(0 <= p and p <= 1);

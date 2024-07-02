@@ -1,4 +1,4 @@
-//! Support: X ∈ {0,1,2,⋯}
+//! Support: {0,1,2,⋯}
 //!
 //! Parameters:
 //! - λ: `lambda` ∈ (0,∞)
@@ -10,7 +10,7 @@ const isFinite = std.math.isFinite;
 const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
-/// p(x) = λ^x exp(-λ) / x!.
+/// p(x) = λ^x exp(-λ) / x!
 pub fn density(x: f64, lambda: f64) f64 {
     assert(isFinite(lambda));
     assert(lambda > 0);
@@ -22,7 +22,7 @@ pub fn density(x: f64, lambda: f64) f64 {
     return @exp(log);
 }
 
-/// No closed form.
+/// No closed form
 pub fn probability(q: f64, lambda: f64) f64 {
     assert(isFinite(lambda));
     assert(lambda > 0);
@@ -36,7 +36,7 @@ pub fn probability(q: f64, lambda: f64) f64 {
     return 1 - special.gamma_probability(@floor(q) + 1, lambda);
 }
 
-/// No closed form.
+/// No closed form
 pub fn quantile(p: f64, lambda: f64) f64 {
     assert(isFinite(lambda));
     assert(lambda > 0);

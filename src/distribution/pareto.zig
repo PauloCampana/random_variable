@@ -1,4 +1,4 @@
-//! Support: X ∈ [k,∞)
+//! Support: [k,∞)
 //!
 //! Parameters:
 //! - α: `shape`   ∈ (0,∞)
@@ -10,7 +10,7 @@ const isFinite = std.math.isFinite;
 const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
-/// f(x) = αk^α / x^(α + 1).
+/// f(x) = αk^α / x^(α + 1)
 pub fn density(x: f64, shape: f64, minimum: f64) f64 {
     assert(isFinite(shape) and isFinite(minimum));
     assert(shape > 0 and minimum > 0);
@@ -23,7 +23,7 @@ pub fn density(x: f64, shape: f64, minimum: f64) f64 {
     return @exp(num - den);
 }
 
-/// F(q) = 1 - (k / q)^α.
+/// F(q) = 1 - (k / q)^α
 pub fn probability(q: f64, shape: f64, minimum: f64) f64 {
     assert(isFinite(shape) and isFinite(minimum));
     assert(shape > 0 and minimum > 0);
@@ -34,7 +34,7 @@ pub fn probability(q: f64, shape: f64, minimum: f64) f64 {
     return 1 - std.math.pow(f64, minimum / q, shape);
 }
 
-/// Q(p) = k / (1 - p)^(1 / α).
+/// Q(p) = k / (1 - p)^(1 / α)
 pub fn quantile(p: f64, shape: f64, minimum: f64) f64 {
     assert(isFinite(shape) and isFinite(minimum));
     assert(shape > 0 and minimum > 0);

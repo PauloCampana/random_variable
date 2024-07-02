@@ -1,4 +1,4 @@
-//! Support: X ∈ [0,∞)
+//! Support: [0,∞)
 //!
 //! Parameters:
 //! - α: `shape` ∈ (0,∞)
@@ -11,7 +11,7 @@ const isFinite = std.math.isFinite;
 const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
-/// f(x) = λ / gamma(α) (λx)^(α - 1) exp(-λx).
+/// f(x) = λ / gamma(α) (λx)^(α - 1) exp(-λx)
 pub fn density(x: f64, shape: f64, rate: f64) f64 {
     assert(isFinite(shape) and isFinite(rate));
     assert(shape > 0 and rate > 0);
@@ -31,7 +31,7 @@ pub fn density(x: f64, shape: f64, rate: f64) f64 {
     return @exp(num - den);
 }
 
-/// No closed form.
+/// No closed form
 pub fn probability(q: f64, shape: f64, rate: f64) f64 {
     assert(isFinite(shape) and isFinite(rate));
     assert(shape > 0 and rate > 0);
@@ -43,7 +43,7 @@ pub fn probability(q: f64, shape: f64, rate: f64) f64 {
     return special.gamma_probability(shape, z);
 }
 
-/// No closed form.
+/// No closed form
 pub fn quantile(p: f64, shape: f64, rate: f64) f64 {
     assert(isFinite(shape) and isFinite(rate));
     assert(shape > 0 and rate > 0);

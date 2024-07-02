@@ -1,4 +1,4 @@
-//! Support: X ∈ {max(0, n + K - N),1,⋯,min(n, K)}
+//! Support: {max(0, n + K - N),1,⋯,min(n, K)}
 //!
 //! Parameters:
 //! - N: `N` ∈ {0,1,2,⋯}
@@ -11,7 +11,7 @@ const assert = std.debug.assert;
 const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
-/// p(x) = (K x) (N - K n - x) / (N n).
+/// p(x) = (K x) (N - K n - x) / (N n)
 pub fn density(x: f64, N: u64, K: u64, n: u64) f64 {
     assert(K <= N and n <= N);
     assert(!isNan(x));
@@ -27,7 +27,7 @@ pub fn density(x: f64, N: u64, K: u64, n: u64) f64 {
     return @exp(num1 + num2 - den);
 }
 
-/// No closed form.
+/// No closed form
 pub fn probability(q: f64, N: u64, K: u64, n: u64) f64 {
     assert(K <= N and n <= N);
     assert(!isNan(q));
@@ -55,7 +55,7 @@ pub fn probability(q: f64, N: u64, K: u64, n: u64) f64 {
     return cumu;
 }
 
-/// No closed form.
+/// No closed form
 pub fn quantile(p: f64, N: u64, K: u64, n: u64) f64 {
     assert(K <= N and n <= N);
     assert(0 <= p and p <= 1);

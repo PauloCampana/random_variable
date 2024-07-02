@@ -1,4 +1,4 @@
-//! Support: X ∈ [0,∞)
+//! Support: [0,∞)
 //!
 //! Parameters:
 //! - n: `df1` ∈ (0,∞)
@@ -12,7 +12,7 @@ const isFinite = std.math.isFinite;
 const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
-/// f(x) = n^(n / 2) m^(m / 2) x^(n / 2 - 1) (m + nx)^(-(n + m) / 2) / beta(n / 2, m / 2).
+/// f(x) = n^(n / 2) m^(m / 2) x^(n / 2 - 1) (m + nx)^(-(n + m) / 2) / beta(n / 2, m / 2)
 pub fn density(x: f64, df1: f64, df2: f64) f64 {
     assert(isFinite(df1) and isFinite(df2));
     assert(df1 > 0 and df2 > 0);
@@ -34,7 +34,7 @@ pub fn density(x: f64, df1: f64, df2: f64) f64 {
     return @exp(num1 + num2 - den);
 }
 
-/// No closed form.
+/// No closed form
 pub fn probability(q: f64, df1: f64, df2: f64) f64 {
     assert(isFinite(df1) and isFinite(df2));
     assert(df1 > 0 and df2 > 0);
@@ -50,7 +50,7 @@ pub fn probability(q: f64, df1: f64, df2: f64) f64 {
     return special.beta_probability(0.5 * df1, 0.5 * df2, p);
 }
 
-/// No closed form.
+/// No closed form
 pub fn quantile(p: f64, df1: f64, df2: f64) f64 {
     assert(isFinite(df1) and isFinite(df2));
     assert(df1 > 0 and df2 > 0);

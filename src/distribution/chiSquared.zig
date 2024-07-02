@@ -1,4 +1,4 @@
-//! Support: X ∈ [0,∞)
+//! Support: [0,∞)
 //!
 //! Parameters:
 //! - ν: `df` ∈ (0,∞)
@@ -7,17 +7,17 @@ const std = @import("std");
 const gamma = @import("gamma.zig");
 const inf = std.math.inf(f64);
 
-/// f(x) = 0.5 / gamma(ν / 2) (x / 2)^(ν / 2 - 1) exp(-x / 2).
+/// f(x) = 0.5 / gamma(ν / 2) (x / 2)^(ν / 2 - 1) exp(-x / 2)
 pub fn density(x: f64, df: f64) f64 {
     return gamma.density(x, 0.5 * df, 0.5);
 }
 
-/// No closed form.
+/// No closed form
 pub fn probability(q: f64, df: f64) f64 {
     return gamma.probability(q, 0.5 * df, 0.5);
 }
 
-/// No closed form.
+/// No closed form
 pub fn quantile(p: f64, df: f64) f64 {
     return gamma.quantile(p, 0.5 * df, 0.5);
 }

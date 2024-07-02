@@ -1,7 +1,7 @@
-//! Support: X ∈ [0,∞)
+//! Support: [0,∞)
 //!
 //! Parameters:
-//! - ξ: `shape` ∈ (0,∞)
+//! - α: `shape` ∈ (0,∞)
 //! - σ: `scale` ∈ (0,∞)
 
 const std = @import("std");
@@ -10,7 +10,7 @@ const isFinite = std.math.isFinite;
 const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
-/// f(x) = ξ / σ exp(ξ(1 - exp(x / σ)) + x / σ).
+/// f(x) = α / σ exp(α(1 - exp(x / σ)) + x / σ)
 pub fn density(x: f64, shape: f64, scale: f64) f64 {
     assert(isFinite(shape) and isFinite(scale));
     assert(shape > 0 and scale > 0);
@@ -24,7 +24,7 @@ pub fn density(x: f64, shape: f64, scale: f64) f64 {
     return shape / scale * outer;
 }
 
-/// F(q) = 1 - exp(ξ(1 - exp(q / σ))).
+/// F(q) = 1 - exp(α(1 - exp(q / σ)))
 pub fn probability(q: f64, shape: f64, scale: f64) f64 {
     assert(isFinite(shape) and isFinite(scale));
     assert(shape > 0 and scale > 0);
@@ -38,7 +38,7 @@ pub fn probability(q: f64, shape: f64, scale: f64) f64 {
     return 1 - outer;
 }
 
-/// Q(p) = σ ln(1 - ln(1 - p) / ξ).
+/// Q(p) = σ ln(1 - ln(1 - p) / α)
 pub fn quantile(p: f64, shape: f64, scale: f64) f64 {
     assert(isFinite(shape) and isFinite(scale));
     assert(shape > 0 and scale > 0);

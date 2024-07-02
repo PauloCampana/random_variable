@@ -1,4 +1,4 @@
-//! Support: X ∈ {0,1,⋯,n}
+//! Support: {0,1,⋯,n}
 //!
 //! Parameters:
 //! - n: `size` ∈ {0,1,2,⋯}
@@ -10,7 +10,7 @@ const assert = std.debug.assert;
 const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
-/// p(x) = (n x) p^x (1 - p)^(n - x).
+/// p(x) = (n x) p^x (1 - p)^(n - x)
 pub fn density(x: f64, size: u64, prob: f64) f64 {
     assert(0 <= prob and prob <= 1);
     assert(!isNan(x));
@@ -29,7 +29,7 @@ pub fn density(x: f64, size: u64, prob: f64) f64 {
     return @exp(log);
 }
 
-/// No closed form.
+/// No closed form
 pub fn probability(q: f64, size: u64, prob: f64) f64 {
     assert(0 <= prob and prob <= 1);
     assert(!isNan(q));

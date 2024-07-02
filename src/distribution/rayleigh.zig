@@ -1,4 +1,4 @@
-//! Support: X ∈ [0,∞)
+//! Support: [0,∞)
 //!
 //! Parameters:
 //! - σ: `scale` ∈ (0,∞)
@@ -9,7 +9,7 @@ const isFinite = std.math.isFinite;
 const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
-/// f(x) = x / σ^2 exp(-x^2 / 2σ^2)).
+/// f(x) = x / σ^2 exp(-x^2 / 2σ^2))
 pub fn density(x: f64, scale: f64) f64 {
     assert(isFinite(scale));
     assert(scale > 0);
@@ -21,7 +21,7 @@ pub fn density(x: f64, scale: f64) f64 {
     return z / scale * @exp(-0.5 * z * z);
 }
 
-/// F(q) = 1 - exp(-q^2 / 2σ^2).
+/// F(q) = 1 - exp(-q^2 / 2σ^2)
 pub fn probability(q: f64, scale: f64) f64 {
     assert(isFinite(scale));
     assert(scale > 0);
@@ -33,7 +33,7 @@ pub fn probability(q: f64, scale: f64) f64 {
     return -std.math.expm1(-0.5 * z * z);
 }
 
-/// Q(p) = σ sqrt(-2ln(1 - p)).
+/// Q(p) = σ sqrt(-2ln(1 - p))
 pub fn quantile(p: f64, scale: f64) f64 {
     assert(isFinite(scale));
     assert(scale > 0);

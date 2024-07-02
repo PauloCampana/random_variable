@@ -1,4 +1,4 @@
-//! Support: X ∈ {0,1,2,⋯}
+//! Support: {0,1,2,⋯}
 //!
 //! Parameters:
 //! - n: `size` ∈ {1,2,⋯}
@@ -12,7 +12,7 @@ const assert = std.debug.assert;
 const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
-/// p(x) = (x + n - 1 x) p^n (1 - p)^x.
+/// p(x) = (x + n - 1 x) p^n (1 - p)^x
 pub fn density(x: f64, size: u64, prob: f64) f64 {
     assert(0 < prob and prob <= 1);
     assert(size != 0);
@@ -29,7 +29,7 @@ pub fn density(x: f64, size: u64, prob: f64) f64 {
     return @exp(log);
 }
 
-/// No closed form.
+/// No closed form
 pub fn probability(q: f64, size: u64, prob: f64) f64 {
     assert(0 < prob and prob <= 1);
     assert(size != 0);
@@ -44,7 +44,7 @@ pub fn probability(q: f64, size: u64, prob: f64) f64 {
     return special.beta_probability(n, @floor(q) + 1, prob);
 }
 
-/// No closed form.
+/// No closed form
 pub fn quantile(p: f64, size: u64, prob: f64) f64 {
     assert(0 < prob and prob <= 1);
     assert(size != 0);

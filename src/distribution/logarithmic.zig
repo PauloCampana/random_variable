@@ -1,4 +1,4 @@
-//! Support: X ∈ {1,2,3,⋯}
+//! Support: {1,2,3,⋯}
 //!
 //! Parameters:
 //! - p: `prob` ∈ (0,1)
@@ -8,7 +8,7 @@ const assert = std.debug.assert;
 const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
-/// p(x) = p^x / (-ln(1 - p) x).
+/// p(x) = p^x / (-ln(1 - p) x)
 pub fn density(x: f64, prob: f64) f64 {
     assert(0 < prob and prob < 1);
     assert(!isNan(x));
@@ -20,7 +20,7 @@ pub fn density(x: f64, prob: f64) f64 {
     return pow / (x * ln);
 }
 
-/// No closed form.
+/// No closed form
 pub fn probability(q: f64, prob: f64) f64 {
     assert(0 < prob and prob < 1);
     assert(!isNan(q));

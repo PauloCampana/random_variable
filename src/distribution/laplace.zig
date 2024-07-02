@@ -1,4 +1,4 @@
-//! Support: X ∈ (-∞,∞)
+//! Support: (-∞,∞)
 //!
 //! Parameters:
 //! - μ: `location` ∈ (-∞,∞)
@@ -10,7 +10,7 @@ const isFinite = std.math.isFinite;
 const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
-/// f(x) = exp(-|x - μ| / σ) / 2σ.
+/// f(x) = exp(-|x - μ| / σ) / 2σ
 pub fn density(x: f64, location: f64, scale: f64) f64 {
     assert(isFinite(location) and isFinite(scale));
     assert(scale > 0);
@@ -19,9 +19,9 @@ pub fn density(x: f64, location: f64, scale: f64) f64 {
     return @exp(-z) / (2 * scale);
 }
 
-/// F(q) =     exp(+(q - μ) / σ)) / 2, x < μ.
+/// F(q) =     exp(+(q - μ) / σ)) / 2, x < μ
 ///
-/// F(q) = 1 - exp(-(q - μ) / σ)) / 2, x > μ.
+/// F(q) = 1 - exp(-(q - μ) / σ)) / 2, x > μ
 pub fn probability(q: f64, location: f64, scale: f64) f64 {
     assert(isFinite(location) and isFinite(scale));
     assert(scale > 0);
@@ -34,9 +34,9 @@ pub fn probability(q: f64, location: f64, scale: f64) f64 {
     }
 }
 
-/// Q(p) = μ + σ ln(2p),       0.0 < p < 0.5.
+/// Q(p) = μ + σ ln(2p)      , 0.0 < p < 0.5
 ///
-/// Q(p) = μ - σ ln(2(1 - p)), 0.5 < p < 1.0.
+/// Q(p) = μ - σ ln(2(1 - p)), 0.5 < p < 1.0
 pub fn quantile(p: f64, location: f64, scale: f64) f64 {
     assert(isFinite(location) and isFinite(scale));
     assert(scale > 0);

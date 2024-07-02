@@ -1,4 +1,4 @@
-//! Support: X ∈ {0,1}
+//! Support: {0,1}
 //!
 //! Parameters:
 //! - p: `prob` ∈ [0,1]
@@ -8,9 +8,9 @@ const assert = std.debug.assert;
 const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
-/// p(x) = 1 - p, x = 0,
+/// p(x) = 1 - p, x = 0
 ///
-/// p(x) = p    , x = 1.
+/// p(x) = p    , x = 1
 pub fn density(x: f64, prob: f64) f64 {
     assert(0 <= prob and prob <= 1);
     assert(!isNan(x));
@@ -23,11 +23,11 @@ pub fn density(x: f64, prob: f64) f64 {
     return 0;
 }
 
-/// F(q) = 0    ,      q < 0,
+/// F(q) = 0    ,      q < 0
 ///
-/// F(q) = 1 - p, 0 <= q < 1,
+/// F(q) = 1 - p, 0 <= q < 1
 ///
-/// F(q) = 1    , 1 <= q.
+/// F(q) = 1    , 1 <= q
 pub fn probability(q: f64, prob: f64) f64 {
     assert(0 <= prob and prob <= 1);
     assert(!isNan(q));
@@ -40,14 +40,16 @@ pub fn probability(q: f64, prob: f64) f64 {
     return 1;
 }
 
-/// Q(x) = 0, x <= 1 - p,
-/// Q(x) = 1, x >  1 - p.
+/// Q(x) = 0, x <= 1 - p
+///
+/// Q(x) = 1, x >  1 - p
 pub fn quantile(p: f64, prob: f64) f64 {
     assert(0 <= prob and prob <= 1);
     assert(0 <= p and p <= 1);
     const ber = @intFromBool(p > 1 - prob);
     return @floatFromInt(ber);
 }
+
 
 pub fn random(generator: std.Random, prob: f64) f64 {
     assert(0 <= prob and prob <= 1);
