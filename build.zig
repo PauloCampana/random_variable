@@ -16,6 +16,9 @@ pub fn build(b: *std.Build) !void {
     });
     b.installArtifact(lib);
 
+    const header = b.addInstallHeaderFile(b.path("src/random_variable.h"), "random_variable.h");
+    b.getInstallStep().dependOn(&header.step);
+
     const tests = b.addTest(.{
         .root_source_file = b.path("src/root.zig"),
         .target = target,
