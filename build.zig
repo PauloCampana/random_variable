@@ -39,17 +39,17 @@ pub fn build(b: *std.Build) !void {
     const gof_step = b.step("gof", "Run \"Goodness of fit\" tests for random variable generation");
     gof_step.dependOn(&gof_run.step);
 
-    const docs = b.addObject(.{
-        .name = "docs",
-        .target = target,
-        .optimize = optimize,
-        .root_source_file = b.path("src/root.zig"),
-    });
-    const docs_run = b.addInstallDirectory(.{
-        .source_dir = docs.getEmittedDocs(),
+    const top_level_docs = b.addInstallDirectory(.{
+        .source_dir = tests.getEmittedDocs(),
         .install_dir = .prefix,
         .install_subdir = "../docs",
     });
+    const docs = b.addInstallDirectory(.{
+        .source_dir = tests.getEmittedDocs(),
+        .install_dir = .prefix,
+        .install_subdir = "docs",
+    });
     const docs_step = b.step("docs", "Generate documentation");
-    docs_step.dependOn(&docs_run.step);
+    docs_step.dependOn(&top_level_docs.step);
+    docs_step.dependOn(&docs.step);
 }
