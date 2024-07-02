@@ -96,8 +96,7 @@ pub fn random(generator: std.Random, size: u64, prob: f64) f64 {
         return n;
     }
     if (prob == 0.5) {
-        const mask = (@as(u64, 1) << @truncate(@mod(size, 64))) - 1;
-        return bitCount(generator, mask, size);
+        return bitCount(generator, size);
     }
     if (mean < 1000) {
         if (prob < 0.5) {
@@ -131,9 +130,8 @@ pub fn fill(buffer: []f64, generator: std.Random, size: u64, prob: f64) []f64 {
         return buffer;
     }
     if (prob == 0.5) {
-        const mask = (@as(u64, 1) << @truncate(@mod(size, 64))) - 1;
         for (buffer) |*x| {
-            x.* = bitCount(generator, mask, size);
+            x.* = bitCount(generator, size);
         }
         return buffer;
     }
@@ -204,17 +202,20 @@ fn guidedSearch(p: f64, n: f64, pq: f64, initial_bino: f64, initial_mass: f64, i
     return bino;
 }
 
-fn bitCount(generator: std.Random, mask: u64, size: u64) f64 {
-    var bino: usize = 0;
-    var i: usize = 64;
+fn bitCount(generator: std.Random, size: u64) f64 {
+    const remainder = size % 64;
+    var bino: u64 = 0;
+    var i: u64 = 0;
+
+    if (remainder != 0) {
+        const uni64 = generator.int(u64);
+        const unisize = uni64 >> @truncate(64 - remainder);
+        bino += @popCount(unisize);
+        i += remainder;
+    }
     while (i < size) : (i += 64) {
         const uni64 = generator.int(u64);
         bino += @popCount(uni64);
-    }
-    if (i - 64 < size) {
-        const uni64 = generator.int(u64);
-        const unisize = uni64 & mask;
-        bino += @popCount(unisize);
     }
     return @floatFromInt(bino);
 }
