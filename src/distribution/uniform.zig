@@ -50,7 +50,7 @@ pub fn random(generator: std.Random, min: f64, max: f64) f64 {
     return min + (max - min) * uni;
 }
 
-pub fn fill(buffer: []f64, generator: std.Random, min: f64, max: f64) []f64 {
+pub fn fill(buffer: []f64, generator: std.Random, min: f64, max: f64) void {
     assert(isFinite(min) and isFinite(max));
     assert(min <= max);
     const scale = max - min;
@@ -58,7 +58,6 @@ pub fn fill(buffer: []f64, generator: std.Random, min: f64, max: f64) []f64 {
         const uni = generator.float(f64);
         x.* = min + scale * uni;
     }
-    return buffer;
 }
 
 export fn rv_uniform_density(x: f64, min: f64, max: f64) f64 {

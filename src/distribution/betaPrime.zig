@@ -76,7 +76,7 @@ pub fn random(generator: std.Random, shape1: f64, shape2: f64) f64 {
     return gam1 / gam2;
 }
 
-pub fn fill(buffer: []f64, generator: std.Random, shape1: f64, shape2: f64) []f64 {
+pub fn fill(buffer: []f64, generator: std.Random, shape1: f64, shape2: f64) void {
     assert(isFinite(shape1) and isFinite(shape2));
     assert(shape1 > 0 and shape2 > 0);
     const invshape1 = 1 / shape1;
@@ -87,7 +87,7 @@ pub fn fill(buffer: []f64, generator: std.Random, shape1: f64, shape2: f64) []f6
             const b = std.math.pow(f64, uni, invshape2);
             x.* = (1 - b) / b;
         }
-        return buffer;
+        return;
     }
     if (shape2 == 1) {
         for (buffer) |*x| {
@@ -95,20 +95,19 @@ pub fn fill(buffer: []f64, generator: std.Random, shape1: f64, shape2: f64) []f6
             const a = std.math.pow(f64, uni, invshape1);
             x.* = a / (1 - a);
         }
-        return buffer;
+        return;
     }
     if (shape1 < 1 and shape2 < 1) {
         for (buffer) |*x| {
             x.* = rejection(generator, invshape1, invshape2);
         }
-        return buffer;
+        return;
     }
     for (buffer) |*x| {
         const gam1 = gamma.random(generator, shape1, 1);
         const gam2 = gamma.random(generator, shape2, 1);
         x.* = gam1 / gam2;
     }
-    return buffer;
 }
 
 fn rejection(generator: std.Random, invshape1: f64, invshape2: f64) f64 {

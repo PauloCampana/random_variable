@@ -63,14 +63,13 @@ pub fn random(generator: std.Random, prob: f64) f64 {
     return linearSearch(uni, prob, initial_mass);
 }
 
-pub fn fill(buffer: []f64, generator: std.Random, prob: f64) []f64 {
+pub fn fill(buffer: []f64, generator: std.Random, prob: f64) void {
     assert(0 < prob and prob < 1);
     const initial_mass = prob / -std.math.log1p(-prob);
     for (buffer) |*x| {
         const uni = generator.float(f64);
         x.* = linearSearch(uni, prob, initial_mass);
     }
-    return buffer;
 }
 
 fn linearSearch(p: f64, prob: f64, initial_mass: f64) f64 {

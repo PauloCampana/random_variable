@@ -6,10 +6,11 @@
 //! certain parameters with value zero or negative.
 //!
 //! Random variable generation has 2 flavours: `random` and `fill`,
-//! `random` returns a single random variable,
-//! `fill` fills a buffer with random variables, it might be faster
-//! than calling `random` in a loop due to using a different algorithm
-//! that is faster but has a setup time.
+//!   * `random` returns a single random variable
+//!   * `fill` fills a buffer with random variables
+//!
+//! it might be faster to call `fill` once than `random` in a loop due to
+//! using a different algorithm that is faster but has a setup time.
 
 // zig fmt: off
 pub const benford             = @import("distribution/benford.zig");

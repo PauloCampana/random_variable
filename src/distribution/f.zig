@@ -64,7 +64,7 @@ pub fn random(generator: std.Random, df1: f64, df2: f64) f64 {
     return df2 / df1 * bp;
 }
 
-pub fn fill(buffer: []f64, generator: std.Random, df1: f64, df2: f64) []f64 {
+pub fn fill(buffer: []f64, generator: std.Random, df1: f64, df2: f64) void {
     const hdf1 = 0.5 * df1;
     const hdf2 = 0.5 * df2;
     const ratio = df2 / df1;
@@ -72,7 +72,6 @@ pub fn fill(buffer: []f64, generator: std.Random, df1: f64, df2: f64) []f64 {
         const bp = betaPrime.random(generator, hdf1, hdf2);
         x.* = ratio * bp;
     }
-    return buffer;
 }
 
 export fn rv_f_density(x: f64, df1: f64, df2: f64) f64 {

@@ -26,8 +26,8 @@ pub fn random(generator: std.Random, df: f64) f64 {
     return gamma.random(generator, 0.5 * df, 0.5);
 }
 
-pub fn fill(buffer: []f64, generator: std.Random, df: f64) []f64 {
-    return gamma.fill(buffer, generator, 0.5 * df, 0.5);
+pub fn fill(buffer: []f64, generator: std.Random, df: f64) void {
+    gamma.fill(buffer, generator, 0.5 * df, 0.5);
 }
 
 export fn rv_chi_squared_density(x: f64, df: f64) f64 {

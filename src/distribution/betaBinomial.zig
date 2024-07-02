@@ -83,12 +83,11 @@ pub fn random(generator: std.Random, size: u64, shape1: f64, shape2: f64) f64 {
     return linearSearch(uni, n, shape1, shape2, initial_mass);
 }
 
-pub fn fill(buffer: []f64, generator: std.Random, size: u64, shape1: f64, shape2: f64) []f64 {
+pub fn fill(buffer: []f64, generator: std.Random, size: u64, shape1: f64, shape2: f64) void {
     assert(isFinite(shape1) and isFinite(shape2));
     assert(shape1 > 0 and shape2 > 0);
     if (size == 0) {
-        @memset(buffer, 0);
-        return buffer;
+        return @memset(buffer, 0);
     }
     const n: f64 = @floatFromInt(size);
     const mass_num = special.lbeta(shape1, shape2 + n);
@@ -98,7 +97,6 @@ pub fn fill(buffer: []f64, generator: std.Random, size: u64, shape1: f64, shape2
         const uni = generator.float(f64);
         x.* = linearSearch(uni, n, shape1, shape2, initial_mass);
     }
-    return buffer;
 }
 
 fn linearSearch(p: f64, n: f64, shape1: f64, shape2: f64, initial_mass: f64) f64 {

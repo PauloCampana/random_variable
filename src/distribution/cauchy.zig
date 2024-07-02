@@ -50,14 +50,13 @@ pub fn random(generator: std.Random, location: f64, scale: f64) f64 {
     return location + scale * @tan(std.math.pi * uni);
 }
 
-pub fn fill(buffer: []f64, generator: std.Random, location: f64, scale: f64) []f64 {
+pub fn fill(buffer: []f64, generator: std.Random, location: f64, scale: f64) void {
     assert(isFinite(location) and isFinite(scale));
     assert(scale > 0);
     for (buffer) |*x| {
         const uni = generator.float(f64);
         x.* = location + scale * @tan(std.math.pi * uni);
     }
-    return buffer;
 }
 
 export fn rv_cauchy_density(x: f64, location: f64, scale: f64) f64 {

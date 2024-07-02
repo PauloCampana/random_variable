@@ -69,13 +69,13 @@ pub fn random(generator: std.Random, shape: f64) f64 {
     return @log(num) / @log(den);
 }
 
-pub fn fill(buffer: []f64, generator: std.Random, shape: f64) []f64 {
+pub fn fill(buffer: []f64, generator: std.Random, shape: f64) void {
     assert(0 < shape and shape < 1);
     if (shape == 0.5) {
         for (buffer) |*x| {
             x.* = generator.float(f64);
         }
-        return buffer;
+        return;
     }
     const shape2 = 1 - shape;
     const mc = (2 * shape - 1) / shape2;
@@ -84,7 +84,6 @@ pub fn fill(buffer: []f64, generator: std.Random, shape: f64) []f64 {
         const uni = generator.float(f64);
         x.* = @log(1 + mc * uni) / log_den;
     }
-    return buffer;
 }
 
 export fn rv_continuous_bernoulli_density(x: f64, shape: f64) f64 {

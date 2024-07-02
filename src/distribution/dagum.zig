@@ -71,7 +71,7 @@ pub fn random(generator: std.Random, shape1: f64, shape2: f64, scale: f64) f64 {
     return scale * pow;
 }
 
-pub fn fill(buffer: []f64, generator: std.Random, shape1: f64, shape2: f64, scale: f64) []f64 {
+pub fn fill(buffer: []f64, generator: std.Random, shape1: f64, shape2: f64, scale: f64) void {
     assert(isFinite(shape1) and isFinite(shape2) and isFinite(scale));
     assert(shape1 > 0 and shape2 > 0 and scale > 0);
     const minvshape1 = -1 / shape1;
@@ -82,7 +82,6 @@ pub fn fill(buffer: []f64, generator: std.Random, shape1: f64, shape2: f64, scal
         const pow = std.math.pow(f64, base, minvshape2);
         x.* = scale * pow;
     }
-    return buffer;
 }
 
 export fn rv_dagum_density(x: f64, shape1: f64, shape2: f64, scale: f64) f64 {

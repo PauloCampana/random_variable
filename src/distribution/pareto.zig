@@ -49,14 +49,13 @@ pub fn random(generator: std.Random, shape: f64, minimum: f64) f64 {
     return minimum * @exp(exp / shape);
 }
 
-pub fn fill(buffer: []f64, generator: std.Random, shape: f64, minimum: f64) []f64 {
+pub fn fill(buffer: []f64, generator: std.Random, shape: f64, minimum: f64) void {
     assert(isFinite(shape) and isFinite(minimum));
     assert(shape > 0 and minimum > 0);
     for (buffer) |*x| {
         const exp = generator.floatExp(f64);
         x.* = minimum * @exp(exp / shape);
     }
-    return buffer;
 }
 
 export fn rv_pareto_density(x: f64, shape: f64, minimum: f64) f64 {

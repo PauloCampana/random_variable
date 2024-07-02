@@ -65,7 +65,7 @@ pub fn random(generator: std.Random, df: f64) f64 {
     return nor * @sqrt(df / chi);
 }
 
-pub fn fill(buffer: []f64, generator: std.Random, df: f64) []f64 {
+pub fn fill(buffer: []f64, generator: std.Random, df: f64) void {
     assert(isFinite(df));
     assert(df > 0);
     if (df == 1) {
@@ -73,7 +73,7 @@ pub fn fill(buffer: []f64, generator: std.Random, df: f64) []f64 {
             const uni = generator.float(f64);
             x.* = @tan(std.math.pi * uni);
         }
-        return buffer;
+        return;
     }
     const hdf = 0.5 * df;
     for (buffer) |*x| {
@@ -81,7 +81,6 @@ pub fn fill(buffer: []f64, generator: std.Random, df: f64) []f64 {
         const chi = gamma.random(generator, hdf, 0.5);
         x.* = nor * @sqrt(df / chi);
     }
-    return buffer;
 }
 
 export fn rv_t_density(x: f64, df: f64) f64 {

@@ -61,7 +61,7 @@ pub fn random(generator: std.Random, shape: f64, rate: f64) f64 {
     return wei / rate;
 }
 
-pub fn fill(buffer: []f64, generator: std.Random, shape: f64, rate: f64) []f64 {
+pub fn fill(buffer: []f64, generator: std.Random, shape: f64, rate: f64) void {
     assert(isFinite(shape) and isFinite(rate));
     assert(shape > 0 and rate > 0);
     const invshape = 1 / shape;
@@ -70,7 +70,6 @@ pub fn fill(buffer: []f64, generator: std.Random, shape: f64, rate: f64) []f64 {
         const wei = std.math.pow(f64, exp, invshape);
         x.* = wei / rate;
     }
-    return buffer;
 }
 
 export fn rv_weibull_density(x: f64, shape: f64, rate: f64) f64 {

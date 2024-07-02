@@ -54,18 +54,16 @@ pub fn random(generator: std.Random, base: u64) f64 {
     return @ceil(bp) - 1;
 }
 
-pub fn fill(buffer: []f64, generator: std.Random, base: u64) []f64 {
+pub fn fill(buffer: []f64, generator: std.Random, base: u64) void {
     assert(base >= 2);
     if (base == 2) {
-        @memset(buffer, 1);
-        return buffer;
+        return @memset(buffer, 1);
     }
     for (buffer) |*x| {
         const uni = generator.float(f64);
         const bp = std.math.pow(f64, @floatFromInt(base), uni);
         x.* = @ceil(bp) - 1;
     }
-    return buffer;
 }
 
 export fn rv_benford_density(x: f64, base: u64) f64 {

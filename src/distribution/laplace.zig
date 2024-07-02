@@ -53,18 +53,17 @@ pub fn random(generator: std.Random, location: f64, scale: f64) f64 {
     return location + scale * if (uni < 0.5) exp else -exp;
 }
 
-pub fn fill(buffer: []f64, generator: std.Random, location: f64, scale: f64) []f64 {
+pub fn fill(buffer: []f64, generator: std.Random, location: f64, scale: f64) void {
     assert(isFinite(location) and isFinite(scale));
     assert(scale > 0);
     for (buffer) |*x| {
         const exp = generator.floatExp(f64);
         const uni = generator.float(f64);
-        // getting a random sign with floats is faster than int or bool
+        // HACK: getting a random sign with floats is faster than int or bool,
         // maybe check this again if random implementation changes.
         const signed = if (uni < 0.5) exp else -exp;
         x.* = location + scale * signed;
     }
-    return buffer;
 }
 
 export fn rv_laplace_density(x: f64, location: f64, scale: f64) f64 {

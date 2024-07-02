@@ -48,14 +48,13 @@ pub fn random(generator: std.Random, rate: f64) f64 {
     return exp / rate;
 }
 
-pub fn fill(buffer: []f64, generator: std.Random, rate: f64) []f64 {
+pub fn fill(buffer: []f64, generator: std.Random, rate: f64) void {
     assert(isFinite(rate));
     assert(rate > 0);
     for (buffer) |*x| {
         const exp = generator.floatExp(f64);
         x.* = exp / rate;
     }
-    return buffer;
 }
 
 export fn rv_exponential_density(x: f64, rate: f64) f64 {

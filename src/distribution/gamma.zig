@@ -78,7 +78,7 @@ pub fn random(generator: std.Random, shape: f64, rate: f64) f64 {
     return gam / rate * fix;
 }
 
-pub fn fill(buffer: []f64, generator: std.Random, shape: f64, rate: f64) []f64 {
+pub fn fill(buffer: []f64, generator: std.Random, shape: f64, rate: f64) void {
     assert(isFinite(shape) and isFinite(rate));
     assert(shape > 0 and rate > 0);
     if (shape == 1) {
@@ -86,7 +86,7 @@ pub fn fill(buffer: []f64, generator: std.Random, shape: f64, rate: f64) []f64 {
             const exp = generator.floatExp(f64);
             x.* = exp / rate;
         }
-        return buffer;
+        return;
     }
     const invshape = 1 / shape;
     const correct = shape >= 1;
@@ -103,7 +103,6 @@ pub fn fill(buffer: []f64, generator: std.Random, shape: f64, rate: f64) []f64 {
         const fix = std.math.pow(f64, uni, invshape);
         x.* = gam / rate * fix;
     }
-    return buffer;
 }
 
 /// https://dl.acm.org/doi/pdf/10.1145/358407.358414

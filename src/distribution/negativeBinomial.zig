@@ -86,12 +86,11 @@ pub fn random(generator: std.Random, size: u64, prob: f64) f64 {
     return poisson.random(generator, lambda);
 }
 
-pub fn fill(buffer: []f64, generator: std.Random, size: u64, prob: f64) []f64 {
+pub fn fill(buffer: []f64, generator: std.Random, size: u64, prob: f64) void {
     assert(0 < prob and prob <= 1);
     assert(size != 0);
     if (prob == 1) {
-        @memset(buffer, 0);
-        return buffer;
+        return @memset(buffer, 0);
     }
     const n: f64 = @floatFromInt(size);
     const qrob = 1 - prob;
@@ -103,7 +102,7 @@ pub fn fill(buffer: []f64, generator: std.Random, size: u64, prob: f64) []f64 {
             const uni = generator.float(f64);
             x.* = linearSearch(uni, n, qrob, initial_mass);
         }
-        return buffer;
+        return;
     }
     if (mean < 15000) {
         const initial_nbin = @ceil(mean);
@@ -113,13 +112,12 @@ pub fn fill(buffer: []f64, generator: std.Random, size: u64, prob: f64) []f64 {
             const uni = generator.float(f64);
             x.* = guidedSearch(uni, n, qrob, initial_nbin, initial_mass, initial_cumu);
         }
-        return buffer;
+        return;
     }
     for (buffer) |*x| {
         const lambda = gamma.random(generator, n, qp);
         x.* = poisson.random(generator, lambda);
     }
-    return buffer;
 }
 
 fn linearSearch(p: f64, n: f64, q: f64, initial_mass: f64) f64 {

@@ -78,7 +78,7 @@ pub fn random(generator: std.Random, shape1: f64, shape2: f64) f64 {
     return gam1 / (gam1 + gam2);
 }
 
-pub fn fill(buffer: []f64, generator: std.Random, shape1: f64, shape2: f64) []f64 {
+pub fn fill(buffer: []f64, generator: std.Random, shape1: f64, shape2: f64) void {
     assert(isFinite(shape1) and isFinite(shape2));
     assert(shape1 > 0 and shape2 > 0);
     const invshape2 = 1 / shape2;
@@ -88,27 +88,26 @@ pub fn fill(buffer: []f64, generator: std.Random, shape1: f64, shape2: f64) []f6
             const uni = generator.float(f64);
             x.* = 1 - std.math.pow(f64, uni, invshape2);
         }
-        return buffer;
+        return;
     }
     if (shape2 == 1) {
         for (buffer) |*x| {
             const uni = generator.float(f64);
             x.* = std.math.pow(f64, uni, invshape1);
         }
-        return buffer;
+        return;
     }
     if (shape1 < 1 and shape2 < 1) {
         for (buffer) |*x| {
             x.* = rejection(generator, invshape1, invshape2);
         }
-        return buffer;
+        return;
     }
     for (buffer) |*x| {
         const gam1 = gamma.random(generator, shape1, 1);
         const gam2 = gamma.random(generator, shape2, 1);
         x.* = gam1 / (gam1 + gam2);
     }
-    return buffer;
 }
 
 // http://luc.devroye.org/chapter_nine.pdf page 416.

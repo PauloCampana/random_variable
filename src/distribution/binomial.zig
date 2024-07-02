@@ -116,24 +116,22 @@ pub fn random(generator: std.Random, size: u64, prob: f64) f64 {
     return guidedSearch(uni, n, prob / qrob, initial_bino, initial_mass, initial_cumu);
 }
 
-pub fn fill(buffer: []f64, generator: std.Random, size: u64, prob: f64) []f64 {
+pub fn fill(buffer: []f64, generator: std.Random, size: u64, prob: f64) void {
     assert(0 <= prob and prob <= 1);
     const n: f64 = @floatFromInt(size);
     const qrob = 1 - prob;
     const mean = n * prob;
     if (prob == 0 or size == 0) {
-        @memset(buffer, 0);
-        return buffer;
+        return @memset(buffer, 0);
     }
     if (prob == 1) {
-        @memset(buffer, n);
-        return buffer;
+        return @memset(buffer, n);
     }
     if (prob == 0.5) {
         for (buffer) |*x| {
             x.* = bitCount(generator, size);
         }
-        return buffer;
+        return;
     }
     if (buffer.len < 20) {
         if (prob < 0.5) {
@@ -151,7 +149,7 @@ pub fn fill(buffer: []f64, generator: std.Random, size: u64, prob: f64) []f64 {
                 x.* = n - linearSearch(uni, n, qp, initial_mass);
             }
         }
-        return buffer;
+        return;
     }
     const pq = prob / qrob;
     const initial_bino = @ceil(mean);
@@ -161,7 +159,6 @@ pub fn fill(buffer: []f64, generator: std.Random, size: u64, prob: f64) []f64 {
         const uni = generator.float(f64);
         x.* = guidedSearch(uni, n, pq, initial_bino, initial_mass, initial_cumu);
     }
-    return buffer;
 }
 
 fn linearSearch(p: f64, n: f64, pq: f64, initial_mass: f64) f64 {

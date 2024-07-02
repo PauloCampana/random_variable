@@ -66,7 +66,7 @@ pub fn random(generator: std.Random, lambda: f64) f64 {
     return rejection(generator, lambda, beta, k);
 }
 
-pub fn fill(buffer: []f64, generator: std.Random, lambda: f64) []f64 {
+pub fn fill(buffer: []f64, generator: std.Random, lambda: f64) void {
     assert(isFinite(lambda));
     assert(lambda > 0);
     if (buffer.len < 15 and lambda < 15) {
@@ -74,7 +74,7 @@ pub fn fill(buffer: []f64, generator: std.Random, lambda: f64) []f64 {
             const uni = generator.float(f64);
             x.* = linearSearch(uni, lambda);
         }
-        return buffer;
+        return;
     }
     if (lambda < 5000) {
         const initial_pois = @ceil(lambda);
@@ -84,14 +84,13 @@ pub fn fill(buffer: []f64, generator: std.Random, lambda: f64) []f64 {
             const uni = generator.float(f64);
             x.* = guidedSearch(uni, lambda, initial_pois, initial_mass, initial_cumu);
         }
-        return buffer;
+        return;
     }
     const beta = std.math.pi / @sqrt(3 * lambda);
     const k = @log(0.79) - lambda - @log(beta);
     for (buffer) |*x| {
         x.* = rejection(generator, lambda, beta, k);
     }
-    return buffer;
 }
 
 fn linearSearch(p: f64, lambda: f64) f64 {

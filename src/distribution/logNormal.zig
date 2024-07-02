@@ -52,14 +52,13 @@ pub fn random(generator: std.Random, log_location: f64, log_scale: f64) f64 {
     return @exp(log_location + log_scale * nor);
 }
 
-pub fn fill(buffer: []f64, generator: std.Random, log_location: f64, log_scale: f64) []f64 {
+pub fn fill(buffer: []f64, generator: std.Random, log_location: f64, log_scale: f64) void {
     assert(isFinite(log_location) and isFinite(log_scale));
     assert(log_scale > 0);
     for (buffer) |*x| {
         const nor = generator.floatNorm(f64);
         x.* = @exp(log_location + log_scale * nor);
     }
-    return buffer;
 }
 
 export fn rv_log_normal_density(x: f64, log_location: f64, log_scale: f64) f64 {

@@ -48,14 +48,13 @@ pub fn random(generator: std.Random, scale: f64) f64 {
     return scale * @sqrt(2 * exp);
 }
 
-pub fn fill(buffer: []f64, generator: std.Random, scale: f64) []f64 {
+pub fn fill(buffer: []f64, generator: std.Random, scale: f64) void {
     assert(isFinite(scale));
     assert(scale > 0);
     for (buffer) |*x| {
         const exp = generator.floatExp(f64);
         x.* = scale * @sqrt(2 * exp);
     }
-    return buffer;
 }
 
 export fn rv_rayleigh_density(x: f64, scale: f64) f64 {

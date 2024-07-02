@@ -55,13 +55,12 @@ pub fn random(generator: std.Random, min: i64, max: i64) f64 {
     return @floatFromInt(uni);
 }
 
-pub fn fill(buffer: []f64, generator: std.Random, min: i64, max: i64) []f64 {
+pub fn fill(buffer: []f64, generator: std.Random, min: i64, max: i64) void {
     assert(min <= max);
     for (buffer) |*x| {
         const uni = generator.intRangeAtMost(i64, min, max);
         x.* = @floatFromInt(uni);
     }
-    return buffer;
 }
 
 export fn rv_discrete_uniform_density(x: f64, min: i64, max: i64) f64 {

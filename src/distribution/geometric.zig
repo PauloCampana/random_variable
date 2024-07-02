@@ -49,14 +49,13 @@ pub fn random(generator: std.Random, prob: f64) f64 {
     return @trunc(exp / rate);
 }
 
-pub fn fill(buffer: []f64, generator: std.Random, prob: f64) []f64 {
+pub fn fill(buffer: []f64, generator: std.Random, prob: f64) void {
     assert(0 < prob and prob <= 1);
     const rate = -std.math.log1p(-prob);
     for (buffer) |*x| {
         const exp = generator.floatExp(f64);
         x.* = @trunc(exp / rate);
     }
-    return buffer;
 }
 
 export fn rv_geometric_density(x: f64, prob: f64) f64 {

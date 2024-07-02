@@ -62,13 +62,12 @@ pub fn random(generator: std.Random, df: f64) f64 {
     return @sqrt(chisq);
 }
 
-pub fn fill(buffer: []f64, generator: std.Random, df: f64) []f64 {
+pub fn fill(buffer: []f64, generator: std.Random, df: f64) void {
     const hdf = 0.5 * df;
     for (buffer) |*x| {
         const chisq = gamma.random(generator, hdf, 0.5);
         x.* = @sqrt(chisq);
     }
-    return buffer;
 }
 
 export fn rv_chi_density(x: f64, df: f64) f64 {

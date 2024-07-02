@@ -61,14 +61,13 @@ pub fn random(generator: std.Random, shape: f64, scale: f64) f64 {
     return scale * @log(1 + exp / shape);
 }
 
-pub fn fill(buffer: []f64, generator: std.Random, shape: f64, scale: f64) []f64 {
+pub fn fill(buffer: []f64, generator: std.Random, shape: f64, scale: f64) void {
     assert(isFinite(shape) and isFinite(scale));
     assert(shape > 0 and scale > 0);
     for (buffer) |*x| {
         const exp = generator.floatExp(f64);
         x.* = scale * @log(1 + exp / shape);
     }
-    return buffer;
 }
 
 export fn rv_gompertz_density(x: f64, shape: f64, scale: f64) f64 {

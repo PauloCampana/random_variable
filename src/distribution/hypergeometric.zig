@@ -85,19 +85,18 @@ pub fn random(generator: std.Random, total: u64, good: u64, tries: u64) f64 {
     return linearSearch(uni, total, good, tries, low, initial_mass);
 }
 
-pub fn fill(buffer: []f64, generator: std.Random, total: u64, good: u64, tries: u64) []f64 {
+pub fn fill(buffer: []f64, generator: std.Random, total: u64, good: u64, tries: u64) void {
     assert(good <= total and tries <= total);
     const low = lower(total, good, tries);
     const upp = upper(total, good, tries);
     if (low == upp) {
-        @memset(buffer, @floatFromInt(low));
+        return @memset(buffer, @floatFromInt(low));
     }
     const initial_mass = density(@floatFromInt(low), total, good, tries);
     for (buffer) |*x| {
         const uni = generator.float(f64);
         x.* = linearSearch(uni, total, good, tries, low, initial_mass);
     }
-    return buffer;
 }
 
 fn linearSearch(p: f64, total: u64, good: u64, tries: u64, initial: u64, initial_mass: f64) f64 {
