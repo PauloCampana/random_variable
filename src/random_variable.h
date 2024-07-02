@@ -247,16 +247,16 @@ double rv_gumbel_quantile(double p, double location, double scale);
 //! Support: {max(0, n + K - N),1,⋯,min(n, K)}
 //!
 //! Parameters:
-//! - N: `N` ∈ {0,1,2,⋯}
-//! - K: `K` ∈ {0,1,⋯,N}
-//! - n: `n` ∈ {0,1,⋯,N}
+//! - N: `total` ∈ {0,1,2,⋯}
+//! - K: `good`  ∈ {0,1,⋯,N}
+//! - n: `tries` ∈ {0,1,⋯,N}
 
 /// p(x) = (K x) (N - K n - x) / (N n)
-double rv_hypergeometric_density(double x, uint64_t N, uint64_t K, uint64_t n);
+double rv_hypergeometric_density(double x, uint64_t total, uint64_t good, uint64_t tries);
 /// No closed form
-double rv_hypergeometric_probability(double q, uint64_t N, uint64_t K, uint64_t n);
+double rv_hypergeometric_probability(double q, uint64_t total, uint64_t good, uint64_t tries);
 /// No closed form
-double rv_hypergeometric_quantile(double p, uint64_t N, uint64_t K, uint64_t n);
+double rv_hypergeometric_quantile(double p, uint64_t total, uint64_t good, uint64_t tries);
 
 //! Support: (-∞,∞)
 //!

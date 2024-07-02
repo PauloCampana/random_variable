@@ -1,9 +1,9 @@
 //! Support: {max(0, n + K - N),1,⋯,min(n, K)}
 //!
 //! Parameters:
-//! - N: `N` ∈ {0,1,2,⋯}
-//! - K: `K` ∈ {0,1,⋯,N}
-//! - n: `n` ∈ {0,1,⋯,N}
+//! - N: `total` ∈ {0,1,2,⋯}
+//! - K: `good`  ∈ {0,1,⋯,N}
+//! - n: `tries` ∈ {0,1,⋯,N}
 
 const std = @import("std");
 const special = @import("../special.zig");
@@ -12,43 +12,42 @@ const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
 /// p(x) = (K x) (N - K n - x) / (N n)
-pub fn density(x: f64, N: u64, K: u64, n: u64) f64 {
-    assert(K <= N and n <= N);
+pub fn density(x: f64, total: u64, good: u64, tries: u64) f64 {
+    assert(good <= total and tries <= total);
     assert(!isNan(x));
-    const Nf: f64 = @floatFromInt(N);
-    const Kf: f64 = @floatFromInt(K);
-    const nf: f64 = @floatFromInt(n);
-    if (x < 0 or x > nf or x > Kf or x != @round(x)) {
+    const low: f64 = @floatFromInt(lower(total, good, tries));
+    const upp: f64 = @floatFromInt(upper(total, good, tries));
+    if (x < low or x > upp or x != @round(x)) {
         return 0;
     }
-    const num1 = special.lbinomial(Kf, x);
-    const num2 = special.lbinomial(Nf - Kf, nf - x);
-    const den = special.lbinomial(Nf, nf);
+    const f_total: f64 = @floatFromInt(total);
+    const f_good: f64 = @floatFromInt(good);
+    const f_tries: f64 = @floatFromInt(tries);
+    const num1 = special.lbinomial(f_good, x);
+    const num2 = special.lbinomial(f_total - f_good, f_tries - x);
+    const den = special.lbinomial(f_total, f_tries);
     return @exp(num1 + num2 - den);
 }
 
 /// No closed form
-pub fn probability(q: f64, N: u64, K: u64, n: u64) f64 {
-    assert(K <= N and n <= N);
+pub fn probability(q: f64, total: u64, good: u64, tries: u64) f64 {
+    assert(good <= total and tries <= total);
     assert(!isNan(q));
-    if (q < 0) {
+    const low: f64 = @floatFromInt(lower(total, good, tries));
+    const upp: f64 = @floatFromInt(upper(total, good, tries));
+    if (q < low) {
         return 0;
     }
-    const Kf: f64 = @floatFromInt(K);
-    const nf: f64 = @floatFromInt(n);
-    if (q >= nf or q >= Kf) {
+    if (q >= upp) {
         return 1;
     }
-    if (K == N or n == N) {
-        return 0;
-    }
-    var hypr = if (n + K < N) 0 else n + K - N;
-    var mass = density(@floatFromInt(hypr), N, K, n);
+    var hypr = lower(total, good, tries);
+    var mass = density(low, total, good, tries);
     var cumu = mass;
     for (0..@intFromFloat(q)) |_| {
-        const num: f64 = @floatFromInt((K - hypr) * (n - hypr));
+        const num: f64 = @floatFromInt((good - hypr) * (tries - hypr));
         hypr += 1;
-        const den: f64 = @floatFromInt(hypr * (hypr + N - K - n));
+        const den: f64 = @floatFromInt(hypr * (hypr + total - good - tries));
         mass *= num / den;
         cumu += mass;
     }
@@ -56,91 +55,81 @@ pub fn probability(q: f64, N: u64, K: u64, n: u64) f64 {
 }
 
 /// No closed form
-pub fn quantile(p: f64, N: u64, K: u64, n: u64) f64 {
-    assert(K <= N and n <= N);
+pub fn quantile(p: f64, total: u64, good: u64, tries: u64) f64 {
+    assert(good <= total and tries <= total);
     assert(0 <= p and p <= 1);
+    const low = lower(total, good, tries);
+    const upp = upper(total, good, tries);
     if (p == 0) {
-        return if (n + K < N) 0 else @floatFromInt(n + K - N);
+        return @floatFromInt(low);
     }
     if (p == 1) {
-        return @floatFromInt(@min(n, K));
+        return @floatFromInt(upp);
     }
-    if (n == 0 or K == 0) {
-        return 0;
+    if (low == upp) {
+        return @floatFromInt(low);
     }
-    if (K == N) {
-        return @floatFromInt(n);
-    }
-    if (n == N) {
-        return @floatFromInt(K);
-    }
-    const initial = if (n + K < N) 0 else n + K - N;
-    const initial_mass = density(@floatFromInt(initial), N, K, n);
-    return linearSearch(p, N, K, n, initial, initial_mass);
+    const initial_mass = density(@floatFromInt(low), total, good, tries);
+    return linearSearch(p, total, good, tries, low, initial_mass);
 }
 
-pub fn random(generator: std.Random, N: u64, K: u64, n: u64) f64 {
-    assert(K <= N and n <= N);
-    if (n == 0 or K == 0) {
-        return 0;
+pub fn random(generator: std.Random, total: u64, good: u64, tries: u64) f64 {
+    assert(good <= total and tries <= total);
+    const low = lower(total, good, tries);
+    const upp = upper(total, good, tries);
+    if (low == upp) {
+        return @floatFromInt(low);
     }
-    if (K == N) {
-        return @floatFromInt(n);
-    }
-    if (n == N) {
-        return @floatFromInt(K);
-    }
-    const initial = if (n + K < N) 0 else n + K - N;
-    const initial_mass = density(@floatFromInt(initial), N, K, n);
+    const initial_mass = density(@floatFromInt(low), total, good, tries);
     const uni = generator.float(f64);
-    return linearSearch(uni, N, K, n, initial, initial_mass);
+    return linearSearch(uni, total, good, tries, low, initial_mass);
 }
 
-pub fn fill(buffer: []f64, generator: std.Random, N: u64, K: u64, n: u64) []f64 {
-    assert(K <= N and n <= N);
-    if (n == 0 or K == 0) {
-        @memset(buffer, 0);
-        return buffer;
+pub fn fill(buffer: []f64, generator: std.Random, total: u64, good: u64, tries: u64) []f64 {
+    assert(good <= total and tries <= total);
+    const low = lower(total, good, tries);
+    const upp = upper(total, good, tries);
+    if (low == upp) {
+        @memset(buffer, @floatFromInt(low));
     }
-    if (K == N) {
-        @memset(buffer, @floatFromInt(n));
-        return buffer;
-    }
-    if (n == N) {
-        @memset(buffer, @floatFromInt(K));
-        return buffer;
-    }
-    const initial = if (n + K < N) 0 else n + K - N;
-    const initial_mass = density(@floatFromInt(initial), N, K, n);
+    const initial_mass = density(@floatFromInt(low), total, good, tries);
     for (buffer) |*x| {
         const uni = generator.float(f64);
-        x.* = linearSearch(uni, N, K, n, initial, initial_mass);
+        x.* = linearSearch(uni, total, good, tries, low, initial_mass);
     }
     return buffer;
 }
 
-fn linearSearch(p: f64, N: u64, K: u64, n: u64, initial: u64, initial_mass: f64) f64 {
+fn linearSearch(p: f64, total: u64, good: u64, tries: u64, initial: u64, initial_mass: f64) f64 {
     var hypr = initial;
     var mass = initial_mass;
     var cumu = mass;
     while (cumu <= p) {
-        const num: f64 = @floatFromInt((K - hypr) * (n - hypr));
+        const num: f64 = @floatFromInt((good - hypr) * (tries - hypr));
         hypr += 1;
-        const den: f64 = @floatFromInt(hypr * (hypr + N - K - n));
+        const den: f64 = @floatFromInt(hypr * (hypr + total - good - tries));
         mass *= num / den;
         cumu += mass;
     }
     return @floatFromInt(hypr);
 }
 
-export fn rv_hypergeometric_density(x: f64, N: u64, K: u64, n: u64) f64 {
-    return density(x, N, K, n);
+fn lower(total: u64, good: u64, tries: u64) u64 {
+    return tries + good -| total;
 }
-export fn rv_hypergeometric_probability(q: f64, N: u64, K: u64, n: u64) f64 {
-    return probability(q, N, K, n);
+
+fn upper(_: u64, good: u64, tries: u64) u64 {
+    return @min(good, tries);
 }
-export fn rv_hypergeometric_quantile(p: f64, N: u64, K: u64, n: u64) f64 {
-    return quantile(p, N, K, n);
+
+export fn rv_hypergeometric_density(x: f64, total: u64, good: u64, tries: u64) f64 {
+    return density(x, total, good, tries);
+}
+export fn rv_hypergeometric_probability(q: f64, total: u64, good: u64, tries: u64) f64 {
+    return probability(q, total, good, tries);
+}
+export fn rv_hypergeometric_quantile(p: f64, total: u64, good: u64, tries: u64) f64 {
+    return quantile(p, total, good, tries);
 }
 
 const expectEqual = std.testing.expectEqual;
