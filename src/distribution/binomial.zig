@@ -14,7 +14,7 @@ const inf = std.math.inf(f64);
 pub fn density(x: f64, size: u64, prob: f64) f64 {
     assert(0 <= prob and prob <= 1);
     assert(!isNan(x));
-    const n = @as(f64, @floatFromInt(size));
+    const n: f64 = @floatFromInt(size);
     if (x < 0 or x > n or x != @round(x)) {
         return 0;
     }
@@ -33,7 +33,7 @@ pub fn density(x: f64, size: u64, prob: f64) f64 {
 pub fn probability(q: f64, size: u64, prob: f64) f64 {
     assert(0 <= prob and prob <= 1);
     assert(!isNan(q));
-    const n = @as(f64, @floatFromInt(size));
+    const n: f64 = @floatFromInt(size);
     if (q < 0) {
         return 0;
     }
@@ -54,7 +54,7 @@ pub fn probability(q: f64, size: u64, prob: f64) f64 {
 pub fn quantile(p: f64, size: u64, prob: f64) f64 {
     assert(0 <= prob and prob <= 1);
     assert(0 <= p and p <= 1);
-    const n = @as(f64, @floatFromInt(size));
+    const n: f64 = @floatFromInt(size);
     if (p == 0) {
         return 0;
     }
@@ -86,7 +86,7 @@ pub fn quantile(p: f64, size: u64, prob: f64) f64 {
 
 pub fn random(generator: std.Random, size: u64, prob: f64) f64 {
     assert(0 <= prob and prob <= 1);
-    const n = @as(f64, @floatFromInt(size));
+    const n: f64 = @floatFromInt(size);
     const qrob = 1 - prob;
     const mean = n * prob;
     if (prob == 0 or size == 0) {
@@ -118,7 +118,7 @@ pub fn random(generator: std.Random, size: u64, prob: f64) f64 {
 
 pub fn fill(buffer: []f64, generator: std.Random, size: u64, prob: f64) []f64 {
     assert(0 <= prob and prob <= 1);
-    const n = @as(f64, @floatFromInt(size));
+    const n: f64 = @floatFromInt(size);
     const qrob = 1 - prob;
     const mean = n * prob;
     if (prob == 0 or size == 0) {

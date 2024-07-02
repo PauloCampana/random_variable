@@ -17,7 +17,7 @@ pub fn density(x: f64, size: u64, shape1: f64, shape2: f64) f64 {
     assert(isFinite(shape1) and isFinite(shape2));
     assert(shape1 > 0 and shape2 > 0);
     assert(!isNan(x));
-    const n = @as(f64, @floatFromInt(size));
+    const n: f64 = @floatFromInt(size);
     if (x < 0 or x > n or x != @round(x)) {
         return 0;
     }
@@ -35,7 +35,7 @@ pub fn probability(q: f64, size: u64, shape1: f64, shape2: f64) f64 {
     if (q < 0) {
         return 0;
     }
-    const n = @as(f64, @floatFromInt(size));
+    const n: f64 = @floatFromInt(size);
     if (q >= n) {
         return 1;
     }
@@ -59,7 +59,7 @@ pub fn quantile(p: f64, size: u64, shape1: f64, shape2: f64) f64 {
     assert(isFinite(shape1) and isFinite(shape2));
     assert(shape1 > 0 and shape2 > 0);
     assert(0 <= p and p <= 1);
-    const n = @as(f64, @floatFromInt(size));
+    const n: f64 = @floatFromInt(size);
     if (p == 0 or p == 1 or size == 0) {
         return n * p;
     }
@@ -75,7 +75,7 @@ pub fn random(generator: std.Random, size: u64, shape1: f64, shape2: f64) f64 {
     if (size == 0) {
         return 0;
     }
-    const n = @as(f64, @floatFromInt(size));
+    const n: f64 = @floatFromInt(size);
     const mass_num = special.lbeta(shape1, shape2 + n);
     const mass_den = special.lbeta(shape1, shape2);
     const initial_mass = @exp(mass_num - mass_den);
@@ -90,7 +90,7 @@ pub fn fill(buffer: []f64, generator: std.Random, size: u64, shape1: f64, shape2
         @memset(buffer, 0);
         return buffer;
     }
-    const n = @as(f64, @floatFromInt(size));
+    const n: f64 = @floatFromInt(size);
     const mass_num = special.lbeta(shape1, shape2 + n);
     const mass_den = special.lbeta(shape1, shape2);
     const initial_mass = @exp(mass_num - mass_den);

@@ -15,9 +15,9 @@ const inf = std.math.inf(f64);
 pub fn density(x: f64, N: u64, K: u64, n: u64) f64 {
     assert(K <= N and n <= N);
     assert(!isNan(x));
-    const Nf = @as(f64, @floatFromInt(N));
-    const Kf = @as(f64, @floatFromInt(K));
-    const nf = @as(f64, @floatFromInt(n));
+    const Nf: f64 = @floatFromInt(N);
+    const Kf: f64 = @floatFromInt(K);
+    const nf: f64 = @floatFromInt(n);
     if (x < 0 or x > nf or x > Kf or x != @round(x)) {
         return 0;
     }
@@ -34,8 +34,8 @@ pub fn probability(q: f64, N: u64, K: u64, n: u64) f64 {
     if (q < 0) {
         return 0;
     }
-    const Kf = @as(f64, @floatFromInt(K));
-    const nf = @as(f64, @floatFromInt(n));
+    const Kf: f64 = @floatFromInt(K);
+    const nf: f64 = @floatFromInt(n);
     if (q >= nf or q >= Kf) {
         return 1;
     }
@@ -46,9 +46,9 @@ pub fn probability(q: f64, N: u64, K: u64, n: u64) f64 {
     var mass = density(@floatFromInt(hypr), N, K, n);
     var cumu = mass;
     for (0..@intFromFloat(q)) |_| {
-        const num = @as(f64, @floatFromInt((K - hypr) * (n - hypr)));
+        const num: f64 = @floatFromInt((K - hypr) * (n - hypr));
         hypr += 1;
-        const den = @as(f64, @floatFromInt(hypr * (hypr + N - K - n)));
+        const den: f64 = @floatFromInt(hypr * (hypr + N - K - n));
         mass *= num / den;
         cumu += mass;
     }
@@ -124,9 +124,9 @@ fn linearSearch(p: f64, N: u64, K: u64, n: u64, initial: u64, initial_mass: f64)
     var mass = initial_mass;
     var cumu = mass;
     while (cumu <= p) {
-        const num = @as(f64, @floatFromInt((K - hypr) * (n - hypr)));
+        const num: f64 = @floatFromInt((K - hypr) * (n - hypr));
         hypr += 1;
-        const den = @as(f64, @floatFromInt(hypr * (hypr + N - K - n)));
+        const den: f64 = @floatFromInt(hypr * (hypr + N - K - n));
         mass *= num / den;
         cumu += mass;
     }

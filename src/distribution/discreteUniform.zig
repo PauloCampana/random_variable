@@ -14,8 +14,8 @@ const inf = std.math.inf(f64);
 pub fn density(x: f64, min: i64, max: i64) f64 {
     assert(min <= max);
     assert(!isNan(x));
-    const fmin = @as(f64, @floatFromInt(min));
-    const fmax = @as(f64, @floatFromInt(max));
+    const fmin: f64 = @floatFromInt(min);
+    const fmax: f64 = @floatFromInt(max);
     if (x < fmin or x > fmax or x != @round(x)) {
         return 0;
     }
@@ -26,8 +26,8 @@ pub fn density(x: f64, min: i64, max: i64) f64 {
 pub fn probability(q: f64, min: i64, max: i64) f64 {
     assert(min <= max);
     assert(!isNan(q));
-    const fmin = @as(f64, @floatFromInt(min));
-    const fmax = @as(f64, @floatFromInt(max));
+    const fmin: f64 = @floatFromInt(min);
+    const fmax: f64 = @floatFromInt(max);
     if (q < fmin) {
         return 0;
     }
@@ -41,8 +41,8 @@ pub fn probability(q: f64, min: i64, max: i64) f64 {
 pub fn quantile(p: f64, min: i64, max: i64) f64 {
     assert(min <= max);
     assert(0 <= p and p <= 1);
-    const fmin = @as(f64, @floatFromInt(min));
-    const fmax = @as(f64, @floatFromInt(max));
+    const fmin: f64 = @floatFromInt(min);
+    const fmax: f64 = @floatFromInt(max);
     if (p == 0) {
         return fmin;
     }

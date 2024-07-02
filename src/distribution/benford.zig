@@ -12,7 +12,7 @@ const inf = std.math.inf(f64);
 pub fn density(x: f64, base: u64) f64 {
     assert(base >= 2);
     assert(!isNan(x));
-    const b = @as(f64, @floatFromInt(base));
+    const b: f64 = @floatFromInt(base);
     if (x < 1 or x > b - 1 or x != @round(x)) {
         return 0;
     }
@@ -23,7 +23,7 @@ pub fn density(x: f64, base: u64) f64 {
 pub fn probability(q: f64, base: u64) f64 {
     assert(base >= 2);
     assert(!isNan(q));
-    const b = @as(f64, @floatFromInt(base));
+    const b: f64 = @floatFromInt(base);
     if (q < 1) {
         return 0;
     }

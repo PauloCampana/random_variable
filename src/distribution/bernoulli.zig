@@ -50,7 +50,6 @@ pub fn quantile(p: f64, prob: f64) f64 {
     return @floatFromInt(ber);
 }
 
-
 pub fn random(generator: std.Random, prob: f64) f64 {
     assert(0 <= prob and prob <= 1);
     const uni = generator.float(f64);
