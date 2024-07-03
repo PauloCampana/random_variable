@@ -28,16 +28,16 @@ pub fn build(b: *std.Build) !void {
     const test_step = b.step("test", "Run library tests");
     test_step.dependOn(&test_run.step);
 
-    const gof = b.addTest(.{
-        .name = "gof",
-        .root_source_file = b.path("src/gof_tests.zig"),
+    const correctness = b.addExecutable(.{
+        .name = "correctness",
+        .root_source_file = b.path("src/correctness.zig"),
         .target = target,
         .optimize = optimize,
     });
-    gof.root_module.addImport("random_variable", module);
-    const gof_run = b.addRunArtifact(gof);
-    const gof_step = b.step("gof", "Run \"Goodness of fit\" tests for random variable generation");
-    gof_step.dependOn(&gof_run.step);
+    correctness.root_module.addImport("random_variable", module);
+    const correctness_run = b.addRunArtifact(correctness);
+    const correctness_step = b.step("correctness", "Run Kolmogorov \"goodness of fit\" test on random functions");
+    correctness_step.dependOn(&correctness_run.step);
 
     const top_level_docs = b.addInstallDirectory(.{
         .source_dir = tests.getEmittedDocs(),
