@@ -25,7 +25,7 @@ pub fn main() !void {
             // minimum for the buffer
             .{ .stack_size = 8 * 1024 * 1024 },
             test_fn,
-            .{ generator.random(), progress }
+            .{ generator.random(), progress },
         );
     }
 
@@ -53,7 +53,7 @@ fn kolmogorov(sample: []f64, namespace: type, parameters: anytype) KolmogorovErr
     if (max > quantile) {
         std.log.err(
             \\
-            \\test: {}({:.3})
+            \\test:       {}({:.3})
             \\statistic:  {d:.8}
             \\quantile:   {d:.8}
         , .{ namespace, parameters, max, quantile });
@@ -74,10 +74,11 @@ fn range(comptime size: comptime_int) [2 * size + 1]f64 {
 }
 
 fn beta(random: std.Random, progress: std.Progress.Node) KolmogorovError!void {
-    const node = progress.start("beta", 0);
+    const node = progress.start("beta", params.len);
     defer node.end();
     var buffer: [n]f64 = undefined;
     for (params) |shape1| {
+        node.completeOne();
         for (params) |shape2| {
             rv.beta.fill(&buffer, random, shape1, shape2);
             try kolmogorov(&buffer, rv.beta, .{ shape1, shape2 });
@@ -86,10 +87,11 @@ fn beta(random: std.Random, progress: std.Progress.Node) KolmogorovError!void {
 }
 
 fn betaPrime(random: std.Random, progress: std.Progress.Node) KolmogorovError!void {
-    const node = progress.start("betaPrime", 0);
+    const node = progress.start("betaPrime", params.len);
     defer node.end();
     var buffer: [n]f64 = undefined;
     for (params) |shape1| {
+        node.completeOne();
         for (params) |shape2| {
             rv.betaPrime.fill(&buffer, random, shape1, shape2);
             try kolmogorov(&buffer, rv.betaPrime, .{ shape1, shape2 });
@@ -137,10 +139,11 @@ fn continuousBernoulli(random: std.Random, progress: std.Progress.Node) Kolmogor
 }
 
 fn dagum(random: std.Random, progress: std.Progress.Node) KolmogorovError!void {
-    const node = progress.start("dagum", 0);
+    const node = progress.start("dagum", params.len);
     defer node.end();
     var buffer: [n]f64 = undefined;
     for (params) |shape1| {
+        node.completeOne();
         for (params) |shape2| {
             rv.dagum.fill(&buffer, random, shape1, shape2, 1);
             try kolmogorov(&buffer, rv.dagum, .{ shape1, shape2, 1 });
@@ -157,10 +160,11 @@ fn exponential(random: std.Random, progress: std.Progress.Node) KolmogorovError!
 }
 
 fn f(random: std.Random, progress: std.Progress.Node) KolmogorovError!void {
-    const node = progress.start("f", 0);
+    const node = progress.start("f", params.len);
     defer node.end();
     var buffer: [n]f64 = undefined;
     for (params) |df1| {
+        node.completeOne();
         // HACK: skipping the df2 = 0.3 case,
         // it's just barely not enough to pass the test,
         // both at 0.3 are quite extreme parameters of the distribution
@@ -217,12 +221,15 @@ fn logistic(random: std.Random, progress: std.Progress.Node) KolmogorovError!voi
 }
 
 fn logNormal(random: std.Random, progress: std.Progress.Node) KolmogorovError!void {
-    const node = progress.start("logNormal", 0);
+    const node = progress.start("logNormal", params.len);
     defer node.end();
     var buffer: [n]f64 = undefined;
-    for (params) |log_scale| {
-        rv.logNormal.fill(&buffer, random, 0, log_scale);
-        try kolmogorov(&buffer, rv.logNormal, .{ 0, log_scale });
+    for (params) |log_location| {
+        node.completeOne();
+        for (params) |log_scale| {
+            rv.logNormal.fill(&buffer, random, log_location, log_scale);
+            try kolmogorov(&buffer, rv.logNormal, .{ log_location, log_scale });
+        }
     }
 }
 
