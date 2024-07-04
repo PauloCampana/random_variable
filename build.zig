@@ -3,6 +3,7 @@ const std = @import("std");
 pub fn build(b: *std.Build) !void {
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
+    const strip = b.option(bool, "strip", "Omit debug symbols");
 
     const module = b.addModule("random_variable", .{
         .root_source_file = b.path("src/root.zig"),
@@ -13,6 +14,7 @@ pub fn build(b: *std.Build) !void {
         .root_source_file = b.path("src/root.zig"),
         .target = target,
         .optimize = optimize,
+        .strip = strip,
     });
     b.installArtifact(lib);
 
@@ -23,6 +25,7 @@ pub fn build(b: *std.Build) !void {
         .root_source_file = b.path("src/root.zig"),
         .target = target,
         .optimize = optimize,
+        .strip = strip,
     });
     const test_run = b.addRunArtifact(tests);
     const test_step = b.step("test", "Run library tests");
@@ -33,6 +36,7 @@ pub fn build(b: *std.Build) !void {
         .root_source_file = b.path("src/correctness.zig"),
         .target = target,
         .optimize = optimize,
+        .strip = strip,
     });
     correctness.root_module.addImport("random_variable", module);
     const correctness_run = b.addRunArtifact(correctness);
