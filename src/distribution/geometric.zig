@@ -44,6 +44,9 @@ pub fn quantile(p: f64, prob: f64) f64 {
 
 pub fn random(generator: std.Random, prob: f64) f64 {
     assert(0 < prob and prob <= 1);
+    if (prob == 0.5) {
+        return clz(generator);
+    }
     const rate = -std.math.log1p(-prob);
     const exp = generator.floatExp(f64);
     return @trunc(exp / rate);
@@ -51,11 +54,27 @@ pub fn random(generator: std.Random, prob: f64) f64 {
 
 pub fn fill(buffer: []f64, generator: std.Random, prob: f64) void {
     assert(0 < prob and prob <= 1);
+    if (prob == 0.5) {
+        for (buffer) |*x| {
+            x.* = clz(generator);
+        }
+        return;
+    }
     const rate = -std.math.log1p(-prob);
     for (buffer) |*x| {
         const exp = generator.floatExp(f64);
         x.* = @trunc(exp / rate);
     }
+}
+
+fn clz(generator: std.Random) f64 {
+    var lz: u64 = @clz(generator.int(u64));
+    var count = lz;
+    while (lz == 64) {
+        lz = @clz(generator.int(u64));
+        count += lz;
+    }
+    return @floatFromInt(count);
 }
 
 export fn rv_geometric_density(x: f64, prob: f64) f64 {

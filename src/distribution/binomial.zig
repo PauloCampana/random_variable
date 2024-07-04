@@ -96,7 +96,7 @@ pub fn random(generator: std.Random, size: u64, prob: f64) f64 {
         return n;
     }
     if (prob == 0.5) {
-        return bitCount(generator, size);
+        return popCount(generator, size);
     }
     if (mean < 1000) {
         if (prob < 0.5) {
@@ -129,7 +129,7 @@ pub fn fill(buffer: []f64, generator: std.Random, size: u64, prob: f64) void {
     }
     if (prob == 0.5) {
         for (buffer) |*x| {
-            x.* = bitCount(generator, size);
+            x.* = popCount(generator, size);
         }
         return;
     }
@@ -199,7 +199,7 @@ fn guidedSearch(p: f64, n: f64, pq: f64, initial_bino: f64, initial_mass: f64, i
     return bino;
 }
 
-fn bitCount(generator: std.Random, size: u64) f64 {
+fn popCount(generator: std.Random, size: u64) f64 {
     const remainder = size % 64;
     var bino: u64 = 0;
     var i: u64 = 0;
