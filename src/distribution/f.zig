@@ -51,6 +51,19 @@ pub fn probability(q: f64, df1: f64, df2: f64) f64 {
 }
 
 /// No closed form
+pub fn survival(t: f64, df1: f64, df2: f64) f64 {
+    assert(isFinite(df1) and isFinite(df2));
+    assert(df1 > 0 and df2 > 0);
+    assert(!isNan(t));
+    if (t <= 0) {
+        return 1;
+    }
+    const z = df1 * t;
+    const p = df2 / (df2 + z);
+    return special.beta_probability(0.5 * df2, 0.5 * df1, p);
+}
+
+/// No closed form
 pub fn quantile(p: f64, df1: f64, df2: f64) f64 {
     assert(isFinite(df1) and isFinite(df2));
     assert(df1 > 0 and df2 > 0);
@@ -79,6 +92,9 @@ export fn rv_f_density(x: f64, df1: f64, df2: f64) f64 {
 }
 export fn rv_f_probability(q: f64, df1: f64, df2: f64) f64 {
     return probability(q, df1, df2);
+}
+export fn rv_f_survival(t: f64, df1: f64, df2: f64) f64 {
+    return survival(t, df1, df2);
 }
 export fn rv_f_quantile(p: f64, df1: f64, df2: f64) f64 {
     return quantile(p, df1, df2);
@@ -109,6 +125,15 @@ test probability {
     try expectApproxEqRel(0                 , probability(0, 3, 5), eps);
     try expectApproxEqRel(0.5351452100063649, probability(1, 3, 5), eps);
     try expectApproxEqRel(0.7673760819999214, probability(2, 3, 5), eps);
+}
+
+test survival {
+    try expectEqual(1, survival(-inf, 3, 5));
+    try expectEqual(0, survival( inf, 3, 5));
+
+    try expectApproxEqRel(1                 , survival(0, 3, 5), eps);
+    try expectApproxEqRel(0.4648547899936350, survival(1, 3, 5), eps);
+    try expectApproxEqRel(0.2326239180000785, survival(2, 3, 5), eps);
 }
 
 test quantile {

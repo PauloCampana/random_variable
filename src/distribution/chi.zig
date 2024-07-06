@@ -43,6 +43,17 @@ pub fn probability(q: f64, df: f64) f64 {
 }
 
 /// No closed form
+pub fn survival(t: f64, df: f64) f64 {
+    assert(isFinite(df));
+    assert(df > 0);
+    assert(!isNan(t));
+    if (t <= 0) {
+        return 1;
+    }
+    return special.gamma_survival(0.5 * df, 0.5 * t * t);
+}
+
+/// No closed form
 pub fn quantile(p: f64, df: f64) f64 {
     assert(isFinite(df));
     assert(df > 0);
@@ -76,6 +87,9 @@ export fn rv_chi_density(x: f64, df: f64) f64 {
 export fn rv_chi_probability(q: f64, df: f64) f64 {
     return probability(q, df);
 }
+export fn rv_chi_survival(t: f64, df: f64) f64 {
+    return survival(t, df);
+}
 export fn rv_chi_quantile(p: f64, df: f64) f64 {
     return quantile(p, df);
 }
@@ -105,6 +119,15 @@ test probability {
     try expectApproxEqRel(0                 , probability(0, 3), eps);
     try expectApproxEqRel(0.1987480430987991, probability(1, 3), eps);
     try expectApproxEqRel(0.7385358700508893, probability(2, 3), eps);
+}
+
+test survival {
+    try expectEqual(1, survival(-inf, 3));
+    try expectEqual(0, survival( inf, 3));
+
+    try expectApproxEqRel(1                 , survival(0, 3), eps);
+    try expectApproxEqRel(0.8012519569012008, survival(1, 3), eps);
+    try expectApproxEqRel(0.2614641299491106, survival(2, 3), eps);
 }
 
 test quantile {

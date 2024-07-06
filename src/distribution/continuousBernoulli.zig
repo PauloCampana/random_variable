@@ -44,6 +44,24 @@ pub fn probability(q: f64, shape: f64) f64 {
     return (inc * dec + shape - 1) / (2 * shape - 1);
 }
 
+/// S(t) = (λ - λ^t (1 - λ)^(1 - t)) / (2λ - 1)
+pub fn survival(t: f64, shape: f64) f64 {
+    assert(0 < shape and shape < 1);
+    assert(!isNan(t));
+    if (t <= 0) {
+        return 1;
+    }
+    if (t >= 1) {
+        return 0;
+    }
+    if (shape == 0.5) {
+        return 1 - t;
+    }
+    const inc = std.math.pow(f64, shape, t);
+    const dec = std.math.pow(f64, 1 - shape, 1 - t);
+    return (shape - inc * dec) / (2 * shape - 1);
+}
+
 /// Q(p) = ln(((2λ - 1)p - λ + 1) / (1 - λ)) / ln(λ / (1 - λ))
 pub fn quantile(p: f64, shape: f64) f64 {
     assert(0 < shape and shape < 1);
@@ -92,6 +110,9 @@ export fn rv_continuous_bernoulli_density(x: f64, shape: f64) f64 {
 export fn rv_continuous_bernoulli_probability(q: f64, shape: f64) f64 {
     return probability(q, shape);
 }
+export fn rv_continuous_bernoulli_survival(t: f64, shape: f64) f64 {
+    return survival(t, shape);
+}
 export fn rv_continuous_bernoulli_quantile(p: f64, shape: f64) f64 {
     return quantile(p, shape);
 }
@@ -127,6 +148,20 @@ test probability {
     try expectApproxEqRel(0.3228556223264012, probability(0.2, 0.2), eps);
     try expectApproxEqRel(0.8934973630757019, probability(0.8, 0.2), eps);
     try expectApproxEqRel(1                 , probability(1  , 0.2), eps);
+}
+
+test survival {
+    try expectEqual(1, survival(-inf, 0.2));
+    try expectEqual(0, survival( inf, 0.2));
+
+    try expectApproxEqRel(1  , survival(0  , 0.5), eps);
+    try expectApproxEqRel(0.5, survival(0.5, 0.5), eps);
+    try expectApproxEqRel(0  , survival(1  , 0.5), eps);
+
+    try expectApproxEqRel(1                 , survival(0  , 0.2), eps);
+    try expectApproxEqRel(0.6771443776735987, survival(0.2, 0.2), eps);
+    try expectApproxEqRel(0.1065026369242980, survival(0.8, 0.2), eps);
+    try expectApproxEqRel(0                 , survival(1  , 0.2), eps);
 }
 
 test quantile {

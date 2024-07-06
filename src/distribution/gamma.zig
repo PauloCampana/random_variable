@@ -36,11 +36,17 @@ pub fn probability(q: f64, shape: f64, scale: f64) f64 {
     assert(isFinite(shape) and isFinite(scale));
     assert(shape > 0 and scale > 0);
     assert(!isNan(q));
-    if (q <= 0) {
-        return 0;
-    }
     const z = q / scale;
     return special.gamma_probability(shape, z);
+}
+
+/// No closed form
+pub fn survival(t: f64, shape: f64, scale: f64) f64 {
+    assert(isFinite(shape) and isFinite(scale));
+    assert(shape > 0 and scale > 0);
+    assert(!isNan(t));
+    const z = t / scale;
+    return special.gamma_survival(shape, z);
 }
 
 /// No closed form
@@ -131,6 +137,9 @@ export fn rv_gamma_density(x: f64, shape: f64, scale: f64) f64 {
 export fn rv_gamma_probability(q: f64, shape: f64, scale: f64) f64 {
     return probability(q, shape, scale);
 }
+export fn rv_gamma_survival(t: f64, shape: f64, scale: f64) f64 {
+    return survival(t, shape, scale);
+}
 export fn rv_gamma_quantile(p: f64, shape: f64, scale: f64) f64 {
     return quantile(p, shape, scale);
 }
@@ -160,6 +169,15 @@ test probability {
     try expectApproxEqRel(0                   , probability(0, 3, 5), eps);
     try expectApproxEqRel(0.001148481244862132, probability(1, 3, 5), eps);
     try expectApproxEqRel(0.007926331867253834, probability(2, 3, 5), eps);
+}
+
+test survival {
+    try expectEqual(1, survival(-inf, 3, 5));
+    try expectEqual(0, survival( inf, 3, 5));
+
+    try expectApproxEqRel(1                 , survival(0, 3, 5), eps);
+    try expectApproxEqRel(0.9988515187551378, survival(1, 3, 5), eps);
+    try expectApproxEqRel(0.9920736681327461, survival(2, 3, 5), eps);
 }
 
 test quantile {

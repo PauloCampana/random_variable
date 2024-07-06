@@ -33,6 +33,18 @@ pub fn probability(q: f64, scale: f64) f64 {
     return -std.math.expm1(-z);
 }
 
+/// S(t) = exp(-t / σ)
+pub fn survival(t: f64, scale: f64) f64 {
+    assert(isFinite(scale));
+    assert(scale > 0);
+    assert(!isNan(t));
+    if (t <= 0) {
+        return 1;
+    }
+    const z = t / scale;
+    return @exp(-z);
+}
+
 /// Q(p) = -σ ln(1 - p)
 pub fn quantile(p: f64, scale: f64) f64 {
     assert(isFinite(scale));
@@ -64,6 +76,9 @@ export fn rv_exponential_density(x: f64, scale: f64) f64 {
 export fn rv_exponential_probability(q: f64, scale: f64) f64 {
     return probability(q, scale);
 }
+export fn rv_exponential_survival(t: f64, scale: f64) f64 {
+    return survival(t, scale);
+}
 export fn rv_exponential_quantile(p: f64, scale: f64) f64 {
     return quantile(p, scale);
 }
@@ -89,6 +104,15 @@ test probability {
     try expectApproxEqRel(0                 , probability(0, 3), eps);
     try expectApproxEqRel(0.2834686894262107, probability(1, 3), eps);
     try expectApproxEqRel(0.4865828809674079, probability(2, 3), eps);
+}
+
+test survival {
+    try expectEqual(1, survival(-inf, 3));
+    try expectEqual(0, survival( inf, 3));
+
+    try expectApproxEqRel(1                 , survival(0, 3), eps);
+    try expectApproxEqRel(0.7165313105737892, survival(1, 3), eps);
+    try expectApproxEqRel(0.5134171190325920, survival(2, 3), eps);
 }
 
 test quantile {

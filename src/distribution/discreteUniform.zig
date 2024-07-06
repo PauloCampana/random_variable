@@ -22,7 +22,7 @@ pub fn density(x: f64, min: i64, max: i64) f64 {
     return 1 / (fmax - fmin + 1);
 }
 
-/// F(q) = (⌊q⌋ - a + 1) / (b - a  + 1)
+/// F(q) = (⌊q⌋ - a + 1) / (b - a + 1)
 pub fn probability(q: f64, min: i64, max: i64) f64 {
     assert(min <= max);
     assert(!isNan(q));
@@ -35,6 +35,21 @@ pub fn probability(q: f64, min: i64, max: i64) f64 {
         return 1;
     }
     return (@floor(q) - fmin + 1) / (fmax - fmin + 1);
+}
+
+/// S(t) = (b - ⌊t⌋) / (b - a + 1)
+pub fn survival(t: f64, min: i64, max: i64) f64 {
+    assert(min <= max);
+    assert(!isNan(t));
+    const fmin: f64 = @floatFromInt(min);
+    const fmax: f64 = @floatFromInt(max);
+    if (t < fmin) {
+        return 1;
+    }
+    if (t >= fmax) {
+        return 0;
+    }
+    return (fmax - @floor(t)) / (fmax - fmin + 1);
 }
 
 /// Q(p) = ⌈p (b - a + 1)⌉ + a - 1
@@ -69,6 +84,9 @@ export fn rv_discrete_uniform_density(x: f64, min: i64, max: i64) f64 {
 export fn rv_discrete_uniform_probability(q: f64, min: i64, max: i64) f64 {
     return probability(q, min, max);
 }
+export fn rv_discrete_uniform_survival(t: f64, min: i64, max: i64) f64 {
+    return survival(t, min, max);
+}
 export fn rv_discrete_uniform_quantile(p: f64, min: i64, max: i64) f64 {
     return quantile(p, min, max);
 }
@@ -98,6 +116,17 @@ test probability {
     try expectApproxEqRel(0.5  , probability( 6, 3, 10), eps);
     try expectApproxEqRel(1    , probability(10, 3, 10), eps);
     try expectApproxEqRel(1    , probability(11, 3, 10), eps);
+}
+
+test survival {
+    try expectEqual(1, survival(-inf, 0, 1));
+    try expectEqual(0, survival( inf, 0, 1));
+
+    try expectApproxEqRel(1    , survival( 2, 3, 10), eps);
+    try expectApproxEqRel(0.875, survival( 3, 3, 10), eps);
+    try expectApproxEqRel(0.5  , survival( 6, 3, 10), eps);
+    try expectApproxEqRel(0    , survival(10, 3, 10), eps);
+    try expectApproxEqRel(0    , survival(11, 3, 10), eps);
 }
 
 test quantile {

@@ -46,6 +46,11 @@ pub fn probability(q: f64, shape1: f64, shape2: f64, scale: f64) f64 {
     return std.math.pow(f64, inner, -shape1);
 }
 
+/// S(t) = 1 - (1 + (t / σ)^-α)^-p
+pub fn survival(t: f64, shape1: f64, shape2: f64, scale: f64) f64 {
+    return 1 - probability(t, shape1, shape2, scale);
+}
+
 /// Q(x) = σ(x^(-1 / p) - 1)^(- 1 / α)
 pub fn quantile(p: f64, shape1: f64, shape2: f64, scale: f64) f64 {
     assert(isFinite(shape1) and isFinite(shape2) and isFinite(scale));
@@ -90,6 +95,9 @@ export fn rv_dagum_density(x: f64, shape1: f64, shape2: f64, scale: f64) f64 {
 export fn rv_dagum_probability(q: f64, shape1: f64, shape2: f64, scale: f64) f64 {
     return probability(q, shape1, shape2, scale);
 }
+export fn rv_dagum_survival(t: f64, shape1: f64, shape2: f64, scale: f64) f64 {
+    return survival(t, shape1, shape2, scale);
+}
 export fn rv_dagum_quantile(p: f64, shape1: f64, shape2: f64, scale: f64) f64 {
     return quantile(p, shape1, shape2, scale);
 }
@@ -125,6 +133,15 @@ test probability {
     try expectApproxEqRel(0                 , probability(0, 3, 5, 1), eps);
     try expectApproxEqRel(0.125             , probability(1, 3, 5, 1), eps);
     try expectApproxEqRel(0.9118179035534407, probability(2, 3, 5, 1), eps);
+}
+
+test survival {
+    try expectEqual(1, survival(-inf, 3, 5, 1));
+    try expectEqual(0, survival( inf, 3, 5, 1));
+
+    try expectApproxEqRel(1                  , survival(0, 3, 5, 1), eps);
+    try expectApproxEqRel(0.875              , survival(1, 3, 5, 1), eps);
+    try expectApproxEqRel(0.08818209644655925, survival(2, 3, 5, 1), eps);
 }
 
 test quantile {

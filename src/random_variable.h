@@ -121,6 +121,8 @@ double rv_chi_density(double x, double df);
 /// No closed form
 double rv_chi_probability(double q, double df);
 /// No closed form
+double rv_chi_survival(double t, double df);
+/// No closed form
 double rv_chi_quantile(double p, double df);
 
 //! Support: [0,∞)
@@ -133,6 +135,8 @@ double rv_chi_squared_density(double x, double df);
 /// No closed form
 double rv_chi_squared_probability(double q, double df);
 /// No closed form
+double rv_chi_squared_survival(double t, double df);
+/// No closed form
 double rv_chi_squared_quantile(double p, double df);
 
 //! Support: [0,1]
@@ -144,6 +148,8 @@ double rv_chi_squared_quantile(double p, double df);
 double rv_continuous_bernoulli_density(double x, double shape);
 /// F(q) = (λ^q (1 - λ)^(1 - q) + λ - 1) / (2λ - 1)
 double rv_continuous_bernoulli_probability(double q, double shape);
+/// S(t) = (λ - λ^t (1 - λ)^(1 - t)) / (2λ - 1)
+double rv_continuous_bernoulli_survival(double t, double shape);
 /// Q(p) = ln(((2λ - 1)p - λ + 1) / (1 - λ)) / ln(λ / (1 - λ))
 double rv_continuous_bernoulli_quantile(double p, double shape);
 
@@ -158,6 +164,8 @@ double rv_continuous_bernoulli_quantile(double p, double shape);
 double rv_dagum_density(double x, double shape1, double shape2, double scale);
 /// F(q) = (1 + (q / σ)^-α)^-p
 double rv_dagum_probability(double q, double shape1, double shape2, double scale);
+/// S(t) = 1 - (1 + (t / σ)^-α)^-p
+double rv_dagum_survival(double t, double shape1, double shape2, double scale);
 /// Q(x) = σ(x^(-1 / p) - 1)^(- 1 / α)
 double rv_dagum_quantile(double p, double shape1, double shape2, double scale);
 
@@ -169,8 +177,10 @@ double rv_dagum_quantile(double p, double shape1, double shape2, double scale);
 
 /// p(x) = 1 / (b - a + 1)
 double rv_discrete_uniform_density(double x, int64_t min, int64_t max);
-/// F(q) = (⌊q⌋ - a + 1) / (b - a  + 1)
+/// F(q) = (⌊q⌋ - a + 1) / (b - a + 1)
 double rv_discrete_uniform_probability(double q, int64_t min, int64_t max);
+/// S(t) = (b - ⌊t⌋) / (b - a + 1)
+double rv_discrete_uniform_survival(double t, int64_t min, int64_t max);
 /// Q(p) = ⌈p (b - a + 1)⌉ + a - 1
 double rv_discrete_uniform_quantile(double p, int64_t min, int64_t max);
 
@@ -183,6 +193,8 @@ double rv_discrete_uniform_quantile(double p, int64_t min, int64_t max);
 double rv_exponential_density(double x, double scale);
 /// F(q) = 1 - exp(-q / σ)
 double rv_exponential_probability(double q, double scale);
+/// S(t) = exp(-t / σ)
+double rv_exponential_survival(double t, double scale);
 /// Q(p) = -σ ln(1 - p)
 double rv_exponential_quantile(double p, double scale);
 
@@ -197,6 +209,8 @@ double rv_f_density(double x, double df1, double df2);
 /// No closed form
 double rv_f_probability(double q, double df1, double df2);
 /// No closed form
+double rv_f_survival(double t, double df1, double df2);
+/// No closed form
 double rv_f_quantile(double p, double df1, double df2);
 
 //! Support: [0,∞)
@@ -209,6 +223,8 @@ double rv_f_quantile(double p, double df1, double df2);
 double rv_gamma_density(double x, double shape, double scale);
 /// No closed form
 double rv_gamma_probability(double q, double shape, double scale);
+/// No closed form
+double rv_gamma_survival(double t, double shape, double scale);
 /// No closed form
 double rv_gamma_quantile(double p, double shape, double scale);
 
