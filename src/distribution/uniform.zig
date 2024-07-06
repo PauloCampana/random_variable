@@ -35,6 +35,20 @@ pub fn probability(q: f64, min: f64, max: f64) f64 {
     return (q - min) / (max - min);
 }
 
+/// S(t) = (b - t) / (b - a)
+pub fn survival(t: f64, min: f64, max: f64) f64 {
+    assert(isFinite(min) and isFinite(max));
+    assert(min <= max);
+    assert(!isNan(t));
+    if (t <= min) {
+        return 1;
+    }
+    if (t >= max) {
+        return 0;
+    }
+    return (max - t) / (max - min);
+}
+
 /// Q(p) = a + (b - a)p
 pub fn quantile(p: f64, min: f64, max: f64) f64 {
     assert(isFinite(min) and isFinite(max));
@@ -66,6 +80,9 @@ export fn rv_uniform_density(x: f64, min: f64, max: f64) f64 {
 export fn rv_uniform_probability(q: f64, min: f64, max: f64) f64 {
     return probability(q, min, max);
 }
+export fn rv_uniform_survival(t: f64, min: f64, max: f64) f64 {
+    return survival(t, min, max);
+}
 export fn rv_uniform_quantile(p: f64, min: f64, max: f64) f64 {
     return quantile(p, min, max);
 }
@@ -96,6 +113,18 @@ test probability {
     try expectApproxEqRel(0.6, probability(4.2, 3, 5), eps);
     try expectApproxEqRel(0.8, probability(4.6, 3, 5), eps);
     try expectApproxEqRel(1  , probability(5  , 3, 5), eps);
+}
+
+test survival {
+    try expectEqual(1, survival(-inf, 0, 1));
+    try expectEqual(0, survival( inf, 0, 1));
+
+    try expectApproxEqRel(1  , survival(3  , 3, 5), eps);
+    try expectApproxEqRel(0.8, survival(3.4, 3, 5), eps);
+    try expectApproxEqRel(0.6, survival(3.8, 3, 5), eps);
+    try expectApproxEqRel(0.4, survival(4.2, 3, 5), eps);
+    try expectApproxEqRel(0.2, survival(4.6, 3, 5), eps);
+    try expectApproxEqRel(0  , survival(5  , 3, 5), eps);
 }
 
 test quantile {

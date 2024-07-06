@@ -33,6 +33,18 @@ pub fn probability(q: f64, scale: f64) f64 {
     return -std.math.expm1(-0.5 * z * z);
 }
 
+/// S(t) = exp(-t^2 / 2σ^2)
+pub fn survival(t: f64, scale: f64) f64 {
+    assert(isFinite(scale));
+    assert(scale > 0);
+    assert(!isNan(t));
+    if (t <= 0) {
+        return 1;
+    }
+    const z = t / scale;
+    return @exp(-0.5 * z * z);
+}
+
 /// Q(p) = σ sqrt(-2ln(1 - p))
 pub fn quantile(p: f64, scale: f64) f64 {
     assert(isFinite(scale));
@@ -63,6 +75,9 @@ export fn rv_rayleigh_density(x: f64, scale: f64) f64 {
 export fn rv_rayleigh_probability(q: f64, scale: f64) f64 {
     return probability(q, scale);
 }
+export fn rv_rayleigh_survival(t: f64, scale: f64) f64 {
+    return survival(t, scale);
+}
 export fn rv_rayleigh_quantile(p: f64, scale: f64) f64 {
     return quantile(p, scale);
 }
@@ -88,6 +103,15 @@ test probability {
     try expectApproxEqRel(0                 , probability(0, 1), eps);
     try expectApproxEqRel(0.3934693402873665, probability(1, 1), eps);
     try expectApproxEqRel(0.8646647167633873, probability(2, 1), eps);
+}
+
+test survival {
+    try expectEqual(1, survival(-inf, 3));
+    try expectEqual(0, survival( inf, 3));
+
+    try expectApproxEqRel(1                 , survival(0, 1), eps);
+    try expectApproxEqRel(0.6065306597126334, survival(1, 1), eps);
+    try expectApproxEqRel(0.1353352832366126, survival(2, 1), eps);
 }
 
 test quantile {

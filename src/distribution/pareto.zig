@@ -34,6 +34,17 @@ pub fn probability(q: f64, shape: f64, minimum: f64) f64 {
     return 1 - std.math.pow(f64, minimum / q, shape);
 }
 
+/// S(t) = (k / t)^α
+pub fn survival(t: f64, shape: f64, minimum: f64) f64 {
+    assert(isFinite(shape) and isFinite(minimum));
+    assert(shape > 0 and minimum > 0);
+    assert(!isNan(t));
+    if (t < minimum) {
+        return 1;
+    }
+    return std.math.pow(f64, minimum / t, shape);
+}
+
 /// Q(p) = k / (1 - p)^(1 / α)
 pub fn quantile(p: f64, shape: f64, minimum: f64) f64 {
     assert(isFinite(shape) and isFinite(minimum));
@@ -64,6 +75,9 @@ export fn rv_pareto_density(x: f64, shape: f64, minimum: f64) f64 {
 export fn rv_pareto_probability(q: f64, shape: f64, minimum: f64) f64 {
     return probability(q, shape, minimum);
 }
+export fn rv_pareto_survival(t: f64, shape: f64, minimum: f64) f64 {
+    return survival(t, shape, minimum);
+}
 export fn rv_pareto_quantile(p: f64, shape: f64, minimum: f64) f64 {
     return quantile(p, shape, minimum);
 }
@@ -89,6 +103,15 @@ test probability {
     try expectApproxEqRel(0                 , probability(5, 3, 5), eps);
     try expectApproxEqRel(0.4212962962962962, probability(6, 3, 5), eps);
     try expectApproxEqRel(0.6355685131195335, probability(7, 3, 5), eps);
+}
+
+test survival {
+    try expectEqual(1, survival(-inf, 3, 5));
+    try expectEqual(0, survival( inf, 3, 5));
+
+    try expectApproxEqRel(1                 , survival(5, 3, 5), eps);
+    try expectApproxEqRel(0.5787037037037037, survival(6, 3, 5), eps);
+    try expectApproxEqRel(0.3644314868804664, survival(7, 3, 5), eps);
 }
 
 test quantile {

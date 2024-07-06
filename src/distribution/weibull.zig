@@ -43,6 +43,19 @@ pub fn probability(q: f64, shape: f64, scale: f64) f64 {
     return -std.math.expm1(-za);
 }
 
+/// S(t) = exp(-(t / σ)^α)
+pub fn survivial(t: f64, shape: f64, scale: f64) f64 {
+    assert(isFinite(shape) and isFinite(scale));
+    assert(shape > 0 and scale > 0);
+    assert(!isNan(t));
+    if (t <= 0) {
+        return 1;
+    }
+    const z = t / scale;
+    const za = std.math.pow(f64, z, shape);
+    return @exp(-za);
+}
+
 /// Q(p) = σ (-ln(1 - p))^(1 / α)
 pub fn quantile(p: f64, shape: f64, scale: f64) f64 {
     assert(isFinite(shape) and isFinite(scale));
@@ -78,6 +91,9 @@ export fn rv_weibull_density(x: f64, shape: f64, scale: f64) f64 {
 export fn rv_weibull_probability(q: f64, shape: f64, scale: f64) f64 {
     return probability(q, shape, scale);
 }
+export fn rv_weibull_survivial(t: f64, shape: f64, scale: f64) f64 {
+    return survivial(t, shape, scale);
+}
 export fn rv_weibull_quantile(p: f64, shape: f64, scale: f64) f64 {
     return quantile(p, shape, scale);
 }
@@ -107,6 +123,15 @@ test probability {
     try expectApproxEqRel(0                   , probability(0, 3, 5), eps);
     try expectApproxEqRel(0.007968085162939369, probability(1, 3, 5), eps);
     try expectApproxEqRel(0.061995000469270512, probability(2, 3, 5), eps);
+}
+
+test survivial {
+    try expectEqual(1, survivial(-inf, 3, 5));
+    try expectEqual(0, survivial( inf, 3, 5));
+
+    try expectApproxEqRel(1                 , survivial(0, 3, 5), eps);
+    try expectApproxEqRel(0.9920319148370606, survivial(1, 3, 5), eps);
+    try expectApproxEqRel(0.9380049995307294, survivial(2, 3, 5), eps);
 }
 
 test quantile {

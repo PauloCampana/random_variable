@@ -19,7 +19,10 @@ pub fn lbeta(a: f64, b: f64) f64 {
 
 pub const normal_probability = prob.normalDist;
 pub const normal_quantile = prob.inverseNormalDist;
+
 pub const gamma_probability = prob.incompleteGamma;
+pub const gamma_survival = prob.complementedIncompleteGamma;
 pub const gamma_quantile_mirrored = prob.inverseComplementedIncompleteGamma;
+
 pub const beta_probability = prob.incompleteBeta;
 pub const beta_quantile = prob.inverseIncompleteBeta;

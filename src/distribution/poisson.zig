@@ -33,7 +33,21 @@ pub fn probability(q: f64, lambda: f64) f64 {
     if (q == inf) {
         return 1;
     }
-    return 1 - special.gamma_probability(@floor(q) + 1, lambda);
+    return special.gamma_survival(@floor(q) + 1, lambda);
+}
+
+/// No closed form
+pub fn survival(t: f64, lambda: f64) f64 {
+    assert(isFinite(lambda));
+    assert(lambda > 0);
+    assert(!isNan(t));
+    if (t < 0) {
+        return 1;
+    }
+    if (t == inf) {
+        return 0;
+    }
+    return special.gamma_probability(@floor(t) + 1, lambda);
 }
 
 /// No closed form
@@ -154,6 +168,9 @@ export fn rv_poisson_density(x: f64, lambda: f64) f64 {
 export fn rv_poisson_probability(q: f64, lambda: f64) f64 {
     return probability(q, lambda);
 }
+export fn rv_poisson_survival(t: f64, lambda: f64) f64 {
+    return survival(t, lambda);
+}
 export fn rv_poisson_quantile(p: f64, lambda: f64) f64 {
     return quantile(p, lambda);
 }
@@ -185,6 +202,18 @@ test probability {
     try expectApproxEqRel(0.0497870683678639, probability( 0.9, 3), eps);
     try expectApproxEqRel(0.1991482734714558, probability( 1  , 3), eps);
     try expectApproxEqRel(0.1991482734714558, probability( 1.1, 3), eps);
+}
+
+test survival {
+    try expectEqual(1, survival(-inf, 3));
+    try expectEqual(0, survival( inf, 3));
+
+    try expectApproxEqRel(1                 , survival(-0.1, 3), eps);
+    try expectApproxEqRel(0.9502129316321360, survival( 0  , 3), eps);
+    try expectApproxEqRel(0.9502129316321360, survival( 0.1, 3), eps);
+    try expectApproxEqRel(0.9502129316321360, survival( 0.9, 3), eps);
+    try expectApproxEqRel(0.8008517265285442, survival( 1  , 3), eps);
+    try expectApproxEqRel(0.8008517265285442, survival( 1.1, 3), eps);
 }
 
 test quantile {

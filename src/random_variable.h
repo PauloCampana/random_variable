@@ -330,6 +330,8 @@ double rv_negative_binomial_density(double x, uint64_t size, double prob);
 /// No closed form
 double rv_negative_binomial_probability(double q, uint64_t size, double prob);
 /// No closed form
+double rv_negative_binomial_survival(double t, uint64_t size, double prob);
+/// No closed form
 double rv_negative_binomial_quantile(double p, uint64_t size, double prob);
 
 //! Support: (-∞,∞)
@@ -343,6 +345,8 @@ double rv_normal_density(double x, double location, double scale);
 /// No closed form
 double rv_normal_probability(double q, double location, double scale);
 /// No closed form
+double rv_normal_survival(double t, double location, double scale);
+/// No closed form
 double rv_normal_quantile(double p, double location, double scale);
 
 //! Support: [k,∞)
@@ -355,6 +359,8 @@ double rv_normal_quantile(double p, double location, double scale);
 double rv_pareto_density(double x, double shape, double minimum);
 /// F(q) = 1 - (k / q)^α
 double rv_pareto_probability(double q, double shape, double minimum);
+/// S(t) = (k / t)^α
+double rv_pareto_survival(double t, double shape, double minimum);
 /// Q(p) = k / (1 - p)^(1 / α)
 double rv_pareto_quantile(double p, double shape, double minimum);
 
@@ -368,6 +374,8 @@ double rv_poisson_density(double x, double lambda);
 /// No closed form
 double rv_poisson_probability(double q, double lambda);
 /// No closed form
+double rv_poisson_survival(double t, double lambda);
+/// No closed form
 double rv_poisson_quantile(double p, double lambda);
 
 //! Support: [0,∞)
@@ -379,6 +387,8 @@ double rv_poisson_quantile(double p, double lambda);
 double rv_rayleigh_density(double x, double scale);
 /// F(q) = 1 - exp(-q^2 / 2σ^2)
 double rv_rayleigh_probability(double q, double scale);
+/// S(t) = exp(-t^2 / 2σ^2)
+double rv_rayleigh_survival(double t, double scale);
 /// Q(p) = σ sqrt(-2ln(1 - p))
 double rv_rayleigh_quantile(double p, double scale);
 
@@ -392,6 +402,8 @@ double rv_t_density(double x, double df);
 /// No closed form
 double rv_t_probability(double q, double df);
 /// No closed form
+double rv_t_survival(double t, double df);
+/// No closed form
 double rv_t_quantile(double p, double df);
 
 //! Support: [a,b]
@@ -404,6 +416,8 @@ double rv_t_quantile(double p, double df);
 double rv_uniform_density(double x, double min, double max);
 /// F(q) = (q - a) / (b - a)
 double rv_uniform_probability(double q, double min, double max);
+/// S(t) = (b - t) / (b - a)
+double rv_uniform_survival(double t, double min, double max);
 /// Q(p) = a + (b - a)p
 double rv_uniform_quantile(double p, double min, double max);
 
@@ -417,6 +431,8 @@ double rv_uniform_quantile(double p, double min, double max);
 double rv_weibull_density(double x, double shape, double scale);
 /// F(q) = 1 - exp(-(q / σ)^α)
 double rv_weibull_probability(double q, double shape, double scale);
+/// S(t) = exp(-(t / σ)^α)
+double rv_weibull_survival(double t, double shape, double scale);
 /// Q(p) = σ (-ln(1 - p))^(1 / α)
 double rv_weibull_quantile(double p, double shape, double scale);
 

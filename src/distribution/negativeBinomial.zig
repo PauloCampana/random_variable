@@ -45,6 +45,11 @@ pub fn probability(q: f64, size: u64, prob: f64) f64 {
 }
 
 /// No closed form
+pub fn survival(t: f64, size: u64, prob: f64) f64 {
+    return 1 - probability(t, size, prob);
+}
+
+/// No closed form
 pub fn quantile(p: f64, size: u64, prob: f64) f64 {
     assert(0 < prob and prob <= 1);
     assert(size != 0);
@@ -164,6 +169,9 @@ export fn rv_negative_binomial_density(x: f64, size: u64, prob: f64) f64 {
 export fn rv_negative_binomial_probability(q: f64, size: u64, prob: f64) f64 {
     return probability(q, size, prob);
 }
+export fn rv_negative_binomial_survival(t: f64, size: u64, prob: f64) f64 {
+    return survival(t, size, prob);
+}
 export fn rv_negative_binomial_quantile(p: f64, size: u64, prob: f64) f64 {
     return quantile(p, size, prob);
 }
@@ -201,6 +209,21 @@ test probability {
     try expectApproxEqRel(0.0000001024, probability( 0.9, 10, 0.2), eps);
     try expectApproxEqRel(0.0000009216, probability( 1  , 10, 0.2), eps);
     try expectApproxEqRel(0.0000009216, probability( 1.1, 10, 0.2), eps);
+}
+
+test survival {
+    try expectEqual(1, survival(-inf, 10, 0.2));
+    try expectEqual(0, survival( inf, 10, 0.2));
+
+    try expectEqual(0, survival(0, 10, 1));
+    try expectEqual(0, survival(1, 10, 1));
+
+    try expectApproxEqRel(1           , survival(-0.1, 10, 0.2), eps);
+    try expectApproxEqRel(0.9999998976, survival( 0  , 10, 0.2), eps);
+    try expectApproxEqRel(0.9999998976, survival( 0.1, 10, 0.2), eps);
+    try expectApproxEqRel(0.9999998976, survival( 0.9, 10, 0.2), eps);
+    try expectApproxEqRel(0.9999990784, survival( 1  , 10, 0.2), eps);
+    try expectApproxEqRel(0.9999990784, survival( 1.1, 10, 0.2), eps);
 }
 
 test quantile {
