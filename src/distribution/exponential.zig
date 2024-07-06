@@ -1,7 +1,7 @@
 //! Support: [0,∞)
 //!
 //! Parameters:
-//! - λ: `rate` ∈ (0,∞)
+//! - σ: `scale` ∈ (0,∞)
 
 const std = @import("std");
 const assert = std.debug.assert;
@@ -9,62 +9,63 @@ const isFinite = std.math.isFinite;
 const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
-/// f(x) = λ exp(-λx)
-pub fn density(x: f64, rate: f64) f64 {
-    assert(isFinite(rate));
-    assert(rate > 0);
+/// f(x) = exp(-x / σ) / σ
+pub fn density(x: f64, scale: f64) f64 {
+    assert(isFinite(scale));
+    assert(scale > 0);
     assert(!isNan(x));
     if (x < 0) {
         return 0;
     }
-    return rate * @exp(-rate * x);
+    const z = x / scale;
+    return @exp(-z) / scale;
 }
 
-/// F(q) = 1 - exp(-λq)
-pub fn probability(q: f64, rate: f64) f64 {
-    assert(isFinite(rate));
-    assert(rate > 0);
+/// F(q) = 1 - exp(-q / σ)
+pub fn probability(q: f64, scale: f64) f64 {
+    assert(isFinite(scale));
+    assert(scale > 0);
     assert(!isNan(q));
     if (q <= 0) {
         return 0;
     }
-    const z = rate * q;
+    const z = q / scale;
     return -std.math.expm1(-z);
 }
 
-/// Q(p) = -ln(1 - p) / λ
-pub fn quantile(p: f64, rate: f64) f64 {
-    assert(isFinite(rate));
-    assert(rate > 0);
+/// Q(p) = -σ ln(1 - p)
+pub fn quantile(p: f64, scale: f64) f64 {
+    assert(isFinite(scale));
+    assert(scale > 0);
     assert(0 <= p and p <= 1);
     const q = -std.math.log1p(-p);
-    return q / rate;
+    return scale * q;
 }
 
-pub fn random(generator: std.Random, rate: f64) f64 {
-    assert(isFinite(rate));
-    assert(rate > 0);
+pub fn random(generator: std.Random, scale: f64) f64 {
+    assert(isFinite(scale));
+    assert(scale > 0);
     const exp = generator.floatExp(f64);
-    return exp / rate;
+    return scale * exp;
 }
 
-pub fn fill(buffer: []f64, generator: std.Random, rate: f64) void {
-    assert(isFinite(rate));
-    assert(rate > 0);
+pub fn fill(buffer: []f64, generator: std.Random, scale: f64) void {
+    assert(isFinite(scale));
+    assert(scale > 0);
     for (buffer) |*x| {
         const exp = generator.floatExp(f64);
-        x.* = exp / rate;
+        x.* = scale * exp;
     }
 }
 
-export fn rv_exponential_density(x: f64, rate: f64) f64 {
-    return density(x, rate);
+export fn rv_exponential_density(x: f64, scale: f64) f64 {
+    return density(x, scale);
 }
-export fn rv_exponential_probability(q: f64, rate: f64) f64 {
-    return probability(q, rate);
+export fn rv_exponential_probability(q: f64, scale: f64) f64 {
+    return probability(q, scale);
 }
-export fn rv_exponential_quantile(p: f64, rate: f64) f64 {
-    return quantile(p, rate);
+export fn rv_exponential_quantile(p: f64, scale: f64) f64 {
+    return quantile(p, scale);
 }
 
 const expectEqual = std.testing.expectEqual;
@@ -76,9 +77,9 @@ test density {
     try expectEqual(0, density(-inf, 3));
     try expectEqual(0, density( inf, 3));
 
-    try expectApproxEqRel(3                   , density(0, 3), eps);
-    try expectApproxEqRel(0.149361205103591900, density(1, 3), eps);
-    try expectApproxEqRel(0.007436256529999075, density(2, 3), eps);
+    try expectApproxEqRel(0.3333333333333333, density(0, 3), eps);
+    try expectApproxEqRel(0.2388437701912630, density(1, 3), eps);
+    try expectApproxEqRel(0.1711390396775306, density(2, 3), eps);
 }
 
 test probability {
@@ -86,15 +87,15 @@ test probability {
     try expectEqual(1, probability( inf, 3));
 
     try expectApproxEqRel(0                 , probability(0, 3), eps);
-    try expectApproxEqRel(0.9502129316321360, probability(1, 3), eps);
-    try expectApproxEqRel(0.9975212478233336, probability(2, 3), eps);
+    try expectApproxEqRel(0.2834686894262107, probability(1, 3), eps);
+    try expectApproxEqRel(0.4865828809674079, probability(2, 3), eps);
 }
 
 test quantile {
-    try expectApproxEqRel(0                  , quantile(0  , 3), eps);
-    try expectApproxEqRel(0.07438118377140325, quantile(0.2, 3), eps);
-    try expectApproxEqRel(0.17027520792199691, quantile(0.4, 3), eps);
-    try expectApproxEqRel(0.30543024395805174, quantile(0.6, 3), eps);
-    try expectApproxEqRel(0.53647930414470013, quantile(0.8, 3), eps);
-    try expectEqual      (inf                , quantile(1  , 3)     );
+    try expectApproxEqRel(0                 , quantile(0  , 3), eps);
+    try expectApproxEqRel(0.6694306539426292, quantile(0.2, 3), eps);
+    try expectApproxEqRel(1.5324768712979720, quantile(0.4, 3), eps);
+    try expectApproxEqRel(2.7488721956224651, quantile(0.6, 3), eps);
+    try expectApproxEqRel(4.8283137373023011, quantile(0.8, 3), eps);
+    try expectEqual      (inf               , quantile(1  , 3)     );
 }

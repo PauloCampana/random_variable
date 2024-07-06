@@ -61,7 +61,7 @@ pub fn random(generator: std.Random, df: f64) f64 {
         return @tan(std.math.pi * uni);
     }
     const nor = generator.floatNorm(f64);
-    const chi = gamma.random(generator, 0.5 * df, 0.5);
+    const chi = gamma.random(generator, 0.5 * df, 2);
     return nor * @sqrt(df / chi);
 }
 
@@ -78,7 +78,7 @@ pub fn fill(buffer: []f64, generator: std.Random, df: f64) void {
     const hdf = 0.5 * df;
     for (buffer) |*x| {
         const nor = generator.floatNorm(f64);
-        const chi = gamma.random(generator, hdf, 0.5);
+        const chi = gamma.random(generator, hdf, 2);
         x.* = nor * @sqrt(df / chi);
     }
 }

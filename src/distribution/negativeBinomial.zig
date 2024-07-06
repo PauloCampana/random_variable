@@ -75,14 +75,14 @@ pub fn random(generator: std.Random, size: u64, prob: f64) f64 {
     }
     const n: f64 = @floatFromInt(size);
     const qrob = 1 - prob;
-    const qp = qrob / prob;
-    const mean = n * qp;
+    const pq = prob / qrob;
+    const mean = n / pq;
     if (mean < 150) {
         const initial_mass = std.math.pow(f64, prob, n);
         const uni = generator.float(f64);
         return linearSearch(uni, n, qrob, initial_mass);
     }
-    const lambda = gamma.random(generator, n, qp);
+    const lambda = gamma.random(generator, n, pq);
     return poisson.random(generator, lambda);
 }
 
@@ -94,8 +94,8 @@ pub fn fill(buffer: []f64, generator: std.Random, size: u64, prob: f64) void {
     }
     const n: f64 = @floatFromInt(size);
     const qrob = 1 - prob;
-    const qp = qrob / prob;
-    const mean = n * qp;
+    const pq = prob / qrob;
+    const mean = n / pq;
     if (buffer.len < 15 and mean < 15) {
         const initial_mass = std.math.pow(f64, prob, n);
         for (buffer) |*x| {
@@ -115,7 +115,7 @@ pub fn fill(buffer: []f64, generator: std.Random, size: u64, prob: f64) void {
         return;
     }
     for (buffer) |*x| {
-        const lambda = gamma.random(generator, n, qp);
+        const lambda = gamma.random(generator, n, pq);
         x.* = poisson.random(generator, lambda);
     }
 }

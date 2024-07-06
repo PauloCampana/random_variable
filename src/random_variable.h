@@ -154,7 +154,7 @@ double rv_continuous_bernoulli_quantile(double p, double shape);
 //! - α: `shape2` ∈ (0,∞)
 //! - σ: `scale`  ∈ (0,∞)
 
-/// f(x) = pα/σ (x / σ)^(pα - 1) / (1 + (x / σ)^α)^(p + 1)
+/// f(x) = pα / σ (x / σ)^(pα - 1) / (1 + (x / σ)^α)^(p + 1)
 double rv_dagum_density(double x, double shape1, double shape2, double scale);
 /// F(q) = (1 + (q / σ)^-α)^-p
 double rv_dagum_probability(double q, double shape1, double shape2, double scale);
@@ -177,14 +177,14 @@ double rv_discrete_uniform_quantile(double p, int64_t min, int64_t max);
 //! Support: [0,∞)
 //!
 //! Parameters:
-//! - λ: `rate` ∈ (0,∞)
+//! - σ: `scale` ∈ (0,∞)
 
-/// f(x) = λ exp(-λx)
-double rv_exponential_density(double x, double rate);
-/// F(q) = 1 - exp(-λq)
-double rv_exponential_probability(double q, double rate);
-/// Q(p) = -ln(1 - p) / λ
-double rv_exponential_quantile(double p, double rate);
+/// f(x) = exp(-x / σ) / σ
+double rv_exponential_density(double x, double scale);
+/// F(q) = 1 - exp(-q / σ)
+double rv_exponential_probability(double q, double scale);
+/// Q(p) = -σ ln(1 - p)
+double rv_exponential_quantile(double p, double scale);
 
 //! Support: [0,∞)
 //!
@@ -203,14 +203,14 @@ double rv_f_quantile(double p, double df1, double df2);
 //!
 //! Parameters:
 //! - α: `shape` ∈ (0,∞)
-//! - λ: `rate`  ∈ (0,∞)
+//! - σ: `scale` ∈ (0,∞)
 
-/// f(x) = λ / gamma(α) (λx)^(α - 1) exp(-λx)
-double rv_gamma_density(double x, double shape, double rate);
+/// f(x) = 1 / (σ gamma(α)) (x / σ)^(α - 1) exp(-x / σ)
+double rv_gamma_density(double x, double shape, double scale);
 /// No closed form
-double rv_gamma_probability(double q, double shape, double rate);
+double rv_gamma_probability(double q, double shape, double scale);
 /// No closed form
-double rv_gamma_quantile(double p, double shape, double rate);
+double rv_gamma_quantile(double p, double shape, double scale);
 
 //! Support: {0,1,2,∞}
 //!
@@ -411,14 +411,14 @@ double rv_uniform_quantile(double p, double min, double max);
 //!
 //! Parameters:
 //! - α: `shape` ∈ (0,∞)
-//! - λ: `rate`  ∈ (0,∞)
+//! - σ: `scale` ∈ (0,∞)
 
-/// f(x) = αλ (λx)^(α - 1) exp(-(λx)^α)
-double rv_weibull_density(double x, double shape, double rate);
-/// F(q) = 1 - exp(-(λq)^α)
-double rv_weibull_probability(double q, double shape, double rate);
-/// Q(p) = (-ln(1 - p))^(1 / α) / λ
-double rv_weibull_quantile(double p, double shape, double rate);
+/// f(x) = α / σ (x / σ)^(α - 1) exp(-(x / σ)^α)
+double rv_weibull_density(double x, double shape, double scale);
+/// F(q) = 1 - exp(-(q / σ)^α)
+double rv_weibull_probability(double q, double shape, double scale);
+/// Q(p) = σ (-ln(1 - p))^(1 / α)
+double rv_weibull_quantile(double p, double shape, double scale);
 
 #ifdef __cplusplus
 } // extern "C"

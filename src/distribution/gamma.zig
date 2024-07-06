@@ -2,7 +2,7 @@
 //!
 //! Parameters:
 //! - α: `shape` ∈ (0,∞)
-//! - λ: `rate`  ∈ (0,∞)
+//! - σ: `scale` ∈ (0,∞)
 
 const std = @import("std");
 const special = @import("../special.zig");
@@ -11,42 +11,42 @@ const isFinite = std.math.isFinite;
 const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
-/// f(x) = λ / gamma(α) (λx)^(α - 1) exp(-λx)
-pub fn density(x: f64, shape: f64, rate: f64) f64 {
-    assert(isFinite(shape) and isFinite(rate));
-    assert(shape > 0 and rate > 0);
+/// f(x) = 1 / (σ gamma(α)) (x / σ)^(α - 1) exp(-x / σ)
+pub fn density(x: f64, shape: f64, scale: f64) f64 {
+    assert(isFinite(shape) and isFinite(scale));
+    assert(shape > 0 and scale > 0);
     assert(!isNan(x));
     if (x < 0 or x == inf) {
         return 0;
     }
     if (x == 0) {
         if (shape == 1) {
-            return rate;
+            return 1 / scale;
         }
         return if (shape < 1) inf else 0;
     }
-    const z = rate * x;
-    const num = @log(rate) + (shape - 1) * @log(z) - z;
-    const den = std.math.lgamma(f64, shape);
+    const z = x / scale;
+    const num = (shape - 1) * @log(z) - z;
+    const den = std.math.lgamma(f64, shape) + @log(scale);
     return @exp(num - den);
 }
 
 /// No closed form
-pub fn probability(q: f64, shape: f64, rate: f64) f64 {
-    assert(isFinite(shape) and isFinite(rate));
-    assert(shape > 0 and rate > 0);
+pub fn probability(q: f64, shape: f64, scale: f64) f64 {
+    assert(isFinite(shape) and isFinite(scale));
+    assert(shape > 0 and scale > 0);
     assert(!isNan(q));
     if (q <= 0) {
         return 0;
     }
-    const z = rate * q;
+    const z = q / scale;
     return special.gamma_probability(shape, z);
 }
 
 /// No closed form
-pub fn quantile(p: f64, shape: f64, rate: f64) f64 {
-    assert(isFinite(shape) and isFinite(rate));
-    assert(shape > 0 and rate > 0);
+pub fn quantile(p: f64, shape: f64, scale: f64) f64 {
+    assert(isFinite(shape) and isFinite(scale));
+    assert(shape > 0 and scale > 0);
     assert(0 <= p and p <= 1);
     if (p == 0) {
         return 0;
@@ -55,15 +55,15 @@ pub fn quantile(p: f64, shape: f64, rate: f64) f64 {
         return inf;
     }
     const q = special.gamma_quantile_mirrored(shape, 1 - p);
-    return q / rate;
+    return scale * q;
 }
 
-pub fn random(generator: std.Random, shape: f64, rate: f64) f64 {
-    assert(isFinite(shape) and isFinite(rate));
-    assert(shape > 0 and rate > 0);
+pub fn random(generator: std.Random, shape: f64, scale: f64) f64 {
+    assert(isFinite(shape) and isFinite(scale));
+    assert(shape > 0 and scale > 0);
     if (shape == 1) {
         const exp = generator.floatExp(f64);
-        return exp / rate;
+        return scale * exp;
     }
     const correct = shape >= 1;
     const increment: f64 = if (correct) 0 else 1;
@@ -71,20 +71,20 @@ pub fn random(generator: std.Random, shape: f64, rate: f64) f64 {
     const c = 1 / (3 * @sqrt(d));
     const gam = rejection(generator, d, c);
     if (correct) {
-        return gam / rate;
+        return scale * gam;
     }
     const uni = generator.float(f64);
     const fix = std.math.pow(f64, uni, 1 / shape);
-    return gam / rate * fix;
+    return scale * fix * gam;
 }
 
-pub fn fill(buffer: []f64, generator: std.Random, shape: f64, rate: f64) void {
-    assert(isFinite(shape) and isFinite(rate));
-    assert(shape > 0 and rate > 0);
+pub fn fill(buffer: []f64, generator: std.Random, shape: f64, scale: f64) void {
+    assert(isFinite(shape) and isFinite(scale));
+    assert(shape > 0 and scale > 0);
     if (shape == 1) {
         for (buffer) |*x| {
             const exp = generator.floatExp(f64);
-            x.* = exp / rate;
+            x.* = scale * exp;
         }
         return;
     }
@@ -96,12 +96,12 @@ pub fn fill(buffer: []f64, generator: std.Random, shape: f64, rate: f64) void {
     for (buffer) |*x| {
         const gam = rejection(generator, d, c);
         if (correct) {
-            x.* = gam / rate;
+            x.* = scale * gam;
             continue;
         }
         const uni = generator.float(f64);
         const fix = std.math.pow(f64, uni, invshape);
-        x.* = gam / rate * fix;
+        x.* = scale * fix * gam;
     }
 }
 
@@ -125,14 +125,14 @@ fn rejection(generator: std.Random, d: f64, c: f64) f64 {
     };
 }
 
-export fn rv_gamma_density(x: f64, shape: f64, rate: f64) f64 {
-    return density(x, shape, rate);
+export fn rv_gamma_density(x: f64, shape: f64, scale: f64) f64 {
+    return density(x, shape, scale);
 }
-export fn rv_gamma_probability(q: f64, shape: f64, rate: f64) f64 {
-    return probability(q, shape, rate);
+export fn rv_gamma_probability(q: f64, shape: f64, scale: f64) f64 {
+    return probability(q, shape, scale);
 }
-export fn rv_gamma_quantile(p: f64, shape: f64, rate: f64) f64 {
-    return quantile(p, shape, rate);
+export fn rv_gamma_quantile(p: f64, shape: f64, scale: f64) f64 {
+    return quantile(p, shape, scale);
 }
 
 const expectEqual = std.testing.expectEqual;
@@ -145,28 +145,28 @@ test density {
     try expectEqual(0, density( inf, 3, 5));
 
     try expectEqual(inf, density(0, 0.9, 5));
-    try expectEqual(  5, density(0, 1  , 5));
-    try expectEqual(  0, density(0, 1.1, 5));
+    try expectEqual(0.2, density(0, 1  , 5));
+    try expectEqual(0  , density(0, 1.1, 5));
 
-    try expectApproxEqRel(0                 , density(0, 3, 5), eps);
-    try expectApproxEqRel(0.4211216874428417, density(1, 3, 5), eps);
-    try expectApproxEqRel(0.0113499824406212, density(2, 3, 5), eps);
+    try expectApproxEqRel(0                   , density(0, 3, 5), eps);
+    try expectApproxEqRel(0.003274923012311927, density(1, 3, 5), eps);
+    try expectApproxEqRel(0.010725120736570228, density(2, 3, 5), eps);
 }
 
 test probability {
     try expectEqual(0, probability(-inf, 3, 5));
     try expectEqual(1, probability( inf, 3, 5));
 
-    try expectApproxEqRel(0                 , probability(0, 3, 5), eps);
-    try expectApproxEqRel(0.8753479805169189, probability(1, 3, 5), eps);
-    try expectApproxEqRel(0.9972306042844884, probability(2, 3, 5), eps);
+    try expectApproxEqRel(0                   , probability(0, 3, 5), eps);
+    try expectApproxEqRel(0.001148481244862132, probability(1, 3, 5), eps);
+    try expectApproxEqRel(0.007926331867253834, probability(2, 3, 5), eps);
 }
 
 test quantile {
-    try expectApproxEqRel(0                 , quantile(0  , 3, 5), eps);
-    try expectApproxEqRel(0.3070088405289287, quantile(0.2, 3, 5), eps);
-    try expectApproxEqRel(0.4570153808006763, quantile(0.4, 3, 5), eps);
-    try expectApproxEqRel(0.6210757194526701, quantile(0.6, 3, 5), eps);
-    try expectApproxEqRel(0.8558059720250668, quantile(0.8, 3, 5), eps);
-    try expectEqual      (inf               , quantile(1  , 3, 5)     );
+    try expectApproxEqRel( 0               , quantile(0  , 3, 5), eps);
+    try expectApproxEqRel( 7.67522101322321, quantile(0.2, 3, 5), eps);
+    try expectApproxEqRel(11.42538452001690, quantile(0.4, 3, 5), eps);
+    try expectApproxEqRel(15.52689298631674, quantile(0.6, 3, 5), eps);
+    try expectApproxEqRel(21.39514930062666, quantile(0.8, 3, 5), eps);
+    try expectEqual      (inf              , quantile(1  , 3, 5)     );
 }

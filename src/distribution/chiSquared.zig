@@ -9,25 +9,25 @@ const inf = std.math.inf(f64);
 
 /// f(x) = 0.5 / gamma(ν / 2) (x / 2)^(ν / 2 - 1) exp(-x / 2)
 pub fn density(x: f64, df: f64) f64 {
-    return gamma.density(x, 0.5 * df, 0.5);
+    return gamma.density(x, 0.5 * df, 2);
 }
 
 /// No closed form
 pub fn probability(q: f64, df: f64) f64 {
-    return gamma.probability(q, 0.5 * df, 0.5);
+    return gamma.probability(q, 0.5 * df, 2);
 }
 
 /// No closed form
 pub fn quantile(p: f64, df: f64) f64 {
-    return gamma.quantile(p, 0.5 * df, 0.5);
+    return gamma.quantile(p, 0.5 * df, 2);
 }
 
 pub fn random(generator: std.Random, df: f64) f64 {
-    return gamma.random(generator, 0.5 * df, 0.5);
+    return gamma.random(generator, 0.5 * df, 2);
 }
 
 pub fn fill(buffer: []f64, generator: std.Random, df: f64) void {
-    gamma.fill(buffer, generator, 0.5 * df, 0.5);
+    gamma.fill(buffer, generator, 0.5 * df, 2);
 }
 
 export fn rv_chi_squared_density(x: f64, df: f64) f64 {
