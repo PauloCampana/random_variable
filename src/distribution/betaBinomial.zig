@@ -55,6 +55,11 @@ pub fn probability(q: f64, size: u64, shape1: f64, shape2: f64) f64 {
 }
 
 /// No closed form
+pub fn survival(t: f64, size: u64, shape1: f64, shape2: f64) f64 {
+    return 1 - probability(t, size, shape1, shape2);
+}
+
+/// No closed form
 pub fn quantile(p: f64, size: u64, shape1: f64, shape2: f64) f64 {
     assert(isFinite(shape1) and isFinite(shape2));
     assert(shape1 > 0 and shape2 > 0);
@@ -119,6 +124,9 @@ export fn rv_beta_binomial_density(x: f64, size: u64, shape1: f64, shape2: f64) 
 export fn rv_beta_binomial_probability(q: f64, size: u64, shape1: f64, shape2: f64) f64 {
     return probability(q, size, shape1, shape2);
 }
+export fn rv_beta_binomial_survival(t: f64, size: u64, shape1: f64, shape2: f64) f64 {
+    return survival(t, size, shape1, shape2);
+}
 export fn rv_beta_binomial_quantile(p: f64, size: u64, shape1: f64, shape2: f64) f64 {
     return quantile(p, size, shape1, shape2);
 }
@@ -156,6 +164,21 @@ test probability {
     try expectApproxEqRel(0.05147058823529412, probability( 0.9, 10, 3, 5), eps);
     try expectApproxEqRel(0.16176470588235294, probability( 1  , 10, 3, 5), eps);
     try expectApproxEqRel(0.16176470588235294, probability( 1.1, 10, 3, 5), eps);
+}
+
+test survival {
+    try expectEqual(1, survival(-inf, 10, 3, 5));
+    try expectEqual(0, survival( inf, 10, 3, 5));
+
+    try expectEqual(0, survival(0, 0, 3, 5));
+    try expectEqual(0, survival(1, 0, 3, 5));
+
+    try expectApproxEqRel(1                 , survival(-0.1, 10, 3, 5), eps);
+    try expectApproxEqRel(0.9485294117647058, survival( 0  , 10, 3, 5), eps);
+    try expectApproxEqRel(0.9485294117647058, survival( 0.1, 10, 3, 5), eps);
+    try expectApproxEqRel(0.9485294117647058, survival( 0.9, 10, 3, 5), eps);
+    try expectApproxEqRel(0.8382352941176470, survival( 1  , 10, 3, 5), eps);
+    try expectApproxEqRel(0.8382352941176470, survival( 1.1, 10, 3, 5), eps);
 }
 
 test quantile {

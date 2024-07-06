@@ -30,7 +30,7 @@ pub fn probability(q: f64, location: f64, scale: f64) f64 {
     return 1 / (1 + @exp(-z));
 }
 
-/// S(t) = exp(-(t - μ) / σ) / (1 + exp(-(t - μ) / σ))
+/// S(t) = 1 / (1 + exp((t - μ) / σ))
 pub fn survival(t: f64, location: f64, scale: f64) f64 {
     assert(isFinite(location) and isFinite(scale));
     assert(scale > 0);
@@ -39,8 +39,7 @@ pub fn survival(t: f64, location: f64, scale: f64) f64 {
         return 1;
     }
     const z = (t - location) / scale;
-    const e = @exp(-z);
-    return e / (1 + e);
+    return 1 / (1 + @exp(z));
 }
 
 /// Q(p) = μ + σ ln(p / (1 - p))

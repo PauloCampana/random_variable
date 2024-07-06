@@ -22,6 +22,8 @@ extern "C" {
 double rv_benford_density(double x, uint64_t base);
 /// F(q) = log_b(1 + ⌊q⌋)
 double rv_benford_probability(double q, uint64_t base);
+/// S(t) = log_b(b / (1 + ⌊t⌋))
+double rv_benford_survival(double t, uint64_t base);
 /// Q(p) = ⌈b^p⌉ - 1
 double rv_benford_quantile(double p, uint64_t base);
 
@@ -40,6 +42,12 @@ double rv_bernoulli_density(double x, double prob);
 ///
 /// F(q) = 1    , 1 <= q
 double rv_bernoulli_probability(double q, double prob);
+/// S(t) = 1,      t < 0
+///
+/// S(t) = p, 0 <= t < 1
+///
+/// S(t) = 0, 1 <= t
+double rv_bernoulli_survival(double t, double prob);
 /// Q(x) = 0, x <= 1 - p
 ///
 /// Q(x) = 1, x >  1 - p
@@ -56,6 +64,8 @@ double rv_beta_density(double x, double shape1, double shape2);
 /// No closed form
 double rv_beta_probability(double q, double shape1, double shape2);
 /// No closed form
+double rv_beta_survival(double t, double shape1, double shape2);
+/// No closed form
 double rv_beta_quantile(double p, double shape1, double shape2);
 
 //! Support: {0,1,⋯,n}
@@ -70,6 +80,8 @@ double rv_beta_binomial_density(double x, uint64_t size, double shape1, double s
 /// No closed form
 double rv_beta_binomial_probability(double q, uint64_t size, double shape1, double shape2);
 /// No closed form
+double rv_beta_binomial_survival(double t, uint64_t size, double shape1, double shape2);
+/// No closed form
 double rv_beta_binomial_quantile(double p, uint64_t size, double shape1, double shape2);
 
 //! Support: [0,∞)
@@ -82,6 +94,8 @@ double rv_beta_binomial_quantile(double p, uint64_t size, double shape1, double 
 double rv_beta_prime_density(double x, double shape1, double shape2);
 /// No closed form
 double rv_beta_prime_probability(double q, double shape1, double shape2);
+/// No closed form
+double rv_beta_prime_survival(double t, double shape1, double shape2);
 /// No closed form
 double rv_beta_prime_quantile(double p, double shape1, double shape2);
 
@@ -96,6 +110,8 @@ double rv_binomial_density(double x, uint64_t size, double prob);
 /// No closed form
 double rv_binomial_probability(double q, uint64_t size, double prob);
 /// No closed form
+double rv_binomial_survival(double t, uint64_t size, double prob);
+/// No closed form
 double rv_binomial_quantile(double p, uint64_t size, double prob);
 
 //! Support: (-∞,∞)
@@ -108,6 +124,8 @@ double rv_binomial_quantile(double p, uint64_t size, double prob);
 double rv_cauchy_density(double x, double location, double scale);
 /// F(q) = 0.5 + arctan((q - μ) / σ) / π
 double rv_cauchy_probability(double q, double location, double scale);
+/// S(t) = 0.5 - arctan((t - μ) / σ) / π
+double rv_cauchy_survival(double q, double location, double scale);
 /// Q(p) = μ + σ tan(π (p - 0.5))
 double rv_cauchy_quantile(double p, double location, double scale);
 
@@ -333,7 +351,7 @@ double rv_logarithmic_quantile(double p, double prob);
 double rv_logistic_density(double x, double location, double scale);
 /// F(q) = 1 / (1 + exp(-(q - μ) / σ))
 double rv_logistic_probability(double q, double location, double scale);
-/// S(t) = exp(-(t - μ) / σ) / (1 + exp(-(t - μ) / σ))
+/// S(t) = 1 / (1 + exp((t - μ) / σ))
 double rv_logistic_survival(double t, double location, double scale);
 /// Q(p) = μ + σ ln(p / (1 - p))
 double rv_logistic_quantile(double p, double location, double scale);

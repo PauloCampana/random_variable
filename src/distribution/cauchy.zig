@@ -28,6 +28,15 @@ pub fn probability(q: f64, location: f64, scale: f64) f64 {
     return 0.5 + std.math.atan(z) / std.math.pi;
 }
 
+/// S(t) = 0.5 - arctan((t - μ) / σ) / π
+pub fn survival(t: f64, location: f64, scale: f64) f64 {
+    assert(isFinite(location) and isFinite(scale));
+    assert(scale > 0);
+    assert(!isNan(t));
+    const z = (t - location) / scale;
+    return 0.5 - std.math.atan(z) / std.math.pi;
+}
+
 /// Q(p) = μ + σ tan(π (p - 0.5))
 pub fn quantile(p: f64, location: f64, scale: f64) f64 {
     assert(isFinite(location) and isFinite(scale));
@@ -65,6 +74,9 @@ export fn rv_cauchy_density(x: f64, location: f64, scale: f64) f64 {
 export fn rv_cauchy_probability(q: f64, location: f64, scale: f64) f64 {
     return probability(q, location, scale);
 }
+export fn rv_cauchy_survival(t: f64, location: f64, scale: f64) f64 {
+    return survival(t, location, scale);
+}
 export fn rv_cauchy_quantile(p: f64, location: f64, scale: f64) f64 {
     return quantile(p, location, scale);
 }
@@ -90,6 +102,15 @@ test probability {
     try expectApproxEqRel(0.5               , probability(0, 0, 1), eps);
     try expectApproxEqRel(0.75              , probability(1, 0, 1), eps);
     try expectApproxEqRel(0.8524163823495667, probability(2, 0, 1), eps);
+}
+
+test survival {
+    try expectEqual(1, survival(-inf, 0, 1));
+    try expectEqual(0, survival( inf, 0, 1));
+
+    try expectApproxEqRel(0.5               , survival(0, 0, 1), eps);
+    try expectApproxEqRel(0.25              , survival(1, 0, 1), eps);
+    try expectApproxEqRel(0.1475836176504332, survival(2, 0, 1), eps);
 }
 
 test quantile {

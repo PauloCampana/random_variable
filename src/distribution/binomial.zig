@@ -40,14 +40,23 @@ pub fn probability(q: f64, size: u64, prob: f64) f64 {
     if (q >= n) {
         return 1;
     }
-    if (prob == 0) {
-        return 1;
-    }
-    if (prob == 1) {
-        return 0;
-    }
     const fq = @floor(q);
     return special.beta_probability(n - fq, fq + 1, 1 - prob);
+}
+
+/// No closed form
+pub fn survival(t: f64, size: u64, prob: f64) f64 {
+    assert(0 <= prob and prob <= 1);
+    assert(!isNan(t));
+    const n: f64 = @floatFromInt(size);
+    if (t < 0) {
+        return 1;
+    }
+    if (t >= n) {
+        return 0;
+    }
+    const ft = @floor(t);
+    return special.beta_probability(ft + 1, n - ft, prob);
 }
 
 /// No closed form
@@ -223,6 +232,9 @@ export fn rv_binomial_density(x: f64, size: u64, prob: f64) f64 {
 export fn rv_binomial_probability(q: f64, size: u64, prob: f64) f64 {
     return probability(q, size, prob);
 }
+export fn rv_binomial_survival(t: f64, size: u64, prob: f64) f64 {
+    return survival(t, size, prob);
+}
 export fn rv_binomial_quantile(p: f64, size: u64, prob: f64) f64 {
     return quantile(p, size, prob);
 }
@@ -270,6 +282,26 @@ test probability {
     try expectApproxEqRel(0.1073741824, probability( 0.9, 10, 0.2), eps);
     try expectApproxEqRel(0.3758096384, probability( 1  , 10, 0.2), eps);
     try expectApproxEqRel(0.3758096384, probability( 1.1, 10, 0.2), eps);
+}
+
+test survival {
+    try expectEqual(1, survival(-inf, 10, 0.2));
+    try expectEqual(0, survival( inf, 10, 0.2));
+
+    try expectEqual(0, survival( 0,  0, 0.2));
+    try expectEqual(0, survival( 1,  0, 0.2));
+    try expectEqual(0, survival( 0, 10, 0  ));
+    try expectEqual(0, survival( 1, 10, 0  ));
+    try expectEqual(1, survival( 9, 10, 1  ));
+    try expectEqual(0, survival(10, 10, 1  ));
+    try expectEqual(0, survival(11, 10, 1  ));
+
+    try expectApproxEqRel(1           , survival(-0.1, 10, 0.2), eps);
+    try expectApproxEqRel(0.8926258176, survival( 0  , 10, 0.2), eps);
+    try expectApproxEqRel(0.8926258176, survival( 0.1, 10, 0.2), eps);
+    try expectApproxEqRel(0.8926258176, survival( 0.9, 10, 0.2), eps);
+    try expectApproxEqRel(0.6241903616, survival( 1  , 10, 0.2), eps);
+    try expectApproxEqRel(0.6241903616, survival( 1.1, 10, 0.2), eps);
 }
 
 test quantile {

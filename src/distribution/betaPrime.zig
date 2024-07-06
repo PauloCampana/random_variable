@@ -47,6 +47,21 @@ pub fn probability(q: f64, shape1: f64, shape2: f64) f64 {
 }
 
 /// No closed form
+pub fn survival(t: f64, shape1: f64, shape2: f64) f64 {
+    assert(isFinite(shape1) and isFinite(shape2));
+    assert(shape1 > 0 and shape2 > 0);
+    assert(!isNan(t));
+    if (t <= 0) {
+        return 1;
+    }
+    if (t == inf) {
+        return 0;
+    }
+    const z = 1 / (1 + t);
+    return special.beta_probability(shape2, shape1, z);
+}
+
+/// No closed form
 pub fn quantile(p: f64, shape1: f64, shape2: f64) f64 {
     assert(isFinite(shape1) and isFinite(shape2));
     assert(shape1 > 0 and shape2 > 0);
@@ -128,6 +143,9 @@ export fn rv_beta_prime_density(x: f64, shape1: f64, shape2: f64) f64 {
 export fn rv_beta_prime_probability(q: f64, shape1: f64, shape2: f64) f64 {
     return probability(q, shape1, shape2);
 }
+export fn rv_beta_prime_survival(t: f64, shape1: f64, shape2: f64) f64 {
+    return survival(t, shape1, shape2);
+}
 export fn rv_beta_prime_quantile(p: f64, shape1: f64, shape2: f64) f64 {
     return quantile(p, shape1, shape2);
 }
@@ -157,6 +175,15 @@ test probability {
     try expectApproxEqRel(0                 , probability(0, 3, 5), eps);
     try expectApproxEqRel(0.7734375         , probability(1, 3, 5), eps);
     try expectApproxEqRel(0.9547325102880658, probability(2, 3, 5), eps);
+}
+
+test survival {
+    try expectEqual(1, survival(-inf, 3, 5));
+    try expectEqual(0, survival( inf, 3, 5));
+
+    try expectApproxEqRel(1                  , survival(0, 3, 5), eps);
+    try expectApproxEqRel(0.2265625          , survival(1, 3, 5), eps);
+    try expectApproxEqRel(0.04526748971193415, survival(2, 3, 5), eps);
 }
 
 test quantile {

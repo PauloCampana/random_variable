@@ -46,7 +46,17 @@ pub fn probability(q: f64, size: u64, prob: f64) f64 {
 
 /// No closed form
 pub fn survival(t: f64, size: u64, prob: f64) f64 {
-    return 1 - probability(t, size, prob);
+    assert(0 < prob and prob <= 1);
+    assert(size != 0);
+    assert(!isNan(t));
+    if (t < 0) {
+        return 1;
+    }
+    if (t == inf) {
+        return 0;
+    }
+    const n: f64 = @floatFromInt(size);
+    return special.beta_probability(@floor(t) + 1, n, 1 - prob);
 }
 
 /// No closed form

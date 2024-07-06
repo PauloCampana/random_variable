@@ -33,6 +33,20 @@ pub fn probability(q: f64, base: u64) f64 {
     return std.math.log1p(@floor(q)) / @log(b);
 }
 
+/// S(t) = log_b(b / (1 + ⌊t⌋))
+pub fn survival(t: f64, base: u64) f64 {
+    assert(base >= 2);
+    assert(!isNan(t));
+    const b: f64 = @floatFromInt(base);
+    if (t < 1) {
+        return 1;
+    }
+    if (t >= b - 1) {
+        return 0;
+    }
+    return @log(b / (1 + @floor(t))) / @log(b);
+}
+
 /// Q(p) = ⌈b^p⌉ - 1
 pub fn quantile(p: f64, base: u64) f64 {
     assert(base >= 2);
@@ -71,6 +85,9 @@ export fn rv_benford_density(x: f64, base: u64) f64 {
 }
 export fn rv_benford_probability(q: f64, base: u64) f64 {
     return probability(q, base);
+}
+export fn rv_benford_survival(t: f64, base: u64) f64 {
+    return survival(t, base);
 }
 export fn rv_benford_quantile(p: f64, base: u64) f64 {
     return quantile(p, base);
@@ -111,6 +128,22 @@ test probability {
     try expectApproxEqRel(0.3010299956639812, probability(1.9, 10), eps);
     try expectApproxEqRel(0.4771212547196624, probability(2  , 10), eps);
     try expectApproxEqRel(0.4771212547196624, probability(2.1, 10), eps);
+}
+
+test survival {
+    try expectEqual(1, survival(-inf, 10));
+    try expectEqual(0, survival( inf, 10));
+
+    try expectEqual(1, survival(0.9, 2));
+    try expectEqual(0, survival(1  , 2));
+    try expectEqual(0, survival(1.1, 2));
+
+    try expectApproxEqRel(1                 , survival(0.9, 10), eps);
+    try expectApproxEqRel(0.6989700043360188, survival(1  , 10), eps);
+    try expectApproxEqRel(0.6989700043360188, survival(1.1, 10), eps);
+    try expectApproxEqRel(0.6989700043360188, survival(1.9, 10), eps);
+    try expectApproxEqRel(0.5228787452803375, survival(2  , 10), eps);
+    try expectApproxEqRel(0.5228787452803375, survival(2.1, 10), eps);
 }
 
 test quantile {

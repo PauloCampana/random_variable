@@ -40,6 +40,23 @@ pub fn probability(q: f64, prob: f64) f64 {
     return 1;
 }
 
+/// S(t) = 1,      t < 0
+///
+/// S(t) = p, 0 <= t < 1
+///
+/// S(t) = 0, 1 <= t
+pub fn survival(t: f64, prob: f64) f64 {
+    assert(0 <= prob and prob <= 1);
+    assert(!isNan(t));
+    if (t < 0) {
+        return 1;
+    }
+    if (t < 1) {
+        return prob;
+    }
+    return 0;
+}
+
 /// Q(x) = 0, x <= 1 - p
 ///
 /// Q(x) = 1, x >  1 - p
@@ -75,6 +92,9 @@ export fn rv_bernoulli_density(x: f64, prob: f64) f64 {
 export fn rv_bernoulli_probability(q: f64, prob: f64) f64 {
     return probability(q, prob);
 }
+export fn rv_bernoulli_survival(t: f64, prob: f64) f64 {
+    return survival(t, prob);
+}
 export fn rv_bernoulli_quantile(p: f64, prob: f64) f64 {
     return quantile(p, prob);
 }
@@ -106,6 +126,18 @@ test probability {
     try expectApproxEqRel(0.8, probability( 0.9, 0.2), eps);
     try expectApproxEqRel(1  , probability( 1  , 0.2), eps);
     try expectApproxEqRel(1  , probability( 1.1, 0.2), eps);
+}
+
+test survival {
+    try expectEqual(1, survival(-inf, 0.2));
+    try expectEqual(0, survival( inf, 0.2));
+
+    try expectApproxEqRel(1  , survival(-0.1, 0.2), eps);
+    try expectApproxEqRel(0.2, survival( 0  , 0.2), eps);
+    try expectApproxEqRel(0.2, survival( 0.1, 0.2), eps);
+    try expectApproxEqRel(0.2, survival( 0.9, 0.2), eps);
+    try expectApproxEqRel(0  , survival( 1  , 0.2), eps);
+    try expectApproxEqRel(0  , survival( 1.1, 0.2), eps);
 }
 
 test quantile {
