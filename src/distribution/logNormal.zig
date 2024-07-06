@@ -37,6 +37,11 @@ pub fn probability(q: f64, log_location: f64, log_scale: f64) f64 {
 }
 
 /// No closed form
+pub fn survival(t: f64, log_location: f64, log_scale: f64) f64 {
+    return 1 - probability(t, log_location, log_scale);
+}
+
+/// No closed form
 pub fn quantile(p: f64, log_location: f64, log_scale: f64) f64 {
     assert(isFinite(log_location) and isFinite(log_scale));
     assert(log_scale > 0);
@@ -67,6 +72,9 @@ export fn rv_log_normal_density(x: f64, log_location: f64, log_scale: f64) f64 {
 export fn rv_log_normal_probability(q: f64, log_location: f64, log_scale: f64) f64 {
     return probability(q, log_location, log_scale);
 }
+export fn rv_log_normal_survival(t: f64, log_location: f64, log_scale: f64) f64 {
+    return survival(t, log_location, log_scale);
+}
 export fn rv_log_normal_quantile(p: f64, log_location: f64, log_scale: f64) f64 {
     return quantile(p, log_location, log_scale);
 }
@@ -92,6 +100,15 @@ test probability {
     try expectApproxEqRel(0                 , probability(0, 0, 1), eps);
     try expectApproxEqRel(0.5               , probability(1, 0, 1), eps);
     try expectApproxEqRel(0.7558914042144173, probability(2, 0, 1), eps);
+}
+
+test survival {
+    try expectEqual(1, survival(-inf, 0, 1));
+    try expectEqual(0, survival( inf, 0, 1));
+
+    try expectApproxEqRel(1                 , survival(0, 0, 1), eps);
+    try expectApproxEqRel(0.5               , survival(1, 0, 1), eps);
+    try expectApproxEqRel(0.2441085957855827, survival(2, 0, 1), eps);
 }
 
 test quantile {

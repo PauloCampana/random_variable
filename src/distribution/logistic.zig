@@ -30,6 +30,19 @@ pub fn probability(q: f64, location: f64, scale: f64) f64 {
     return 1 / (1 + @exp(-z));
 }
 
+/// S(t) = exp(-(t - μ) / σ) / (1 + exp(-(t - μ) / σ))
+pub fn survival(t: f64, location: f64, scale: f64) f64 {
+    assert(isFinite(location) and isFinite(scale));
+    assert(scale > 0);
+    assert(!isNan(t));
+    if (t == -inf) {
+        return 1;
+    }
+    const z = (t - location) / scale;
+    const e = @exp(-z);
+    return e / (1 + e);
+}
+
 /// Q(p) = μ + σ ln(p / (1 - p))
 pub fn quantile(p: f64, location: f64, scale: f64) f64 {
     assert(isFinite(location) and isFinite(scale));
@@ -61,6 +74,9 @@ export fn rv_logistic_density(x: f64, location: f64, scale: f64) f64 {
 export fn rv_logistic_probability(q: f64, location: f64, scale: f64) f64 {
     return probability(q, location, scale);
 }
+export fn rv_logistic_survival(t: f64, location: f64, scale: f64) f64 {
+    return survival(t, location, scale);
+}
 export fn rv_logistic_quantile(p: f64, location: f64, scale: f64) f64 {
     return quantile(p, location, scale);
 }
@@ -86,6 +102,15 @@ test probability {
     try expectApproxEqRel(0.5               , probability(0, 0, 1), eps);
     try expectApproxEqRel(0.7310585786300049, probability(1, 0, 1), eps);
     try expectApproxEqRel(0.8807970779778823, probability(2, 0, 1), eps);
+}
+
+test survival {
+    try expectEqual(1, survival(-inf, 0, 1));
+    try expectEqual(0, survival( inf, 0, 1));
+
+    try expectApproxEqRel(0.5               , survival(0, 0, 1), eps);
+    try expectApproxEqRel(0.2689414213699951, survival(1, 0, 1), eps);
+    try expectApproxEqRel(0.1192029220221175, survival(2, 0, 1), eps);
 }
 
 test quantile {

@@ -19,7 +19,7 @@ pub fn density(x: f64, shape: f64, scale: f64) f64 {
         return 0;
     }
     const z = x / scale;
-    const inner = 1 - @exp(z);
+    const inner = -std.math.expm1(z);
     const outer = @exp(shape * inner + z);
     return shape / scale * outer;
 }
@@ -33,9 +33,21 @@ pub fn probability(q: f64, shape: f64, scale: f64) f64 {
         return 0;
     }
     const z = q / scale;
-    const inner = 1 - @exp(z);
-    const outer = @exp(shape * inner);
-    return 1 - outer;
+    const inner = -std.math.expm1(z);
+    return -std.math.expm1(shape * inner);
+}
+
+/// S(t) = exp(α(1 - exp(t / σ)))
+pub fn survival(t: f64, shape: f64, scale: f64) f64 {
+    assert(isFinite(shape) and isFinite(scale));
+    assert(shape > 0 and scale > 0);
+    assert(!isNan(t));
+    if (t <= 0) {
+        return 1;
+    }
+    const z = t / scale;
+    const inner = -std.math.expm1(z);
+    return @exp(shape * inner);
 }
 
 /// Q(p) = σ ln(1 - ln(1 - p) / α)
@@ -76,6 +88,9 @@ export fn rv_gompertz_density(x: f64, shape: f64, scale: f64) f64 {
 export fn rv_gompertz_probability(q: f64, shape: f64, scale: f64) f64 {
     return probability(q, shape, scale);
 }
+export fn rv_gompertz_survival(t: f64, shape: f64, scale: f64) f64 {
+    return survival(t, shape, scale);
+}
 export fn rv_gompertz_quantile(p: f64, shape: f64, scale: f64) f64 {
     return quantile(p, shape, scale);
 }
@@ -101,6 +116,15 @@ test probability {
     try expectApproxEqRel(0                 , probability(0, 3, 5), eps);
     try expectApproxEqRel(0.4853191475940816, probability(1, 3, 5), eps);
     try expectApproxEqRel(0.7713297096238283, probability(2, 3, 5), eps);
+}
+
+test survival {
+    try expectEqual(1, survival(-inf, 3, 5));
+    try expectEqual(0, survival( inf, 3, 5));
+
+    try expectApproxEqRel(1                 , survival(0, 3, 5), eps);
+    try expectApproxEqRel(0.5146808524059183, survival(1, 3, 5), eps);
+    try expectApproxEqRel(0.2286702903761716, survival(2, 3, 5), eps);
 }
 
 test quantile {

@@ -29,6 +29,17 @@ pub fn probability(q: f64, prob: f64) f64 {
     return -std.math.expm1(p);
 }
 
+/// S(t) = (1 - p)^(⌊t⌋ + 1)
+pub fn survival(t: f64, prob: f64) f64 {
+    assert(0 < prob and prob <= 1);
+    assert(!isNan(t));
+    if (t < 0) {
+        return 1;
+    }
+    const p = (@floor(t) + 1) * std.math.log1p(-prob);
+    return @exp(p);
+}
+
 /// Q(x) = ⌊ln(1 - x) / ln(1 - p)⌋
 pub fn quantile(p: f64, prob: f64) f64 {
     assert(0 < prob and prob <= 1);
@@ -83,6 +94,9 @@ export fn rv_geometric_density(x: f64, prob: f64) f64 {
 export fn rv_geometric_probability(q: f64, prob: f64) f64 {
     return probability(q, prob);
 }
+export fn rv_geometric_survival(t: f64, prob: f64) f64 {
+    return survival(t, prob);
+}
 export fn rv_geometric_quantile(p: f64, prob: f64) f64 {
     return quantile(p, prob);
 }
@@ -121,6 +135,20 @@ test probability {
     try expectApproxEqRel(0.2 , probability( 0.9, 0.2), eps);
     try expectApproxEqRel(0.36, probability( 1  , 0.2), eps);
     try expectApproxEqRel(0.36, probability( 1.1, 0.2), eps);
+}
+
+test survival {
+    try expectEqual(1, survival(-inf, 0.2));
+    try expectEqual(0, survival( inf, 0.2));
+    try expectEqual(1, survival(-inf, 1  ));
+    try expectEqual(0, survival( inf, 1  ));
+
+    try expectApproxEqRel(1   , survival(-0.1, 0.2), eps);
+    try expectApproxEqRel(0.8 , survival( 0  , 0.2), eps);
+    try expectApproxEqRel(0.8 , survival( 0.1, 0.2), eps);
+    try expectApproxEqRel(0.8 , survival( 0.9, 0.2), eps);
+    try expectApproxEqRel(0.64, survival( 1  , 0.2), eps);
+    try expectApproxEqRel(0.64, survival( 1.1, 0.2), eps);
 }
 
 test quantile {

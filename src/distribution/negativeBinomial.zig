@@ -37,7 +37,7 @@ pub fn probability(q: f64, size: u64, prob: f64) f64 {
     if (q < 0) {
         return 0;
     }
-    if (q == inf or prob == 1) {
+    if (q == inf) {
         return 1;
     }
     const n: f64 = @floatFromInt(size);

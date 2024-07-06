@@ -55,6 +55,11 @@ pub fn probability(q: f64, total: u64, good: u64, tries: u64) f64 {
 }
 
 /// No closed form
+pub fn survival(t: f64, total: u64, good: u64, tries: u64) f64 {
+    return 1 - probability(t, total, good, tries);
+}
+
+/// No closed form
 pub fn quantile(p: f64, total: u64, good: u64, tries: u64) f64 {
     assert(good <= total and tries <= total);
     assert(0 <= p and p <= 1);
@@ -127,6 +132,9 @@ export fn rv_hypergeometric_density(x: f64, total: u64, good: u64, tries: u64) f
 export fn rv_hypergeometric_probability(q: f64, total: u64, good: u64, tries: u64) f64 {
     return probability(q, total, good, tries);
 }
+export fn rv_hypergeometric_survival(t: f64, total: u64, good: u64, tries: u64) f64 {
+    return survival(t, total, good, tries);
+}
 export fn rv_hypergeometric_quantile(p: f64, total: u64, good: u64, tries: u64) f64 {
     return quantile(p, total, good, tries);
 }
@@ -186,6 +194,32 @@ test probability {
     try expectApproxEqRel(0.2222222222222222, probability( 0.9, 10, 2, 5), eps);
     try expectApproxEqRel(0.7777777777777778, probability( 1  , 10, 2, 5), eps);
     try expectApproxEqRel(0.7777777777777778, probability( 1.1, 10, 2, 5), eps);
+}
+
+test survival {
+    try expectEqual(1, survival(-inf, 10, 2, 5));
+    try expectEqual(0, survival( inf, 10, 2, 5));
+
+    try expectEqual(0, survival( 0, 10,  2, 0 ));
+    try expectEqual(0, survival( 1, 10,  2, 0 ));
+    try expectEqual(0, survival( 0, 10,  0, 5 ));
+    try expectEqual(0, survival( 1, 10,  0, 5 ));
+    try expectEqual(1, survival( 4, 10, 10, 5 ));
+    try expectEqual(0, survival( 5, 10, 10, 5 ));
+    try expectEqual(0, survival( 6, 10, 10, 5 ));
+    try expectEqual(1, survival( 1, 10,  2, 10));
+    try expectEqual(0, survival( 2, 10,  2, 10));
+    try expectEqual(0, survival( 3, 10,  2, 10));
+    try expectEqual(1, survival( 9, 10, 10, 10));
+    try expectEqual(0, survival(10, 10, 10, 10));
+    try expectEqual(0, survival(11, 10, 10, 10));
+
+    try expectApproxEqRel(1                 , survival(-0.1, 10, 2, 5), eps);
+    try expectApproxEqRel(0.7777777777777778, survival( 0  , 10, 2, 5), eps);
+    try expectApproxEqRel(0.7777777777777778, survival( 0.1, 10, 2, 5), eps);
+    try expectApproxEqRel(0.7777777777777778, survival( 0.9, 10, 2, 5), eps);
+    try expectApproxEqRel(0.2222222222222222, survival( 1  , 10, 2, 5), eps);
+    try expectApproxEqRel(0.2222222222222222, survival( 1.1, 10, 2, 5), eps);
 }
 
 test quantile {

@@ -43,6 +43,11 @@ pub fn probability(q: f64, prob: f64) f64 {
 }
 
 /// No closed form
+pub fn survival(t: f64, prob: f64) f64 {
+    return 1 - probability(t, prob);
+}
+
+/// No closed form
 pub fn quantile(p: f64, prob: f64) f64 {
     assert(0 < prob and prob < 1);
     assert(0 <= p and p <= 1);
@@ -91,6 +96,9 @@ export fn rv_logarithmic_density(x: f64, prob: f64) f64 {
 export fn rv_logarithmic_probability(q: f64, prob: f64) f64 {
     return probability(q, prob);
 }
+export fn rv_logarithmic_survival(t: f64, prob: f64) f64 {
+    return survival(t, prob);
+}
 export fn rv_logarithmic_quantile(p: f64, prob: f64) f64 {
     return quantile(p, prob);
 }
@@ -122,6 +130,18 @@ test probability {
     try expectApproxEqRel(0.8962840235449099, probability(1.9, 0.2), eps);
     try expectApproxEqRel(0.9859124258994009, probability(2  , 0.2), eps);
     try expectApproxEqRel(0.9859124258994009, probability(2.1, 0.2), eps);
+}
+
+test survival {
+    try expectEqual(1, survival(-inf, 0.2));
+    try expectEqual(0, survival( inf, 0.2));
+
+    try expectApproxEqRel(1                  , survival(0.9, 0.2), eps);
+    try expectApproxEqRel(0.10371597645509004, survival(1  , 0.2), eps);
+    try expectApproxEqRel(0.10371597645509004, survival(1.1, 0.2), eps);
+    try expectApproxEqRel(0.10371597645509004, survival(1.9, 0.2), eps);
+    try expectApproxEqRel(0.01408757410059904, survival(2  , 0.2), eps);
+    try expectApproxEqRel(0.01408757410059904, survival(2.1, 0.2), eps);
 }
 
 test quantile {

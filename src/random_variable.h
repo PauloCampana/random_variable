@@ -221,6 +221,8 @@ double rv_gamma_quantile(double p, double shape, double scale);
 double rv_geometric_density(double x, double prob);
 /// F(q) = 1 - (1 - p)^(⌊q⌋ + 1)
 double rv_geometric_probability(double q, double prob);
+/// S(t) = (1 - p)^(⌊t⌋ + 1)
+double rv_geometric_survival(double t, double prob);
 /// Q(x) = ⌊ln(1 - x) / ln(1 - p)⌋
 double rv_geometric_quantile(double p, double prob);
 
@@ -234,6 +236,8 @@ double rv_geometric_quantile(double p, double prob);
 double rv_gompertz_density(double x, double shape, double scale);
 /// F(q) = 1 - exp(α(1 - exp(q / σ)))
 double rv_gompertz_probability(double q, double shape, double scale);
+/// S(t) = exp(α(1 - exp(t / σ)))
+double rv_gompertz_survival(double t, double shape, double scale);
 /// Q(p) = σ ln(1 - ln(1 - p) / α)
 double rv_gompertz_quantile(double p, double shape, double scale);
 
@@ -247,6 +251,8 @@ double rv_gompertz_quantile(double p, double shape, double scale);
 double rv_gumbel_density(double x, double location, double scale);
 /// F(q) = exp(-exp(-(q - μ) / σ))
 double rv_gumbel_probability(double q, double location, double scale);
+/// S(t) = 1 - exp(-exp(-(t - μ) / σ))
+double rv_gumbel_survival(double t, double location, double scale);
 /// Q(p) = μ - σ ln(-ln(p))
 double rv_gumbel_quantile(double p, double location, double scale);
 
@@ -262,6 +268,8 @@ double rv_hypergeometric_density(double x, uint64_t total, uint64_t good, uint64
 /// No closed form
 double rv_hypergeometric_probability(double q, uint64_t total, uint64_t good, uint64_t tries);
 /// No closed form
+double rv_hypergeometric_survival(double t, uint64_t total, uint64_t good, uint64_t tries);
+/// No closed form
 double rv_hypergeometric_quantile(double p, uint64_t total, uint64_t good, uint64_t tries);
 
 //! Support: (-∞,∞)
@@ -276,6 +284,10 @@ double rv_laplace_density(double x, double location, double scale);
 ///
 /// F(q) = 1 - exp(-(q - μ) / σ)) / 2, x > μ
 double rv_laplace_probability(double q, double location, double scale);
+/// S(t) = 1 - exp(+(t - μ) / σ)) / 2, x < μ
+///
+/// S(t) =     exp(-(t - μ) / σ)) / 2, x > μ
+double rv_laplace_survival(double t, double location, double scale);
 /// Q(p) = μ + σ ln(2p)      , 0.0 < p < 0.5
 ///
 /// Q(p) = μ - σ ln(2(1 - p)), 0.5 < p < 1.0
@@ -291,6 +303,8 @@ double rv_logarithmic_density(double x, double prob);
 /// No closed form
 double rv_logarithmic_probability(double q, double prob);
 /// No closed form
+double rv_logarithmic_survival(double t, double prob);
+/// No closed form
 double rv_logarithmic_quantile(double p, double prob);
 
 //! Support: (-∞,∞)
@@ -303,6 +317,8 @@ double rv_logarithmic_quantile(double p, double prob);
 double rv_logistic_density(double x, double location, double scale);
 /// F(q) = 1 / (1 + exp(-(q - μ) / σ))
 double rv_logistic_probability(double q, double location, double scale);
+/// S(t) = exp(-(t - μ) / σ) / (1 + exp(-(t - μ) / σ))
+double rv_logistic_survival(double t, double location, double scale);
 /// Q(p) = μ + σ ln(p / (1 - p))
 double rv_logistic_quantile(double p, double location, double scale);
 
@@ -316,6 +332,8 @@ double rv_logistic_quantile(double p, double location, double scale);
 double rv_log_normal_density(double x, double log_location, double log_scale);
 /// No closed form
 double rv_log_normal_probability(double q, double log_location, double log_scale);
+/// No closed form
+double rv_log_normal_survival(double t, double log_location, double log_scale);
 /// No closed form
 double rv_log_normal_quantile(double p, double log_location, double log_scale);
 

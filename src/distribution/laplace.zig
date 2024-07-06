@@ -34,6 +34,21 @@ pub fn probability(q: f64, location: f64, scale: f64) f64 {
     }
 }
 
+/// S(t) = 1 - exp(+(t - μ) / σ)) / 2, x < μ
+///
+/// S(t) =     exp(-(t - μ) / σ)) / 2, x > μ
+pub fn survival(t: f64, location: f64, scale: f64) f64 {
+    assert(isFinite(location) and isFinite(scale));
+    assert(scale > 0);
+    assert(!isNan(t));
+    const z = (t - location) / scale;
+    if (t < location) {
+        return 1 - 0.5 * @exp(z);
+    } else {
+        return 0.5 * @exp(-z);
+    }
+}
+
 /// Q(p) = μ + σ ln(2p)      , 0.0 < p < 0.5
 ///
 /// Q(p) = μ - σ ln(2(1 - p)), 0.5 < p < 1.0
@@ -72,6 +87,9 @@ export fn rv_laplace_density(x: f64, location: f64, scale: f64) f64 {
 export fn rv_laplace_probability(q: f64, location: f64, scale: f64) f64 {
     return probability(q, location, scale);
 }
+export fn rv_laplace_survival(t: f64, location: f64, scale: f64) f64 {
+    return survival(t, location, scale);
+}
 export fn rv_laplace_quantile(p: f64, location: f64, scale: f64) f64 {
     return quantile(p, location, scale);
 }
@@ -97,6 +115,15 @@ test probability {
     try expectApproxEqRel(0.5               , probability(0, 0, 1), eps);
     try expectApproxEqRel(0.8160602794142788, probability(1, 0, 1), eps);
     try expectApproxEqRel(0.9323323583816936, probability(2, 0, 1), eps);
+}
+
+test survival {
+    try expectEqual(1, survival(-inf, 0, 1));
+    try expectEqual(0, survival( inf, 0, 1));
+
+    try expectApproxEqRel(0.5                , survival(0, 0, 1), eps);
+    try expectApproxEqRel(0.18393972058572116, survival(1, 0, 1), eps);
+    try expectApproxEqRel(0.06766764161830634, survival(2, 0, 1), eps);
 }
 
 test quantile {
