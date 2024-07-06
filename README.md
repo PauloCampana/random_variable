@@ -1,4 +1,5 @@
 ![](image.png)
+
 For over 30 probability distributions, this library provides:
 
 * Random variable generation
