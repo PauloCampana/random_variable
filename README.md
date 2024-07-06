@@ -1,14 +1,23 @@
 ![](image.png)
-
 For over 30 probability distributions, this library provides:
 
 * Random variable generation
-* Density, Probability and Quantile functions
+* Density, Probability, Survival and Quantile functions
 
-# Documentation
-Avaliable on <https://paulocampana.github.io/random_variable>
+Mathematical functions are tested for high precision and
+RNG tested to correctly fit the distribution
 
-# Importing library
+# Installation
+Builds static library with header file, optionally run tests
+```bash
+$ zig build -Doptimize=ReleaseFast
+$ zig build test
+$ zig build correctness -Doptimize=ReleaseFast
+```
+
+# [Documentation](https://paulocampana.github.io/random_variable)
+
+# Importing Zig module
 ```bash
 $ zig fetch --save git+https://github.com/PauloCampana/random_variable
 ```
@@ -27,5 +36,3 @@ exe.root_module.addImport("random_variable", rv.module("random_variable"));
 // main.zig
 const rv = @import("random_variable");
 ```
-
-Or just copy the whole project into yours and import `src/root.zig`

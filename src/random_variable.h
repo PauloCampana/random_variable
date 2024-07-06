@@ -1,4 +1,5 @@
-//! Density/mass, probability and quantile functions for probability distributions.
+//! Density, probability, survival and quantile functions
+//! for probability distributions.
 //!
 //! Asserts invalid distribution parameters on Debug and ReleaseSafe modes
 //! such as ±NaN, ±Inf, probabilities outside of the [0,1] interval or

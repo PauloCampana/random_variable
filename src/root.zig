@@ -1,5 +1,5 @@
-//! Density/mass, probability, quantile and random number generation
-//! functions for probability distributions.
+//! Density, probability, survival and quantile functions +
+//! random number generation for probability distributions.
 //!
 //! Asserts invalid distribution parameters on Debug and ReleaseSafe modes
 //! such as ±NaN, ±Inf, probabilities outside of the [0,1] interval or
