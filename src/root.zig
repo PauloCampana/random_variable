@@ -2,8 +2,8 @@
 //! functions for probability distributions.
 //!
 //! Asserts invalid distribution parameters on Debug and ReleaseSafe modes
-//! such as ±NaN, ±Inf, probabilities outside of the [0,1] interval and
-//! certain parameters with value zero or negative.
+//! such as ±NaN, ±Inf, probabilities outside of the [0,1] interval or
+//! negative shape/scale parameters
 //!
 //! Random variable generation has 2 flavours: `random` and `fill`,
 //!   * `random` returns a single random variable
