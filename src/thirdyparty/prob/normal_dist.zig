@@ -248,13 +248,7 @@ pub fn inverseNormalDist(y0: f64) f64 {
         z * polevl(z, P2[0..]) / p1evl(z, Q2[0..]);
 
     x = x0 - x1;
-    // this was originally `if (code != 0)`
-    // but got wrongly translated to `if (!code)`
-    // should be `if (code)`
-    // code != 0
-    // code != false
-    // code == true
-    // code
+
     if (code) {
         x = -x;
     }

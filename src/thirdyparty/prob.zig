@@ -1,7 +1,5 @@
 // Code from Cephes,
 // translated to zig by tiehuis, member of the zig core team
-// small updated by paulo campana
-// not yet avaliable at zig std library
 
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2015-2021 Zig Contributors

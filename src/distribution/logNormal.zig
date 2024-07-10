@@ -5,7 +5,7 @@
 //! - σ: `log_scale`    ∈ ( 0,∞)
 
 const std = @import("std");
-const special = @import("../special.zig");
+const normal = @import("normal.zig");
 const assert = std.debug.assert;
 const isFinite = std.math.isFinite;
 const isNan = std.math.isNan;
@@ -26,28 +26,24 @@ pub fn density(x: f64, log_location: f64, log_scale: f64) f64 {
 
 /// No closed form
 pub fn probability(q: f64, log_location: f64, log_scale: f64) f64 {
-    assert(isFinite(log_location) and isFinite(log_scale));
-    assert(log_scale > 0);
-    assert(!isNan(q));
     if (q <= 0) {
         return 0;
     }
-    const z = (@log(q) - log_location) / log_scale;
-    return special.normal_probability(z);
+    return normal.probability(@log(q), log_location, log_scale);
 }
 
 /// No closed form
 pub fn survival(t: f64, log_location: f64, log_scale: f64) f64 {
-    return 1 - probability(t, log_location, log_scale);
+    if (t <= 0) {
+        return 1;
+    }
+    return normal.survival(@log(t), log_location, log_scale);
 }
 
 /// No closed form
 pub fn quantile(p: f64, log_location: f64, log_scale: f64) f64 {
-    assert(isFinite(log_location) and isFinite(log_scale));
-    assert(log_scale > 0);
-    assert(0 <= p and p <= 1);
-    const q = special.normal_quantile(p);
-    return @exp(log_location + log_scale * q);
+    const q = normal.quantile(p, log_location, log_scale);
+    return @exp(q);
 }
 
 pub fn random(generator: std.Random, log_location: f64, log_scale: f64) f64 {

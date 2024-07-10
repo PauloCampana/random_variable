@@ -27,13 +27,16 @@ pub fn probability(q: f64, location: f64, scale: f64) f64 {
     assert(scale > 0);
     assert(!isNan(q));
     const z = (q - location) / scale;
-    return special.normal_probability(z);
+    return special.normal.probability(z);
 }
 
 /// No closed form
 pub fn survival(t: f64, location: f64, scale: f64) f64 {
-    // HACK: make special.normal_survival()
-    return 1 - probability(t, location, scale);
+    assert(isFinite(location) and isFinite(scale));
+    assert(scale > 0);
+    assert(!isNan(t));
+    const z = (t - location) / scale;
+    return special.normal.survival(z);
 }
 
 /// No closed form
@@ -41,7 +44,7 @@ pub fn quantile(p: f64, location: f64, scale: f64) f64 {
     assert(isFinite(location) and isFinite(scale));
     assert(scale > 0);
     assert(0 <= p and p <= 1);
-    const q = special.normal_quantile(p);
+    const q = special.normal.quantile(p);
     return location + scale * q;
 }
 
