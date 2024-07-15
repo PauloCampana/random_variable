@@ -33,7 +33,7 @@ pub fn probability(q: f64, lambda: f64) f64 {
     if (q == inf) {
         return 1;
     }
-    return special.gamma_survival(@floor(q) + 1, lambda);
+    return special.gamma.survival(lambda, @floor(q) + 1);
 }
 
 /// No closed form
@@ -47,7 +47,7 @@ pub fn survival(t: f64, lambda: f64) f64 {
     if (t == inf) {
         return 0;
     }
-    return special.gamma_probability(@floor(t) + 1, lambda);
+    return special.gamma.probability(lambda, @floor(t) + 1);
 }
 
 /// No closed form

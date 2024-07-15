@@ -5,10 +5,7 @@ const std = @import("std");
 const prob = @import("thirdyparty/prob.zig");
 
 pub const normal = @import("special/normal.zig");
-
-pub const gamma_probability = prob.incompleteGamma;
-pub const gamma_survival = prob.complementedIncompleteGamma;
-pub const gamma_quantile_mirrored = prob.inverseComplementedIncompleteGamma;
+pub const gamma = @import("special/gamma.zig");
 
 pub const beta_probability = prob.incompleteBeta;
 pub const beta_quantile = prob.inverseIncompleteBeta;

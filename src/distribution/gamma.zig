@@ -37,7 +37,7 @@ pub fn probability(q: f64, shape: f64, scale: f64) f64 {
     assert(shape > 0 and scale > 0);
     assert(!isNan(q));
     const z = q / scale;
-    return special.gamma_probability(shape, z);
+    return special.gamma.probability(z, shape);
 }
 
 /// No closed form
@@ -46,7 +46,7 @@ pub fn survival(t: f64, shape: f64, scale: f64) f64 {
     assert(shape > 0 and scale > 0);
     assert(!isNan(t));
     const z = t / scale;
-    return special.gamma_survival(shape, z);
+    return special.gamma.survival(z, shape);
 }
 
 /// No closed form
@@ -54,13 +54,7 @@ pub fn quantile(p: f64, shape: f64, scale: f64) f64 {
     assert(isFinite(shape) and isFinite(scale));
     assert(shape > 0 and scale > 0);
     assert(0 <= p and p <= 1);
-    if (p == 0) {
-        return 0;
-    }
-    if (p == 1) {
-        return inf;
-    }
-    const q = special.gamma_quantile_mirrored(shape, 1 - p);
+    const q = special.gamma.quantile(p, shape);
     return scale * q;
 }
 

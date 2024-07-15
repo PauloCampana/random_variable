@@ -39,7 +39,7 @@ pub fn probability(q: f64, df: f64) f64 {
     if (q <= 0) {
         return 0;
     }
-    return special.gamma_probability(0.5 * df, 0.5 * q * q);
+    return special.gamma.probability(0.5 * q * q, 0.5 * df);
 }
 
 /// No closed form
@@ -50,7 +50,7 @@ pub fn survival(t: f64, df: f64) f64 {
     if (t <= 0) {
         return 1;
     }
-    return special.gamma_survival(0.5 * df, 0.5 * t * t);
+    return special.gamma.survival(0.5 * t * t, 0.5 * df);
 }
 
 /// No closed form
@@ -58,13 +58,7 @@ pub fn quantile(p: f64, df: f64) f64 {
     assert(isFinite(df));
     assert(df > 0);
     assert(0 <= p and p <= 1);
-    if (p == 0) {
-        return 0;
-    }
-    if (p == 1) {
-        return inf;
-    }
-    const q = special.gamma_quantile_mirrored(0.5 * df, 1 - p);
+    const q = special.gamma.quantile(p, 0.5 * df);
     return @sqrt(2 * q);
 }
 
