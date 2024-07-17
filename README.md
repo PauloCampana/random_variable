@@ -3,7 +3,7 @@
 For over 30 probability distributions, this library provides:
 
 * Random variable generation
-* Density, Probability, Survival and Quantile functions
+* Density, probability, survival and quantile functions
 
 Mathematical functions are tested for high precision and
 RNG tested to correctly fit the distribution
@@ -25,12 +25,13 @@ $ zig fetch --save git+https://github.com/PauloCampana/random_variable
 
 ```zig
 // build.zig
-const rv = b.dependency("random_variable", .{
+const rv_dep = b.dependency("random_variable", .{
     .target = target,
     .optimize = optimize,
 });
+const rv_mod = rv_dep.module("random_variable");
 
-exe.root_module.addImport("random_variable", rv.module("random_variable"));
+exe.root_module.addImport("random_variable", rv_mod);
 ```
 
 ```zig
