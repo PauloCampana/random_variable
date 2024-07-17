@@ -43,7 +43,7 @@ pub fn probability(q: f64, shape1: f64, shape2: f64) f64 {
         return 1;
     }
     const z = q / (1 + q);
-    return special.beta_probability(shape1, shape2, z);
+    return special.beta.probability(z, shape1, shape2);
 }
 
 /// No closed form
@@ -54,11 +54,8 @@ pub fn survival(t: f64, shape1: f64, shape2: f64) f64 {
     if (t <= 0) {
         return 1;
     }
-    if (t == inf) {
-        return 0;
-    }
     const z = 1 / (1 + t);
-    return special.beta_probability(shape2, shape1, z);
+    return special.beta.probability(z, shape2, shape1);
 }
 
 /// No closed form
@@ -66,7 +63,7 @@ pub fn quantile(p: f64, shape1: f64, shape2: f64) f64 {
     assert(isFinite(shape1) and isFinite(shape2));
     assert(shape1 > 0 and shape2 > 0);
     assert(0 <= p and p <= 1);
-    const q = special.beta_quantile(shape1, shape2, p);
+    const q = special.beta.quantile(p, shape1, shape2);
     return q / (1 - q);
 }
 

@@ -32,10 +32,10 @@ pub fn probability(q: f64, df: f64) f64 {
     const z = q * q;
     if (q < 0) {
         const p = df / (df + z);
-        return 0.5 * special.beta_probability(0.5 * df, 0.5, p);
+        return 0.5 * special.beta.probability(p, 0.5 * df, 0.5);
     } else {
         const p = z / (df + z);
-        return 0.5 * special.beta_probability(0.5, 0.5 * df, p) + 0.5;
+        return 0.5 * special.beta.probability(p, 0.5, 0.5 * df) + 0.5;
     }
 }
 
@@ -50,10 +50,10 @@ pub fn survival(t: f64, df: f64) f64 {
     const z = t * t;
     if (t > 0) {
         const p = df / (df + z);
-        return 0.5 * special.beta_probability(0.5 * df, 0.5, p);
+        return 0.5 * special.beta.probability(p, 0.5 * df, 0.5);
     } else {
         const p = z / (df + z);
-        return 0.5 * special.beta_probability(0.5, 0.5 * df, p) + 0.5;
+        return 0.5 * special.beta.probability(p, 0.5, 0.5 * df) + 0.5;
     }
 }
 
@@ -63,10 +63,10 @@ pub fn quantile(p: f64, df: f64) f64 {
     assert(df > 0);
     assert(0 <= p and p <= 1);
     if (p < 0.5) {
-        const q = special.beta_quantile(0.5 * df, 0.5, 2 * p);
+        const q = special.beta.quantile(2 * p, 0.5 * df, 0.5);
         return -@sqrt(df / q - df);
     } else {
-        const q = special.beta_quantile(0.5 * df, 0.5, 2 - 2 * p);
+        const q = special.beta.quantile(2 - 2 * p, 0.5 * df, 0.5);
         return @sqrt(df / q - df);
     }
 }

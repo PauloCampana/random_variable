@@ -41,7 +41,7 @@ pub fn probability(q: f64, size: u64, prob: f64) f64 {
         return 1;
     }
     const n: f64 = @floatFromInt(size);
-    return special.beta_probability(n, @floor(q) + 1, prob);
+    return special.beta.probability(prob, n, @floor(q) + 1);
 }
 
 /// No closed form
@@ -56,7 +56,7 @@ pub fn survival(t: f64, size: u64, prob: f64) f64 {
         return 0;
     }
     const n: f64 = @floatFromInt(size);
-    return special.beta_probability(@floor(t) + 1, n, 1 - prob);
+    return special.beta.probability(1 - prob, @floor(t) + 1, n);
 }
 
 /// No closed form

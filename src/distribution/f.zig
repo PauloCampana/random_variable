@@ -47,7 +47,7 @@ pub fn probability(q: f64, df1: f64, df2: f64) f64 {
     }
     const z = df1 * q;
     const p = z / (df2 + z);
-    return special.beta_probability(0.5 * df1, 0.5 * df2, p);
+    return special.beta.probability(p, 0.5 * df1, 0.5 * df2);
 }
 
 /// No closed form
@@ -60,7 +60,7 @@ pub fn survival(t: f64, df1: f64, df2: f64) f64 {
     }
     const z = df1 * t;
     const p = df2 / (df2 + z);
-    return special.beta_probability(0.5 * df2, 0.5 * df1, p);
+    return special.beta.probability(p, 0.5 * df2, 0.5 * df1);
 }
 
 /// No closed form
@@ -68,7 +68,7 @@ pub fn quantile(p: f64, df1: f64, df2: f64) f64 {
     assert(isFinite(df1) and isFinite(df2));
     assert(df1 > 0 and df2 > 0);
     assert(0 <= p and p <= 1);
-    const q = special.beta_quantile(0.5 * df2, 0.5 * df1, 1 - p);
+    const q = special.beta.quantile(1 - p, 0.5 * df2, 0.5 * df1);
     return (df2 / q - df2) / df1;
 }
 

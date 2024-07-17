@@ -2,13 +2,10 @@
 // <https://netlib.org/cephes/>
 
 const std = @import("std");
-const prob = @import("thirdyparty/prob.zig");
 
 pub const normal = @import("special/normal.zig");
 pub const gamma = @import("special/gamma.zig");
-
-pub const beta_probability = prob.incompleteBeta;
-pub const beta_quantile = prob.inverseIncompleteBeta;
+pub const beta = @import("special/beta.zig");
 
 pub fn lbinomial(n: f64, k: f64) f64 {
     const num = std.math.lgamma(f64, n + 1);
