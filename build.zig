@@ -31,16 +31,17 @@ pub fn build(b: *std.Build) !void {
     const test_step = b.step("test", "Run library tests");
     test_step.dependOn(&test_run.step);
 
-    const correctness = b.addExecutable(.{
+    const correctness = b.addTest(.{
         .name = "correctness",
         .root_source_file = b.path("src/correctness.zig"),
+        .test_runner = b.path("src/correctness_runner.zig"),
         .target = target,
         .optimize = optimize,
         .strip = strip,
     });
     correctness.root_module.addImport("random_variable", module);
     const correctness_run = b.addRunArtifact(correctness);
-    const correctness_step = b.step("correctness", "Run Kolmogorov \"goodness of fit\" test on random functions");
+    const correctness_step = b.step("correctness", "Run \"goodness of fit\" tests on random functions");
     correctness_step.dependOn(&correctness_run.step);
 
     const top_level_docs = b.addInstallDirectory(.{
