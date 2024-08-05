@@ -75,10 +75,6 @@ fn pearson(
     const df = @max(map.count(), 2) - 1;
     const pvalue = rv.chiSquared.survival(statistic, @floatFromInt(df));
     if (pvalue < 0.001) {
-        var map_it2 = map.iterator();
-        while (map_it2.next()) |entry| {
-            std.log.err("x={d}, o={d}", .{ entry.key_ptr.*, entry.value_ptr.* });
-        }
         std.log.err(
             \\     {}{:.3}
             \\statistic: {d:.8}

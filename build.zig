@@ -4,6 +4,7 @@ pub fn build(b: *std.Build) !void {
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
     const strip = b.option(bool, "strip", "Omit debug symbols");
+    const filters = b.option([]const []const u8, "test-filter", "Skip tests that do not match any filter") orelse &[_][]u8{};
 
     const module = b.addModule("random_variable", .{
         .root_source_file = b.path("src/root.zig"),
@@ -26,6 +27,7 @@ pub fn build(b: *std.Build) !void {
         .target = target,
         .optimize = optimize,
         .strip = strip,
+        .filters = filters,
     });
     const test_run = b.addRunArtifact(tests);
     const test_step = b.step("test", "Run library tests");
@@ -38,6 +40,7 @@ pub fn build(b: *std.Build) !void {
         .target = target,
         .optimize = optimize,
         .strip = strip,
+        .filters = filters,
     });
     correctness.root_module.addImport("random_variable", module);
     const correctness_run = b.addRunArtifact(correctness);
