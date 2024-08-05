@@ -51,5 +51,8 @@ fn test_wrapper(
         count.success += 1;
     } else |_| {
         count.fail += 1;
+        if (@errorReturnTrace()) |trace| {
+            std.debug.dumpStackTrace(trace.*);
+        }
     }
 }
