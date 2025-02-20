@@ -36,7 +36,7 @@ pub fn build(b: *std.Build) !void {
     const correctness = b.addTest(.{
         .name = "correctness",
         .root_source_file = b.path("src/correctness.zig"),
-        .test_runner = b.path("src/correctness_runner.zig"),
+        .test_runner = .{ .path = b.path("src/correctness_runner.zig"), .mode = .simple },
         .target = target,
         .optimize = optimize,
         .strip = strip,

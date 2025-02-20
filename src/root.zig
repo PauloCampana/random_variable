@@ -53,14 +53,14 @@ comptime {
 // std.testing.refAllDeclsRecursive but works outside tests,
 // needed to analyze all the namespaces and export functions
 fn refAllDeclsRecursive(comptime T: type) void {
-    inline for (@typeInfo(T).Struct.decls) |decl| {
+    inline for (@typeInfo(T).@"struct".decls) |decl| {
         const field = @field(T, decl.name);
         if (@TypeOf(field) == type) {
             switch (@typeInfo(field)) {
-                .Struct,
-                .Enum,
-                .Union,
-                .Opaque,
+                .@"struct",
+                .@"enum",
+                .@"union",
+                .@"opaque",
                 => refAllDeclsRecursive(field),
                 else => {},
             }
