@@ -31,12 +31,18 @@ pub fn main() !void {
     wgroup.wait();
     progress.end();
 
+    var stdout_buffer: [256]u8 = undefined;
+    var stdout_writer = std.fs.File.stdout().writer(&stdout_buffer);
+    const stdout = &stdout_writer.interface;
+
     if (count.success == test_fns.len) {
-        std.debug.print("All {d} tests passed.\n", .{count.success});
+        try stdout.print("All {d} tests passed.\n", .{count.success});
     } else {
-        std.debug.print("{d} tests passed; {d} failed.\n", .{ count.success, count.fail });
+        try stdout.print("{d} tests passed; {d} failed.\n", .{ count.success, count.fail });
     }
-    std.debug.print("took {}\n", .{std.fmt.fmtDuration(timer.read())});
+    try stdout.print("took {D}\n", .{timer.read()});
+
+    try stdout.flush();
 }
 
 fn test_wrapper(

@@ -8,14 +8,15 @@ pub fn build(b: *std.Build) !void {
 
     const module = b.addModule("random_variable", .{
         .root_source_file = b.path("src/root.zig"),
-    });
-
-    const lib = b.addStaticLibrary(.{
-        .name = "random_variable",
-        .root_source_file = b.path("src/root.zig"),
         .target = target,
         .optimize = optimize,
         .strip = strip,
+    });
+
+    const lib = b.addLibrary(.{
+        .root_module = module,
+        .name = "random_variable",
+        .linkage = .static,
     });
     b.installArtifact(lib);
 
@@ -23,10 +24,7 @@ pub fn build(b: *std.Build) !void {
     b.getInstallStep().dependOn(&header.step);
 
     const tests = b.addTest(.{
-        .root_source_file = b.path("src/root.zig"),
-        .target = target,
-        .optimize = optimize,
-        .strip = strip,
+        .root_module = module,
         .filters = filters,
     });
     const test_run = b.addRunArtifact(tests);
@@ -35,11 +33,13 @@ pub fn build(b: *std.Build) !void {
 
     const correctness = b.addTest(.{
         .name = "correctness",
-        .root_source_file = b.path("src/correctness.zig"),
+        .root_module = b.addModule("correctness", .{
+            .root_source_file = b.path("src/correctness.zig"),
+            .target = target,
+            .optimize = .ReleaseSafe,
+            .strip = strip,
+        }),
         .test_runner = .{ .path = b.path("src/correctness_runner.zig"), .mode = .simple },
-        .target = target,
-        .optimize = optimize,
-        .strip = strip,
         .filters = filters,
     });
     correctness.root_module.addImport("random_variable", module);
@@ -59,5 +59,5 @@ pub fn build(b: *std.Build) !void {
     });
     const docs_step = b.step("docs", "Generate documentation");
     docs_step.dependOn(&top_level_docs.step);
-    docs_step.dependOn(&docs.step);
+    b.getInstallStep().dependOn(&docs.step);
 }
