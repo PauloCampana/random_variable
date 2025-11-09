@@ -5,7 +5,7 @@
 //! - m: `df2` ∈ (0,∞)
 
 const std = @import("std");
-const betaPrime = @import("betaPrime.zig");
+const beta_prime = @import("beta_prime.zig");
 const special = @import("../special.zig");
 const assert = std.debug.assert;
 const isFinite = std.math.isFinite;
@@ -73,7 +73,7 @@ pub fn quantile(p: f64, df1: f64, df2: f64) f64 {
 }
 
 pub fn random(generator: std.Random, df1: f64, df2: f64) f64 {
-    const bp = betaPrime.random(generator, 0.5 * df1, 0.5 * df2);
+    const bp = beta_prime.random(generator, 0.5 * df1, 0.5 * df2);
     return df2 / df1 * bp;
 }
 
@@ -82,7 +82,7 @@ pub fn fill(buffer: []f64, generator: std.Random, df1: f64, df2: f64) void {
     const hdf2 = 0.5 * df2;
     const ratio = df2 / df1;
     for (buffer) |*x| {
-        const bp = betaPrime.random(generator, hdf1, hdf2);
+        const bp = beta_prime.random(generator, hdf1, hdf2);
         x.* = ratio * bp;
     }
 }

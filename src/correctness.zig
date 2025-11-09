@@ -73,7 +73,7 @@ fn pearson(
     }
 
     const df = @max(map.count(), 2) - 1;
-    const pvalue = rv.chiSquared.survival(statistic, @floatFromInt(df));
+    const pvalue = rv.chi_squared.survival(statistic, @floatFromInt(df));
     if (pvalue < 0.001) {
         std.log.err(
             \\     {}{:.3}
@@ -117,28 +117,28 @@ test "beta" {
     }
 }
 
-test "betaBinomial" {
+test "beta_binomial" {
     var buffer: [n]f64 = undefined;
     var gen = std.Random.DefaultPrng.init(0);
     const random = gen.random();
     for (sizes) |size| {
         for (shapes) |shape1| {
             for (shapes) |shape2| {
-                rv.betaBinomial.fill(&buffer, random, size, shape1, shape2);
-                try pearson(&buffer, rv.betaBinomial, .{ size, shape1, shape2 });
+                rv.beta_binomial.fill(&buffer, random, size, shape1, shape2);
+                try pearson(&buffer, rv.beta_binomial, .{ size, shape1, shape2 });
             }
         }
     }
 }
 
-test "betaPrime" {
+test "beta_prime" {
     var buffer: [n]f64 = undefined;
     var gen = std.Random.DefaultPrng.init(0);
     const random = gen.random();
     for (shapes) |shape1| {
         for (shapes) |shape2| {
-            rv.betaPrime.fill(&buffer, random, shape1, shape2);
-            try kolmogorov(&buffer, rv.betaPrime, .{ shape1, shape2 });
+            rv.beta_prime.fill(&buffer, random, shape1, shape2);
+            try kolmogorov(&buffer, rv.beta_prime, .{ shape1, shape2 });
         }
     }
 }
@@ -173,23 +173,23 @@ test "chi" {
     }
 }
 
-test "chiSquared" {
+test "chi_squared" {
     var buffer: [n]f64 = undefined;
     var gen = std.Random.DefaultPrng.init(0);
     const random = gen.random();
     for (shapes) |df| {
-        rv.chiSquared.fill(&buffer, random, df);
-        try kolmogorov(&buffer, rv.chiSquared, .{df});
+        rv.chi_squared.fill(&buffer, random, df);
+        try kolmogorov(&buffer, rv.chi_squared, .{df});
     }
 }
 
-test "continuousBernoulli" {
+test "continuous_bernoulli" {
     var buffer: [n]f64 = undefined;
     var gen = std.Random.DefaultPrng.init(0);
     const random = gen.random();
     for (probs[1..5]) |shape| { // prob > 0 and prob < 1
-        rv.continuousBernoulli.fill(&buffer, random, shape);
-        try kolmogorov(&buffer, rv.continuousBernoulli, .{shape});
+        rv.continuous_bernoulli.fill(&buffer, random, shape);
+        try kolmogorov(&buffer, rv.continuous_bernoulli, .{shape});
     }
 }
 
@@ -205,15 +205,15 @@ test "dagum" {
     }
 }
 
-test "discreteUniform" {
+test "discrete_uniform" {
     var buffer: [n]f64 = undefined;
     var gen = std.Random.DefaultPrng.init(0);
     const random = gen.random();
     for (integers) |min| {
         for (integers) |max| {
             if (min > max) continue; // skip invalid parameters
-            rv.discreteUniform.fill(&buffer, random, min, max);
-            try pearson(&buffer, rv.discreteUniform, .{ min, max });
+            rv.discrete_uniform.fill(&buffer, random, min, max);
+            try pearson(&buffer, rv.discrete_uniform, .{ min, max });
         }
     }
 }
@@ -319,27 +319,27 @@ test "logistic" {
     try kolmogorov(&buffer, rv.logistic, .{ 0, 1 });
 }
 
-test "logNormal" {
+test "log_normal" {
     var buffer: [n]f64 = undefined;
     var gen = std.Random.DefaultPrng.init(0);
     const random = gen.random();
     for (shapes) |log_location| {
         for (shapes) |log_scale| {
-            rv.logNormal.fill(&buffer, random, log_location, log_scale);
-            try kolmogorov(&buffer, rv.logNormal, .{ log_location, log_scale });
+            rv.log_normal.fill(&buffer, random, log_location, log_scale);
+            try kolmogorov(&buffer, rv.log_normal, .{ log_location, log_scale });
         }
     }
 }
 
-test "negativeBinomial" {
+test "negative_binomial" {
     var buffer: [n]f64 = undefined;
     var gen = std.Random.DefaultPrng.init(0);
     const random = gen.random();
     for (sizes[1..]) |size| { // size > 0
         // HACK: prob == 0.01 and 0.1 generates way too many unique numbers
         for (probs[3..]) |prob| { // prob > 0
-            rv.negativeBinomial.fill(&buffer, random, size, prob);
-            try pearson(&buffer, rv.negativeBinomial, .{ size, prob });
+            rv.negative_binomial.fill(&buffer, random, size, prob);
+            try pearson(&buffer, rv.negative_binomial, .{ size, prob });
         }
     }
 }
