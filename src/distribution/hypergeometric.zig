@@ -12,7 +12,7 @@ const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
 /// p(x) = (K x) (N - K n - x) / (N n)
-pub fn density(x: f64, total: u64, good: u64, tries: u64) f64 {
+pub fn density(x: f64, total: u64, good: u64, tries: u64) callconv(.c) f64 {
     assert(good <= total and tries <= total);
     assert(!isNan(x));
     const low: f64 = @floatFromInt(lower(total, good, tries));
@@ -30,7 +30,7 @@ pub fn density(x: f64, total: u64, good: u64, tries: u64) f64 {
 }
 
 /// No closed form
-pub fn probability(q: f64, total: u64, good: u64, tries: u64) f64 {
+pub fn probability(q: f64, total: u64, good: u64, tries: u64) callconv(.c) f64 {
     assert(good <= total and tries <= total);
     assert(!isNan(q));
     const low: f64 = @floatFromInt(lower(total, good, tries));
@@ -55,12 +55,12 @@ pub fn probability(q: f64, total: u64, good: u64, tries: u64) f64 {
 }
 
 /// No closed form
-pub fn survival(t: f64, total: u64, good: u64, tries: u64) f64 {
+pub fn survival(t: f64, total: u64, good: u64, tries: u64) callconv(.c) f64 {
     return 1 - probability(t, total, good, tries);
 }
 
 /// No closed form
-pub fn quantile(p: f64, total: u64, good: u64, tries: u64) f64 {
+pub fn quantile(p: f64, total: u64, good: u64, tries: u64) callconv(.c) f64 {
     assert(good <= total and tries <= total);
     assert(0 <= p and p <= 1);
     const low = lower(total, good, tries);
@@ -126,17 +126,11 @@ fn upper(_: u64, good: u64, tries: u64) u64 {
     return @min(good, tries);
 }
 
-export fn rv_hypergeometric_density(x: f64, total: u64, good: u64, tries: u64) f64 {
-    return density(x, total, good, tries);
-}
-export fn rv_hypergeometric_probability(q: f64, total: u64, good: u64, tries: u64) f64 {
-    return probability(q, total, good, tries);
-}
-export fn rv_hypergeometric_survival(t: f64, total: u64, good: u64, tries: u64) f64 {
-    return survival(t, total, good, tries);
-}
-export fn rv_hypergeometric_quantile(p: f64, total: u64, good: u64, tries: u64) f64 {
-    return quantile(p, total, good, tries);
+comptime {
+    @export(&density, .{ .name = "rv_hypergeometric_density" });
+    @export(&probability, .{ .name = "rv_hypergeometric_probability" });
+    @export(&survival, .{ .name = "rv_hypergeometric_survival" });
+    @export(&quantile, .{ .name = "rv_hypergeometric_quantile" });
 }
 
 const expectEqual = std.testing.expectEqual;

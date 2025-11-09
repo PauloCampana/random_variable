@@ -11,7 +11,7 @@ const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
 /// f(x) = exp(-|x - μ| / σ) / 2σ
-pub fn density(x: f64, location: f64, scale: f64) f64 {
+pub fn density(x: f64, location: f64, scale: f64) callconv(.c) f64 {
     assert(isFinite(location) and isFinite(scale));
     assert(scale > 0);
     assert(!isNan(x));
@@ -22,7 +22,7 @@ pub fn density(x: f64, location: f64, scale: f64) f64 {
 /// F(q) =     exp(+(q - μ) / σ)) / 2, x < μ
 ///
 /// F(q) = 1 - exp(-(q - μ) / σ)) / 2, x > μ
-pub fn probability(q: f64, location: f64, scale: f64) f64 {
+pub fn probability(q: f64, location: f64, scale: f64) callconv(.c) f64 {
     assert(isFinite(location) and isFinite(scale));
     assert(scale > 0);
     assert(!isNan(q));
@@ -37,7 +37,7 @@ pub fn probability(q: f64, location: f64, scale: f64) f64 {
 /// S(t) = 1 - exp(+(t - μ) / σ)) / 2, x < μ
 ///
 /// S(t) =     exp(-(t - μ) / σ)) / 2, x > μ
-pub fn survival(t: f64, location: f64, scale: f64) f64 {
+pub fn survival(t: f64, location: f64, scale: f64) callconv(.c) f64 {
     assert(isFinite(location) and isFinite(scale));
     assert(scale > 0);
     assert(!isNan(t));
@@ -52,7 +52,7 @@ pub fn survival(t: f64, location: f64, scale: f64) f64 {
 /// Q(p) = μ + σ ln(2p)      , 0.0 < p < 0.5
 ///
 /// Q(p) = μ - σ ln(2(1 - p)), 0.5 < p < 1.0
-pub fn quantile(p: f64, location: f64, scale: f64) f64 {
+pub fn quantile(p: f64, location: f64, scale: f64) callconv(.c) f64 {
     assert(isFinite(location) and isFinite(scale));
     assert(scale > 0);
     assert(0 <= p and p <= 1);
@@ -81,17 +81,11 @@ pub fn fill(buffer: []f64, generator: std.Random, location: f64, scale: f64) voi
     }
 }
 
-export fn rv_laplace_density(x: f64, location: f64, scale: f64) f64 {
-    return density(x, location, scale);
-}
-export fn rv_laplace_probability(q: f64, location: f64, scale: f64) f64 {
-    return probability(q, location, scale);
-}
-export fn rv_laplace_survival(t: f64, location: f64, scale: f64) f64 {
-    return survival(t, location, scale);
-}
-export fn rv_laplace_quantile(p: f64, location: f64, scale: f64) f64 {
-    return quantile(p, location, scale);
+comptime {
+    @export(&density, .{ .name = "rv_laplace_density" });
+    @export(&probability, .{ .name = "rv_laplace_probability" });
+    @export(&survival, .{ .name = "rv_laplace_survival" });
+    @export(&quantile, .{ .name = "rv_laplace_quantile" });
 }
 
 const expectEqual = std.testing.expectEqual;

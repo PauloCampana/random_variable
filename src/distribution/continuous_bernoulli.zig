@@ -10,7 +10,7 @@ const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
 /// f(x) = 2 / (1 - 2λ) arctanh(1 - 2λ) λ^x (1 - λ)^(1 - x)
-pub fn density(x: f64, shape: f64) f64 {
+pub fn density(x: f64, shape: f64) callconv(.c) f64 {
     assert(0 < shape and shape < 1);
     assert(!isNan(x));
     if (x < 0 or x > 1) {
@@ -27,7 +27,7 @@ pub fn density(x: f64, shape: f64) f64 {
 }
 
 /// F(q) = (λ^q (1 - λ)^(1 - q) + λ - 1) / (2λ - 1)
-pub fn probability(q: f64, shape: f64) f64 {
+pub fn probability(q: f64, shape: f64) callconv(.c) f64 {
     assert(0 < shape and shape < 1);
     assert(!isNan(q));
     if (q <= 0) {
@@ -45,7 +45,7 @@ pub fn probability(q: f64, shape: f64) f64 {
 }
 
 /// S(t) = (λ - λ^t (1 - λ)^(1 - t)) / (2λ - 1)
-pub fn survival(t: f64, shape: f64) f64 {
+pub fn survival(t: f64, shape: f64) callconv(.c) f64 {
     assert(0 < shape and shape < 1);
     assert(!isNan(t));
     if (t <= 0) {
@@ -63,7 +63,7 @@ pub fn survival(t: f64, shape: f64) f64 {
 }
 
 /// Q(p) = ln(((2λ - 1)p - λ + 1) / (1 - λ)) / ln(λ / (1 - λ))
-pub fn quantile(p: f64, shape: f64) f64 {
+pub fn quantile(p: f64, shape: f64) callconv(.c) f64 {
     assert(0 < shape and shape < 1);
     assert(0 <= p and p <= 1);
     if (shape == 0.5) {
@@ -104,17 +104,11 @@ pub fn fill(buffer: []f64, generator: std.Random, shape: f64) void {
     }
 }
 
-export fn rv_continuous_bernoulli_density(x: f64, shape: f64) f64 {
-    return density(x, shape);
-}
-export fn rv_continuous_bernoulli_probability(q: f64, shape: f64) f64 {
-    return probability(q, shape);
-}
-export fn rv_continuous_bernoulli_survival(t: f64, shape: f64) f64 {
-    return survival(t, shape);
-}
-export fn rv_continuous_bernoulli_quantile(p: f64, shape: f64) f64 {
-    return quantile(p, shape);
+comptime {
+    @export(&density, .{ .name = "rv_continuous_bernoulli_density" });
+    @export(&probability, .{ .name = "rv_continuous_bernoulli_probability" });
+    @export(&survival, .{ .name = "rv_continuous_bernoulli_survival" });
+    @export(&quantile, .{ .name = "rv_continuous_bernoulli_quantile" });
 }
 
 const expectEqual = std.testing.expectEqual;

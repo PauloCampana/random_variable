@@ -11,7 +11,7 @@ const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
 /// p(x) = 1 / (b - a + 1)
-pub fn density(x: f64, min: i64, max: i64) f64 {
+pub fn density(x: f64, min: i64, max: i64) callconv(.c) f64 {
     assert(min <= max);
     assert(!isNan(x));
     const fmin: f64 = @floatFromInt(min);
@@ -23,7 +23,7 @@ pub fn density(x: f64, min: i64, max: i64) f64 {
 }
 
 /// F(q) = (⌊q⌋ - a + 1) / (b - a + 1)
-pub fn probability(q: f64, min: i64, max: i64) f64 {
+pub fn probability(q: f64, min: i64, max: i64) callconv(.c) f64 {
     assert(min <= max);
     assert(!isNan(q));
     const fmin: f64 = @floatFromInt(min);
@@ -38,7 +38,7 @@ pub fn probability(q: f64, min: i64, max: i64) f64 {
 }
 
 /// S(t) = (b - ⌊t⌋) / (b - a + 1)
-pub fn survival(t: f64, min: i64, max: i64) f64 {
+pub fn survival(t: f64, min: i64, max: i64) callconv(.c) f64 {
     assert(min <= max);
     assert(!isNan(t));
     const fmin: f64 = @floatFromInt(min);
@@ -53,7 +53,7 @@ pub fn survival(t: f64, min: i64, max: i64) f64 {
 }
 
 /// Q(p) = ⌈p (b - a + 1)⌉ + a - 1
-pub fn quantile(p: f64, min: i64, max: i64) f64 {
+pub fn quantile(p: f64, min: i64, max: i64) callconv(.c) f64 {
     assert(min <= max);
     assert(0 <= p and p <= 1);
     const fmin: f64 = @floatFromInt(min);
@@ -78,17 +78,11 @@ pub fn fill(buffer: []f64, generator: std.Random, min: i64, max: i64) void {
     }
 }
 
-export fn rv_discrete_uniform_density(x: f64, min: i64, max: i64) f64 {
-    return density(x, min, max);
-}
-export fn rv_discrete_uniform_probability(q: f64, min: i64, max: i64) f64 {
-    return probability(q, min, max);
-}
-export fn rv_discrete_uniform_survival(t: f64, min: i64, max: i64) f64 {
-    return survival(t, min, max);
-}
-export fn rv_discrete_uniform_quantile(p: f64, min: i64, max: i64) f64 {
-    return quantile(p, min, max);
+comptime {
+    @export(&density, .{ .name = "rv_discrete_uniform_density" });
+    @export(&probability, .{ .name = "rv_discrete_uniform_probability" });
+    @export(&survival, .{ .name = "rv_discrete_uniform_survival" });
+    @export(&quantile, .{ .name = "rv_discrete_uniform_quantile" });
 }
 
 const expectEqual = std.testing.expectEqual;

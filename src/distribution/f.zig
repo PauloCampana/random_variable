@@ -13,7 +13,7 @@ const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
 /// f(x) = n^(n / 2) m^(m / 2) x^(n / 2 - 1) (m + nx)^(-(n + m) / 2) / beta(n / 2, m / 2)
-pub fn density(x: f64, df1: f64, df2: f64) f64 {
+pub fn density(x: f64, df1: f64, df2: f64) callconv(.c) f64 {
     assert(isFinite(df1) and isFinite(df2));
     assert(df1 > 0 and df2 > 0);
     assert(!isNan(x));
@@ -35,7 +35,7 @@ pub fn density(x: f64, df1: f64, df2: f64) f64 {
 }
 
 /// No closed form
-pub fn probability(q: f64, df1: f64, df2: f64) f64 {
+pub fn probability(q: f64, df1: f64, df2: f64) callconv(.c) f64 {
     assert(isFinite(df1) and isFinite(df2));
     assert(df1 > 0 and df2 > 0);
     assert(!isNan(q));
@@ -51,7 +51,7 @@ pub fn probability(q: f64, df1: f64, df2: f64) f64 {
 }
 
 /// No closed form
-pub fn survival(t: f64, df1: f64, df2: f64) f64 {
+pub fn survival(t: f64, df1: f64, df2: f64) callconv(.c) f64 {
     assert(isFinite(df1) and isFinite(df2));
     assert(df1 > 0 and df2 > 0);
     assert(!isNan(t));
@@ -64,7 +64,7 @@ pub fn survival(t: f64, df1: f64, df2: f64) f64 {
 }
 
 /// No closed form
-pub fn quantile(p: f64, df1: f64, df2: f64) f64 {
+pub fn quantile(p: f64, df1: f64, df2: f64) callconv(.c) f64 {
     assert(isFinite(df1) and isFinite(df2));
     assert(df1 > 0 and df2 > 0);
     assert(0 <= p and p <= 1);
@@ -87,17 +87,11 @@ pub fn fill(buffer: []f64, generator: std.Random, df1: f64, df2: f64) void {
     }
 }
 
-export fn rv_f_density(x: f64, df1: f64, df2: f64) f64 {
-    return density(x, df1, df2);
-}
-export fn rv_f_probability(q: f64, df1: f64, df2: f64) f64 {
-    return probability(q, df1, df2);
-}
-export fn rv_f_survival(t: f64, df1: f64, df2: f64) f64 {
-    return survival(t, df1, df2);
-}
-export fn rv_f_quantile(p: f64, df1: f64, df2: f64) f64 {
-    return quantile(p, df1, df2);
+comptime {
+    @export(&density, .{ .name = "rv_f_density" });
+    @export(&probability, .{ .name = "rv_f_probability" });
+    @export(&survival, .{ .name = "rv_f_survival" });
+    @export(&quantile, .{ .name = "rv_f_quantile" });
 }
 
 const expectEqual = std.testing.expectEqual;

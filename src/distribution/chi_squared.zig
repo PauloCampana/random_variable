@@ -8,22 +8,22 @@ const gamma = @import("gamma.zig");
 const inf = std.math.inf(f64);
 
 /// f(x) = 0.5 / gamma(ν / 2) (x / 2)^(ν / 2 - 1) exp(-x / 2)
-pub fn density(x: f64, df: f64) f64 {
+pub fn density(x: f64, df: f64) callconv(.c) f64 {
     return gamma.density(x, 0.5 * df, 2);
 }
 
 /// No closed form
-pub fn probability(q: f64, df: f64) f64 {
+pub fn probability(q: f64, df: f64) callconv(.c) f64 {
     return gamma.probability(q, 0.5 * df, 2);
 }
 
 /// No closed form
-pub fn survival(t: f64, df: f64) f64 {
+pub fn survival(t: f64, df: f64) callconv(.c) f64 {
     return gamma.survival(t, 0.5 * df, 2);
 }
 
 /// No closed form
-pub fn quantile(p: f64, df: f64) f64 {
+pub fn quantile(p: f64, df: f64) callconv(.c) f64 {
     return gamma.quantile(p, 0.5 * df, 2);
 }
 
@@ -35,17 +35,11 @@ pub fn fill(buffer: []f64, generator: std.Random, df: f64) void {
     gamma.fill(buffer, generator, 0.5 * df, 2);
 }
 
-export fn rv_chi_squared_density(x: f64, df: f64) f64 {
-    return density(x, df);
-}
-export fn rv_chi_squared_probability(q: f64, df: f64) f64 {
-    return probability(q, df);
-}
-export fn rv_chi_squared_survival(t: f64, df: f64) f64 {
-    return survival(t, df);
-}
-export fn rv_chi_squared_quantile(p: f64, df: f64) f64 {
-    return quantile(p, df);
+comptime {
+    @export(&density, .{ .name = "rv_chi_squared_density" });
+    @export(&probability, .{ .name = "rv_chi_squared_probability" });
+    @export(&survival, .{ .name = "rv_chi_squared_survival" });
+    @export(&quantile, .{ .name = "rv_chi_squared_quantile" });
 }
 
 const expectEqual = std.testing.expectEqual;

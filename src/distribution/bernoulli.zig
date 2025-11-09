@@ -11,7 +11,7 @@ const inf = std.math.inf(f64);
 /// p(x) = 1 - p, x = 0
 ///
 /// p(x) = p    , x = 1
-pub fn density(x: f64, prob: f64) f64 {
+pub fn density(x: f64, prob: f64) callconv(.c) f64 {
     assert(0 <= prob and prob <= 1);
     assert(!isNan(x));
     if (x == 0) {
@@ -28,7 +28,7 @@ pub fn density(x: f64, prob: f64) f64 {
 /// F(q) = 1 - p, 0 <= q < 1
 ///
 /// F(q) = 1    , 1 <= q
-pub fn probability(q: f64, prob: f64) f64 {
+pub fn probability(q: f64, prob: f64) callconv(.c) f64 {
     assert(0 <= prob and prob <= 1);
     assert(!isNan(q));
     if (q < 0) {
@@ -45,7 +45,7 @@ pub fn probability(q: f64, prob: f64) f64 {
 /// S(t) = p, 0 <= t < 1
 ///
 /// S(t) = 0, 1 <= t
-pub fn survival(t: f64, prob: f64) f64 {
+pub fn survival(t: f64, prob: f64) callconv(.c) f64 {
     assert(0 <= prob and prob <= 1);
     assert(!isNan(t));
     if (t < 0) {
@@ -60,7 +60,7 @@ pub fn survival(t: f64, prob: f64) f64 {
 /// Q(x) = 0, x <= 1 - p
 ///
 /// Q(x) = 1, x >  1 - p
-pub fn quantile(p: f64, prob: f64) f64 {
+pub fn quantile(p: f64, prob: f64) callconv(.c) f64 {
     assert(0 <= prob and prob <= 1);
     assert(0 <= p and p <= 1);
     const ber = @intFromBool(p > 1 - prob);
@@ -86,17 +86,11 @@ pub fn fill(buffer: []f64, generator: std.Random, prob: f64) void {
     }
 }
 
-export fn rv_bernoulli_density(x: f64, prob: f64) f64 {
-    return density(x, prob);
-}
-export fn rv_bernoulli_probability(q: f64, prob: f64) f64 {
-    return probability(q, prob);
-}
-export fn rv_bernoulli_survival(t: f64, prob: f64) f64 {
-    return survival(t, prob);
-}
-export fn rv_bernoulli_quantile(p: f64, prob: f64) f64 {
-    return quantile(p, prob);
+comptime {
+    @export(&density, .{ .name = "rv_bernoulli_density" });
+    @export(&probability, .{ .name = "rv_bernoulli_probability" });
+    @export(&survival, .{ .name = "rv_bernoulli_survival" });
+    @export(&quantile, .{ .name = "rv_bernoulli_quantile" });
 }
 
 const expectEqual = std.testing.expectEqual;

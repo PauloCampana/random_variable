@@ -12,7 +12,7 @@ const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
 /// f(x) = exp(-((ln(x) - μ) / σ)^2 / 2) / (xσ sqrt(2π))
-pub fn density(x: f64, log_location: f64, log_scale: f64) f64 {
+pub fn density(x: f64, log_location: f64, log_scale: f64) callconv(.c) f64 {
     assert(isFinite(log_location) and isFinite(log_scale));
     assert(log_scale > 0);
     assert(!isNan(x));
@@ -25,7 +25,7 @@ pub fn density(x: f64, log_location: f64, log_scale: f64) f64 {
 }
 
 /// No closed form
-pub fn probability(q: f64, log_location: f64, log_scale: f64) f64 {
+pub fn probability(q: f64, log_location: f64, log_scale: f64) callconv(.c) f64 {
     if (q <= 0) {
         return 0;
     }
@@ -33,7 +33,7 @@ pub fn probability(q: f64, log_location: f64, log_scale: f64) f64 {
 }
 
 /// No closed form
-pub fn survival(t: f64, log_location: f64, log_scale: f64) f64 {
+pub fn survival(t: f64, log_location: f64, log_scale: f64) callconv(.c) f64 {
     if (t <= 0) {
         return 1;
     }
@@ -41,7 +41,7 @@ pub fn survival(t: f64, log_location: f64, log_scale: f64) f64 {
 }
 
 /// No closed form
-pub fn quantile(p: f64, log_location: f64, log_scale: f64) f64 {
+pub fn quantile(p: f64, log_location: f64, log_scale: f64) callconv(.c) f64 {
     const q = normal.quantile(p, log_location, log_scale);
     return @exp(q);
 }
@@ -62,17 +62,11 @@ pub fn fill(buffer: []f64, generator: std.Random, log_location: f64, log_scale: 
     }
 }
 
-export fn rv_log_normal_density(x: f64, log_location: f64, log_scale: f64) f64 {
-    return density(x, log_location, log_scale);
-}
-export fn rv_log_normal_probability(q: f64, log_location: f64, log_scale: f64) f64 {
-    return probability(q, log_location, log_scale);
-}
-export fn rv_log_normal_survival(t: f64, log_location: f64, log_scale: f64) f64 {
-    return survival(t, log_location, log_scale);
-}
-export fn rv_log_normal_quantile(p: f64, log_location: f64, log_scale: f64) f64 {
-    return quantile(p, log_location, log_scale);
+comptime {
+    @export(&density, .{ .name = "rv_log_normal_density" });
+    @export(&probability, .{ .name = "rv_log_normal_probability" });
+    @export(&survival, .{ .name = "rv_log_normal_survival" });
+    @export(&quantile, .{ .name = "rv_log_normal_quantile" });
 }
 
 const expectEqual = std.testing.expectEqual;

@@ -11,7 +11,7 @@ const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
 /// f(x) = 1 / (πσ (1 + ((x - μ) / σ)^2))
-pub fn density(x: f64, location: f64, scale: f64) f64 {
+pub fn density(x: f64, location: f64, scale: f64) callconv(.c) f64 {
     assert(isFinite(location) and isFinite(scale));
     assert(scale > 0);
     assert(!isNan(x));
@@ -20,7 +20,7 @@ pub fn density(x: f64, location: f64, scale: f64) f64 {
 }
 
 /// F(q) = 0.5 + arctan((q - μ) / σ) / π
-pub fn probability(q: f64, location: f64, scale: f64) f64 {
+pub fn probability(q: f64, location: f64, scale: f64) callconv(.c) f64 {
     assert(isFinite(location) and isFinite(scale));
     assert(scale > 0);
     assert(!isNan(q));
@@ -29,7 +29,7 @@ pub fn probability(q: f64, location: f64, scale: f64) f64 {
 }
 
 /// S(t) = 0.5 - arctan((t - μ) / σ) / π
-pub fn survival(t: f64, location: f64, scale: f64) f64 {
+pub fn survival(t: f64, location: f64, scale: f64) callconv(.c) f64 {
     assert(isFinite(location) and isFinite(scale));
     assert(scale > 0);
     assert(!isNan(t));
@@ -38,7 +38,7 @@ pub fn survival(t: f64, location: f64, scale: f64) f64 {
 }
 
 /// Q(p) = μ + σ tan(π (p - 0.5))
-pub fn quantile(p: f64, location: f64, scale: f64) f64 {
+pub fn quantile(p: f64, location: f64, scale: f64) callconv(.c) f64 {
     assert(isFinite(location) and isFinite(scale));
     assert(scale > 0);
     assert(0 <= p and p <= 1);
@@ -68,17 +68,11 @@ pub fn fill(buffer: []f64, generator: std.Random, location: f64, scale: f64) voi
     }
 }
 
-export fn rv_cauchy_density(x: f64, location: f64, scale: f64) f64 {
-    return density(x, location, scale);
-}
-export fn rv_cauchy_probability(q: f64, location: f64, scale: f64) f64 {
-    return probability(q, location, scale);
-}
-export fn rv_cauchy_survival(t: f64, location: f64, scale: f64) f64 {
-    return survival(t, location, scale);
-}
-export fn rv_cauchy_quantile(p: f64, location: f64, scale: f64) f64 {
-    return quantile(p, location, scale);
+comptime {
+    @export(&density, .{ .name = "rv_cauchy_density" });
+    @export(&probability, .{ .name = "rv_cauchy_probability" });
+    @export(&survival, .{ .name = "rv_cauchy_survival" });
+    @export(&quantile, .{ .name = "rv_cauchy_quantile" });
 }
 
 const expectEqual = std.testing.expectEqual;

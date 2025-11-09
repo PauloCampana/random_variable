@@ -11,7 +11,7 @@ const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
 /// f(x) = αk^α / x^(α + 1)
-pub fn density(x: f64, shape: f64, minimum: f64) f64 {
+pub fn density(x: f64, shape: f64, minimum: f64) callconv(.c) f64 {
     assert(isFinite(shape) and isFinite(minimum));
     assert(shape > 0 and minimum > 0);
     assert(!isNan(x));
@@ -24,7 +24,7 @@ pub fn density(x: f64, shape: f64, minimum: f64) f64 {
 }
 
 /// F(q) = 1 - (k / q)^α
-pub fn probability(q: f64, shape: f64, minimum: f64) f64 {
+pub fn probability(q: f64, shape: f64, minimum: f64) callconv(.c) f64 {
     assert(isFinite(shape) and isFinite(minimum));
     assert(shape > 0 and minimum > 0);
     assert(!isNan(q));
@@ -35,7 +35,7 @@ pub fn probability(q: f64, shape: f64, minimum: f64) f64 {
 }
 
 /// S(t) = (k / t)^α
-pub fn survival(t: f64, shape: f64, minimum: f64) f64 {
+pub fn survival(t: f64, shape: f64, minimum: f64) callconv(.c) f64 {
     assert(isFinite(shape) and isFinite(minimum));
     assert(shape > 0 and minimum > 0);
     assert(!isNan(t));
@@ -46,7 +46,7 @@ pub fn survival(t: f64, shape: f64, minimum: f64) f64 {
 }
 
 /// Q(p) = k / (1 - p)^(1 / α)
-pub fn quantile(p: f64, shape: f64, minimum: f64) f64 {
+pub fn quantile(p: f64, shape: f64, minimum: f64) callconv(.c) f64 {
     assert(isFinite(shape) and isFinite(minimum));
     assert(shape > 0 and minimum > 0);
     assert(0 <= p and p <= 1);
@@ -69,17 +69,11 @@ pub fn fill(buffer: []f64, generator: std.Random, shape: f64, minimum: f64) void
     }
 }
 
-export fn rv_pareto_density(x: f64, shape: f64, minimum: f64) f64 {
-    return density(x, shape, minimum);
-}
-export fn rv_pareto_probability(q: f64, shape: f64, minimum: f64) f64 {
-    return probability(q, shape, minimum);
-}
-export fn rv_pareto_survival(t: f64, shape: f64, minimum: f64) f64 {
-    return survival(t, shape, minimum);
-}
-export fn rv_pareto_quantile(p: f64, shape: f64, minimum: f64) f64 {
-    return quantile(p, shape, minimum);
+comptime {
+    @export(&density, .{ .name = "rv_pareto_density" });
+    @export(&probability, .{ .name = "rv_pareto_probability" });
+    @export(&survival, .{ .name = "rv_pareto_survival" });
+    @export(&quantile, .{ .name = "rv_pareto_quantile" });
 }
 
 const expectEqual = std.testing.expectEqual;

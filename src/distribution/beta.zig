@@ -13,7 +13,7 @@ const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
 /// f(x) = x^(α - 1) (1 - x)^(β - 1) / beta(α, β)
-pub fn density(x: f64, shape1: f64, shape2: f64) f64 {
+pub fn density(x: f64, shape1: f64, shape2: f64) callconv(.c) f64 {
     assert(isFinite(shape1) and isFinite(shape2));
     assert(shape1 > 0 and shape2 > 0);
     assert(!isNan(x));
@@ -38,7 +38,7 @@ pub fn density(x: f64, shape1: f64, shape2: f64) f64 {
 }
 
 /// No closed form
-pub fn probability(q: f64, shape1: f64, shape2: f64) f64 {
+pub fn probability(q: f64, shape1: f64, shape2: f64) callconv(.c) f64 {
     assert(isFinite(shape1) and isFinite(shape2));
     assert(shape1 > 0 and shape2 > 0);
     assert(!isNan(q));
@@ -46,7 +46,7 @@ pub fn probability(q: f64, shape1: f64, shape2: f64) f64 {
 }
 
 /// No closed form
-pub fn survival(t: f64, shape1: f64, shape2: f64) f64 {
+pub fn survival(t: f64, shape1: f64, shape2: f64) callconv(.c) f64 {
     assert(isFinite(shape1) and isFinite(shape2));
     assert(shape1 > 0 and shape2 > 0);
     assert(!isNan(t));
@@ -54,7 +54,7 @@ pub fn survival(t: f64, shape1: f64, shape2: f64) f64 {
 }
 
 /// No closed form
-pub fn quantile(p: f64, shape1: f64, shape2: f64) f64 {
+pub fn quantile(p: f64, shape1: f64, shape2: f64) callconv(.c) f64 {
     assert(isFinite(shape1) and isFinite(shape2));
     assert(shape1 > 0 and shape2 > 0);
     assert(0 <= p and p <= 1);
@@ -126,17 +126,11 @@ fn rejection(generator: std.Random, invshape1: f64, invshape2: f64) f64 {
     }
 }
 
-export fn rv_beta_density(x: f64, shape1: f64, shape2: f64) f64 {
-    return density(x, shape1, shape2);
-}
-export fn rv_beta_probability(q: f64, shape1: f64, shape2: f64) f64 {
-    return probability(q, shape1, shape2);
-}
-export fn rv_beta_survival(t: f64, shape1: f64, shape2: f64) f64 {
-    return survival(t, shape1, shape2);
-}
-export fn rv_beta_quantile(p: f64, shape1: f64, shape2: f64) f64 {
-    return quantile(p, shape1, shape2);
+comptime {
+    @export(&density, .{ .name = "rv_beta_density" });
+    @export(&probability, .{ .name = "rv_beta_probability" });
+    @export(&survival, .{ .name = "rv_beta_survival" });
+    @export(&quantile, .{ .name = "rv_beta_quantile" });
 }
 
 const expectEqual = std.testing.expectEqual;

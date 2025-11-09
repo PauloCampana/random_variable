@@ -12,7 +12,7 @@ const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
 /// f(x) (ν / (ν + x^2))^((ν + 1) / 2) / (sqrt(ν) beta(ν / 2, 1 / 2))
-pub fn density(x: f64, df: f64) f64 {
+pub fn density(x: f64, df: f64) callconv(.c) f64 {
     assert(isFinite(df));
     assert(df > 0);
     assert(!isNan(x));
@@ -22,7 +22,7 @@ pub fn density(x: f64, df: f64) f64 {
 }
 
 /// No closed form
-pub fn probability(q: f64, df: f64) f64 {
+pub fn probability(q: f64, df: f64) callconv(.c) f64 {
     assert(isFinite(df));
     assert(df > 0);
     assert(!isNan(q));
@@ -40,7 +40,7 @@ pub fn probability(q: f64, df: f64) f64 {
 }
 
 /// No closed form
-pub fn survival(t: f64, df: f64) f64 {
+pub fn survival(t: f64, df: f64) callconv(.c) f64 {
     assert(isFinite(df));
     assert(df > 0);
     assert(!isNan(t));
@@ -58,7 +58,7 @@ pub fn survival(t: f64, df: f64) f64 {
 }
 
 /// No closed form
-pub fn quantile(p: f64, df: f64) f64 {
+pub fn quantile(p: f64, df: f64) callconv(.c) f64 {
     assert(isFinite(df));
     assert(df > 0);
     assert(0 <= p and p <= 1);
@@ -101,17 +101,11 @@ pub fn fill(buffer: []f64, generator: std.Random, df: f64) void {
     }
 }
 
-export fn rv_t_density(x: f64, df: f64) f64 {
-    return density(x, df);
-}
-export fn rv_t_probability(q: f64, df: f64) f64 {
-    return probability(q, df);
-}
-export fn rv_t_survival(t: f64, df: f64) f64 {
-    return survival(t, df);
-}
-export fn rv_t_quantile(p: f64, df: f64) f64 {
-    return quantile(p, df);
+comptime {
+    @export(&density, .{ .name = "rv_t_density" });
+    @export(&probability, .{ .name = "rv_t_probability" });
+    @export(&survival, .{ .name = "rv_t_survival" });
+    @export(&quantile, .{ .name = "rv_t_quantile" });
 }
 
 const expectEqual = std.testing.expectEqual;

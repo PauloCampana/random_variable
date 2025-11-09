@@ -13,7 +13,7 @@ const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
 /// p(x) = (x + n - 1 x) p^n (1 - p)^x
-pub fn density(x: f64, size: u64, prob: f64) f64 {
+pub fn density(x: f64, size: u64, prob: f64) callconv(.c) f64 {
     assert(0 < prob and prob <= 1);
     assert(size != 0);
     assert(!isNan(x));
@@ -30,7 +30,7 @@ pub fn density(x: f64, size: u64, prob: f64) f64 {
 }
 
 /// No closed form
-pub fn probability(q: f64, size: u64, prob: f64) f64 {
+pub fn probability(q: f64, size: u64, prob: f64) callconv(.c) f64 {
     assert(0 < prob and prob <= 1);
     assert(size != 0);
     assert(!isNan(q));
@@ -45,7 +45,7 @@ pub fn probability(q: f64, size: u64, prob: f64) f64 {
 }
 
 /// No closed form
-pub fn survival(t: f64, size: u64, prob: f64) f64 {
+pub fn survival(t: f64, size: u64, prob: f64) callconv(.c) f64 {
     assert(0 < prob and prob <= 1);
     assert(size != 0);
     assert(!isNan(t));
@@ -60,7 +60,7 @@ pub fn survival(t: f64, size: u64, prob: f64) f64 {
 }
 
 /// No closed form
-pub fn quantile(p: f64, size: u64, prob: f64) f64 {
+pub fn quantile(p: f64, size: u64, prob: f64) callconv(.c) f64 {
     assert(0 < prob and prob <= 1);
     assert(size != 0);
     assert(0 <= p and p <= 1);
@@ -173,17 +173,11 @@ fn guidedSearch(p: f64, n: f64, q: f64, initial_nbin: f64, initial_mass: f64, in
     return nbin;
 }
 
-export fn rv_negative_binomial_density(x: f64, size: u64, prob: f64) f64 {
-    return density(x, size, prob);
-}
-export fn rv_negative_binomial_probability(q: f64, size: u64, prob: f64) f64 {
-    return probability(q, size, prob);
-}
-export fn rv_negative_binomial_survival(t: f64, size: u64, prob: f64) f64 {
-    return survival(t, size, prob);
-}
-export fn rv_negative_binomial_quantile(p: f64, size: u64, prob: f64) f64 {
-    return quantile(p, size, prob);
+comptime {
+    @export(&density, .{ .name = "rv_negative_binomial_density" });
+    @export(&probability, .{ .name = "rv_negative_binomial_probability" });
+    @export(&survival, .{ .name = "rv_negative_binomial_survival" });
+    @export(&quantile, .{ .name = "rv_negative_binomial_quantile" });
 }
 
 const expectEqual = std.testing.expectEqual;

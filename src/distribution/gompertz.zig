@@ -11,7 +11,7 @@ const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
 /// f(x) = α / σ exp(α(1 - exp(x / σ)) + x / σ)
-pub fn density(x: f64, shape: f64, scale: f64) f64 {
+pub fn density(x: f64, shape: f64, scale: f64) callconv(.c) f64 {
     assert(isFinite(shape) and isFinite(scale));
     assert(shape > 0 and scale > 0);
     assert(!isNan(x));
@@ -25,7 +25,7 @@ pub fn density(x: f64, shape: f64, scale: f64) f64 {
 }
 
 /// F(q) = 1 - exp(α(1 - exp(q / σ)))
-pub fn probability(q: f64, shape: f64, scale: f64) f64 {
+pub fn probability(q: f64, shape: f64, scale: f64) callconv(.c) f64 {
     assert(isFinite(shape) and isFinite(scale));
     assert(shape > 0 and scale > 0);
     assert(!isNan(q));
@@ -38,7 +38,7 @@ pub fn probability(q: f64, shape: f64, scale: f64) f64 {
 }
 
 /// S(t) = exp(α(1 - exp(t / σ)))
-pub fn survival(t: f64, shape: f64, scale: f64) f64 {
+pub fn survival(t: f64, shape: f64, scale: f64) callconv(.c) f64 {
     assert(isFinite(shape) and isFinite(scale));
     assert(shape > 0 and scale > 0);
     assert(!isNan(t));
@@ -51,7 +51,7 @@ pub fn survival(t: f64, shape: f64, scale: f64) f64 {
 }
 
 /// Q(p) = σ ln(1 - ln(1 - p) / α)
-pub fn quantile(p: f64, shape: f64, scale: f64) f64 {
+pub fn quantile(p: f64, shape: f64, scale: f64) callconv(.c) f64 {
     assert(isFinite(shape) and isFinite(scale));
     assert(shape > 0 and scale > 0);
     assert(0 <= p and p <= 1);
@@ -82,17 +82,11 @@ pub fn fill(buffer: []f64, generator: std.Random, shape: f64, scale: f64) void {
     }
 }
 
-export fn rv_gompertz_density(x: f64, shape: f64, scale: f64) f64 {
-    return density(x, shape, scale);
-}
-export fn rv_gompertz_probability(q: f64, shape: f64, scale: f64) f64 {
-    return probability(q, shape, scale);
-}
-export fn rv_gompertz_survival(t: f64, shape: f64, scale: f64) f64 {
-    return survival(t, shape, scale);
-}
-export fn rv_gompertz_quantile(p: f64, shape: f64, scale: f64) f64 {
-    return quantile(p, shape, scale);
+comptime {
+    @export(&density, .{ .name = "rv_gompertz_density" });
+    @export(&probability, .{ .name = "rv_gompertz_probability" });
+    @export(&survival, .{ .name = "rv_gompertz_survival" });
+    @export(&quantile, .{ .name = "rv_gompertz_quantile" });
 }
 
 const expectEqual = std.testing.expectEqual;

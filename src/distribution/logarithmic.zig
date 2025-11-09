@@ -9,7 +9,7 @@ const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
 /// p(x) = p^x / (-ln(1 - p) x)
-pub fn density(x: f64, prob: f64) f64 {
+pub fn density(x: f64, prob: f64) callconv(.c) f64 {
     assert(0 < prob and prob < 1);
     assert(!isNan(x));
     if (x < 1 or x != @round(x)) {
@@ -21,7 +21,7 @@ pub fn density(x: f64, prob: f64) f64 {
 }
 
 /// No closed form
-pub fn probability(q: f64, prob: f64) f64 {
+pub fn probability(q: f64, prob: f64) callconv(.c) f64 {
     assert(0 < prob and prob < 1);
     assert(!isNan(q));
     if (q < 1) {
@@ -43,12 +43,12 @@ pub fn probability(q: f64, prob: f64) f64 {
 }
 
 /// No closed form
-pub fn survival(t: f64, prob: f64) f64 {
+pub fn survival(t: f64, prob: f64) callconv(.c) f64 {
     return 1 - probability(t, prob);
 }
 
 /// No closed form
-pub fn quantile(p: f64, prob: f64) f64 {
+pub fn quantile(p: f64, prob: f64) callconv(.c) f64 {
     assert(0 < prob and prob < 1);
     assert(0 <= p and p <= 1);
     if (p == 0) {
@@ -90,17 +90,11 @@ fn linearSearch(p: f64, prob: f64, initial_mass: f64) f64 {
     return loga;
 }
 
-export fn rv_logarithmic_density(x: f64, prob: f64) f64 {
-    return density(x, prob);
-}
-export fn rv_logarithmic_probability(q: f64, prob: f64) f64 {
-    return probability(q, prob);
-}
-export fn rv_logarithmic_survival(t: f64, prob: f64) f64 {
-    return survival(t, prob);
-}
-export fn rv_logarithmic_quantile(p: f64, prob: f64) f64 {
-    return quantile(p, prob);
+comptime {
+    @export(&density, .{ .name = "rv_logarithmic_density" });
+    @export(&probability, .{ .name = "rv_logarithmic_probability" });
+    @export(&survival, .{ .name = "rv_logarithmic_survival" });
+    @export(&quantile, .{ .name = "rv_logarithmic_quantile" });
 }
 
 const expectEqual = std.testing.expectEqual;

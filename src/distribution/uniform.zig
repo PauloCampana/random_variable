@@ -11,7 +11,7 @@ const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
 /// f(x) = 1 / (b - a)
-pub fn density(x: f64, min: f64, max: f64) f64 {
+pub fn density(x: f64, min: f64, max: f64) callconv(.c) f64 {
     assert(isFinite(min) and isFinite(max));
     assert(min <= max);
     assert(!isNan(x));
@@ -22,7 +22,7 @@ pub fn density(x: f64, min: f64, max: f64) f64 {
 }
 
 /// F(q) = (q - a) / (b - a)
-pub fn probability(q: f64, min: f64, max: f64) f64 {
+pub fn probability(q: f64, min: f64, max: f64) callconv(.c) f64 {
     assert(isFinite(min) and isFinite(max));
     assert(min <= max);
     assert(!isNan(q));
@@ -36,7 +36,7 @@ pub fn probability(q: f64, min: f64, max: f64) f64 {
 }
 
 /// S(t) = (b - t) / (b - a)
-pub fn survival(t: f64, min: f64, max: f64) f64 {
+pub fn survival(t: f64, min: f64, max: f64) callconv(.c) f64 {
     assert(isFinite(min) and isFinite(max));
     assert(min <= max);
     assert(!isNan(t));
@@ -50,7 +50,7 @@ pub fn survival(t: f64, min: f64, max: f64) f64 {
 }
 
 /// Q(p) = a + (b - a)p
-pub fn quantile(p: f64, min: f64, max: f64) f64 {
+pub fn quantile(p: f64, min: f64, max: f64) callconv(.c) f64 {
     assert(isFinite(min) and isFinite(max));
     assert(min <= max);
     assert(0 <= p and p <= 1);
@@ -74,17 +74,11 @@ pub fn fill(buffer: []f64, generator: std.Random, min: f64, max: f64) void {
     }
 }
 
-export fn rv_uniform_density(x: f64, min: f64, max: f64) f64 {
-    return density(x, min, max);
-}
-export fn rv_uniform_probability(q: f64, min: f64, max: f64) f64 {
-    return probability(q, min, max);
-}
-export fn rv_uniform_survival(t: f64, min: f64, max: f64) f64 {
-    return survival(t, min, max);
-}
-export fn rv_uniform_quantile(p: f64, min: f64, max: f64) f64 {
-    return quantile(p, min, max);
+comptime {
+    @export(&density, .{ .name = "rv_uniform_density" });
+    @export(&probability, .{ .name = "rv_uniform_probability" });
+    @export(&survival, .{ .name = "rv_uniform_survival" });
+    @export(&quantile, .{ .name = "rv_uniform_quantile" });
 }
 
 const expectEqual = std.testing.expectEqual;

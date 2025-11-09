@@ -13,7 +13,7 @@ const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
 /// p(x) = (n x) beta(x + α, n - x + β) / beta(α, β)
-pub fn density(x: f64, size: u64, shape1: f64, shape2: f64) f64 {
+pub fn density(x: f64, size: u64, shape1: f64, shape2: f64) callconv(.c) f64 {
     assert(isFinite(shape1) and isFinite(shape2));
     assert(shape1 > 0 and shape2 > 0);
     assert(!isNan(x));
@@ -28,7 +28,7 @@ pub fn density(x: f64, size: u64, shape1: f64, shape2: f64) f64 {
 }
 
 /// No closed form
-pub fn probability(q: f64, size: u64, shape1: f64, shape2: f64) f64 {
+pub fn probability(q: f64, size: u64, shape1: f64, shape2: f64) callconv(.c) f64 {
     assert(isFinite(shape1) and isFinite(shape2));
     assert(shape1 > 0 and shape2 > 0);
     assert(!isNan(q));
@@ -55,12 +55,12 @@ pub fn probability(q: f64, size: u64, shape1: f64, shape2: f64) f64 {
 }
 
 /// No closed form
-pub fn survival(t: f64, size: u64, shape1: f64, shape2: f64) f64 {
+pub fn survival(t: f64, size: u64, shape1: f64, shape2: f64) callconv(.c) f64 {
     return 1 - probability(t, size, shape1, shape2);
 }
 
 /// No closed form
-pub fn quantile(p: f64, size: u64, shape1: f64, shape2: f64) f64 {
+pub fn quantile(p: f64, size: u64, shape1: f64, shape2: f64) callconv(.c) f64 {
     assert(isFinite(shape1) and isFinite(shape2));
     assert(shape1 > 0 and shape2 > 0);
     assert(0 <= p and p <= 1);
@@ -118,17 +118,11 @@ fn linearSearch(p: f64, n: f64, shape1: f64, shape2: f64, initial_mass: f64) f64
     return bbin;
 }
 
-export fn rv_beta_binomial_density(x: f64, size: u64, shape1: f64, shape2: f64) f64 {
-    return density(x, size, shape1, shape2);
-}
-export fn rv_beta_binomial_probability(q: f64, size: u64, shape1: f64, shape2: f64) f64 {
-    return probability(q, size, shape1, shape2);
-}
-export fn rv_beta_binomial_survival(t: f64, size: u64, shape1: f64, shape2: f64) f64 {
-    return survival(t, size, shape1, shape2);
-}
-export fn rv_beta_binomial_quantile(p: f64, size: u64, shape1: f64, shape2: f64) f64 {
-    return quantile(p, size, shape1, shape2);
+comptime {
+    @export(&density, .{ .name = "rv_beta_binomial_density" });
+    @export(&probability, .{ .name = "rv_beta_binomial_probability" });
+    @export(&survival, .{ .name = "rv_beta_binomial_survival" });
+    @export(&quantile, .{ .name = "rv_beta_binomial_quantile" });
 }
 
 const expectEqual = std.testing.expectEqual;

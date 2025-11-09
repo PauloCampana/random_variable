@@ -12,7 +12,7 @@ const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
 /// f(x) = pα / σ (x / σ)^(pα - 1) / (1 + (x / σ)^α)^(p + 1)
-pub fn density(x: f64, shape1: f64, shape2: f64, scale: f64) f64 {
+pub fn density(x: f64, shape1: f64, shape2: f64, scale: f64) callconv(.c) f64 {
     assert(isFinite(shape1) and isFinite(shape2) and isFinite(scale));
     assert(shape1 > 0 and shape2 > 0 and scale > 0);
     assert(!isNan(x));
@@ -34,7 +34,7 @@ pub fn density(x: f64, shape1: f64, shape2: f64, scale: f64) f64 {
 }
 
 /// F(q) = (1 + (q / σ)^-α)^-p
-pub fn probability(q: f64, shape1: f64, shape2: f64, scale: f64) f64 {
+pub fn probability(q: f64, shape1: f64, shape2: f64, scale: f64) callconv(.c) f64 {
     assert(isFinite(shape1) and isFinite(shape2) and isFinite(scale));
     assert(shape1 > 0 and shape2 > 0 and scale > 0);
     assert(!isNan(q));
@@ -47,12 +47,12 @@ pub fn probability(q: f64, shape1: f64, shape2: f64, scale: f64) f64 {
 }
 
 /// S(t) = 1 - (1 + (t / σ)^-α)^-p
-pub fn survival(t: f64, shape1: f64, shape2: f64, scale: f64) f64 {
+pub fn survival(t: f64, shape1: f64, shape2: f64, scale: f64) callconv(.c) f64 {
     return 1 - probability(t, shape1, shape2, scale);
 }
 
 /// Q(x) = σ(x^(-1 / p) - 1)^(- 1 / α)
-pub fn quantile(p: f64, shape1: f64, shape2: f64, scale: f64) f64 {
+pub fn quantile(p: f64, shape1: f64, shape2: f64, scale: f64) callconv(.c) f64 {
     assert(isFinite(shape1) and isFinite(shape2) and isFinite(scale));
     assert(shape1 > 0 and shape2 > 0 and scale > 0);
     assert(0 <= p and p <= 1);
@@ -89,17 +89,11 @@ pub fn fill(buffer: []f64, generator: std.Random, shape1: f64, shape2: f64, scal
     }
 }
 
-export fn rv_dagum_density(x: f64, shape1: f64, shape2: f64, scale: f64) f64 {
-    return density(x, shape1, shape2, scale);
-}
-export fn rv_dagum_probability(q: f64, shape1: f64, shape2: f64, scale: f64) f64 {
-    return probability(q, shape1, shape2, scale);
-}
-export fn rv_dagum_survival(t: f64, shape1: f64, shape2: f64, scale: f64) f64 {
-    return survival(t, shape1, shape2, scale);
-}
-export fn rv_dagum_quantile(p: f64, shape1: f64, shape2: f64, scale: f64) f64 {
-    return quantile(p, shape1, shape2, scale);
+comptime {
+    @export(&density, .{ .name = "rv_dagum_density" });
+    @export(&probability, .{ .name = "rv_dagum_probability" });
+    @export(&survival, .{ .name = "rv_dagum_survival" });
+    @export(&quantile, .{ .name = "rv_dagum_quantile" });
 }
 
 const expectEqual = std.testing.expectEqual;

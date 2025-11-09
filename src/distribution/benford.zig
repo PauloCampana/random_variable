@@ -9,7 +9,7 @@ const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
 /// p(x) = log_b(1 + 1 / x)
-pub fn density(x: f64, base: u64) f64 {
+pub fn density(x: f64, base: u64) callconv(.c) f64 {
     assert(base >= 2);
     assert(!isNan(x));
     const b: f64 = @floatFromInt(base);
@@ -20,7 +20,7 @@ pub fn density(x: f64, base: u64) f64 {
 }
 
 /// F(q) = log_b(1 + ⌊q⌋)
-pub fn probability(q: f64, base: u64) f64 {
+pub fn probability(q: f64, base: u64) callconv(.c) f64 {
     assert(base >= 2);
     assert(!isNan(q));
     const b: f64 = @floatFromInt(base);
@@ -34,7 +34,7 @@ pub fn probability(q: f64, base: u64) f64 {
 }
 
 /// S(t) = log_b(b / (1 + ⌊t⌋))
-pub fn survival(t: f64, base: u64) f64 {
+pub fn survival(t: f64, base: u64) callconv(.c) f64 {
     assert(base >= 2);
     assert(!isNan(t));
     const b: f64 = @floatFromInt(base);
@@ -48,7 +48,7 @@ pub fn survival(t: f64, base: u64) f64 {
 }
 
 /// Q(p) = ⌈b^p⌉ - 1
-pub fn quantile(p: f64, base: u64) f64 {
+pub fn quantile(p: f64, base: u64) callconv(.c) f64 {
     assert(base >= 2);
     assert(0 <= p and p <= 1);
     if (p == 0) {
@@ -80,17 +80,11 @@ pub fn fill(buffer: []f64, generator: std.Random, base: u64) void {
     }
 }
 
-export fn rv_benford_density(x: f64, base: u64) f64 {
-    return density(x, base);
-}
-export fn rv_benford_probability(q: f64, base: u64) f64 {
-    return probability(q, base);
-}
-export fn rv_benford_survival(t: f64, base: u64) f64 {
-    return survival(t, base);
-}
-export fn rv_benford_quantile(p: f64, base: u64) f64 {
-    return quantile(p, base);
+comptime {
+    @export(&density, .{ .name = "rv_benford_density" });
+    @export(&probability, .{ .name = "rv_benford_probability" });
+    @export(&survival, .{ .name = "rv_benford_survival" });
+    @export(&quantile, .{ .name = "rv_benford_quantile" });
 }
 
 const expectEqual = std.testing.expectEqual;

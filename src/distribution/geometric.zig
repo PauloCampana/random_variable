@@ -9,7 +9,7 @@ const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
 /// p(x) = p (1 - p)^x
-pub fn density(x: f64, prob: f64) f64 {
+pub fn density(x: f64, prob: f64) callconv(.c) f64 {
     assert(0 < prob and prob <= 1);
     assert(!isNan(x));
     if (x < 0 or x != @round(x)) {
@@ -19,7 +19,7 @@ pub fn density(x: f64, prob: f64) f64 {
 }
 
 /// F(q) = 1 - (1 - p)^(⌊q⌋ + 1)
-pub fn probability(q: f64, prob: f64) f64 {
+pub fn probability(q: f64, prob: f64) callconv(.c) f64 {
     assert(0 < prob and prob <= 1);
     assert(!isNan(q));
     if (q < 0) {
@@ -30,7 +30,7 @@ pub fn probability(q: f64, prob: f64) f64 {
 }
 
 /// S(t) = (1 - p)^(⌊t⌋ + 1)
-pub fn survival(t: f64, prob: f64) f64 {
+pub fn survival(t: f64, prob: f64) callconv(.c) f64 {
     assert(0 < prob and prob <= 1);
     assert(!isNan(t));
     if (t < 0) {
@@ -41,7 +41,7 @@ pub fn survival(t: f64, prob: f64) f64 {
 }
 
 /// Q(x) = ⌊ln(1 - x) / ln(1 - p)⌋
-pub fn quantile(p: f64, prob: f64) f64 {
+pub fn quantile(p: f64, prob: f64) callconv(.c) f64 {
     assert(0 < prob and prob <= 1);
     assert(0 <= p and p <= 1);
     if (p == 1) {
@@ -88,17 +88,11 @@ fn clz(generator: std.Random) f64 {
     return @floatFromInt(count);
 }
 
-export fn rv_geometric_density(x: f64, prob: f64) f64 {
-    return density(x, prob);
-}
-export fn rv_geometric_probability(q: f64, prob: f64) f64 {
-    return probability(q, prob);
-}
-export fn rv_geometric_survival(t: f64, prob: f64) f64 {
-    return survival(t, prob);
-}
-export fn rv_geometric_quantile(p: f64, prob: f64) f64 {
-    return quantile(p, prob);
+comptime {
+    @export(&density, .{ .name = "rv_geometric_density" });
+    @export(&probability, .{ .name = "rv_geometric_probability" });
+    @export(&survival, .{ .name = "rv_geometric_survival" });
+    @export(&quantile, .{ .name = "rv_geometric_quantile" });
 }
 
 const expectEqual = std.testing.expectEqual;

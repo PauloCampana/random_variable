@@ -10,7 +10,7 @@ const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
 /// f(x) = x / σ^2 exp(-x^2 / 2σ^2))
-pub fn density(x: f64, scale: f64) f64 {
+pub fn density(x: f64, scale: f64) callconv(.c) f64 {
     assert(isFinite(scale));
     assert(scale > 0);
     assert(!isNan(x));
@@ -22,7 +22,7 @@ pub fn density(x: f64, scale: f64) f64 {
 }
 
 /// F(q) = 1 - exp(-q^2 / 2σ^2)
-pub fn probability(q: f64, scale: f64) f64 {
+pub fn probability(q: f64, scale: f64) callconv(.c) f64 {
     assert(isFinite(scale));
     assert(scale > 0);
     assert(!isNan(q));
@@ -34,7 +34,7 @@ pub fn probability(q: f64, scale: f64) f64 {
 }
 
 /// S(t) = exp(-t^2 / 2σ^2)
-pub fn survival(t: f64, scale: f64) f64 {
+pub fn survival(t: f64, scale: f64) callconv(.c) f64 {
     assert(isFinite(scale));
     assert(scale > 0);
     assert(!isNan(t));
@@ -46,7 +46,7 @@ pub fn survival(t: f64, scale: f64) f64 {
 }
 
 /// Q(p) = σ sqrt(-2ln(1 - p))
-pub fn quantile(p: f64, scale: f64) f64 {
+pub fn quantile(p: f64, scale: f64) callconv(.c) f64 {
     assert(isFinite(scale));
     assert(scale > 0);
     assert(0 <= p and p <= 1);
@@ -69,17 +69,11 @@ pub fn fill(buffer: []f64, generator: std.Random, scale: f64) void {
     }
 }
 
-export fn rv_rayleigh_density(x: f64, scale: f64) f64 {
-    return density(x, scale);
-}
-export fn rv_rayleigh_probability(q: f64, scale: f64) f64 {
-    return probability(q, scale);
-}
-export fn rv_rayleigh_survival(t: f64, scale: f64) f64 {
-    return survival(t, scale);
-}
-export fn rv_rayleigh_quantile(p: f64, scale: f64) f64 {
-    return quantile(p, scale);
+comptime {
+    @export(&density, .{ .name = "rv_rayleigh_density" });
+    @export(&probability, .{ .name = "rv_rayleigh_probability" });
+    @export(&survival, .{ .name = "rv_rayleigh_survival" });
+    @export(&quantile, .{ .name = "rv_rayleigh_quantile" });
 }
 
 const expectEqual = std.testing.expectEqual;

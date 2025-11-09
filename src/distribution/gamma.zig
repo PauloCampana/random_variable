@@ -12,7 +12,7 @@ const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
 /// f(x) = 1 / (σ gamma(α)) (x / σ)^(α - 1) exp(-x / σ)
-pub fn density(x: f64, shape: f64, scale: f64) f64 {
+pub fn density(x: f64, shape: f64, scale: f64) callconv(.c) f64 {
     assert(isFinite(shape) and isFinite(scale));
     assert(shape > 0 and scale > 0);
     assert(!isNan(x));
@@ -32,7 +32,7 @@ pub fn density(x: f64, shape: f64, scale: f64) f64 {
 }
 
 /// No closed form
-pub fn probability(q: f64, shape: f64, scale: f64) f64 {
+pub fn probability(q: f64, shape: f64, scale: f64) callconv(.c) f64 {
     assert(isFinite(shape) and isFinite(scale));
     assert(shape > 0 and scale > 0);
     assert(!isNan(q));
@@ -41,7 +41,7 @@ pub fn probability(q: f64, shape: f64, scale: f64) f64 {
 }
 
 /// No closed form
-pub fn survival(t: f64, shape: f64, scale: f64) f64 {
+pub fn survival(t: f64, shape: f64, scale: f64) callconv(.c) f64 {
     assert(isFinite(shape) and isFinite(scale));
     assert(shape > 0 and scale > 0);
     assert(!isNan(t));
@@ -50,7 +50,7 @@ pub fn survival(t: f64, shape: f64, scale: f64) f64 {
 }
 
 /// No closed form
-pub fn quantile(p: f64, shape: f64, scale: f64) f64 {
+pub fn quantile(p: f64, shape: f64, scale: f64) callconv(.c) f64 {
     assert(isFinite(shape) and isFinite(scale));
     assert(shape > 0 and scale > 0);
     assert(0 <= p and p <= 1);
@@ -125,17 +125,11 @@ fn rejection(generator: std.Random, d: f64, c: f64) f64 {
     };
 }
 
-export fn rv_gamma_density(x: f64, shape: f64, scale: f64) f64 {
-    return density(x, shape, scale);
-}
-export fn rv_gamma_probability(q: f64, shape: f64, scale: f64) f64 {
-    return probability(q, shape, scale);
-}
-export fn rv_gamma_survival(t: f64, shape: f64, scale: f64) f64 {
-    return survival(t, shape, scale);
-}
-export fn rv_gamma_quantile(p: f64, shape: f64, scale: f64) f64 {
-    return quantile(p, shape, scale);
+comptime {
+    @export(&density, .{ .name = "rv_gamma_density" });
+    @export(&probability, .{ .name = "rv_gamma_probability" });
+    @export(&survival, .{ .name = "rv_gamma_survival" });
+    @export(&quantile, .{ .name = "rv_gamma_quantile" });
 }
 
 const expectEqual = std.testing.expectEqual;

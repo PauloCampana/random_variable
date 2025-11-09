@@ -11,7 +11,7 @@ const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
 /// f(x) = α / σ (x / σ)^(α - 1) exp(-(x / σ)^α)
-pub fn density(x: f64, shape: f64, scale: f64) f64 {
+pub fn density(x: f64, shape: f64, scale: f64) callconv(.c) f64 {
     assert(isFinite(shape) and isFinite(scale));
     assert(shape > 0 and scale > 0);
     assert(!isNan(x));
@@ -31,7 +31,7 @@ pub fn density(x: f64, shape: f64, scale: f64) f64 {
 }
 
 /// F(q) = 1 - exp(-(q / σ)^α)
-pub fn probability(q: f64, shape: f64, scale: f64) f64 {
+pub fn probability(q: f64, shape: f64, scale: f64) callconv(.c) f64 {
     assert(isFinite(shape) and isFinite(scale));
     assert(shape > 0 and scale > 0);
     assert(!isNan(q));
@@ -44,7 +44,7 @@ pub fn probability(q: f64, shape: f64, scale: f64) f64 {
 }
 
 /// S(t) = exp(-(t / σ)^α)
-pub fn survival(t: f64, shape: f64, scale: f64) f64 {
+pub fn survival(t: f64, shape: f64, scale: f64) callconv(.c) f64 {
     assert(isFinite(shape) and isFinite(scale));
     assert(shape > 0 and scale > 0);
     assert(!isNan(t));
@@ -57,7 +57,7 @@ pub fn survival(t: f64, shape: f64, scale: f64) f64 {
 }
 
 /// Q(p) = σ (-ln(1 - p))^(1 / α)
-pub fn quantile(p: f64, shape: f64, scale: f64) f64 {
+pub fn quantile(p: f64, shape: f64, scale: f64) callconv(.c) f64 {
     assert(isFinite(shape) and isFinite(scale));
     assert(shape > 0 and scale > 0);
     assert(0 <= p and p <= 1);
@@ -85,17 +85,11 @@ pub fn fill(buffer: []f64, generator: std.Random, shape: f64, scale: f64) void {
     }
 }
 
-export fn rv_weibull_density(x: f64, shape: f64, scale: f64) f64 {
-    return density(x, shape, scale);
-}
-export fn rv_weibull_probability(q: f64, shape: f64, scale: f64) f64 {
-    return probability(q, shape, scale);
-}
-export fn rv_weibull_survival(t: f64, shape: f64, scale: f64) f64 {
-    return survival(t, shape, scale);
-}
-export fn rv_weibull_quantile(p: f64, shape: f64, scale: f64) f64 {
-    return quantile(p, shape, scale);
+comptime {
+    @export(&density, .{ .name = "rv_weibull_density" });
+    @export(&probability, .{ .name = "rv_weibull_probability" });
+    @export(&survival, .{ .name = "rv_weibull_survival" });
+    @export(&quantile, .{ .name = "rv_weibull_quantile" });
 }
 
 const expectEqual = std.testing.expectEqual;
