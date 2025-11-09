@@ -4,7 +4,7 @@ pub fn build(b: *std.Build) !void {
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
     const strip = b.option(bool, "strip", "Omit debug symbols");
-    const filters = b.option([]const []const u8, "test-filter", "Skip tests that do not match any filter") orelse &[_][]u8{};
+    const filters = b.option([]const []const u8, "test-filter", "Skip tests that do not match any filter") orelse &.{};
 
     const module = b.addModule("random_variable", .{
         .root_source_file = b.path("src/root.zig"),
@@ -33,7 +33,7 @@ pub fn build(b: *std.Build) !void {
 
     const correctness = b.addTest(.{
         .name = "correctness",
-        .root_module = b.addModule("correctness", .{
+        .root_module = b.createModule(.{
             .root_source_file = b.path("src/correctness.zig"),
             .target = target,
             .optimize = .ReleaseSafe,

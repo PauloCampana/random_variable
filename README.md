@@ -31,10 +31,10 @@ const rv_dep = b.dependency("random_variable", .{
 });
 const rv_mod = rv_dep.module("random_variable");
 
-exe.root_module.addImport("random_variable", rv_mod);
+exe.root_module.addImport("rv", rv_mod);
 ```
 
 ```zig
 // main.zig
-const rv = @import("random_variable");
+const rv = @import("rv");
 ```

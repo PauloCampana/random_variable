@@ -2,7 +2,7 @@
     .name = .random_variable,
     .fingerprint = 0x542bbc61bbfe4f11,
     .version = "1.0.0",
-    .minimum_zig_version = "0.14.0",
+    .minimum_zig_version = "0.15.1",
     .dependencies = .{},
     .paths = .{
         "build.zig",
