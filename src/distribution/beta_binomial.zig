@@ -69,7 +69,7 @@ pub fn quantile(p: f64, size: u64, shape1: f64, shape2: f64) callconv(.c) f64 {
     const mass_num = special.lbeta(shape1, shape2 + n);
     const mass_den = special.lbeta(shape1, shape2);
     const initial_mass = @exp(mass_num - mass_den);
-    return linearSearch(p, n, shape1, shape2, initial_mass);
+    return linear_search(p, n, shape1, shape2, initial_mass);
 }
 
 pub fn random(generator: std.Random, size: u64, shape1: f64, shape2: f64) f64 {
@@ -83,7 +83,7 @@ pub fn random(generator: std.Random, size: u64, shape1: f64, shape2: f64) f64 {
     const mass_den = special.lbeta(shape1, shape2);
     const initial_mass = @exp(mass_num - mass_den);
     const uni = generator.float(f64);
-    return linearSearch(uni, n, shape1, shape2, initial_mass);
+    return linear_search(uni, n, shape1, shape2, initial_mass);
 }
 
 pub fn fill(buffer: []f64, generator: std.Random, size: u64, shape1: f64, shape2: f64) void {
@@ -98,11 +98,11 @@ pub fn fill(buffer: []f64, generator: std.Random, size: u64, shape1: f64, shape2
     const initial_mass = @exp(mass_num - mass_den);
     for (buffer) |*x| {
         const uni = generator.float(f64);
-        x.* = linearSearch(uni, n, shape1, shape2, initial_mass);
+        x.* = linear_search(uni, n, shape1, shape2, initial_mass);
     }
 }
 
-fn linearSearch(p: f64, n: f64, shape1: f64, shape2: f64, initial_mass: f64) f64 {
+fn linear_search(p: f64, n: f64, shape1: f64, shape2: f64, initial_mass: f64) f64 {
     var bbin: f64 = 0;
     var mass = initial_mass;
     var cumu = mass;

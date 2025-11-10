@@ -60,7 +60,7 @@ pub fn quantile(p: f64, prob: f64) callconv(.c) f64 {
         return inf;
     }
     const initial_mass = prob / -std.math.log1p(-prob);
-    return linearSearch(p, prob, initial_mass);
+    return linear_search(p, prob, initial_mass);
 }
 
 pub fn random(generator: std.Random, prob: f64) f64 {
@@ -68,7 +68,7 @@ pub fn random(generator: std.Random, prob: f64) f64 {
 
     const initial_mass = prob / -std.math.log1p(-prob);
     const uni = generator.float(f64);
-    return linearSearch(uni, prob, initial_mass);
+    return linear_search(uni, prob, initial_mass);
 }
 
 pub fn fill(buffer: []f64, generator: std.Random, prob: f64) void {
@@ -77,11 +77,11 @@ pub fn fill(buffer: []f64, generator: std.Random, prob: f64) void {
     const initial_mass = prob / -std.math.log1p(-prob);
     for (buffer) |*x| {
         const uni = generator.float(f64);
-        x.* = linearSearch(uni, prob, initial_mass);
+        x.* = linear_search(uni, prob, initial_mass);
     }
 }
 
-fn linearSearch(p: f64, prob: f64, initial_mass: f64) f64 {
+fn linear_search(p: f64, prob: f64, initial_mass: f64) f64 {
     var loga: f64 = 1;
     var mass = initial_mass;
     var cumu = mass;

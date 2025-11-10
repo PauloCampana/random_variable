@@ -84,16 +84,16 @@ pub fn quantile(p: f64, size: u64, prob: f64) callconv(.c) f64 {
     if (mean < 500) {
         if (prob < 0.5) {
             const initial_mass = std.math.pow(f64, qrob, n);
-            return linearSearch(p, n, prob / qrob, initial_mass);
+            return linear_search(p, n, prob / qrob, initial_mass);
         } else {
             const initial_mass = std.math.pow(f64, prob, n);
-            return n - linearSearch(p, n, qrob / prob, initial_mass);
+            return n - linear_search(p, n, qrob / prob, initial_mass);
         }
     }
     const initial_bino = @ceil(mean);
     const initial_mass = density(initial_bino, size, prob);
     const initial_cumu = probability(initial_bino, size, prob);
-    return guidedSearch(p, n, prob / qrob, initial_bino, initial_mass, initial_cumu);
+    return guided_search(p, n, prob / qrob, initial_bino, initial_mass, initial_cumu);
 }
 
 pub fn random(generator: std.Random, size: u64, prob: f64) f64 {
@@ -109,24 +109,24 @@ pub fn random(generator: std.Random, size: u64, prob: f64) f64 {
         return n;
     }
     if (prob == 0.5) {
-        return popCount(generator, size);
+        return pop_count(generator, size);
     }
     if (mean < 1000) {
         if (prob < 0.5) {
             const initial_mass = std.math.pow(f64, qrob, n);
             const uni = generator.float(f64);
-            return linearSearch(uni, n, prob / qrob, initial_mass);
+            return linear_search(uni, n, prob / qrob, initial_mass);
         } else {
             const initial_mass = std.math.pow(f64, prob, n);
             const uni = generator.float(f64);
-            return n - linearSearch(uni, n, qrob / prob, initial_mass);
+            return n - linear_search(uni, n, qrob / prob, initial_mass);
         }
     }
     const initial_bino = @ceil(mean);
     const initial_mass = density(initial_bino, size, prob);
     const initial_cumu = probability(initial_bino, size, prob);
     const uni = generator.float(f64);
-    return guidedSearch(uni, n, prob / qrob, initial_bino, initial_mass, initial_cumu);
+    return guided_search(uni, n, prob / qrob, initial_bino, initial_mass, initial_cumu);
 }
 
 pub fn fill(buffer: []f64, generator: std.Random, size: u64, prob: f64) void {
@@ -143,7 +143,7 @@ pub fn fill(buffer: []f64, generator: std.Random, size: u64, prob: f64) void {
     }
     if (prob == 0.5) {
         for (buffer) |*x| {
-            x.* = popCount(generator, size);
+            x.* = pop_count(generator, size);
         }
         return;
     }
@@ -153,14 +153,14 @@ pub fn fill(buffer: []f64, generator: std.Random, size: u64, prob: f64) void {
             const initial_mass = std.math.pow(f64, qrob, n);
             for (buffer) |*x| {
                 const uni = generator.float(f64);
-                x.* = linearSearch(uni, n, pq, initial_mass);
+                x.* = linear_search(uni, n, pq, initial_mass);
             }
         } else {
             const qp = qrob / prob;
             const initial_mass = std.math.pow(f64, prob, n);
             for (buffer) |*x| {
                 const uni = generator.float(f64);
-                x.* = n - linearSearch(uni, n, qp, initial_mass);
+                x.* = n - linear_search(uni, n, qp, initial_mass);
             }
         }
         return;
@@ -171,11 +171,11 @@ pub fn fill(buffer: []f64, generator: std.Random, size: u64, prob: f64) void {
     const initial_cumu = probability(initial_bino, size, prob);
     for (buffer) |*x| {
         const uni = generator.float(f64);
-        x.* = guidedSearch(uni, n, pq, initial_bino, initial_mass, initial_cumu);
+        x.* = guided_search(uni, n, pq, initial_bino, initial_mass, initial_cumu);
     }
 }
 
-fn linearSearch(p: f64, n: f64, pq: f64, initial_mass: f64) f64 {
+fn linear_search(p: f64, n: f64, pq: f64, initial_mass: f64) f64 {
     var mass = initial_mass;
     var cumu = mass;
     var bin: f64 = 0;
@@ -188,7 +188,7 @@ fn linearSearch(p: f64, n: f64, pq: f64, initial_mass: f64) f64 {
     return bin;
 }
 
-fn guidedSearch(p: f64, n: f64, pq: f64, initial_bino: f64, initial_mass: f64, initial_cumu: f64) f64 {
+fn guided_search(p: f64, n: f64, pq: f64, initial_bino: f64, initial_mass: f64, initial_cumu: f64) f64 {
     var bino = initial_bino;
     var mass = initial_mass;
     var cumu = initial_cumu;
@@ -213,7 +213,7 @@ fn guidedSearch(p: f64, n: f64, pq: f64, initial_bino: f64, initial_mass: f64, i
     return bino;
 }
 
-fn popCount(generator: std.Random, size: u64) f64 {
+fn pop_count(generator: std.Random, size: u64) f64 {
     const remainder = size % 64;
     var bino: u64 = 0;
     var i: u64 = 0;

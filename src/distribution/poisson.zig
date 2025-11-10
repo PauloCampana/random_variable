@@ -57,12 +57,12 @@ pub fn quantile(p: f64, lambda: f64) callconv(.c) f64 {
         return inf;
     }
     if (lambda < 350) {
-        return linearSearch(p, lambda);
+        return linear_search(p, lambda);
     } else {
         const initial_pois = @ceil(lambda);
         const initial_mass = density(initial_pois, lambda);
         const initial_cumu = probability(initial_pois, lambda);
-        return guidedSearch(p, lambda, initial_pois, initial_mass, initial_cumu);
+        return guided_search(p, lambda, initial_pois, initial_mass, initial_cumu);
     }
 }
 
@@ -71,7 +71,7 @@ pub fn random(generator: std.Random, lambda: f64) f64 {
 
     if (lambda < 130) {
         const uni = generator.float(f64);
-        return linearSearch(uni, lambda);
+        return linear_search(uni, lambda);
     }
     const beta = std.math.pi / @sqrt(3 * lambda);
     const k = @log(0.735) - lambda - @log(beta);
@@ -84,7 +84,7 @@ pub fn fill(buffer: []f64, generator: std.Random, lambda: f64) void {
     if (buffer.len < 15 and lambda < 15) {
         for (buffer) |*x| {
             const uni = generator.float(f64);
-            x.* = linearSearch(uni, lambda);
+            x.* = linear_search(uni, lambda);
         }
         return;
     }
@@ -94,7 +94,7 @@ pub fn fill(buffer: []f64, generator: std.Random, lambda: f64) void {
         const initial_cumu = probability(initial_pois, lambda);
         for (buffer) |*x| {
             const uni = generator.float(f64);
-            x.* = guidedSearch(uni, lambda, initial_pois, initial_mass, initial_cumu);
+            x.* = guided_search(uni, lambda, initial_pois, initial_mass, initial_cumu);
         }
         return;
     }
@@ -105,7 +105,7 @@ pub fn fill(buffer: []f64, generator: std.Random, lambda: f64) void {
     }
 }
 
-fn linearSearch(p: f64, lambda: f64) f64 {
+fn linear_search(p: f64, lambda: f64) f64 {
     var pois: f64 = 0;
     var mass = @exp(-lambda);
     var cumu = mass;
@@ -117,7 +117,7 @@ fn linearSearch(p: f64, lambda: f64) f64 {
     return pois;
 }
 
-fn guidedSearch(p: f64, lambda: f64, initial_pois: f64, initial_mass: f64, initial_cumu: f64) f64 {
+fn guided_search(p: f64, lambda: f64, initial_pois: f64, initial_mass: f64, initial_cumu: f64) f64 {
     var pois = initial_pois;
     var mass = initial_mass;
     var cumu = initial_cumu;

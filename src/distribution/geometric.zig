@@ -60,7 +60,7 @@ pub fn random(generator: std.Random, prob: f64) f64 {
     assert.geometric(prob);
 
     if (prob == 0.5) {
-        return clz(generator);
+        return leading_zeroes(generator);
     }
     const rate = -std.math.log1p(-prob);
     const exp = generator.floatExp(f64);
@@ -72,7 +72,7 @@ pub fn fill(buffer: []f64, generator: std.Random, prob: f64) void {
 
     if (prob == 0.5) {
         for (buffer) |*x| {
-            x.* = clz(generator);
+            x.* = leading_zeroes(generator);
         }
         return;
     }
@@ -83,14 +83,13 @@ pub fn fill(buffer: []f64, generator: std.Random, prob: f64) void {
     }
 }
 
-fn clz(generator: std.Random) f64 {
-    var lz: u64 = @clz(generator.int(u64));
-    var count = lz;
-    while (lz == 64) {
-        lz = @clz(generator.int(u64));
-        count += lz;
+fn leading_zeroes(generator: std.Random) f64 {
+    var count: u64 = 0;
+    while (true) {
+        const int = generator.int(u64);
+        count += @clz(int);
+        if (int != 0) return @floatFromInt(count);
     }
-    return @floatFromInt(count);
 }
 
 comptime {

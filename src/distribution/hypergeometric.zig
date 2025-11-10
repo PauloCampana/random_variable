@@ -77,7 +77,7 @@ pub fn quantile(p: f64, total: u64, good: u64, tries: u64) callconv(.c) f64 {
         return @floatFromInt(low);
     }
     const initial_mass = density(@floatFromInt(low), total, good, tries);
-    return linearSearch(p, total, good, tries, low, initial_mass);
+    return linear_search(p, total, good, tries, low, initial_mass);
 }
 
 pub fn random(generator: std.Random, total: u64, good: u64, tries: u64) f64 {
@@ -90,7 +90,7 @@ pub fn random(generator: std.Random, total: u64, good: u64, tries: u64) f64 {
     }
     const initial_mass = density(@floatFromInt(low), total, good, tries);
     const uni = generator.float(f64);
-    return linearSearch(uni, total, good, tries, low, initial_mass);
+    return linear_search(uni, total, good, tries, low, initial_mass);
 }
 
 pub fn fill(buffer: []f64, generator: std.Random, total: u64, good: u64, tries: u64) void {
@@ -104,11 +104,11 @@ pub fn fill(buffer: []f64, generator: std.Random, total: u64, good: u64, tries: 
     const initial_mass = density(@floatFromInt(low), total, good, tries);
     for (buffer) |*x| {
         const uni = generator.float(f64);
-        x.* = linearSearch(uni, total, good, tries, low, initial_mass);
+        x.* = linear_search(uni, total, good, tries, low, initial_mass);
     }
 }
 
-fn linearSearch(p: f64, total: u64, good: u64, tries: u64, initial: u64, initial_mass: f64) f64 {
+fn linear_search(p: f64, total: u64, good: u64, tries: u64, initial: u64, initial_mass: f64) f64 {
     var hypr = initial;
     var mass = initial_mass;
     var cumu = mass;

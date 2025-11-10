@@ -47,24 +47,8 @@ pub const weibull              = @import("distribution/weibull.zig");
 // zig fmt: on
 
 comptime {
-    refAllDeclsRecursive(@This());
-}
-
-// std.testing.refAllDeclsRecursive but works outside tests,
-// needed to analyze all the namespaces and export functions
-fn refAllDeclsRecursive(comptime T: type) void {
-    inline for (@typeInfo(T).@"struct".decls) |decl| {
-        const field = @field(T, decl.name);
-        if (@TypeOf(field) == type) {
-            switch (@typeInfo(field)) {
-                .@"struct",
-                .@"enum",
-                .@"union",
-                .@"opaque",
-                => refAllDeclsRecursive(field),
-                else => {},
-            }
-        }
-        _ = &field;
+    // analyze all namespaces for exporting functions
+    for (@typeInfo(@This()).@"struct".decls) |decl| {
+        _ = @field(@This(), decl.name);
     }
 }
