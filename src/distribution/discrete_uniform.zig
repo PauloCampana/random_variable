@@ -5,15 +5,14 @@
 //! - b: `max` ∈ {a,a + 1,⋯}
 
 const std = @import("std");
-const assert = std.debug.assert;
-const isFinite = std.math.isFinite;
-const isNan = std.math.isNan;
+const assert = @import("../assert.zig");
 const inf = std.math.inf(f64);
 
 /// p(x) = 1 / (b - a + 1)
 pub fn density(x: f64, min: i64, max: i64) callconv(.c) f64 {
-    assert(min <= max);
-    assert(!isNan(x));
+    assert.discrete_uniform(min, max);
+    assert.real(x);
+
     const fmin: f64 = @floatFromInt(min);
     const fmax: f64 = @floatFromInt(max);
     if (x < fmin or x > fmax or x != @round(x)) {
@@ -24,8 +23,9 @@ pub fn density(x: f64, min: i64, max: i64) callconv(.c) f64 {
 
 /// F(q) = (⌊q⌋ - a + 1) / (b - a + 1)
 pub fn probability(q: f64, min: i64, max: i64) callconv(.c) f64 {
-    assert(min <= max);
-    assert(!isNan(q));
+    assert.discrete_uniform(min, max);
+    assert.real(q);
+
     const fmin: f64 = @floatFromInt(min);
     const fmax: f64 = @floatFromInt(max);
     if (q < fmin) {
@@ -39,8 +39,9 @@ pub fn probability(q: f64, min: i64, max: i64) callconv(.c) f64 {
 
 /// S(t) = (b - ⌊t⌋) / (b - a + 1)
 pub fn survival(t: f64, min: i64, max: i64) callconv(.c) f64 {
-    assert(min <= max);
-    assert(!isNan(t));
+    assert.discrete_uniform(min, max);
+    assert.real(t);
+
     const fmin: f64 = @floatFromInt(min);
     const fmax: f64 = @floatFromInt(max);
     if (t < fmin) {
@@ -54,8 +55,9 @@ pub fn survival(t: f64, min: i64, max: i64) callconv(.c) f64 {
 
 /// Q(p) = ⌈p (b - a + 1)⌉ + a - 1
 pub fn quantile(p: f64, min: i64, max: i64) callconv(.c) f64 {
-    assert(min <= max);
-    assert(0 <= p and p <= 1);
+    assert.discrete_uniform(min, max);
+    assert.probability(p);
+
     const fmin: f64 = @floatFromInt(min);
     const fmax: f64 = @floatFromInt(max);
     if (p == 0) {
@@ -65,13 +67,15 @@ pub fn quantile(p: f64, min: i64, max: i64) callconv(.c) f64 {
 }
 
 pub fn random(generator: std.Random, min: i64, max: i64) f64 {
-    assert(min <= max);
+    assert.discrete_uniform(min, max);
+
     const uni = generator.intRangeAtMost(i64, min, max);
     return @floatFromInt(uni);
 }
 
 pub fn fill(buffer: []f64, generator: std.Random, min: i64, max: i64) void {
-    assert(min <= max);
+    assert.discrete_uniform(min, max);
+
     for (buffer) |*x| {
         const uni = generator.intRangeAtMost(i64, min, max);
         x.* = @floatFromInt(uni);

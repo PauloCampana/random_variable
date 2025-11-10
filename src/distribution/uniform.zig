@@ -5,16 +5,14 @@
 //! - b: `max` ∈ [ a,∞)
 
 const std = @import("std");
-const assert = std.debug.assert;
-const isFinite = std.math.isFinite;
-const isNan = std.math.isNan;
+const assert = @import("../assert.zig");
 const inf = std.math.inf(f64);
 
 /// f(x) = 1 / (b - a)
 pub fn density(x: f64, min: f64, max: f64) callconv(.c) f64 {
-    assert(isFinite(min) and isFinite(max));
-    assert(min <= max);
-    assert(!isNan(x));
+    assert.uniform(min, max);
+    assert.real(x);
+
     if (x < min or x > max) {
         return 0;
     }
@@ -23,9 +21,9 @@ pub fn density(x: f64, min: f64, max: f64) callconv(.c) f64 {
 
 /// F(q) = (q - a) / (b - a)
 pub fn probability(q: f64, min: f64, max: f64) callconv(.c) f64 {
-    assert(isFinite(min) and isFinite(max));
-    assert(min <= max);
-    assert(!isNan(q));
+    assert.uniform(min, max);
+    assert.real(q);
+
     if (q <= min) {
         return 0;
     }
@@ -37,9 +35,9 @@ pub fn probability(q: f64, min: f64, max: f64) callconv(.c) f64 {
 
 /// S(t) = (b - t) / (b - a)
 pub fn survival(t: f64, min: f64, max: f64) callconv(.c) f64 {
-    assert(isFinite(min) and isFinite(max));
-    assert(min <= max);
-    assert(!isNan(t));
+    assert.uniform(min, max);
+    assert.real(t);
+
     if (t <= min) {
         return 1;
     }
@@ -51,22 +49,22 @@ pub fn survival(t: f64, min: f64, max: f64) callconv(.c) f64 {
 
 /// Q(p) = a + (b - a)p
 pub fn quantile(p: f64, min: f64, max: f64) callconv(.c) f64 {
-    assert(isFinite(min) and isFinite(max));
-    assert(min <= max);
-    assert(0 <= p and p <= 1);
+    assert.uniform(min, max);
+    assert.probability(p);
+
     return min + (max - min) * p;
 }
 
 pub fn random(generator: std.Random, min: f64, max: f64) f64 {
-    assert(isFinite(min) and isFinite(max));
-    assert(min <= max);
+    assert.uniform(min, max);
+
     const uni = generator.float(f64);
     return min + (max - min) * uni;
 }
 
 pub fn fill(buffer: []f64, generator: std.Random, min: f64, max: f64) void {
-    assert(isFinite(min) and isFinite(max));
-    assert(min <= max);
+    assert.uniform(min, max);
+
     const scale = max - min;
     for (buffer) |*x| {
         const uni = generator.float(f64);

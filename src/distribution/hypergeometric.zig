@@ -6,15 +6,15 @@
 //! - n: `tries` ∈ {0,1,⋯,N}
 
 const std = @import("std");
+const assert = @import("../assert.zig");
 const special = @import("../special.zig");
-const assert = std.debug.assert;
-const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
 /// p(x) = (K x) (N - K n - x) / (N n)
 pub fn density(x: f64, total: u64, good: u64, tries: u64) callconv(.c) f64 {
-    assert(good <= total and tries <= total);
-    assert(!isNan(x));
+    assert.hypergeometric(total, good, tries);
+    assert.real(x);
+
     const low: f64 = @floatFromInt(lower(total, good, tries));
     const upp: f64 = @floatFromInt(upper(total, good, tries));
     if (x < low or x > upp or x != @round(x)) {
@@ -31,8 +31,9 @@ pub fn density(x: f64, total: u64, good: u64, tries: u64) callconv(.c) f64 {
 
 /// No closed form
 pub fn probability(q: f64, total: u64, good: u64, tries: u64) callconv(.c) f64 {
-    assert(good <= total and tries <= total);
-    assert(!isNan(q));
+    assert.hypergeometric(total, good, tries);
+    assert.real(q);
+
     const low: f64 = @floatFromInt(lower(total, good, tries));
     const upp: f64 = @floatFromInt(upper(total, good, tries));
     if (q < low) {
@@ -61,8 +62,9 @@ pub fn survival(t: f64, total: u64, good: u64, tries: u64) callconv(.c) f64 {
 
 /// No closed form
 pub fn quantile(p: f64, total: u64, good: u64, tries: u64) callconv(.c) f64 {
-    assert(good <= total and tries <= total);
-    assert(0 <= p and p <= 1);
+    assert.hypergeometric(total, good, tries);
+    assert.probability(p);
+
     const low = lower(total, good, tries);
     const upp = upper(total, good, tries);
     if (p == 0) {
@@ -79,7 +81,8 @@ pub fn quantile(p: f64, total: u64, good: u64, tries: u64) callconv(.c) f64 {
 }
 
 pub fn random(generator: std.Random, total: u64, good: u64, tries: u64) f64 {
-    assert(good <= total and tries <= total);
+    assert.hypergeometric(total, good, tries);
+
     const low = lower(total, good, tries);
     const upp = upper(total, good, tries);
     if (low == upp) {
@@ -91,7 +94,8 @@ pub fn random(generator: std.Random, total: u64, good: u64, tries: u64) f64 {
 }
 
 pub fn fill(buffer: []f64, generator: std.Random, total: u64, good: u64, tries: u64) void {
-    assert(good <= total and tries <= total);
+    assert.hypergeometric(total, good, tries);
+
     const low = lower(total, good, tries);
     const upp = upper(total, good, tries);
     if (low == upp) {

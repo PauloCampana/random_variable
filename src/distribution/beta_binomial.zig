@@ -6,17 +6,15 @@
 //! - β: `shape2` ∈ (0,∞)
 
 const std = @import("std");
+const assert = @import("../assert.zig");
 const special = @import("../special.zig");
-const assert = std.debug.assert;
-const isFinite = std.math.isFinite;
-const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
 /// p(x) = (n x) beta(x + α, n - x + β) / beta(α, β)
 pub fn density(x: f64, size: u64, shape1: f64, shape2: f64) callconv(.c) f64 {
-    assert(isFinite(shape1) and isFinite(shape2));
-    assert(shape1 > 0 and shape2 > 0);
-    assert(!isNan(x));
+    assert.beta_binomial(size, shape1, shape2);
+    assert.real(x);
+
     const n: f64 = @floatFromInt(size);
     if (x < 0 or x > n or x != @round(x)) {
         return 0;
@@ -29,9 +27,9 @@ pub fn density(x: f64, size: u64, shape1: f64, shape2: f64) callconv(.c) f64 {
 
 /// No closed form
 pub fn probability(q: f64, size: u64, shape1: f64, shape2: f64) callconv(.c) f64 {
-    assert(isFinite(shape1) and isFinite(shape2));
-    assert(shape1 > 0 and shape2 > 0);
-    assert(!isNan(q));
+    assert.beta_binomial(size, shape1, shape2);
+    assert.real(q);
+
     if (q < 0) {
         return 0;
     }
@@ -61,9 +59,9 @@ pub fn survival(t: f64, size: u64, shape1: f64, shape2: f64) callconv(.c) f64 {
 
 /// No closed form
 pub fn quantile(p: f64, size: u64, shape1: f64, shape2: f64) callconv(.c) f64 {
-    assert(isFinite(shape1) and isFinite(shape2));
-    assert(shape1 > 0 and shape2 > 0);
-    assert(0 <= p and p <= 1);
+    assert.beta_binomial(size, shape1, shape2);
+    assert.probability(p);
+
     const n: f64 = @floatFromInt(size);
     if (p == 0 or p == 1 or size == 0) {
         return n * p;
@@ -75,8 +73,8 @@ pub fn quantile(p: f64, size: u64, shape1: f64, shape2: f64) callconv(.c) f64 {
 }
 
 pub fn random(generator: std.Random, size: u64, shape1: f64, shape2: f64) f64 {
-    assert(isFinite(shape1) and isFinite(shape2));
-    assert(shape1 > 0 and shape2 > 0);
+    assert.beta_binomial(size, shape1, shape2);
+
     if (size == 0) {
         return 0;
     }
@@ -89,8 +87,8 @@ pub fn random(generator: std.Random, size: u64, shape1: f64, shape2: f64) f64 {
 }
 
 pub fn fill(buffer: []f64, generator: std.Random, size: u64, shape1: f64, shape2: f64) void {
-    assert(isFinite(shape1) and isFinite(shape2));
-    assert(shape1 > 0 and shape2 > 0);
+    assert.beta_binomial(size, shape1, shape2);
+
     if (size == 0) {
         return @memset(buffer, 0);
     }

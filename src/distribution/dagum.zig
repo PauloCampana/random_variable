@@ -6,16 +6,14 @@
 //! - σ: `scale`  ∈ (0,∞)
 
 const std = @import("std");
-const assert = std.debug.assert;
-const isFinite = std.math.isFinite;
-const isNan = std.math.isNan;
+const assert = @import("../assert.zig");
 const inf = std.math.inf(f64);
 
 /// f(x) = pα / σ (x / σ)^(pα - 1) / (1 + (x / σ)^α)^(p + 1)
 pub fn density(x: f64, shape1: f64, shape2: f64, scale: f64) callconv(.c) f64 {
-    assert(isFinite(shape1) and isFinite(shape2) and isFinite(scale));
-    assert(shape1 > 0 and shape2 > 0 and scale > 0);
-    assert(!isNan(x));
+    assert.dagum(shape1, shape2, scale);
+    assert.real(x);
+
     if (x < 0 or x == inf) {
         return 0;
     }
@@ -35,9 +33,9 @@ pub fn density(x: f64, shape1: f64, shape2: f64, scale: f64) callconv(.c) f64 {
 
 /// F(q) = (1 + (q / σ)^-α)^-p
 pub fn probability(q: f64, shape1: f64, shape2: f64, scale: f64) callconv(.c) f64 {
-    assert(isFinite(shape1) and isFinite(shape2) and isFinite(scale));
-    assert(shape1 > 0 and shape2 > 0 and scale > 0);
-    assert(!isNan(q));
+    assert.dagum(shape1, shape2, scale);
+    assert.real(q);
+
     if (q <= 0) {
         return 0;
     }
@@ -53,9 +51,9 @@ pub fn survival(t: f64, shape1: f64, shape2: f64, scale: f64) callconv(.c) f64 {
 
 /// Q(x) = σ(x^(-1 / p) - 1)^(- 1 / α)
 pub fn quantile(p: f64, shape1: f64, shape2: f64, scale: f64) callconv(.c) f64 {
-    assert(isFinite(shape1) and isFinite(shape2) and isFinite(scale));
-    assert(shape1 > 0 and shape2 > 0 and scale > 0);
-    assert(0 <= p and p <= 1);
+    assert.dagum(shape1, shape2, scale);
+    assert.probability(p);
+
     if (p == 0) {
         return 0;
     }
@@ -68,8 +66,8 @@ pub fn quantile(p: f64, shape1: f64, shape2: f64, scale: f64) callconv(.c) f64 {
 }
 
 pub fn random(generator: std.Random, shape1: f64, shape2: f64, scale: f64) f64 {
-    assert(isFinite(shape1) and isFinite(shape2) and isFinite(scale));
-    assert(shape1 > 0 and shape2 > 0 and scale > 0);
+    assert.dagum(shape1, shape2, scale);
+
     const uni = generator.float(f64);
     const base = std.math.pow(f64, uni, -1 / shape1) - 1;
     const pow = std.math.pow(f64, base, -1 / shape2);
@@ -77,8 +75,8 @@ pub fn random(generator: std.Random, shape1: f64, shape2: f64, scale: f64) f64 {
 }
 
 pub fn fill(buffer: []f64, generator: std.Random, shape1: f64, shape2: f64, scale: f64) void {
-    assert(isFinite(shape1) and isFinite(shape2) and isFinite(scale));
-    assert(shape1 > 0 and shape2 > 0 and scale > 0);
+    assert.dagum(shape1, shape2, scale);
+
     const minvshape1 = -1 / shape1;
     const minvshape2 = -1 / shape2;
     for (buffer) |*x| {

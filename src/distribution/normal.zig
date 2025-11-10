@@ -5,17 +5,15 @@
 //! - σ: `scale`    ∈ ( 0,∞)
 
 const std = @import("std");
+const assert = @import("../assert.zig");
 const special = @import("../special.zig");
-const assert = std.debug.assert;
-const isFinite = std.math.isFinite;
-const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
 /// f(x) = exp(-((x - μ) / σ)^2 / 2) / (σ sqrt(2π))
 pub fn density(x: f64, location: f64, scale: f64) callconv(.c) f64 {
-    assert(isFinite(location) and isFinite(scale));
-    assert(scale > 0);
-    assert(!isNan(x));
+    assert.normal(location, scale);
+    assert.real(x);
+
     const z = (x - location) / scale;
     const sqrt2pi = comptime @sqrt(2 * std.math.pi);
     return @exp(-0.5 * z * z) / (scale * sqrt2pi);
@@ -23,41 +21,41 @@ pub fn density(x: f64, location: f64, scale: f64) callconv(.c) f64 {
 
 /// No closed form
 pub fn probability(q: f64, location: f64, scale: f64) callconv(.c) f64 {
-    assert(isFinite(location) and isFinite(scale));
-    assert(scale > 0);
-    assert(!isNan(q));
+    assert.normal(location, scale);
+    assert.real(q);
+
     const z = (q - location) / scale;
     return special.normal.probability(z);
 }
 
 /// No closed form
 pub fn survival(t: f64, location: f64, scale: f64) callconv(.c) f64 {
-    assert(isFinite(location) and isFinite(scale));
-    assert(scale > 0);
-    assert(!isNan(t));
+    assert.normal(location, scale);
+    assert.real(t);
+
     const z = (t - location) / scale;
     return special.normal.survival(z);
 }
 
 /// No closed form
 pub fn quantile(p: f64, location: f64, scale: f64) callconv(.c) f64 {
-    assert(isFinite(location) and isFinite(scale));
-    assert(scale > 0);
-    assert(0 <= p and p <= 1);
+    assert.normal(location, scale);
+    assert.probability(p);
+
     const q = special.normal.quantile(p);
     return location + scale * q;
 }
 
 pub fn random(generator: std.Random, location: f64, scale: f64) f64 {
-    assert(isFinite(location) and isFinite(scale));
-    assert(scale > 0);
+    assert.normal(location, scale);
+
     const nor = generator.floatNorm(f64);
     return location + scale * nor;
 }
 
 pub fn fill(buffer: []f64, generator: std.Random, location: f64, scale: f64) void {
-    assert(isFinite(location) and isFinite(scale));
-    assert(scale > 0);
+    assert.normal(location, scale);
+
     for (buffer) |*x| {
         const nor = generator.floatNorm(f64);
         x.* = location + scale * nor;

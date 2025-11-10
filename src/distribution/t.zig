@@ -4,18 +4,16 @@
 //! - ν: `df` ∈ (0,∞)
 
 const std = @import("std");
-const gamma = @import("gamma.zig");
+const assert = @import("../assert.zig");
 const special = @import("../special.zig");
-const assert = std.debug.assert;
-const isFinite = std.math.isFinite;
-const isNan = std.math.isNan;
+const gamma = @import("gamma.zig");
 const inf = std.math.inf(f64);
 
 /// f(x) (ν / (ν + x^2))^((ν + 1) / 2) / (sqrt(ν) beta(ν / 2, 1 / 2))
 pub fn density(x: f64, df: f64) callconv(.c) f64 {
-    assert(isFinite(df));
-    assert(df > 0);
-    assert(!isNan(x));
+    assert.t(df);
+    assert.real(x);
+
     const num = (0.5 * df + 0.5) * @log(df / (df + x * x));
     const den = 0.5 * @log(df) + special.lbeta(0.5 * df, 0.5);
     return @exp(num - den);
@@ -23,9 +21,9 @@ pub fn density(x: f64, df: f64) callconv(.c) f64 {
 
 /// No closed form
 pub fn probability(q: f64, df: f64) callconv(.c) f64 {
-    assert(isFinite(df));
-    assert(df > 0);
-    assert(!isNan(q));
+    assert.t(df);
+    assert.real(q);
+
     if (q == inf) {
         return 1;
     }
@@ -41,9 +39,9 @@ pub fn probability(q: f64, df: f64) callconv(.c) f64 {
 
 /// No closed form
 pub fn survival(t: f64, df: f64) callconv(.c) f64 {
-    assert(isFinite(df));
-    assert(df > 0);
-    assert(!isNan(t));
+    assert.t(df);
+    assert.real(t);
+
     if (t == -inf) {
         return 1;
     }
@@ -59,9 +57,9 @@ pub fn survival(t: f64, df: f64) callconv(.c) f64 {
 
 /// No closed form
 pub fn quantile(p: f64, df: f64) callconv(.c) f64 {
-    assert(isFinite(df));
-    assert(df > 0);
-    assert(0 <= p and p <= 1);
+    assert.t(df);
+    assert.probability(p);
+
     if (p < 0.5) {
         const q = special.beta.quantile(2 * p, 0.5 * df, 0.5);
         return -@sqrt(df / q - df);
@@ -72,8 +70,8 @@ pub fn quantile(p: f64, df: f64) callconv(.c) f64 {
 }
 
 pub fn random(generator: std.Random, df: f64) f64 {
-    assert(isFinite(df));
-    assert(df > 0);
+    assert.t(df);
+
     if (df == 1) {
         const uni = generator.float(f64);
         return @tan(std.math.pi * uni);
@@ -84,8 +82,8 @@ pub fn random(generator: std.Random, df: f64) f64 {
 }
 
 pub fn fill(buffer: []f64, generator: std.Random, df: f64) void {
-    assert(isFinite(df));
-    assert(df > 0);
+    assert.t(df);
+
     if (df == 1) {
         for (buffer) |*x| {
             const uni = generator.float(f64);

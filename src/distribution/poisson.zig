@@ -4,17 +4,15 @@
 //! - λ: `lambda` ∈ (0,∞)
 
 const std = @import("std");
+const assert = @import("../assert.zig");
 const special = @import("../special.zig");
-const assert = std.debug.assert;
-const isFinite = std.math.isFinite;
-const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
 /// p(x) = λ^x exp(-λ) / x!
 pub fn density(x: f64, lambda: f64) callconv(.c) f64 {
-    assert(isFinite(lambda));
-    assert(lambda > 0);
-    assert(!isNan(x));
+    assert.poisson(lambda);
+    assert.real(x);
+
     if (x < 0 or x == inf or x != @round(x)) {
         return 0;
     }
@@ -24,9 +22,9 @@ pub fn density(x: f64, lambda: f64) callconv(.c) f64 {
 
 /// No closed form
 pub fn probability(q: f64, lambda: f64) callconv(.c) f64 {
-    assert(isFinite(lambda));
-    assert(lambda > 0);
-    assert(!isNan(q));
+    assert.poisson(lambda);
+    assert.real(q);
+
     if (q < 0) {
         return 0;
     }
@@ -38,9 +36,9 @@ pub fn probability(q: f64, lambda: f64) callconv(.c) f64 {
 
 /// No closed form
 pub fn survival(t: f64, lambda: f64) callconv(.c) f64 {
-    assert(isFinite(lambda));
-    assert(lambda > 0);
-    assert(!isNan(t));
+    assert.poisson(lambda);
+    assert.real(t);
+
     if (t < 0) {
         return 1;
     }
@@ -52,9 +50,9 @@ pub fn survival(t: f64, lambda: f64) callconv(.c) f64 {
 
 /// No closed form
 pub fn quantile(p: f64, lambda: f64) callconv(.c) f64 {
-    assert(isFinite(lambda));
-    assert(lambda > 0);
-    assert(0 <= p and p <= 1);
+    assert.poisson(lambda);
+    assert.probability(p);
+
     if (p == 1) {
         return inf;
     }
@@ -69,8 +67,8 @@ pub fn quantile(p: f64, lambda: f64) callconv(.c) f64 {
 }
 
 pub fn random(generator: std.Random, lambda: f64) f64 {
-    assert(isFinite(lambda));
-    assert(lambda > 0);
+    assert.poisson(lambda);
+
     if (lambda < 130) {
         const uni = generator.float(f64);
         return linearSearch(uni, lambda);
@@ -81,8 +79,8 @@ pub fn random(generator: std.Random, lambda: f64) f64 {
 }
 
 pub fn fill(buffer: []f64, generator: std.Random, lambda: f64) void {
-    assert(isFinite(lambda));
-    assert(lambda > 0);
+    assert.poisson(lambda);
+
     if (buffer.len < 15 and lambda < 15) {
         for (buffer) |*x| {
             const uni = generator.float(f64);

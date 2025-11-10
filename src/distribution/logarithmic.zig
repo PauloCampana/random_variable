@@ -4,14 +4,14 @@
 //! - p: `prob` ∈ (0,1)
 
 const std = @import("std");
-const assert = std.debug.assert;
-const isNan = std.math.isNan;
+const assert = @import("../assert.zig");
 const inf = std.math.inf(f64);
 
 /// p(x) = p^x / (-ln(1 - p) x)
 pub fn density(x: f64, prob: f64) callconv(.c) f64 {
-    assert(0 < prob and prob < 1);
-    assert(!isNan(x));
+    assert.logarithmic(prob);
+    assert.real(x);
+
     if (x < 1 or x != @round(x)) {
         return 0;
     }
@@ -22,8 +22,9 @@ pub fn density(x: f64, prob: f64) callconv(.c) f64 {
 
 /// No closed form
 pub fn probability(q: f64, prob: f64) callconv(.c) f64 {
-    assert(0 < prob and prob < 1);
-    assert(!isNan(q));
+    assert.logarithmic(prob);
+    assert.real(q);
+
     if (q < 1) {
         return 0;
     }
@@ -49,8 +50,9 @@ pub fn survival(t: f64, prob: f64) callconv(.c) f64 {
 
 /// No closed form
 pub fn quantile(p: f64, prob: f64) callconv(.c) f64 {
-    assert(0 < prob and prob < 1);
-    assert(0 <= p and p <= 1);
+    assert.logarithmic(prob);
+    assert.probability(p);
+
     if (p == 0) {
         return 1;
     }
@@ -62,14 +64,16 @@ pub fn quantile(p: f64, prob: f64) callconv(.c) f64 {
 }
 
 pub fn random(generator: std.Random, prob: f64) f64 {
-    assert(0 < prob and prob < 1);
+    assert.logarithmic(prob);
+
     const initial_mass = prob / -std.math.log1p(-prob);
     const uni = generator.float(f64);
     return linearSearch(uni, prob, initial_mass);
 }
 
 pub fn fill(buffer: []f64, generator: std.Random, prob: f64) void {
-    assert(0 < prob and prob < 1);
+    assert.logarithmic(prob);
+
     const initial_mass = prob / -std.math.log1p(-prob);
     for (buffer) |*x| {
         const uni = generator.float(f64);

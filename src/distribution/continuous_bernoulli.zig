@@ -4,15 +4,14 @@
 //! - λ: `shape` ∈ (0,1)
 
 const std = @import("std");
-const assert = std.debug.assert;
-const isFinite = std.math.isFinite;
-const isNan = std.math.isNan;
+const assert = @import("../assert.zig");
 const inf = std.math.inf(f64);
 
 /// f(x) = 2 / (1 - 2λ) arctanh(1 - 2λ) λ^x (1 - λ)^(1 - x)
 pub fn density(x: f64, shape: f64) callconv(.c) f64 {
-    assert(0 < shape and shape < 1);
-    assert(!isNan(x));
+    assert.continuous_bernoulli(shape);
+    assert.real(x);
+
     if (x < 0 or x > 1) {
         return 0;
     }
@@ -28,8 +27,9 @@ pub fn density(x: f64, shape: f64) callconv(.c) f64 {
 
 /// F(q) = (λ^q (1 - λ)^(1 - q) + λ - 1) / (2λ - 1)
 pub fn probability(q: f64, shape: f64) callconv(.c) f64 {
-    assert(0 < shape and shape < 1);
-    assert(!isNan(q));
+    assert.continuous_bernoulli(shape);
+    assert.real(q);
+
     if (q <= 0) {
         return 0;
     }
@@ -46,8 +46,9 @@ pub fn probability(q: f64, shape: f64) callconv(.c) f64 {
 
 /// S(t) = (λ - λ^t (1 - λ)^(1 - t)) / (2λ - 1)
 pub fn survival(t: f64, shape: f64) callconv(.c) f64 {
-    assert(0 < shape and shape < 1);
-    assert(!isNan(t));
+    assert.continuous_bernoulli(shape);
+    assert.real(t);
+
     if (t <= 0) {
         return 1;
     }
@@ -64,8 +65,9 @@ pub fn survival(t: f64, shape: f64) callconv(.c) f64 {
 
 /// Q(p) = ln(((2λ - 1)p - λ + 1) / (1 - λ)) / ln(λ / (1 - λ))
 pub fn quantile(p: f64, shape: f64) callconv(.c) f64 {
-    assert(0 < shape and shape < 1);
-    assert(0 <= p and p <= 1);
+    assert.continuous_bernoulli(shape);
+    assert.probability(p);
+
     if (shape == 0.5) {
         return p;
     }
@@ -76,7 +78,8 @@ pub fn quantile(p: f64, shape: f64) callconv(.c) f64 {
 }
 
 pub fn random(generator: std.Random, shape: f64) f64 {
-    assert(0 < shape and shape < 1);
+    assert.continuous_bernoulli(shape);
+
     const uni = generator.float(f64);
     if (shape == 0.5) {
         return uni;
@@ -88,7 +91,8 @@ pub fn random(generator: std.Random, shape: f64) f64 {
 }
 
 pub fn fill(buffer: []f64, generator: std.Random, shape: f64) void {
-    assert(0 < shape and shape < 1);
+    assert.continuous_bernoulli(shape);
+
     if (shape == 0.5) {
         for (buffer) |*x| {
             x.* = generator.float(f64);

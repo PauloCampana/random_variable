@@ -5,17 +5,15 @@
 //! - σ: `log_scale`    ∈ ( 0,∞)
 
 const std = @import("std");
+const assert = @import("../assert.zig");
 const normal = @import("normal.zig");
-const assert = std.debug.assert;
-const isFinite = std.math.isFinite;
-const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
 /// f(x) = exp(-((ln(x) - μ) / σ)^2 / 2) / (xσ sqrt(2π))
 pub fn density(x: f64, log_location: f64, log_scale: f64) callconv(.c) f64 {
-    assert(isFinite(log_location) and isFinite(log_scale));
-    assert(log_scale > 0);
-    assert(!isNan(x));
+    assert.log_normal(log_location, log_scale);
+    assert.real(x);
+
     if (x <= 0) {
         return 0;
     }
@@ -47,15 +45,15 @@ pub fn quantile(p: f64, log_location: f64, log_scale: f64) callconv(.c) f64 {
 }
 
 pub fn random(generator: std.Random, log_location: f64, log_scale: f64) f64 {
-    assert(isFinite(log_location) and isFinite(log_scale));
-    assert(log_scale > 0);
+    assert.log_normal(log_location, log_scale);
+
     const nor = generator.floatNorm(f64);
     return @exp(log_location + log_scale * nor);
 }
 
 pub fn fill(buffer: []f64, generator: std.Random, log_location: f64, log_scale: f64) void {
-    assert(isFinite(log_location) and isFinite(log_scale));
-    assert(log_scale > 0);
+    assert.log_normal(log_location, log_scale);
+
     for (buffer) |*x| {
         const nor = generator.floatNorm(f64);
         x.* = @exp(log_location + log_scale * nor);

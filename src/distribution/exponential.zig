@@ -4,16 +4,14 @@
 //! - σ: `scale` ∈ (0,∞)
 
 const std = @import("std");
-const assert = std.debug.assert;
-const isFinite = std.math.isFinite;
-const isNan = std.math.isNan;
+const assert = @import("../assert.zig");
 const inf = std.math.inf(f64);
 
 /// f(x) = exp(-x / σ) / σ
 pub fn density(x: f64, scale: f64) callconv(.c) f64 {
-    assert(isFinite(scale));
-    assert(scale > 0);
-    assert(!isNan(x));
+    assert.exponential(scale);
+    assert.real(x);
+
     if (x < 0) {
         return 0;
     }
@@ -23,9 +21,9 @@ pub fn density(x: f64, scale: f64) callconv(.c) f64 {
 
 /// F(q) = 1 - exp(-q / σ)
 pub fn probability(q: f64, scale: f64) callconv(.c) f64 {
-    assert(isFinite(scale));
-    assert(scale > 0);
-    assert(!isNan(q));
+    assert.exponential(scale);
+    assert.real(q);
+
     if (q <= 0) {
         return 0;
     }
@@ -35,9 +33,9 @@ pub fn probability(q: f64, scale: f64) callconv(.c) f64 {
 
 /// S(t) = exp(-t / σ)
 pub fn survival(t: f64, scale: f64) callconv(.c) f64 {
-    assert(isFinite(scale));
-    assert(scale > 0);
-    assert(!isNan(t));
+    assert.exponential(scale);
+    assert.real(t);
+
     if (t <= 0) {
         return 1;
     }
@@ -47,23 +45,23 @@ pub fn survival(t: f64, scale: f64) callconv(.c) f64 {
 
 /// Q(p) = -σ ln(1 - p)
 pub fn quantile(p: f64, scale: f64) callconv(.c) f64 {
-    assert(isFinite(scale));
-    assert(scale > 0);
-    assert(0 <= p and p <= 1);
+    assert.exponential(scale);
+    assert.probability(p);
+
     const q = -std.math.log1p(-p);
     return scale * q;
 }
 
 pub fn random(generator: std.Random, scale: f64) f64 {
-    assert(isFinite(scale));
-    assert(scale > 0);
+    assert.exponential(scale);
+
     const exp = generator.floatExp(f64);
     return scale * exp;
 }
 
 pub fn fill(buffer: []f64, generator: std.Random, scale: f64) void {
-    assert(isFinite(scale));
-    assert(scale > 0);
+    assert.exponential(scale);
+
     for (buffer) |*x| {
         const exp = generator.floatExp(f64);
         x.* = scale * exp;

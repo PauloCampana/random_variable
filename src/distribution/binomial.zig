@@ -5,15 +5,15 @@
 //! - p: `prob` ∈ [0,1]
 
 const std = @import("std");
+const assert = @import("../assert.zig");
 const special = @import("../special.zig");
-const assert = std.debug.assert;
-const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
 /// p(x) = (n x) p^x (1 - p)^(n - x)
 pub fn density(x: f64, size: u64, prob: f64) callconv(.c) f64 {
-    assert(0 <= prob and prob <= 1);
-    assert(!isNan(x));
+    assert.binomial(size, prob);
+    assert.real(x);
+
     const n: f64 = @floatFromInt(size);
     if (x < 0 or x > n or x != @round(x)) {
         return 0;
@@ -31,8 +31,9 @@ pub fn density(x: f64, size: u64, prob: f64) callconv(.c) f64 {
 
 /// No closed form
 pub fn probability(q: f64, size: u64, prob: f64) callconv(.c) f64 {
-    assert(0 <= prob and prob <= 1);
-    assert(!isNan(q));
+    assert.binomial(size, prob);
+    assert.real(q);
+
     const n: f64 = @floatFromInt(size);
     if (q < 0) {
         return 0;
@@ -46,8 +47,9 @@ pub fn probability(q: f64, size: u64, prob: f64) callconv(.c) f64 {
 
 /// No closed form
 pub fn survival(t: f64, size: u64, prob: f64) callconv(.c) f64 {
-    assert(0 <= prob and prob <= 1);
-    assert(!isNan(t));
+    assert.binomial(size, prob);
+    assert.real(t);
+
     const n: f64 = @floatFromInt(size);
     if (t < 0) {
         return 1;
@@ -61,8 +63,9 @@ pub fn survival(t: f64, size: u64, prob: f64) callconv(.c) f64 {
 
 /// No closed form
 pub fn quantile(p: f64, size: u64, prob: f64) callconv(.c) f64 {
-    assert(0 <= prob and prob <= 1);
-    assert(0 <= p and p <= 1);
+    assert.binomial(size, prob);
+    assert.probability(p);
+
     const n: f64 = @floatFromInt(size);
     if (p == 0) {
         return 0;
@@ -94,7 +97,8 @@ pub fn quantile(p: f64, size: u64, prob: f64) callconv(.c) f64 {
 }
 
 pub fn random(generator: std.Random, size: u64, prob: f64) f64 {
-    assert(0 <= prob and prob <= 1);
+    assert.binomial(size, prob);
+
     const n: f64 = @floatFromInt(size);
     const qrob = 1 - prob;
     const mean = n * prob;
@@ -126,7 +130,8 @@ pub fn random(generator: std.Random, size: u64, prob: f64) f64 {
 }
 
 pub fn fill(buffer: []f64, generator: std.Random, size: u64, prob: f64) void {
-    assert(0 <= prob and prob <= 1);
+    assert.binomial(size, prob);
+
     const n: f64 = @floatFromInt(size);
     const qrob = 1 - prob;
     const mean = n * prob;

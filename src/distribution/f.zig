@@ -5,18 +5,16 @@
 //! - m: `df2` ∈ (0,∞)
 
 const std = @import("std");
-const beta_prime = @import("beta_prime.zig");
+const assert = @import("../assert.zig");
 const special = @import("../special.zig");
-const assert = std.debug.assert;
-const isFinite = std.math.isFinite;
-const isNan = std.math.isNan;
+const beta_prime = @import("beta_prime.zig");
 const inf = std.math.inf(f64);
 
 /// f(x) = n^(n / 2) m^(m / 2) x^(n / 2 - 1) (m + nx)^(-(n + m) / 2) / beta(n / 2, m / 2)
 pub fn density(x: f64, df1: f64, df2: f64) callconv(.c) f64 {
-    assert(isFinite(df1) and isFinite(df2));
-    assert(df1 > 0 and df2 > 0);
-    assert(!isNan(x));
+    assert.f(df1, df2);
+    assert.real(x);
+
     if (x < 0 or x == inf) {
         return 0;
     }
@@ -36,9 +34,9 @@ pub fn density(x: f64, df1: f64, df2: f64) callconv(.c) f64 {
 
 /// No closed form
 pub fn probability(q: f64, df1: f64, df2: f64) callconv(.c) f64 {
-    assert(isFinite(df1) and isFinite(df2));
-    assert(df1 > 0 and df2 > 0);
-    assert(!isNan(q));
+    assert.f(df1, df2);
+    assert.real(q);
+
     if (q <= 0) {
         return 0;
     }
@@ -52,9 +50,9 @@ pub fn probability(q: f64, df1: f64, df2: f64) callconv(.c) f64 {
 
 /// No closed form
 pub fn survival(t: f64, df1: f64, df2: f64) callconv(.c) f64 {
-    assert(isFinite(df1) and isFinite(df2));
-    assert(df1 > 0 and df2 > 0);
-    assert(!isNan(t));
+    assert.f(df1, df2);
+    assert.real(t);
+
     if (t <= 0) {
         return 1;
     }
@@ -65,9 +63,9 @@ pub fn survival(t: f64, df1: f64, df2: f64) callconv(.c) f64 {
 
 /// No closed form
 pub fn quantile(p: f64, df1: f64, df2: f64) callconv(.c) f64 {
-    assert(isFinite(df1) and isFinite(df2));
-    assert(df1 > 0 and df2 > 0);
-    assert(0 <= p and p <= 1);
+    assert.f(df1, df2);
+    assert.probability(p);
+
     const q = special.beta.quantile(1 - p, 0.5 * df2, 0.5 * df1);
     return (df2 / q - df2) / df1;
 }

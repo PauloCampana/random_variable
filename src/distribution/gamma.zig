@@ -5,17 +5,15 @@
 //! - σ: `scale` ∈ (0,∞)
 
 const std = @import("std");
+const assert = @import("../assert.zig");
 const special = @import("../special.zig");
-const assert = std.debug.assert;
-const isFinite = std.math.isFinite;
-const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
 /// f(x) = 1 / (σ gamma(α)) (x / σ)^(α - 1) exp(-x / σ)
 pub fn density(x: f64, shape: f64, scale: f64) callconv(.c) f64 {
-    assert(isFinite(shape) and isFinite(scale));
-    assert(shape > 0 and scale > 0);
-    assert(!isNan(x));
+    assert.gamma(shape, scale);
+    assert.real(x);
+
     if (x < 0 or x == inf) {
         return 0;
     }
@@ -33,34 +31,34 @@ pub fn density(x: f64, shape: f64, scale: f64) callconv(.c) f64 {
 
 /// No closed form
 pub fn probability(q: f64, shape: f64, scale: f64) callconv(.c) f64 {
-    assert(isFinite(shape) and isFinite(scale));
-    assert(shape > 0 and scale > 0);
-    assert(!isNan(q));
+    assert.gamma(shape, scale);
+    assert.real(q);
+
     const z = q / scale;
     return special.gamma.probability(z, shape);
 }
 
 /// No closed form
 pub fn survival(t: f64, shape: f64, scale: f64) callconv(.c) f64 {
-    assert(isFinite(shape) and isFinite(scale));
-    assert(shape > 0 and scale > 0);
-    assert(!isNan(t));
+    assert.gamma(shape, scale);
+    assert.real(t);
+
     const z = t / scale;
     return special.gamma.survival(z, shape);
 }
 
 /// No closed form
 pub fn quantile(p: f64, shape: f64, scale: f64) callconv(.c) f64 {
-    assert(isFinite(shape) and isFinite(scale));
-    assert(shape > 0 and scale > 0);
-    assert(0 <= p and p <= 1);
+    assert.gamma(shape, scale);
+    assert.probability(p);
+
     const q = special.gamma.quantile(p, shape);
     return scale * q;
 }
 
 pub fn random(generator: std.Random, shape: f64, scale: f64) f64 {
-    assert(isFinite(shape) and isFinite(scale));
-    assert(shape > 0 and scale > 0);
+    assert.gamma(shape, scale);
+
     if (shape == 1) {
         const exp = generator.floatExp(f64);
         return scale * exp;
@@ -79,8 +77,8 @@ pub fn random(generator: std.Random, shape: f64, scale: f64) f64 {
 }
 
 pub fn fill(buffer: []f64, generator: std.Random, shape: f64, scale: f64) void {
-    assert(isFinite(shape) and isFinite(scale));
-    assert(shape > 0 and scale > 0);
+    assert.gamma(shape, scale);
+
     if (shape == 1) {
         for (buffer) |*x| {
             const exp = generator.floatExp(f64);

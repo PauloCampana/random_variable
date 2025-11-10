@@ -5,16 +5,14 @@
 //! - σ: `scale`    ∈ ( 0,∞)
 
 const std = @import("std");
-const assert = std.debug.assert;
-const isFinite = std.math.isFinite;
-const isNan = std.math.isNan;
+const assert = @import("../assert.zig");
 const inf = std.math.inf(f64);
 
 /// f(x) = exp(-(x - μ) / σ - exp(-(x - μ) / σ)) / σ
 pub fn density(x: f64, location: f64, scale: f64) callconv(.c) f64 {
-    assert(isFinite(location) and isFinite(scale));
-    assert(scale > 0);
-    assert(!isNan(x));
+    assert.gumbel(location, scale);
+    assert.real(x);
+
     if (x == -inf) {
         return 0;
     }
@@ -26,9 +24,9 @@ pub fn density(x: f64, location: f64, scale: f64) callconv(.c) f64 {
 
 /// F(q) = exp(-exp(-(q - μ) / σ))
 pub fn probability(q: f64, location: f64, scale: f64) callconv(.c) f64 {
-    assert(isFinite(location) and isFinite(scale));
-    assert(scale > 0);
-    assert(!isNan(q));
+    assert.gumbel(location, scale);
+    assert.real(q);
+
     const z = (q - location) / scale;
     const inner = @exp(-z);
     return @exp(-inner);
@@ -36,9 +34,9 @@ pub fn probability(q: f64, location: f64, scale: f64) callconv(.c) f64 {
 
 /// S(t) = 1 - exp(-exp(-(t - μ) / σ))
 pub fn survival(t: f64, location: f64, scale: f64) callconv(.c) f64 {
-    assert(isFinite(location) and isFinite(scale));
-    assert(scale > 0);
-    assert(!isNan(t));
+    assert.gumbel(location, scale);
+    assert.real(t);
+
     const z = (t - location) / scale;
     const inner = @exp(-z);
     return -std.math.expm1(-inner);
@@ -46,24 +44,24 @@ pub fn survival(t: f64, location: f64, scale: f64) callconv(.c) f64 {
 
 /// Q(p) = μ - σ ln(-ln(p))
 pub fn quantile(p: f64, location: f64, scale: f64) callconv(.c) f64 {
-    assert(isFinite(location) and isFinite(scale));
-    assert(scale > 0);
-    assert(0 <= p and p <= 1);
+    assert.gumbel(location, scale);
+    assert.probability(p);
+
     const inner = -@log(p);
     const outer = -@log(inner);
     return location + scale * outer;
 }
 
 pub fn random(generator: std.Random, location: f64, scale: f64) f64 {
-    assert(isFinite(location) and isFinite(scale));
-    assert(scale > 0);
+    assert.gumbel(location, scale);
+
     const exp = generator.floatExp(f64);
     return location - scale * @log(exp);
 }
 
 pub fn fill(buffer: []f64, generator: std.Random, location: f64, scale: f64) void {
-    assert(isFinite(location) and isFinite(scale));
-    assert(scale > 0);
+    assert.gumbel(location, scale);
+
     for (buffer) |*x| {
         const exp = generator.floatExp(f64);
         x.* = location - scale * @log(exp);

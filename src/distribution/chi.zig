@@ -4,18 +4,16 @@
 //! - ν: `df` ∈ (0,∞)
 
 const std = @import("std");
-const gamma = @import("gamma.zig");
+const assert = @import("../assert.zig");
 const special = @import("../special.zig");
-const assert = std.debug.assert;
-const isFinite = std.math.isFinite;
-const isNan = std.math.isNan;
+const gamma = @import("gamma.zig");
 const inf = std.math.inf(f64);
 
 /// f(x) = x^(ν - 1) exp(-x^2 / 2) / (2^(ν / 2 - 1) gamma(ν / 2))
 pub fn density(x: f64, df: f64) callconv(.c) f64 {
-    assert(isFinite(df));
-    assert(df > 0);
-    assert(!isNan(x));
+    assert.chi(df);
+    assert.real(x);
+
     if (x < 0 or x == inf) {
         return 0;
     }
@@ -33,9 +31,9 @@ pub fn density(x: f64, df: f64) callconv(.c) f64 {
 
 /// No closed form
 pub fn probability(q: f64, df: f64) callconv(.c) f64 {
-    assert(isFinite(df));
-    assert(df > 0);
-    assert(!isNan(q));
+    assert.chi(df);
+    assert.real(q);
+
     if (q <= 0) {
         return 0;
     }
@@ -44,9 +42,9 @@ pub fn probability(q: f64, df: f64) callconv(.c) f64 {
 
 /// No closed form
 pub fn survival(t: f64, df: f64) callconv(.c) f64 {
-    assert(isFinite(df));
-    assert(df > 0);
-    assert(!isNan(t));
+    assert.chi(df);
+    assert.real(t);
+
     if (t <= 0) {
         return 1;
     }
@@ -55,9 +53,9 @@ pub fn survival(t: f64, df: f64) callconv(.c) f64 {
 
 /// No closed form
 pub fn quantile(p: f64, df: f64) callconv(.c) f64 {
-    assert(isFinite(df));
-    assert(df > 0);
-    assert(0 <= p and p <= 1);
+    assert.chi(df);
+    assert.probability(p);
+
     const q = special.gamma.quantile(p, 0.5 * df);
     return @sqrt(2 * q);
 }

@@ -5,16 +5,14 @@
 //! - σ: `scale` ∈ (0,∞)
 
 const std = @import("std");
-const assert = std.debug.assert;
-const isFinite = std.math.isFinite;
-const isNan = std.math.isNan;
+const assert = @import("../assert.zig");
 const inf = std.math.inf(f64);
 
 /// f(x) = α / σ exp(α(1 - exp(x / σ)) + x / σ)
 pub fn density(x: f64, shape: f64, scale: f64) callconv(.c) f64 {
-    assert(isFinite(shape) and isFinite(scale));
-    assert(shape > 0 and scale > 0);
-    assert(!isNan(x));
+    assert.gompertz(shape, scale);
+    assert.real(x);
+
     if (x < 0 or x == inf) {
         return 0;
     }
@@ -26,9 +24,9 @@ pub fn density(x: f64, shape: f64, scale: f64) callconv(.c) f64 {
 
 /// F(q) = 1 - exp(α(1 - exp(q / σ)))
 pub fn probability(q: f64, shape: f64, scale: f64) callconv(.c) f64 {
-    assert(isFinite(shape) and isFinite(scale));
-    assert(shape > 0 and scale > 0);
-    assert(!isNan(q));
+    assert.gompertz(shape, scale);
+    assert.real(q);
+
     if (q <= 0) {
         return 0;
     }
@@ -39,9 +37,9 @@ pub fn probability(q: f64, shape: f64, scale: f64) callconv(.c) f64 {
 
 /// S(t) = exp(α(1 - exp(t / σ)))
 pub fn survival(t: f64, shape: f64, scale: f64) callconv(.c) f64 {
-    assert(isFinite(shape) and isFinite(scale));
-    assert(shape > 0 and scale > 0);
-    assert(!isNan(t));
+    assert.gompertz(shape, scale);
+    assert.real(t);
+
     if (t <= 0) {
         return 1;
     }
@@ -52,9 +50,9 @@ pub fn survival(t: f64, shape: f64, scale: f64) callconv(.c) f64 {
 
 /// Q(p) = σ ln(1 - ln(1 - p) / α)
 pub fn quantile(p: f64, shape: f64, scale: f64) callconv(.c) f64 {
-    assert(isFinite(shape) and isFinite(scale));
-    assert(shape > 0 and scale > 0);
-    assert(0 <= p and p <= 1);
+    assert.gompertz(shape, scale);
+    assert.probability(p);
+
     if (p == 0) {
         return 0;
     }
@@ -67,15 +65,15 @@ pub fn quantile(p: f64, shape: f64, scale: f64) callconv(.c) f64 {
 }
 
 pub fn random(generator: std.Random, shape: f64, scale: f64) f64 {
-    assert(isFinite(shape) and isFinite(scale));
-    assert(shape > 0 and scale > 0);
+    assert.gompertz(shape, scale);
+
     const exp = generator.floatExp(f64);
     return scale * @log(1 + exp / shape);
 }
 
 pub fn fill(buffer: []f64, generator: std.Random, shape: f64, scale: f64) void {
-    assert(isFinite(shape) and isFinite(scale));
-    assert(shape > 0 and scale > 0);
+    assert.gompertz(shape, scale);
+
     for (buffer) |*x| {
         const exp = generator.floatExp(f64);
         x.* = scale * @log(1 + exp / shape);

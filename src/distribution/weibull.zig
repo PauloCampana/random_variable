@@ -5,16 +5,14 @@
 //! - σ: `scale` ∈ (0,∞)
 
 const std = @import("std");
-const assert = std.debug.assert;
-const isFinite = std.math.isFinite;
-const isNan = std.math.isNan;
+const assert = @import("../assert.zig");
 const inf = std.math.inf(f64);
 
 /// f(x) = α / σ (x / σ)^(α - 1) exp(-(x / σ)^α)
 pub fn density(x: f64, shape: f64, scale: f64) callconv(.c) f64 {
-    assert(isFinite(shape) and isFinite(scale));
-    assert(shape > 0 and scale > 0);
-    assert(!isNan(x));
+    assert.weibull(shape, scale);
+    assert.real(x);
+
     if (x < 0 or x == inf) {
         return 0;
     }
@@ -32,9 +30,9 @@ pub fn density(x: f64, shape: f64, scale: f64) callconv(.c) f64 {
 
 /// F(q) = 1 - exp(-(q / σ)^α)
 pub fn probability(q: f64, shape: f64, scale: f64) callconv(.c) f64 {
-    assert(isFinite(shape) and isFinite(scale));
-    assert(shape > 0 and scale > 0);
-    assert(!isNan(q));
+    assert.weibull(shape, scale);
+    assert.real(q);
+
     if (q <= 0) {
         return 0;
     }
@@ -45,9 +43,9 @@ pub fn probability(q: f64, shape: f64, scale: f64) callconv(.c) f64 {
 
 /// S(t) = exp(-(t / σ)^α)
 pub fn survival(t: f64, shape: f64, scale: f64) callconv(.c) f64 {
-    assert(isFinite(shape) and isFinite(scale));
-    assert(shape > 0 and scale > 0);
-    assert(!isNan(t));
+    assert.weibull(shape, scale);
+    assert.real(t);
+
     if (t <= 0) {
         return 1;
     }
@@ -58,25 +56,23 @@ pub fn survival(t: f64, shape: f64, scale: f64) callconv(.c) f64 {
 
 /// Q(p) = σ (-ln(1 - p))^(1 / α)
 pub fn quantile(p: f64, shape: f64, scale: f64) callconv(.c) f64 {
-    assert(isFinite(shape) and isFinite(scale));
-    assert(shape > 0 and scale > 0);
-    assert(0 <= p and p <= 1);
+    assert.weibull(shape, scale);
+    assert.probability(p);
+
     const exp = -std.math.log1p(-p);
     const wei = std.math.pow(f64, exp, 1 / shape);
     return scale * wei;
 }
 
 pub fn random(generator: std.Random, shape: f64, scale: f64) f64 {
-    assert(isFinite(shape) and isFinite(scale));
-    assert(shape > 0 and scale > 0);
+    assert.weibull(shape, scale);
     const exp = generator.floatExp(f64);
     const wei = std.math.pow(f64, exp, 1 / shape);
     return scale * wei;
 }
 
 pub fn fill(buffer: []f64, generator: std.Random, shape: f64, scale: f64) void {
-    assert(isFinite(shape) and isFinite(scale));
-    assert(shape > 0 and scale > 0);
+    assert.weibull(shape, scale);
     const invshape = 1 / shape;
     for (buffer) |*x| {
         const exp = generator.floatExp(f64);

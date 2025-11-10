@@ -5,43 +5,41 @@
 //! - σ: `scale`    ∈ ( 0,∞)
 
 const std = @import("std");
-const assert = std.debug.assert;
-const isFinite = std.math.isFinite;
-const isNan = std.math.isNan;
+const assert = @import("../assert.zig");
 const inf = std.math.inf(f64);
 
 /// f(x) = 1 / (πσ (1 + ((x - μ) / σ)^2))
 pub fn density(x: f64, location: f64, scale: f64) callconv(.c) f64 {
-    assert(isFinite(location) and isFinite(scale));
-    assert(scale > 0);
-    assert(!isNan(x));
+    assert.cauchy(location, scale);
+    assert.real(x);
+
     const z = (x - location) / scale;
     return 1 / (std.math.pi * scale * (1 + z * z));
 }
 
 /// F(q) = 0.5 + arctan((q - μ) / σ) / π
 pub fn probability(q: f64, location: f64, scale: f64) callconv(.c) f64 {
-    assert(isFinite(location) and isFinite(scale));
-    assert(scale > 0);
-    assert(!isNan(q));
+    assert.cauchy(location, scale);
+    assert.real(q);
+
     const z = (q - location) / scale;
     return 0.5 + std.math.atan(z) / std.math.pi;
 }
 
 /// S(t) = 0.5 - arctan((t - μ) / σ) / π
 pub fn survival(t: f64, location: f64, scale: f64) callconv(.c) f64 {
-    assert(isFinite(location) and isFinite(scale));
-    assert(scale > 0);
-    assert(!isNan(t));
+    assert.cauchy(location, scale);
+    assert.real(t);
+
     const z = (t - location) / scale;
     return 0.5 - std.math.atan(z) / std.math.pi;
 }
 
 /// Q(p) = μ + σ tan(π (p - 0.5))
 pub fn quantile(p: f64, location: f64, scale: f64) callconv(.c) f64 {
-    assert(isFinite(location) and isFinite(scale));
-    assert(scale > 0);
-    assert(0 <= p and p <= 1);
+    assert.cauchy(location, scale);
+    assert.probability(p);
+
     if (p == 0) {
         return -inf;
     }
@@ -53,15 +51,15 @@ pub fn quantile(p: f64, location: f64, scale: f64) callconv(.c) f64 {
 }
 
 pub fn random(generator: std.Random, location: f64, scale: f64) f64 {
-    assert(isFinite(location) and isFinite(scale));
-    assert(scale > 0);
+    assert.cauchy(location, scale);
+
     const uni = generator.float(f64);
     return location + scale * @tan(std.math.pi * uni);
 }
 
 pub fn fill(buffer: []f64, generator: std.Random, location: f64, scale: f64) void {
-    assert(isFinite(location) and isFinite(scale));
-    assert(scale > 0);
+    assert.cauchy(location, scale);
+
     for (buffer) |*x| {
         const uni = generator.float(f64);
         x.* = location + scale * @tan(std.math.pi * uni);

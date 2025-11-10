@@ -4,16 +4,14 @@
 //! - σ: `scale` ∈ (0,∞)
 
 const std = @import("std");
-const assert = std.debug.assert;
-const isFinite = std.math.isFinite;
-const isNan = std.math.isNan;
+const assert = @import("../assert.zig");
 const inf = std.math.inf(f64);
 
 /// f(x) = x / σ^2 exp(-x^2 / 2σ^2))
 pub fn density(x: f64, scale: f64) callconv(.c) f64 {
-    assert(isFinite(scale));
-    assert(scale > 0);
-    assert(!isNan(x));
+    assert.rayleigh(scale);
+    assert.real(x);
+
     if (x < 0 or x == inf) {
         return 0;
     }
@@ -23,9 +21,9 @@ pub fn density(x: f64, scale: f64) callconv(.c) f64 {
 
 /// F(q) = 1 - exp(-q^2 / 2σ^2)
 pub fn probability(q: f64, scale: f64) callconv(.c) f64 {
-    assert(isFinite(scale));
-    assert(scale > 0);
-    assert(!isNan(q));
+    assert.rayleigh(scale);
+    assert.real(q);
+
     if (q <= 0) {
         return 0;
     }
@@ -35,9 +33,9 @@ pub fn probability(q: f64, scale: f64) callconv(.c) f64 {
 
 /// S(t) = exp(-t^2 / 2σ^2)
 pub fn survival(t: f64, scale: f64) callconv(.c) f64 {
-    assert(isFinite(scale));
-    assert(scale > 0);
-    assert(!isNan(t));
+    assert.rayleigh(scale);
+    assert.real(t);
+
     if (t <= 0) {
         return 1;
     }
@@ -47,22 +45,22 @@ pub fn survival(t: f64, scale: f64) callconv(.c) f64 {
 
 /// Q(p) = σ sqrt(-2ln(1 - p))
 pub fn quantile(p: f64, scale: f64) callconv(.c) f64 {
-    assert(isFinite(scale));
-    assert(scale > 0);
-    assert(0 <= p and p <= 1);
+    assert.rayleigh(scale);
+    assert.probability(p);
+
     return scale * @sqrt(2 * -std.math.log1p(-p));
 }
 
 pub fn random(generator: std.Random, scale: f64) f64 {
-    assert(isFinite(scale));
-    assert(scale > 0);
+    assert.rayleigh(scale);
+
     const exp = generator.floatExp(f64);
     return scale * @sqrt(2 * exp);
 }
 
 pub fn fill(buffer: []f64, generator: std.Random, scale: f64) void {
-    assert(isFinite(scale));
-    assert(scale > 0);
+    assert.rayleigh(scale);
+
     for (buffer) |*x| {
         const exp = generator.floatExp(f64);
         x.* = scale * @sqrt(2 * exp);

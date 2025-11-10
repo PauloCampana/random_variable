@@ -4,6 +4,7 @@
 //! - ν: `df` ∈ (0,∞)
 
 const std = @import("std");
+const assert = @import("../assert.zig");
 const gamma = @import("gamma.zig");
 const inf = std.math.inf(f64);
 

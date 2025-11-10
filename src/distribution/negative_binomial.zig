@@ -5,18 +5,17 @@
 //! - p: `prob` ∈ (0,1]
 
 const std = @import("std");
+const assert = @import("../assert.zig");
+const special = @import("../special.zig");
 const gamma = @import("gamma.zig");
 const poisson = @import("poisson.zig");
-const special = @import("../special.zig");
-const assert = std.debug.assert;
-const isNan = std.math.isNan;
 const inf = std.math.inf(f64);
 
 /// p(x) = (x + n - 1 x) p^n (1 - p)^x
 pub fn density(x: f64, size: u64, prob: f64) callconv(.c) f64 {
-    assert(0 < prob and prob <= 1);
-    assert(size != 0);
-    assert(!isNan(x));
+    assert.negative_binomial(size, prob);
+    assert.real(x);
+
     if (x < 0 or x == inf or x != @round(x)) {
         return 0;
     }
@@ -31,9 +30,9 @@ pub fn density(x: f64, size: u64, prob: f64) callconv(.c) f64 {
 
 /// No closed form
 pub fn probability(q: f64, size: u64, prob: f64) callconv(.c) f64 {
-    assert(0 < prob and prob <= 1);
-    assert(size != 0);
-    assert(!isNan(q));
+    assert.negative_binomial(size, prob);
+    assert.real(q);
+
     if (q < 0) {
         return 0;
     }
@@ -46,9 +45,9 @@ pub fn probability(q: f64, size: u64, prob: f64) callconv(.c) f64 {
 
 /// No closed form
 pub fn survival(t: f64, size: u64, prob: f64) callconv(.c) f64 {
-    assert(0 < prob and prob <= 1);
-    assert(size != 0);
-    assert(!isNan(t));
+    assert.negative_binomial(size, prob);
+    assert.real(t);
+
     if (t < 0) {
         return 1;
     }
@@ -61,9 +60,9 @@ pub fn survival(t: f64, size: u64, prob: f64) callconv(.c) f64 {
 
 /// No closed form
 pub fn quantile(p: f64, size: u64, prob: f64) callconv(.c) f64 {
-    assert(0 < prob and prob <= 1);
-    assert(size != 0);
-    assert(0 <= p and p <= 1);
+    assert.negative_binomial(size, prob);
+    assert.probability(p);
+
     if (p == 0 or prob == 1) {
         return 0;
     }
@@ -83,8 +82,8 @@ pub fn quantile(p: f64, size: u64, prob: f64) callconv(.c) f64 {
 }
 
 pub fn random(generator: std.Random, size: u64, prob: f64) f64 {
-    assert(0 < prob and prob <= 1);
-    assert(size != 0);
+    assert.negative_binomial(size, prob);
+
     if (prob == 1) {
         return 0;
     }
@@ -102,8 +101,8 @@ pub fn random(generator: std.Random, size: u64, prob: f64) f64 {
 }
 
 pub fn fill(buffer: []f64, generator: std.Random, size: u64, prob: f64) void {
-    assert(0 < prob and prob <= 1);
-    assert(size != 0);
+    assert.negative_binomial(size, prob);
+
     if (prob == 1) {
         return @memset(buffer, 0);
     }

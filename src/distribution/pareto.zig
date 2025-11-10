@@ -5,16 +5,14 @@
 //! - k: `minimum` ∈ (0,∞)
 
 const std = @import("std");
-const assert = std.debug.assert;
-const isFinite = std.math.isFinite;
-const isNan = std.math.isNan;
+const assert = @import("../assert.zig");
 const inf = std.math.inf(f64);
 
 /// f(x) = αk^α / x^(α + 1)
 pub fn density(x: f64, shape: f64, minimum: f64) callconv(.c) f64 {
-    assert(isFinite(shape) and isFinite(minimum));
-    assert(shape > 0 and minimum > 0);
-    assert(!isNan(x));
+    assert.pareto(shape, minimum);
+    assert.real(x);
+
     if (x < minimum) {
         return 0;
     }
@@ -25,9 +23,9 @@ pub fn density(x: f64, shape: f64, minimum: f64) callconv(.c) f64 {
 
 /// F(q) = 1 - (k / q)^α
 pub fn probability(q: f64, shape: f64, minimum: f64) callconv(.c) f64 {
-    assert(isFinite(shape) and isFinite(minimum));
-    assert(shape > 0 and minimum > 0);
-    assert(!isNan(q));
+    assert.pareto(shape, minimum);
+    assert.real(q);
+
     if (q < minimum) {
         return 0;
     }
@@ -36,9 +34,9 @@ pub fn probability(q: f64, shape: f64, minimum: f64) callconv(.c) f64 {
 
 /// S(t) = (k / t)^α
 pub fn survival(t: f64, shape: f64, minimum: f64) callconv(.c) f64 {
-    assert(isFinite(shape) and isFinite(minimum));
-    assert(shape > 0 and minimum > 0);
-    assert(!isNan(t));
+    assert.pareto(shape, minimum);
+    assert.real(t);
+
     if (t < minimum) {
         return 1;
     }
@@ -47,22 +45,22 @@ pub fn survival(t: f64, shape: f64, minimum: f64) callconv(.c) f64 {
 
 /// Q(p) = k / (1 - p)^(1 / α)
 pub fn quantile(p: f64, shape: f64, minimum: f64) callconv(.c) f64 {
-    assert(isFinite(shape) and isFinite(minimum));
-    assert(shape > 0 and minimum > 0);
-    assert(0 <= p and p <= 1);
+    assert.pareto(shape, minimum);
+    assert.probability(p);
+
     return minimum * std.math.pow(f64, 1 - p, -1 / shape);
 }
 
 pub fn random(generator: std.Random, shape: f64, minimum: f64) f64 {
-    assert(isFinite(shape) and isFinite(minimum));
-    assert(shape > 0 and minimum > 0);
+    assert.pareto(shape, minimum);
+
     const exp = generator.floatExp(f64);
     return minimum * @exp(exp / shape);
 }
 
 pub fn fill(buffer: []f64, generator: std.Random, shape: f64, minimum: f64) void {
-    assert(isFinite(shape) and isFinite(minimum));
-    assert(shape > 0 and minimum > 0);
+    assert.pareto(shape, minimum);
+
     for (buffer) |*x| {
         const exp = generator.floatExp(f64);
         x.* = minimum * @exp(exp / shape);

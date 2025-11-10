@@ -4,16 +4,16 @@
 //! - p: `prob` ∈ [0,1]
 
 const std = @import("std");
-const assert = std.debug.assert;
-const isNan = std.math.isNan;
+const assert = @import("../assert.zig");
 const inf = std.math.inf(f64);
 
 /// p(x) = 1 - p, x = 0
 ///
 /// p(x) = p    , x = 1
 pub fn density(x: f64, prob: f64) callconv(.c) f64 {
-    assert(0 <= prob and prob <= 1);
-    assert(!isNan(x));
+    assert.bernoulli(prob);
+    assert.real(x);
+
     if (x == 0) {
         return 1 - prob;
     }
@@ -29,8 +29,9 @@ pub fn density(x: f64, prob: f64) callconv(.c) f64 {
 ///
 /// F(q) = 1    , 1 <= q
 pub fn probability(q: f64, prob: f64) callconv(.c) f64 {
-    assert(0 <= prob and prob <= 1);
-    assert(!isNan(q));
+    assert.bernoulli(prob);
+    assert.real(q);
+
     if (q < 0) {
         return 0;
     }
@@ -46,8 +47,9 @@ pub fn probability(q: f64, prob: f64) callconv(.c) f64 {
 ///
 /// S(t) = 0, 1 <= t
 pub fn survival(t: f64, prob: f64) callconv(.c) f64 {
-    assert(0 <= prob and prob <= 1);
-    assert(!isNan(t));
+    assert.bernoulli(prob);
+    assert.real(t);
+
     if (t < 0) {
         return 1;
     }
@@ -61,21 +63,24 @@ pub fn survival(t: f64, prob: f64) callconv(.c) f64 {
 ///
 /// Q(x) = 1, x >  1 - p
 pub fn quantile(p: f64, prob: f64) callconv(.c) f64 {
-    assert(0 <= prob and prob <= 1);
-    assert(0 <= p and p <= 1);
+    assert.bernoulli(prob);
+    assert.probability(p);
+
     const ber = @intFromBool(p > 1 - prob);
     return @floatFromInt(ber);
 }
 
 pub fn random(generator: std.Random, prob: f64) f64 {
-    assert(0 <= prob and prob <= 1);
+    assert.bernoulli(prob);
+
     const uni = generator.float(f64);
     const ber = @intFromBool(uni < prob);
     return @floatFromInt(ber);
 }
 
 pub fn fill(buffer: []f64, generator: std.Random, prob: f64) void {
-    assert(0 <= prob and prob <= 1);
+    assert.bernoulli(prob);
+
     if (prob == 0 or prob == 1) {
         return @memset(buffer, prob);
     }

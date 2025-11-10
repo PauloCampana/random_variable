@@ -4,14 +4,14 @@
 //! - b: `base` ∈ {2,3,4,⋯}
 
 const std = @import("std");
-const assert = std.debug.assert;
-const isNan = std.math.isNan;
+const assert = @import("../assert.zig");
 const inf = std.math.inf(f64);
 
 /// p(x) = log_b(1 + 1 / x)
 pub fn density(x: f64, base: u64) callconv(.c) f64 {
-    assert(base >= 2);
-    assert(!isNan(x));
+    assert.benford(base);
+    assert.real(x);
+
     const b: f64 = @floatFromInt(base);
     if (x < 1 or x > b - 1 or x != @round(x)) {
         return 0;
@@ -21,8 +21,9 @@ pub fn density(x: f64, base: u64) callconv(.c) f64 {
 
 /// F(q) = log_b(1 + ⌊q⌋)
 pub fn probability(q: f64, base: u64) callconv(.c) f64 {
-    assert(base >= 2);
-    assert(!isNan(q));
+    assert.benford(base);
+    assert.real(q);
+
     const b: f64 = @floatFromInt(base);
     if (q < 1) {
         return 0;
@@ -35,8 +36,9 @@ pub fn probability(q: f64, base: u64) callconv(.c) f64 {
 
 /// S(t) = log_b(b / (1 + ⌊t⌋))
 pub fn survival(t: f64, base: u64) callconv(.c) f64 {
-    assert(base >= 2);
-    assert(!isNan(t));
+    assert.benford(base);
+    assert.real(t);
+
     const b: f64 = @floatFromInt(base);
     if (t < 1) {
         return 1;
@@ -49,8 +51,9 @@ pub fn survival(t: f64, base: u64) callconv(.c) f64 {
 
 /// Q(p) = ⌈b^p⌉ - 1
 pub fn quantile(p: f64, base: u64) callconv(.c) f64 {
-    assert(base >= 2);
-    assert(0 <= p and p <= 1);
+    assert.benford(base);
+    assert.probability(p);
+
     if (p == 0) {
         return 1;
     }
@@ -59,7 +62,8 @@ pub fn quantile(p: f64, base: u64) callconv(.c) f64 {
 }
 
 pub fn random(generator: std.Random, base: u64) f64 {
-    assert(base >= 2);
+    assert.benford(base);
+
     const uni = generator.float(f64);
     if (base == 2) {
         return 1;
@@ -69,7 +73,8 @@ pub fn random(generator: std.Random, base: u64) f64 {
 }
 
 pub fn fill(buffer: []f64, generator: std.Random, base: u64) void {
-    assert(base >= 2);
+    assert.benford(base);
+
     if (base == 2) {
         return @memset(buffer, 1);
     }
